@@ -90,9 +90,7 @@ Pol_90 <-  if ((Pol_90_g) >=50) {"Your tubewell is highly likely to be Polluted.
 } else {"Your tubewell may be polluted."
 }
 
-Pol_deep <- if (dd >150) {"Your tubewell is HIGHLY likely to be arsenic-safe"
-  
-}
+Pol_deep <- if (dd >150) {"Your tubewell is HIGHLY likely to be arsenic-safe"}
 
 # rounding up to the next 10
 round.choose <- function(x, round.val, dir = 1) {
@@ -124,8 +122,10 @@ if ((input$colo == 'Red')  && (length(index) > 0)) {
   if (dd < 90){
     paste ("Your tubewell is", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", 
            round.choose (as_90, 10,1),"µg/L ")
+  } else if (dd <=150) {
+    paste (Pol_deep)
   } else {
-    paste (Pol_90)
+	paste (Pol_90)
   }
 }
 
