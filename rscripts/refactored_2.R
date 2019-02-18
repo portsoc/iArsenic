@@ -119,28 +119,20 @@ warning_severity = ''
 flood_warning = ''
 
 if (length(index) > 0){
-	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
-	
-	
+	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }	
 	
 	if ((input$colo == 'Black' || input$utensil == "No colour change to slightly blackish")) {
-	  if (dd > 150) { warning_severity = 'HIGHLY ' }
-	  
-	  paste ("Your tubewell is ", warning_severity, "likely to be arsenic-safe", flood_warning, sep='')
-	}
-
-	else if ((input$colo == 'Red' || input$utensil == "Red")) {
+	  if (dd > 150) { warning_severity = 'HIGHLY' }	  
+	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
+	} else if ((input$colo == 'Red' || input$utensil == "Red")) {
 	  if (dd < 90){
-		paste ("Your tubewell is", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", round.choose (as_90, 10,1),"µg/L ", flood_warning)
-	  } 
-	  else if (dd <=150) {
+		paste ("Your tubewell is", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", round.choose (as_90, 10,1),"µg/L", flood_warning)
+	  } else if (dd <=150) {
 			paste (Pol_90)
-	  } 
-	  else {
+	  } else {
 			paste (Pol_deep)
 	  }
 	}
-}
-else{
-  paste("We are unable to assess your tubewell with the information you supplied, please fill all the sections")
+} else {
+    paste("We are unable to assess your tubewell with the information you supplied, please fill all the sections")
 }
