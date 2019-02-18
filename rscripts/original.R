@@ -203,4 +203,3 @@ if  ( (input$colo == "Red") && (dd<15) && ((as_median) >= 20)&& (length(index)>0
   paste("We are unable to assess your tubewell with the information you supplied, please fill all the sections")
 
 
-cat('\n')

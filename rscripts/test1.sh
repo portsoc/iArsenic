@@ -1,3 +1,14 @@
+if which gecho
+then
+  # on mac, gecho is a better echo
+  alias echo=gecho
+fi
+
+scriptname=${1:-refactored.R}
+
+echo using script "$scriptname"
+
+
 function runtests
 {
   for depth in 20 60 100 200  # dropped 10 because we don't do flood
@@ -6,7 +17,7 @@ function runtests
     for colour in Red Black
     do
       echo -n $depth $colour \"$div\" \"$dis\" \"$upa\" ' '
-      Rscript refactored.R $depth $colour "$div" "$dis" "$upa" 2>/dev/null # hide warnings
+      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" 2>/dev/null # hide warnings
       echo
     done
   done
