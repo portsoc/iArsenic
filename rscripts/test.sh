@@ -17,7 +17,7 @@ function runtests
     for colour in Red Black
     do
       echo -n \"$div\" \"$dis\" \"$upa\" $depth $colour '-' '-' ' '
-      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" 2>/dev/null # hide warnings
+      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" "" "" 2>/dev/null # hide warnings
       echo
     done
     for utensil in "Red" "No colour change to slightly blackish"
@@ -25,7 +25,7 @@ function runtests
       colour="none"
       utensilshort=${utensil:0:2}
       echo -n \"$div\" \"$dis\" \"$upa\" $depth $colour \"$utensilshort\" '-' ' '
-      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" "$utensil" 2>/dev/null # hide warnings
+      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" "$utensil" "" 2>/dev/null # hide warnings
       echo
     done
   done
