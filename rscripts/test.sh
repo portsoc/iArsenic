@@ -16,8 +16,35 @@ function runtests
   do
     for colour in Red Black
     do
-      echo -n $depth $colour \"$div\" \"$dis\" \"$upa\" ' '
+      echo -n \"$div\" \"$dis\" \"$upa\" $depth $colour '-' '-' ' '
       Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" 2>/dev/null # hide warnings
+      echo
+    done
+    for utensil in "Red" "No colour change to slightly blackish"
+    do
+      colour="none"
+      utensilshort=${utensil:0:2}
+      echo -n \"$div\" \"$dis\" \"$upa\" $depth $colour \"$utensilshort\" '-' ' '
+      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" "$utensil" 2>/dev/null # hide warnings
+      echo
+    done
+  done
+
+  depth=10
+  for flooding in "Yes" "No"
+  do
+    for colour in Red Black
+    do
+      echo -n \"$div\" \"$dis\" \"$upa\" $depth $colour '-' \"$flooding\" ' '
+      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" "" "$flooding" 2>/dev/null # hide warnings
+      echo
+    done
+    for utensil in "Red" "No colour change to slightly blackish"
+    do
+      colour="none"
+      utensilshort=${utensil:0:2}
+      echo -n \"$div\" \"$dis\" \"$upa\" $depth $colour \"$utensilshort\" \"$flooding\"  ' '
+      Rscript "$scriptname" $depth $colour "$div" "$dis" "$upa" "$utensil" "$flooding" 2>/dev/null # hide warnings
       echo
     done
   done

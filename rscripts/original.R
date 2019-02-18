@@ -9,7 +9,9 @@ input = data.frame(
   colo = args[2],
   div = args[3],
   dis = args[4],
-  upa = args[5]
+  upa = args[5],
+  utensil = args[6],
+  flood = args[7]
 )
 
 # we don't have inputs for flood and utensil
