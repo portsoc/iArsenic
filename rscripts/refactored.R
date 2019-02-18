@@ -123,7 +123,7 @@ if ((input$colo == 'Black' ) && length(index) > 0) {
 if ((input$colo == 'Red')  && (length(index) > 0)) {
   if (dd < 90){
     paste ("Your tubewell is", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", 
-           round.choose (as_90, 10,1),"µg/L")
+           round.choose (as_90, 10,1),"µg/L ")
   } else {
     paste (Pol_90)
   }

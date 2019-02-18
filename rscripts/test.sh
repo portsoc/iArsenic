@@ -1,4 +1,4 @@
-if which gecho
+if which gecho > /dev/null
 then
   # on mac, gecho is a better echo
   alias echo=gecho
