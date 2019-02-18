@@ -14,6 +14,7 @@ input = data.frame(
 )
 
 if (is.na(input$utensil)) {input$utensil = ' '}
+if (is.na(input$flood)) {input$flood = ' '}
 
 # we don't have inputs for flood and utensil
 
