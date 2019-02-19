@@ -2,8 +2,6 @@ args = commandArgs(trailingOnly=TRUE)
 
 dd <- as.integer(args[1])
 
-
-
 input = data.frame(
   colo = args[2],
   div = args[3],
@@ -21,11 +19,6 @@ paste <- cat
 
 # strata border: 15 50 90 150
 
-
-##################################################################
-# ORIGINAL CODE FOLLOWS
-
-
 adm.files <- read.csv("data/AdmBnd1b.csv", header = T, stringsAsFactors=F)
 
 df <- data.frame(div = c(adm.files$Division),
@@ -35,9 +28,6 @@ df <- data.frame(div = c(adm.files$Division),
                  dep = c(adm.files$Depth),
                  asc = c(adm.files$Arsenic))
 
-
-
-
 #Selecting the wells data for the Upazila which are <90 m deep
 index <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
 
@@ -45,31 +35,20 @@ index <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
 index_2 <- which(df$dep[index] < 90)
 
 #----new for shallow <90 m arsenic range
-as_data <-(df$asc[index][index_2])
-as_10 <- quantile(as_data, c(0.10), type = 1)
-as_90 <- quantile(as_data, c(0.90), type = 1)
-#-----
-
-
-if (length(index_2) == 0){ df_asc = 0
-} else { df_asc = df$asc[index][index_2] }
+df_asc <-(df$asc[index][index_2])
+as_10 <- quantile(df_asc, c(0.10), type = 1)
+as_90 <- quantile(df_asc, c(0.90), type = 1)
+if (length(index_2) == 0){ df_asc = 0 } 
 as_mean <- mean(df_asc)
 as_median <- median(df_asc)
 as_max <- max(df_asc)
 
-
-#--------------
 #Selecting the wells data for the Upazila which are >90 m deep
 index_150 <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
-
 index_2_150 <- which(df$dep[index_150] >= 90)
-
-as_mean_150 <- mean(df$asc[index_150][index_2_150])
-as_median_150 <- median(df$asc[index_150][index_2_150])
-as_max_150 <- max(df$asc[index_150][index_2_150])
-
-#-------------
-
+df_asc_150 <- df$asc[index_150][index_2_150]
+if (length(index_2_150) == 0){ df_asc_150 = 0 } 
+as_mean_150 <- mean(df_asc_150)
 
 Pol_stat<-if (((as_median)>20) && (((as_median)<=50))){"likely to be Polluted"
 } else if (((as_median)>50) && (((as_median)<=200))){"likely to be HIGHLY Polluted"
@@ -80,7 +59,7 @@ Max_Pol <- if ((as_max>=0)&&(as_max<=100)){"and concentration may be around"
 }else {", a chemical test is needed as concentration can be high, ranging around"
 }
 
-if (length(index_2_150) > 0 ) { as_mean_150 = 0 } 
+#Pol_90 is declared here 
 if (as_mean_150 >= 50) {Pol_90 <- "Your tubewell is highly likely to be Polluted."
 } else if (as_mean_150 < 50) {Pol_90 <- "Your tubewell may be arsenic-safe."
 }
@@ -95,19 +74,15 @@ round.choose <- function(x, round.val, dir = 1) {
     }
   }
 }
-#-----------------
 
 #Assessment based on basement colour
 
-
-
-warning_severity = ''
-flood_warning = ''
-
 if (length(index) > 0){
+	flood_warning = ''
 	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
 
 	if ((input$colo == 'Black' || input$utensil == "No colour change to slightly blackish")) {
+	  warning_severity = ''
 	  if (dd > 150) { warning_severity = 'HIGHLY' }
 	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
 	} else if ((input$colo == 'Red' || input$utensil == "Red")) {
