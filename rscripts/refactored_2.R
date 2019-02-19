@@ -80,13 +80,9 @@ Max_Pol <- if ((as_max>=0)&&(as_max<=100)){"and concentration may be around"
 }else {", a chemical test is needed as concentration can be high, ranging around"
 }
 
-#Red platform
-Pol_90_g <- if ( (length (index_2_150)>0)) {as_mean_150
-
-} else {0}
-Pol_90 <-  if ((Pol_90_g) >=50) {"Your tubewell is highly likely to be Polluted."
-} else if (((Pol_90_g) <50) | (((as_median)>0) && ((as_median)<20))) {"Your tubewell may be arsenic-safe."
-} else {"Your tubewell may be polluted."
+if (length(index_2_150) > 0 ) { as_mean_150 = 0 } 
+if (as_mean_150 >= 50) {Pol_90 <- "Your tubewell is highly likely to be Polluted."
+} else if (as_mean_150 < 50) {Pol_90 <- "Your tubewell may be arsenic-safe."
 }
 
 # rounding up to the next 10
