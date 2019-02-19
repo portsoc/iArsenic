@@ -16,8 +16,6 @@ input = data.frame(
 if (is.na(input$utensil)) {input$utensil = ' '}
 if (is.na(input$flood)) {input$flood = ' '}
 
-# we don't have inputs for flood and utensil
-
 # we want to log into console, not simply return
 paste <- cat
 
@@ -26,7 +24,7 @@ paste <- cat
 
 ##################################################################
 # ORIGINAL CODE FOLLOWS
-    
+
 
 adm.files <- read.csv("data/AdmBnd1b.csv", header = T, stringsAsFactors=F)
 
@@ -37,7 +35,7 @@ df <- data.frame(div = c(adm.files$Division),
                  dep = c(adm.files$Depth),
                  asc = c(adm.files$Arsenic))
 
-  
+
 
 
 #Selecting the wells data for the Upazila which are <90 m deep
@@ -53,17 +51,11 @@ as_90 <- quantile(as_data, c(0.90), type = 1)
 #-----
 
 
-as_mean_a <- mean(df$asc[index][index_2])
-as_median_a <- median(df$asc[index][index_2])
-as_max_a <- max(df$asc[index][index_2])
-
-as_mean <- if (length(index_2) == 0) {0
-}else {as_mean_a}
-as_median <- if (length(index_2) == 0) {0
-}else {as_median_a}
-
-as_max <- if (length(index_2) == 0) {0
-}else {as_max_a}
+if (length(index_2) == 0){ df_asc = 0
+} else { df_asc = df$asc[index][index_2] }
+as_mean <- mean(df_asc)
+as_median <- median(df_asc)
+as_max <- max(df_asc)
 
 
 #--------------
@@ -90,14 +82,12 @@ Max_Pol <- if ((as_max>=0)&&(as_max<=100)){"and concentration may be around"
 
 #Red platform
 Pol_90_g <- if ( (length (index_2_150)>0)) {as_mean_150
-  
-} else {0} 
+
+} else {0}
 Pol_90 <-  if ((Pol_90_g) >=50) {"Your tubewell is highly likely to be Polluted."
 } else if (((Pol_90_g) <50) | (((as_median)>0) && ((as_median)<20))) {"Your tubewell may be arsenic-safe."
 } else {"Your tubewell may be polluted."
 }
-
-Pol_deep <- if (dd >150) {"Your tubewell is HIGHLY likely to be arsenic-safe"}
 
 # rounding up to the next 10
 round.choose <- function(x, round.val, dir = 1) {
@@ -119,10 +109,10 @@ warning_severity = ''
 flood_warning = ''
 
 if (length(index) > 0){
-	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }	
-	
+	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
+
 	if ((input$colo == 'Black' || input$utensil == "No colour change to slightly blackish")) {
-	  if (dd > 150) { warning_severity = 'HIGHLY' }	  
+	  if (dd > 150) { warning_severity = 'HIGHLY' }
 	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
 	} else if ((input$colo == 'Red' || input$utensil == "Red")) {
 	  if (dd < 90){
@@ -130,7 +120,7 @@ if (length(index) > 0){
 	  } else if (dd <=150) {
 			paste (Pol_90)
 	  } else {
-			paste (Pol_deep)
+			paste ("Your tubewell is HIGHLY likely to be arsenic-safe")
 	  }
 	}
 } else {
