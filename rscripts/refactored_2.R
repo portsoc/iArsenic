@@ -36,8 +36,8 @@ index_2 <- which(df$dep[index] < 90)
 
 #----new for shallow <90 m arsenic range
 df_asc <-(df$asc[index][index_2])
-as_10 <- quantile(df_asc, c(0.10), type = 1)
-as_90 <- quantile(df_asc, c(0.90), type = 1)
+lower_quantile <- quantile(df_asc, c(0.10), type = 1)
+upper_quantile <- quantile(df_asc, c(0.90), type = 1)
 if (length(index_2) == 0){ df_asc = 0 } 
 #as_mean <- mean(df_asc)
 as_median <- median(df_asc)
@@ -50,12 +50,13 @@ df_asc_150 <- df$asc[index_150][index_2_150]
 if (length(index_2_150) == 0){ df_asc_150 = 0 } 
 as_mean_150 <- mean(df_asc_150)
 
+#the following three pieces of code decide the output message
 Pol_stat<-if (((as_median)>20) && (((as_median)<=50))){"likely to be Polluted"
 } else if (((as_median)>50) && (((as_median)<=200))){"likely to be HIGHLY Polluted"
 } else if ((as_median)>200){"likely to be SEVERELY Polluted"
 }else {"likely to be arsenic-safe"}
 
-Max_Pol <- if ((as_max>=0)&&(as_max<=100)){"and concentration may be around"
+chem_test <- if ((as_max>=0)&&(as_max<=100)){"and concentration may be around"
 }else {", a chemical test is needed as concentration can be high, ranging around"
 }
 
@@ -65,19 +66,19 @@ if (as_mean_150 >= 50) {Pol_90 <- "Your tubewell is highly likely to be Polluted
 }
 
 # rounding up to the next 10
-round.choose <- function(x, round.val, dir = 1) {
+round.concen <- function(strata, round.val, dir = 1) {
   if(dir == 1) {  ##ROUND UP
-    x + (round.val - x %% round.val)
+    strata + (round.val - strata %% round.val)
   } else {
     if(dir == 0) {  ##ROUND DOWN
-      x - (x %% round.val)
+      strata - (strata %% round.val)
     }
   }
 }
 
 concentration <- function() {
-  low_value <- round.choose (as_10, 10, 1)
-  high_value <- round.choose (as_90, 10, 1)
+  low_value <- round.concen (lower_quantile, 10, 1)
+  high_value <- round.concen (upper_quantile, 10, 1)
   if(is.na(low_value) | is.na(high_value)) { return('(No data currently available)') }  
   if(low_value == high_value){
     concen_output <- paste0(high_value, " µg/L")
@@ -98,7 +99,7 @@ if (length(index) > 0){
 	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
 	} else if ((input$colo == 'Red' | input$utensil == "Red")) {
 	  if (dd < 90){
-		paste ("Your tubewell is", Pol_stat, Max_Pol, concentration(), flood_warning)
+		paste ("Your tubewell is", Pol_stat, chem_test, concentration(), flood_warning)
 	  } else if (dd <=150) {
 			paste (Pol_90)
 	  } else {
