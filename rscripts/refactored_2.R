@@ -39,7 +39,7 @@ df_asc <-(df$asc[index][index_2])
 as_10 <- quantile(df_asc, c(0.10), type = 1)
 as_90 <- quantile(df_asc, c(0.90), type = 1)
 if (length(index_2) == 0){ df_asc = 0 } 
-as_mean <- mean(df_asc)
+#as_mean <- mean(df_asc)
 as_median <- median(df_asc)
 as_max <- max(df_asc)
 
