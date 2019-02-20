@@ -75,19 +75,30 @@ round.choose <- function(x, round.val, dir = 1) {
   }
 }
 
+concentration <- function() {
+  low_value <- round.choose (as_10, 10, 1)
+  high_value <- round.choose (as_90, 10, 1)
+  if(is.na(low_value) | is.na(high_value)) { return('(No data currently available)') }  
+  if(low_value == high_value){
+    concen_output <- paste0(high_value, " µg/L")
+  }else {
+    concen_output <- paste0(low_value, ' to ', high_value, ' µg/L')
+  }
+}
+
 #Assessment based on basement colour
 
 if (length(index) > 0){
 	flood_warning = ''
 	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
 
-	if ((input$colo == 'Black' || input$utensil == "No colour change to slightly blackish")) {
+	if ((input$colo == 'Black' | input$utensil == "No colour change to slightly blackish")) {
 	  warning_severity = ''
 	  if (dd > 150) { warning_severity = 'HIGHLY' }
 	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
-	} else if ((input$colo == 'Red' || input$utensil == "Red")) {
+	} else if ((input$colo == 'Red' | input$utensil == "Red")) {
 	  if (dd < 90){
-		paste ("Your tubewell is", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", round.choose (as_90, 10,1),"µg/L", flood_warning)
+		paste ("Your tubewell is", Pol_stat, Max_Pol, concentration(), flood_warning)
 	  } else if (dd <=150) {
 			paste (Pol_90)
 	  } else {
