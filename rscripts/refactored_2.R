@@ -67,8 +67,8 @@ if (as_mean_150 >= 50) {Pol_90 <- "Your tubewell is highly likely to be Polluted
 round.concentration <- function() {
   low_value <- lower_quantile + (10 - lower_quantile %% 10)
   high_value <- upper_quantile + (10 - upper_quantile %% 10)
-  if(is.na(low_value) | is.na(high_value)) { return('(No data currently available)') }  
-  if(low_value == high_value){
+  if(is.na(low_value) | is.na(high_value)) { concen_output <- '(No data currently available)' 
+  } else if(low_value == high_value){
     concen_output <- paste0(high_value, " µg/L")
   }else {
     concen_output <- paste0(low_value, ' to ', high_value, ' µg/L')
