@@ -39,7 +39,6 @@ df_asc <-(df$asc[index][index_2])
 lower_quantile <- quantile(df_asc, c(0.10), type = 1)
 upper_quantile <- quantile(df_asc, c(0.90), type = 1)
 if (length(index_2) == 0){ df_asc = 0 } 
-#as_mean <- mean(df_asc)
 as_median <- median(df_asc)
 as_max <- max(df_asc)
 
@@ -65,20 +64,9 @@ if (as_mean_150 >= 50) {Pol_90 <- "Your tubewell is highly likely to be Polluted
 } else if (as_mean_150 < 50) {Pol_90 <- "Your tubewell may be arsenic-safe."
 }
 
-# rounding up to the next 10
-round.concen <- function(strata, round.val, dir = 1) {
-  if(dir == 1) {  ##ROUND UP
-    strata + (round.val - strata %% round.val)
-  } else {
-    if(dir == 0) {  ##ROUND DOWN
-      strata - (strata %% round.val)
-    }
-  }
-}
-
-concentration <- function() {
-  low_value <- round.concen (lower_quantile, 10, 1)
-  high_value <- round.concen (upper_quantile, 10, 1)
+round.concentration <- function() {
+  low_value <- lower_quantile + (10 - lower_quantile %% 10)
+  high_value <- upper_quantile + (10 - upper_quantile %% 10)
   if(is.na(low_value) | is.na(high_value)) { return('(No data currently available)') }  
   if(low_value == high_value){
     concen_output <- paste0(high_value, " µg/L")
@@ -99,7 +87,7 @@ if (length(index) > 0){
 	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
 	} else if ((input$colo == 'Red' | input$utensil == "Red")) {
 	  if (dd < 90){
-		paste ("Your tubewell is", Pol_stat, chem_test, concentration(), flood_warning)
+		paste ("Your tubewell is", Pol_stat, chem_test, round.concentration(), flood_warning)
 	  } else if (dd <=150) {
 			paste (Pol_90)
 	  } else {
