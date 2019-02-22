@@ -83,21 +83,23 @@ round.choose <- function(x, round.val, dir = 1) {
 warning_severity = ''
 nitrate_warning = ''
 
-if ((input$colo == 'Black' ) && length(index) > 0) {
-  if (dd > 150) { warning_severity = 'HIGHLY ' }
-  #else if ((input$flood == "Yes") && (dd <= 15) {nitrate_warning = 'but may be vulnerable to nitrate and pathogens'}
-  
-  paste ("Your tubewell is ", warning_severity, "likely to be arsenic-safe", sep='') #nitrate warning has been removed from here for now
-}
+if (length(index) > 0){
+	flood_warning = ''
+	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
 
-if ((input$colo == 'Red')  && (length(index) > 0)) {
-  if (dd < 90){
-    paste ("Your tubewell is", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", round.choose (as_90, 10,1),"µg/L ")
-  } 
-  else if (dd <=150) {
-		paste (Pol_90)
-  } 
-  else {
-		paste (Pol_deep)
-  }
+	if ((input$colo == 'Black' | input$utensil == "No colour change to slightly blackish")) {
+	  warning_severity = ''
+	  if (dd > 150) { warning_severity = 'HIGHLY' }
+	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
+	} else if ((input$colo == 'Red' | input$utensil == "Red")) {
+	  if (dd < 90){
+		paste ("Your tubewell is", Pol_stat, chem_test, round.choose (lower_quantile, 10,1), "to", round.choose (upper_quantile, 10,1),"µg/L ", flood_warning)
+	  } else if (dd <=150) {
+			paste (Pol_90)
+	  } else {
+			paste ("Your tubewell is HIGHLY likely to be arsenic-safe")
+	  }
+	}
+} else {
+    paste("We are unable to assess your tubewell with the information you supplied, please fill all the sections")
 }
