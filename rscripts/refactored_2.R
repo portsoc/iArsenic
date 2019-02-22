@@ -85,7 +85,7 @@ nitrate_warning = ''
 
 if (length(index) > 0){
 	flood_warning = ''
-	if ((dd <= 15) && (input$flood == 'Yes')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
+	if ((dd <= 15) && (input$flood == 'No')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
 
 	if ((input$colo == 'Black' | input$utensil == "No colour change to slightly blackish")) {
 	  warning_severity = ''
