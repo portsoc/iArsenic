@@ -29,39 +29,38 @@ df <- data.frame(div = c(adm.files$Division),
                  asc = c(adm.files$Arsenic))
 
 #Selecting the wells data for the Upazila which are <90 m deep
-index <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
+wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
 
-# to avoid the problem of no shallow well in some areas
-index_2 <- which(df$dep[index] < 90)
+# to avoid the problem of no shallow well in some areas (what?)
+wells_under_90 <- which(df$dep[wells_in_area] < 90)
 
 #----new for shallow <90 m arsenic range
-df_asc <-(df$asc[index][index_2])
-lower_quantile <- quantile(df_asc, c(0.10), type = 1)
-upper_quantile <- quantile(df_asc, c(0.90), type = 1)
-if (length(index_2) == 0){ df_asc = 0 } 
-as_median <- median(df_asc)
-as_max <- max(df_asc)
+arsenic_under_90 <-(df$asc[wells_in_area][wells_under_90])
+lower_quantile_under_90 <- quantile(arsenic_under_90, c(0.10), type = 1)
+upper_quantile_under_90 <- quantile(arsenic_under_90, c(0.90), type = 1)
+if (length(wells_under_90) == 0) { arsenic_under_90 = 0 }
+as_median_under_90 <- median(arsenic_under_90)
+as_max_under_90 <- max(arsenic_under_90)
 
 #Selecting the wells data for the Upazila which are >90 m deep
-index_150 <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
-index_2_150 <- which(df$dep[index_150] >= 90)
-df_asc_150 <- df$asc[index_150][index_2_150]
-if (length(index_2_150) == 0){ df_asc_150 = 0 } 
-as_mean_150 <- mean(df_asc_150)
+wells_over_90 <- which(df$dep[wells_in_area] >= 90)
+arsenic_over_90 <- df$asc[wells_in_area][wells_over_90]
+if (length(wells_over_90) == 0){ arsenic_over_90 = 0 }
+as_mean_over_90 <- mean(arsenic_over_90)
 
 #the following three pieces of code decide the output message
-Pol_stat<-if (((as_median)>20) && (((as_median)<=50))){"likely to be Polluted"
-} else if (((as_median)>50) && (((as_median)<=200))){"likely to be HIGHLY Polluted"
-} else if ((as_median)>200){"likely to be SEVERELY Polluted"
+Pol_stat<-if (((as_median_under_90)>20) && (((as_median_under_90)<=50))){"likely to be Polluted"
+} else if (((as_median_under_90)>50) && (((as_median_under_90)<=200))){"likely to be HIGHLY Polluted"
+} else if ((as_median_under_90)>200){"likely to be SEVERELY Polluted"
 }else {"likely to be arsenic-safe"}
 
-chem_test <- if ((as_max>=0)&&(as_max<=100)){"and concentration may be around"
+chem_test <- if ((as_max_under_90>=0)&&(as_max_under_90<=100)){"and concentration may be around"
 }else {", a chemical test is needed as concentration can be high, ranging around"
 }
 
-#Pol_90 is declared here 
-if (as_mean_150 >= 50) {Pol_90 <- "Your tubewell is highly likely to be Polluted."
-} else if (as_mean_150 < 50) {Pol_90 <- "Your tubewell may be arsenic-safe."
+#Pol_90 is declared here
+if (as_mean_over_90 >= 50) {Pol_90 <- "Your tubewell is highly likely to be Polluted."
+} else if (as_mean_over_90 < 50) {Pol_90 <- "Your tubewell may be arsenic-safe."
 }
 
 # rounding up to the next 10
@@ -83,7 +82,7 @@ round.choose <- function(x, round.val, dir = 1) {
 warning_severity = ''
 nitrate_warning = ''
 
-if (length(index) > 0){
+if (length(wells_in_area) > 0){
 	flood_warning = ''
 	if ((dd <= 15) && (input$flood == 'No')){ flood_warning = 'but may be vulnerable to nitrate and pathogens' }
 
@@ -92,10 +91,10 @@ if (length(index) > 0){
 	  if (dd > 150) { warning_severity = 'HIGHLY' }
 	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
 	} else if ((input$colo == 'Red' | input$utensil == "Red")) {
-	  if ((dd <= 15) && (input$colo == "Red") && (as_median >= 20)) {
-	    paste ("in", Pol_stat, chem_test, round.choose (lower_quantile, 10,1), "to", round.choose (upper_quantile, 10,1),"µg/L ")
+	  if ((dd <= 15) && (input$colo == "Red") && (as_median_under_90 >= 20)) {
+	    paste ("in", Pol_stat, chem_test, round.choose (lower_quantile_under_90, 10,1), "to", round.choose (upper_quantile_under_90, 10,1),"µg/L ")
 	  } else if (dd < 90){
-		paste ("Your tubewell is", Pol_stat, chem_test, round.choose (lower_quantile, 10,1), "to", round.choose (upper_quantile, 10,1),"µg/L ") #flood_warning removed temporarily to ensure comparable output to the original. 
+		paste ("Your tubewell is", Pol_stat, chem_test, round.choose (lower_quantile_under_90, 10,1), "to", round.choose (upper_quantile_under_90, 10,1),"µg/L ") #flood_warning removed temporarily to ensure comparable output to the original.
 	  } else if (dd <=150) {
 			paste (Pol_90)
 	  } else {
