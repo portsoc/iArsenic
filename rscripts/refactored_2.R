@@ -93,7 +93,7 @@ if (length(index) > 0){
 	  paste ("Your tubewell is", warning_severity, "likely to be arsenic-safe", flood_warning)
 	} else if ((input$colo == 'Red' | input$utensil == "Red")) {
 	  if (dd < 90){
-		paste ("Your tubewell is", Pol_stat, chem_test, round.choose (lower_quantile, 10,1), "to", round.choose (upper_quantile, 10,1),"µg/L ", flood_warning)
+		paste ("Your tubewell is", Pol_stat, chem_test, round.choose (lower_quantile, 10,1), "to", round.choose (upper_quantile, 10,1),"µg/L ") #flood_warning removed temporarily to ensure comparable output to the original. 
 	  } else if (dd <=150) {
 			paste (Pol_90)
 	  } else {
