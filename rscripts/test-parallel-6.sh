@@ -4,7 +4,7 @@ then
   alias echo=gecho
 fi
 
-scriptname=${1:-refactored.R}
+scriptname=${1:-original.R}
 
 echo using script "$scriptname"
 

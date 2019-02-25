@@ -4,7 +4,7 @@ then
   alias echo=gecho
 fi
 
-scriptname=${1:-refactored.R}
+scriptname=${1:-original.R}
 
 echo using script "$scriptname"
 
@@ -50,7 +50,7 @@ function runtests
   done
 }
 
-div="Barisal" dis="Barguna" upa="Amtali" runtests 
+div="Barisal" dis="Barguna" upa="Amtali" runtests
 div="Barisal" dis="Barguna" upa="Bamna" runtests
 div="Barisal" dis="Barguna" upa="Barguna Sadar" runtests
 div="Barisal" dis="Barguna" upa="Betagi" runtests
