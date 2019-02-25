@@ -118,7 +118,7 @@ round.choose <- function(x, round.val, dir = 1) {
 
 if  ( (input$colo == "Red") && (dd<15) && ((as_median) >= 20)&& (length(index)>0)) {
   
-  paste ("in", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", round.choose (as_90, 10,1),"µg/L", 
+  paste ("Your tubewell is", Pol_stat, Max_Pol, round.choose (as_10, 10,1), "to", round.choose (as_90, 10,1),"µg/L", 
          Sep='')
   
 } else if ( (input$colo == "Red") && (dd<15) && ((as_median) <= 20)&& (length(index)>0)) {
