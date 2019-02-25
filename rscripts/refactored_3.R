@@ -64,16 +64,16 @@ if (length(wells_in_area) > 0){
 
   if ((input$colour == 'Black' | input$utensil == 'No colour change to slightly blackish')) {
 
-    warning_severity = if (depth > 150) 'HIGHLY' else ''
+    warning_severity = if (depth > 150) 'HIGHLY ' else ''
 
     flood_warning <-
       if ((depth <= 15) && (input$flood == 'No')) {
-        'but may be vulnerable to nitrate and pathogens'
+        ' but may be vulnerable to nitrate and pathogens'
       } else {
         ''
       }
 
-    paste ('Your tubewell is', warning_severity, 'likely to be arsenic-safe', flood_warning)
+    paste ('Your tubewell is ', warning_severity, 'likely to be arsenic-safe', flood_warning, sep='')
 
   } else if (input$colour == 'Red' | input$utensil == 'Red') {
 
