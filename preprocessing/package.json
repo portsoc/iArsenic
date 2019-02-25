@@ -1,0 +1,11 @@
+{
+  "name": "preprocessing",
+  "version": "0.0.1",
+  "description": "iArsenic: preprocessing CSV data into stats we need for making arsenic assessments",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parse": "^4.3.3"
+  }
+}
