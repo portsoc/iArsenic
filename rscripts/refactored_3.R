@@ -78,7 +78,7 @@ if (length(wells_in_area) > 0){
   } else if (input$colour == 'Red' | input$utensil == 'Red') {
 
     if (depth < 90){
-      pollution_status_under_90 <-
+      pollution_status <-
         if ((as_median_under_90 > 20) && (as_median_under_90 <= 50)) {
           'likely to be Polluted'
         } else if ((as_median_under_90 > 50) && (as_median_under_90 <= 200)) {
@@ -96,7 +96,7 @@ if (length(wells_in_area) > 0){
           ', a chemical test is needed as concentration can be high, ranging around'
         }
 
-      paste ('Your tubewell is', pollution_status_under_90, chem_test_status, round.choose (lower_quantile_under_90, 10,1), 'to', round.choose (upper_quantile_under_90, 10,1),'µg/L ')
+      paste ('Your tubewell is', pollution_status, chem_test_status, round.choose (lower_quantile_under_90, 10,1), 'to', round.choose (upper_quantile_under_90, 10,1),'µg/L ')
 
     } else if (depth <= 150) {
       if (as_mean_over_90 >= 50) {
