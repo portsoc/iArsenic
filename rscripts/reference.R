@@ -1,15 +1,16 @@
 args <- commandArgs(trailingOnly=TRUE)
 
 # the code currently has depth strata borders at 15 50 90 150
-depth <- as.integer(args[1])
+depth <- as.integer(args[5])
 
 input <- data.frame(
-  div = args[3],
-  dis = args[4],
-  upa = args[5],
-  colour = args[2],
-  utensil = args[6],
-  flood = args[7]
+  div = args[1],
+  dis = args[2],
+  upa = args[3],
+  uni = args[4],
+  colour = args[6],
+  utensil = args[7],
+  flood = args[8]
 )
 
 if (is.na(input$utensil)) input$utensil = ' '
@@ -23,12 +24,13 @@ adm.files <- read.csv('data/AdmBnd1b.csv', header = T, stringsAsFactors=F)
 df <- data.frame(div = c(adm.files$Division),
                  dis = c(adm.files$District),
                  upa = c(adm.files$Upazila),
+                 uni = c(adm.files$Union),
                  stringsAsFactors = FALSE,
                  dep = c(adm.files$Depth),
                  asc = c(adm.files$Arsenic))
 
 #Selecting the wells data for the Upazila which are <90 m deep
-wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
+wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa & df$uni == input$uni)
 
 # to avoid the problem of no shallow well in some areas (what?)
 wells_under_90 <- which(df$dep[wells_in_area] < 90)
