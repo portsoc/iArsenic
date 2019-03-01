@@ -7,6 +7,18 @@ function quantile(sorted, p) {
   return sorted[which-1];
 }
 
+function mean(sorted) {
+//sum of all values divided by number of values
+}
+
+function max(sorted) {
+//highest value in a list
+}
+
+function median(sorted) {
+//middle value if odd. half way between two middle terms
+}
+
 module.exports = {
   quantile,
 }
