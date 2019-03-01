@@ -3,22 +3,32 @@
 // and p must be between 0 and 1 inclusive
 function quantile(sorted, p) {
   const n = sorted.length;
-  const which = Math.ceil(n*p) || 1; // p=0 uses the first element
-  return sorted[which-1];
+  const which = Math.ceil(n * p) || 1; // p=0 uses the first element
+  return sorted[which - 1];
 }
 
 function mean(sorted) {
-//sum of all values divided by number of values
+  const average = sorted => sorted.reduce((a, b) => a + b, 0) / sorted.length;
+  return average;
 }
 
 function max(sorted) {
-//highest value in a list
+  let max = Math.max(sorted);
+  return max;
 }
 
 function median(sorted) {
-//middle value if odd. half way between two middle terms
+  let half = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 != 0)
+    return sorted[half];
+  else
+    return (sorted[half - 1] + sorted[half]) / 2.0;
 }
 
 module.exports = {
   quantile,
+  mean,
+  max,
+  median
 }
