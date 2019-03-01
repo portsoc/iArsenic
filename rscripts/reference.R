@@ -1,5 +1,8 @@
 args <- commandArgs(trailingOnly=TRUE)
 
+# todo
+# [ ] if we don't have enough data, go up
+
 # the code currently has depth strata borders at 15 50 90 150
 depth <- as.integer(args[5])
 
@@ -29,11 +32,57 @@ df <- data.frame(div = c(adm.files$Division),
                  dep = c(adm.files$Depth),
                  asc = c(adm.files$Arsenic))
 
+min_data_count = 7
+
 #Selecting the wells data for the Upazila which are <90 m deep
 wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa & df$uni == input$uni)
 
-# to avoid the problem of no shallow well in some areas (what?)
 wells_under_90 <- which(df$dep[wells_in_area] < 90)
+wells_over_90 <- which(df$dep[wells_in_area] >= 90)
+
+if (depth < 90 & length(wells_under_90) < min_data_count) {
+  paste('up ', length(wells_under_90), ' ');
+  wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
+  wells_under_90 <- which(df$dep[wells_in_area] < 90)
+
+  if (length(wells_under_90) < min_data_count) {
+    paste('up ', length(wells_under_90), ' ');
+    wells_in_area <- which(df$div == input$div & df$dis == input$dis)
+    wells_under_90 <- which(df$dep[wells_in_area] < 90)
+
+    if (length(wells_under_90) < min_data_count) {
+      paste('up ', length(wells_under_90), ' ');
+      wells_in_area <- which(df$div == input$div)
+      wells_under_90 <- which(df$dep[wells_in_area] < 90)
+
+      if (length(wells_under_90) < min_data_count) {
+        paste('not enough data')
+      }
+    }
+  }
+}
+
+if (depth >= 90 & length(wells_over_90) < min_data_count) {
+  paste('up ', length(wells_over_90), ' ');
+  wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
+  wells_over_90 <- which(df$dep[wells_in_area] >= 90)
+
+  if (depth >= 90 & length(wells_over_90) < min_data_count) {
+    paste('up ', length(wells_over_90), ' ');
+    wells_in_area <- which(df$div == input$div & df$dis == input$dis)
+    wells_over_90 <- which(df$dep[wells_in_area] >= 90)
+
+    if (depth >= 90 & length(wells_over_90) < min_data_count) {
+      paste('up ', length(wells_over_90), ' ');
+      wells_in_area <- which(df$div == input$div)
+      wells_over_90 <- which(df$dep[wells_in_area] >= 90)
+
+      if (length(wells_over_90) < min_data_count) {
+        paste('not enough data ')
+      }
+    }
+  }
+}
 
 #----new for shallow <90 m arsenic range
 arsenic_under_90 <-(df$asc[wells_in_area][wells_under_90])
@@ -44,9 +93,8 @@ as_median_under_90 <- median(arsenic_under_90)
 as_max_under_90 <- max(arsenic_under_90)
 
 #Selecting the wells data for the Upazila which are >90 m deep
-wells_over_90 <- which(df$dep[wells_in_area] >= 90)
 arsenic_over_90 <- df$asc[wells_in_area][wells_over_90]
-if (length(wells_over_90) == 0){ arsenic_over_90 = 0 }
+if (length(wells_over_90) == 0) { arsenic_over_90 = 0 }
 as_mean_over_90 <- mean(arsenic_over_90)
 
 # rounding up to the next round.val (e.g. to the next 10)
