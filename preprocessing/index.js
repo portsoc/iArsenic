@@ -15,6 +15,8 @@ console.log(records.length);
 console.log(records[100]);
 
 
+
+
 /*
 for every area, on every level, compute the following:
 
@@ -26,6 +28,23 @@ as_mean_over_90  (>=90)
 
 
 have a hash of divisions
+
+for (records.length) {
+  do{
+    for (let i = 0; i<= records.length; i++){
+      if (records(i).depth <= 90) {
+        append records(i).arsenic to wells_under_90;
+      else{
+        append records(i).arsenic to wells_over_90;
+      }
+    }
+  while search division === current division;
+  search divsion = current division
+  }
+}
+
+
+
 
 const divisions = {
   wells_under_90: [],
