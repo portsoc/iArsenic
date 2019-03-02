@@ -41,39 +41,39 @@ wells_under_90 <- which(df$dep[wells_in_area] < 90)
 wells_over_90 <- which(df$dep[wells_in_area] >= 90)
 
 if (depth < 90 & length(wells_under_90) < min_data_count) {
-  paste('up ', length(wells_under_90), ' ');
+  # paste('up ', length(wells_under_90), ' ');
   wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
   wells_under_90 <- which(df$dep[wells_in_area] < 90)
 
   if (length(wells_under_90) < min_data_count) {
-    paste('up ', length(wells_under_90), ' ');
+    # paste('up ', length(wells_under_90), ' ');
     wells_in_area <- which(df$div == input$div & df$dis == input$dis)
     wells_under_90 <- which(df$dep[wells_in_area] < 90)
 
     if (length(wells_under_90) < min_data_count) {
-      paste('up ', length(wells_under_90), ' ');
+      # paste('up ', length(wells_under_90), ' ');
       wells_in_area <- which(df$div == input$div)
       wells_under_90 <- which(df$dep[wells_in_area] < 90)
 
       if (length(wells_under_90) < min_data_count) {
-        paste('not enough data')
+        paste('not enough data ')
       }
     }
   }
 }
 
 if (depth >= 90 & length(wells_over_90) < min_data_count) {
-  paste('up ', length(wells_over_90), ' ');
+  # paste('up ', length(wells_over_90), ' ');
   wells_in_area <- which(df$div == input$div & df$dis == input$dis & df$upa == input$upa)
   wells_over_90 <- which(df$dep[wells_in_area] >= 90)
 
   if (depth >= 90 & length(wells_over_90) < min_data_count) {
-    paste('up ', length(wells_over_90), ' ');
+    # paste('up ', length(wells_over_90), ' ');
     wells_in_area <- which(df$div == input$div & df$dis == input$dis)
     wells_over_90 <- which(df$dep[wells_in_area] >= 90)
 
     if (depth >= 90 & length(wells_over_90) < min_data_count) {
-      paste('up ', length(wells_over_90), ' ');
+      # paste('up ', length(wells_over_90), ' ');
       wells_in_area <- which(df$div == input$div)
       wells_over_90 <- which(df$dep[wells_in_area] >= 90)
 
