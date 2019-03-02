@@ -16,7 +16,7 @@ function runtests
     for colour in Red Black
     do
       echo -n \"$div\" \"$dis\" \"$upa\" \"$uni\" $depth $colour '-' '-' ' '
-      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour - -  2>/dev/null # hide warnings
+      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour - -  2>/dev/null || exit -1 # hide warnings
       echo
     done
     for utensil in "Red" "No colour change to slightly blackish"
@@ -24,7 +24,7 @@ function runtests
       colour="none"
       utensilshort=${utensil:0:2}
       echo -n \"$div\" \"$dis\" \"$upa\" \"$uni\" $depth $colour \"$utensilshort\" '-' ' '
-      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour "$utensil" - 2>/dev/null # hide warnings
+      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour "$utensil" - 2>/dev/null || exit -1 # hide warnings
       echo
     done
   done
@@ -35,7 +35,7 @@ function runtests
     for colour in Red Black
     do
       echo -n \"$div\" \"$dis\" \"$upa\" \"$uni\" $depth $colour '-' \"$flooding\" ' '
-      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour - "$flooding" 2>/dev/null # hide warnings
+      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour - "$flooding" 2>/dev/null || exit -1 # hide warnings
       echo
     done
     for utensil in "Red" "No colour change to slightly blackish"
@@ -43,7 +43,7 @@ function runtests
       colour="none"
       utensilshort=${utensil:0:2}
       echo -n \"$div\" \"$dis\" \"$upa\" \"$uni\" $depth $colour \"$utensilshort\" \"$flooding\"  ' '
-      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour "$utensil" "$flooding" 2>/dev/null # hide warnings
+      Rscript "$scriptname" "$div" "$dis" "$upa" "$uni" $depth $colour "$utensil" "$flooding" 2>/dev/null || exit -1 # hide warnings
       echo
     done
   done
