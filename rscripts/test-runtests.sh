@@ -10,6 +10,11 @@ echo using script "$scriptname"
 
 function runtests
 {
+  if [ -n "$outputfile" ]
+  then
+    exec >> "$outputfile"
+  fi
+
   for depth in 20 60 100 200  # dropped 10 because we don't do flood
                               # and we don't have utensil yet
   do
