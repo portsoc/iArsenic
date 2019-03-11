@@ -8,13 +8,12 @@ function quantile(sorted, p) {
 }
 
 function mean(sorted) {
-  const average = sorted => sorted.reduce((a, b) => a + b, 0) / sorted.length;
+  const average = sorted.reduce((a, b) => a + b, 0) / sorted.length;
   return average;
 }
 
 function max(sorted) {
-  let max = Math.max(sorted);
-  return max;
+  return sorted[sorted.length - 1];
 }
 
 function median(sorted) {
@@ -23,7 +22,7 @@ function median(sorted) {
   if (sorted.length % 2 !== 0) {
     return sorted[half];
   } else {
-    return (sorted[half - 1] + sorted[half]) / 2.0;
+    return (sorted[half - 1] + sorted[half]) / 2;
   }
 }
 
@@ -31,5 +30,5 @@ module.exports = {
   quantile,
   mean,
   max,
-  median
+  median,
 };
