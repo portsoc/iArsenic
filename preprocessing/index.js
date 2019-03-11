@@ -2,142 +2,174 @@ const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
 
-const data = fs.readFileSync(path.join(__dirname,'..','rscripts', 'data', 'AdmBnd1b.csv'));
+const MIN_DATA_COUNT = 7;
 
-const records = parse(data, {
-  columns: true,
-  skip_empty_lines: true,
-});
+function readRecords() {
+  const filePath = path.join(__dirname, '..', 'rscripts', 'data', 'AdmBnd1b.csv');
+  const data = fs.readFileSync(filePath);
 
+  const records = parse(data, {
+    columns: true,
+    skip_empty_lines: true,
+  });
 
+  return records;
+}
 
-console.log(records.length);
-console.log(records[100]);
+function preprocessRecords(records) {
+  const divisions = extractLocations(records);
 
+  fillArsenicData(divisions, records);
 
-
-
-/*
-for every area, on every level, compute the following:
-
-as_median_under_90   (<90)
-as_max_under_90
-lower_quantile_under_90
-upper_quantile_under_90
-as_mean_over_90  (>=90)
-
-
-have a hash of divisions
-
-for (records.length) {
-  do{
-    for (let i = 0; i<= records.length; i++){
-      if (records(i).depth <= 90) {
-        append records(i).arsenic to wells_under_90;
-      else{
-        append records(i).arsenic to wells_over_90;
+  for (const div of Object.values(divisions)) {
+    computeWellStats(div);
+    for (const dis of Object.values(div.districts)) {
+      computeWellStats(dis);
+      for (const upa of Object.values(dis.upazilas)) {
+        computeWellStats(upa);
+        for (const uni of Object.values(upa.unions)) {
+          computeWellStats(uni);
+        }
       }
     }
-  while search division === current division;
-  search divsion = current division
   }
 }
 
+// prepare the location-based data hierarchy if the location is new
+function extractLocations(records) {
+  const divisions = {};
 
+  for (const r of records) {
+    if (!r.Division || !r.District || !r.Upazila || !r.Union) {
+      // skip because we don't have location
+      continue;
+    }
 
-
-const divisions = {
-  wells_under_90: [],
-  wells_over_90: [],
-
-  as_median_under_90,
-  as_max_under_90,
-  lower_quantile_under_90,
-  upper_quantile_under_90,
-  as_mean_over_90,
-
-  districts: {
-    wells_under_90: [],
-    wells_over_90: [],
-
-    as_median_under_90,
-    as_max_under_90,
-    lower_quantile_under_90,
-    upper_quantile_under_90,
-    as_mean_over_90,
-
-    upazilas: {
-      wells_under_90: [],
-      wells_over_90: [],
-
-      as_median_under_90,
-      as_max_under_90,
-      lower_quantile_under_90,
-      upper_quantile_under_90,
-      as_mean_over_90,
-
-      unions: {
+    if (!(r.Division in divisions)) {
+      divisions[r.Division] = {
         wells_under_90: [],
         wells_over_90: [],
+        districts: {},
+        name: r.Division,
+      };
+    }
+    const division = divisions[r.Division];
 
-        as_median_under_90,
-        as_max_under_90,
-        lower_quantile_under_90,
-        upper_quantile_under_90,
-        as_mean_over_90,
-      }
+    if (!(r.District in division.districts)) {
+      division.districts[r.District] = {
+        wells_under_90: [],
+        wells_over_90: [],
+        upazilas: {},
+        name: r.District,
+        parent: division,
+      };
+    }
+    const district = division.districts[r.District];
+
+    if (!(r.Upazila in district.upazilas)) {
+      district.upazilas[r.Upazila] = {
+        wells_under_90: [],
+        wells_over_90: [],
+        unions: {},
+        name: r.Upazila,
+        parent: district,
+      };
+    }
+    const upazila = district.upazilas[r.Upazila];
+
+    if (!(r.Union in upazila.unions)) {
+      upazila.unions[r.Union] = {
+        wells_under_90: [],
+        wells_over_90: [],
+        name: r.Union,
+        parent: upazila,
+      };
+    }
+  }
+
+  return divisions;
+}
+
+// put each well's arsenic level data into the location hierarchy
+function fillArsenicData(divisions, records) {
+  for (const r of records) {
+    if (!r.Division || !r.District || !r.Upazila || !r.Union ||
+        !r.Depth || isNaN(r.Depth) || r.Arsenic === '' || isNaN(r.Arsenic)) {
+      // skip because we don't have location or depth or arsenic level
+      continue;
+    }
+
+    const division = divisions[r.Division];
+    const district = division.districts[r.District];
+    const upazila = district.upazilas[r.Upazila];
+    const union = upazila.unions[r.Union];
+
+    if (Number(r.Depth) <= 90) {
+      division.wells_under_90.push(Number(r.Arsenic));
+      district.wells_under_90.push(Number(r.Arsenic));
+      upazila.wells_under_90.push(Number(r.Arsenic));
+      union.wells_under_90.push(Number(r.Arsenic));
+    } else {
+      division.wells_over_90.push(Number(r.Arsenic));
+      district.wells_over_90.push(Number(r.Arsenic));
+      upazila.wells_over_90.push(Number(r.Arsenic));
+      union.wells_over_90.push(Number(r.Arsenic));
     }
   }
 }
 
-const divisions = {}
+function computeWellStats(location) {
+  // sort the arsenic concentration data arrays
+  location.wells_under_90.sort(numericalCompare);
+  location.wells_over_90.sort(numericalCompare);
 
-for each record
-  if it's missing any data, skip it
-  if we don't know the division (!(record.Division in divisions)), add a new object for it
-    divisons[record.Division] = {
-      wells_under_90: [],
-      wells_over_90: [],
-      districts: {},
+  // if we don't have enough data under 90
+  //   take the computations from the parent or complain
+  if (location.wells_under_90.length < MIN_DATA_COUNT) {
+    if (!location.parent) {
+      console.debug(`Division ${location.name} does not have enough wells under 90`);
+    } else {
+      location.as_median_under_90 = location.parent.as_median_under_90;
+      location.as_max_under_90 = location.parent.as_max_under_90;
+      location.lower_quantile_under_90 = location.parent.lower_quantile_under_90;
+      location.upper_quantile_under_90 = location.parent.upper_quantile_under_90;
     }
-  in the division, add the well in wells_under_90[] or wells_over_90[]
-  if we don't know the district, add a new object for it
-  in the district, add the well in wells_under_90[] or wells_over_90[]
-  if we don't know the upazila, add a new object for it
-  in the upazila, add the well in wells_under_90[] or wells_over_90[]
-  if we don't know the union, add a new object for it
-  in the union, add the well in wells_under_90[] or wells_over_90[]
+  } else {
+    // we do have enough data under 90
+    // todo    compute as_median_under_90   (<90)
+    // todo    compute as_max_under_90
+    // todo    compute lower_quantile_under_90
+    // todo    compute upper_quantile_under_90
+  }
 
-for each division
-  sort the arrays
-  if we don't have enough data under 90
-    complain
-  else
-    compute as_median_under_90   (<90)
-    compute as_max_under_90
-    compute lower_quantile_under_90
-    compute upper_quantile_under_90
-  if we don't have enough data over 90
-    complain
-  else
-    compute as_mean_over_90  (>=90)
+  // if we don't have enough data over 90
+  //   take the computations from the parent or complain
+  if (location.wells_over_90.length < MIN_DATA_COUNT) {
+    if (!location.parent) {
+      console.debug(`Division ${location.name} does not have enough wells under 90`);
+    } else {
+      location.as_mean_over_90 = location.parent.as_mean_over_90;
+    }
+  } else {
+    // we do have enough data over 90
+    // todo    compute as_mean_over_90  (>=90)
+  }
+}
 
-for each district
-  sort the arrays
-  if we don't have enough data under 90
-    take the computations from the division or complain
-  else
-    compute as_median_under_90   (<90)
-    compute as_max_under_90
-    compute lower_quantile_under_90
-    compute upper_quantile_under_90
-  if we don't have enough data over 90
-    take the computations from the division or complain
-  else
-    compute as_mean_over_90  (>=90)
+function numericalCompare(a, b) {
+  return a - b;
+}
 
-similar for upazila, union
+function main() {
+  const records = readRecords();
+  console.log(`Parsed ${records.length} records.`);
 
+  preprocessRecords(records);
+}
+
+main();
+
+/*
 create a function that given all the parameters spits out an estimate
 
 replicate test.sh in javascript
