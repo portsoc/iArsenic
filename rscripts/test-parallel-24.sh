@@ -5071,7 +5071,7 @@ div="Sylhet" dis="Sunamganj" upa="Derai" uni="Rafinagar" runtests
 div="Sylhet" dis="Sunamganj" upa="Derai" uni="Rajanagar" runtests
 div="Sylhet" dis="Sunamganj" upa="Derai" uni="Taral" runtests
 div="Sylhet" dis="Sunamganj" upa="Dharampasha" uni="Chamardani" runtests
-div="Sylhet" dis="Sunamganj" upa="Dharampasha" uni="Dakshin  Sukhairrajapur" runtests
+div="Sylhet" dis="Sunamganj" upa="Dharampasha" uni="Dakshin Sukhairrajapur" runtests
 div="Sylhet" dis="Sunamganj" upa="Dharampasha" uni="Dakshin Bongshikunda" runtests
 div="Sylhet" dis="Sunamganj" upa="Dharampasha" uni="Dharmapasha" runtests
 div="Sylhet" dis="Sunamganj" upa="Dharampasha" uni="Joysree" runtests
