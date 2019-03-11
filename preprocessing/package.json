@@ -13,6 +13,6 @@
     "semistandard": "^13.0.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest tests/"
   }
 }

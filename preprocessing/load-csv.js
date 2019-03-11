@@ -2,9 +2,11 @@ const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
 
+const stats = require('./stats');
+
 const MIN_DATA_COUNT = 7;
 
-function readRecords() {
+function readTheCSVFile() {
   const filePath = path.join(__dirname, '..', 'rscripts', 'data', 'AdmBnd1b.csv');
   const data = fs.readFileSync(filePath);
 
@@ -14,25 +16,6 @@ function readRecords() {
   });
 
   return records;
-}
-
-function preprocessRecords(records) {
-  const divisions = extractLocations(records);
-
-  fillArsenicData(divisions, records);
-
-  for (const div of Object.values(divisions)) {
-    computeWellStats(div);
-    for (const dis of Object.values(div.districts)) {
-      computeWellStats(dis);
-      for (const upa of Object.values(dis.upazilas)) {
-        computeWellStats(upa);
-        for (const uni of Object.values(upa.unions)) {
-          computeWellStats(uni);
-        }
-      }
-    }
-  }
 }
 
 // prepare the location-based data hierarchy if the location is new
@@ -90,6 +73,27 @@ function extractLocations(records) {
   return divisions;
 }
 
+function preprocessRecords(records) {
+  const divisions = extractLocations(records);
+
+  fillArsenicData(divisions, records);
+
+  for (const div of Object.values(divisions)) {
+    computeWellStats(div);
+    for (const dis of Object.values(div.districts)) {
+      computeWellStats(dis);
+      for (const upa of Object.values(dis.upazilas)) {
+        computeWellStats(upa);
+        for (const uni of Object.values(upa.unions)) {
+          computeWellStats(uni);
+        }
+      }
+    }
+  }
+
+  return divisions;
+}
+
 // put each well's arsenic level data into the location hierarchy
 function fillArsenicData(divisions, records) {
   for (const r of records) {
@@ -104,7 +108,7 @@ function fillArsenicData(divisions, records) {
     const upazila = district.upazilas[r.Upazila];
     const union = upazila.unions[r.Union];
 
-    if (Number(r.Depth) <= 90) {
+    if (Number(r.Depth) < 90) {
       division.wells_under_90.push(Number(r.Arsenic));
       district.wells_under_90.push(Number(r.Arsenic));
       upazila.wells_under_90.push(Number(r.Arsenic));
@@ -136,10 +140,10 @@ function computeWellStats(location) {
     }
   } else {
     // we do have enough data under 90
-    // todo    compute as_median_under_90   (<90)
-    // todo    compute as_max_under_90
-    // todo    compute lower_quantile_under_90
-    // todo    compute upper_quantile_under_90
+    location.as_median_under_90 = stats.median(location.wells_under_90);
+    location.as_max_under_90 = stats.max(location.wells_under_90);
+    location.lower_quantile_under_90 = stats.quantile(location.wells_under_90, 0.1);
+    location.upper_quantile_under_90 = stats.quantile(location.wells_under_90, 0.9);
   }
 
   // if we don't have enough data over 90
@@ -152,7 +156,7 @@ function computeWellStats(location) {
     }
   } else {
     // we do have enough data over 90
-    // todo    compute as_mean_over_90  (>=90)
+    location.as_mean_over_90 = stats.mean(location.wells_over_90);
   }
 }
 
@@ -160,17 +164,12 @@ function numericalCompare(a, b) {
   return a - b;
 }
 
-function main() {
-  const records = readRecords();
+function load() {
+  const records = readTheCSVFile();
   console.log(`Parsed ${records.length} records.`);
 
-  preprocessRecords(records);
+  const divisions = preprocessRecords(records);
+  return divisions;
 }
 
-main();
-
-/*
-create a function that given all the parameters spits out an estimate
-
-replicate test.sh in javascript
-*/
+module.exports = load;
