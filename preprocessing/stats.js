@@ -20,10 +20,11 @@ function max(sorted) {
 function median(sorted) {
   let half = Math.floor(sorted.length / 2);
 
-  if (sorted.length % 2 != 0)
+  if (sorted.length % 2 !== 0) {
     return sorted[half];
-  else
+  } else {
     return (sorted[half - 1] + sorted[half]) / 2.0;
+  }
 }
 
 module.exports = {
@@ -31,4 +32,4 @@ module.exports = {
   mean,
   max,
   median
-}
+};
