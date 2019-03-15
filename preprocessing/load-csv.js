@@ -166,7 +166,7 @@ function numericalCompare(a, b) {
 
 function load() {
   const records = readTheCSVFile();
-  console.log(`Parsed ${records.length} records.`);
+  console.debug(`Parsed ${records.length} records.`);
 
   const divisions = preprocessRecords(records);
   return divisions;
