@@ -1,17 +1,17 @@
-function populateDropdown(elemStr, arr) {
-  const dropdown = document.getElementById(elemStr);
-  for (let i = 0; i < testList.length; i += 1) {
-    const opt = document.createElement("option");
-    opt.value = arr[i];
-    opt.text = arr[i];
-    dropdown.add(opt, null);
-  }
-}
-
-
-const testList = ['a', 'b', 'c', 'd', 'e', 'f']
-const elem = 'district_dd';
-populateDropdown(elem, testList);
+// function populateDropdown(elemStr, arr) {
+//   const dropdown = document.getElementById(elemStr);
+//   for (let i = 0; i < testList.length; i += 1) {
+//     const opt = document.createElement("option");
+//     opt.value = arr[i];
+//     opt.text = arr[i];
+//     dropdown.add(opt, null);
+//   }
+// }
+//
+//
+// const testList = ['a', 'b', 'c', 'd', 'e', 'f']
+// const elem = 'district_dd';
+// populateDropdown(elem, testList);
 
 
 function pollution_status_u_90() {
@@ -38,9 +38,9 @@ function updateRangeLabel(elemID, val) {
   document.getElementById(elemID).value = val + ' ft';
 }
 
-function displayUtensil(){
-  utensilList = document.querySelector('#utensil');
-  for (let elem : utensilList){
-    elem.className = 'utensil_visible';
+function displayUtensil(class){
+  utensilList = document.querySelectorAll(class);
+  for (let i = 0; i < utensilList.length; i += 1){
+    utensilList[i].className = 'utensil_visible';
   }
 }
