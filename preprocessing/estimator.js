@@ -1,6 +1,8 @@
 function round(x, magnitude, dir = 1) {
-  if (dir === 1) {
-    // ROUND UP - todo should it round 30 (magnitude 10) to 40?
+  if (x % magnitude === 0) {
+    return x;
+  } else if (dir === 1) {
+    // ROUND UP
     return x + (magnitude - x % magnitude);
   } else {
     // ROUND DOWN
