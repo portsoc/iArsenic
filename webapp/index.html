@@ -20,7 +20,8 @@
 
     <label for="division">Division:</label>
     <select id="division_dd">
-
+      <option value="">bweh</option>
+      <option value="">foo</option>
     </select>
 
     <label for="district">District:</label>
@@ -38,6 +39,7 @@
     </select>
 
     <h2>Is there staining on the platform?</h2>
+
     <input type="radio" id="red" name="staining" value="">
     <label for="red">Red</label>
     <input type="radio" id="black" name="staining" value="">
@@ -46,6 +48,7 @@
     <label for="mixed">Mixed or Unsure</label>
 
     <a href="#">Don't understand the question? Click here.</a>
+
 
     <h2>Please tell us the depth of your well:</h2>
     <input type="range" list="range_labels" name="depth" value="600" min="0" max="1200" step="5" oninput="updateRangeLabel('depth_output', this.value)">
@@ -63,6 +66,9 @@
     <label for="yes">Yes</label>
     <input type="radio" id="no" name="drink" value="">
     <label for="no">No</label>
+
+    <h2>Click below to see your assessment</h2>
+    <button type="button" name="submit">Submit</button>
   </section>
 
   <section class="assessments">
