@@ -99,7 +99,9 @@ as_mean_over_90 <- mean(arsenic_over_90)
 
 # rounding up to the next round.val (e.g. to the next 10)
 round.choose <- function(x, round.val, dir = 1) {
-  if(dir == 1) {  ##ROUND UP
+  if(x %% round.val == 0) {
+    x
+  } else if(dir == 1) {  ##ROUND UP
     x + (round.val - x %% round.val)
   } else {
     if(dir == 0) {  ##ROUND DOWN
