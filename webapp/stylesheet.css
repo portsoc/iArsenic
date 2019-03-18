@@ -3,6 +3,22 @@
   width: 75%;
 }
 
+#depth_output {
+  display: block;
+  width: 35vw;
+}
+
+.utensil_hidden {
+  display: none;
+}
+
+.utensil_visible {
+  display: block;
+}
+
+/* #mixed:checked~.utensil {
+  visibility: visible;
+} */
 /* ------------------------- Textual ------------------------ */
 h1 {}
 
@@ -12,4 +28,8 @@ h2 {
 
 h3 {
   font-size: 75%;
+}
+
+.stain_link {
+  font-size: 65%;
 }

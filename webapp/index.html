@@ -40,14 +40,38 @@
 
     <h2>Is there staining on the platform?</h2>
 
-    <input type="radio" id="red" name="staining" value="">
-    <label for="red">Red</label>
-    <input type="radio" id="black" name="staining" value="">
-    <label for="black">Black</label>
-    <input type="radio" id="mixed" name="staining" value="">
-    <label for="mixed">Mixed or Unsure</label>
+    <div>
+      <input type="radio" id="red" name="staining" value="">
+      <label for="red">Red</label>
+    </div>
+    <div>
+      <input type="radio" id="black" name="staining" value="">
+      <label for="black">Black</label>
+    </div>
+    <div>
+      <input type="radio" id="mixed" name="staining" value="" onchange="displayUtensil()">
+      <label for="mixed">Mixed or Unsure</label>
+    </div>
 
-    <a href="#">Don't understand the question? Click here.</a>
+    <a class="stain_link " href="#">Don't understand the question? Click here.</a>
+
+
+
+    <div id="utensil" class="utensil_hidden">
+      <h2>Is there staining on your utensil?</h2>
+      <section>
+        <input type="radio" id="red_u" name="staining_u" value="">
+        <label for="red_u">Red</label>
+      </section>
+      <section>
+        <input type="radio" id="black_u" name="staining_u" value="">
+        <label for="black_u">Black</label>
+      </section>
+      <section>
+        <input type="radio" id="mixed_u" name="staining_u" value="">
+        <label for="mixed_u">Mixed or Unsure</label>
+      </section>
+    </div>
 
 
     <h2>Please tell us the depth of your well:</h2>
@@ -58,8 +82,6 @@
       <option value="600" label="600">
       <option value="1200" label="1200">
     </datalist>
-
-
 
     <h2>Is anyone drinking from this well?</h2>
     <input type="radio" id="yes" name="drink" value="">
@@ -85,6 +107,5 @@
   </section>
 
 </body>
-
 
 </html>

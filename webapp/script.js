@@ -37,3 +37,10 @@ function chem_test() {
 function updateRangeLabel(elemID, val) {
   document.getElementById(elemID).value = val + ' ft';
 }
+
+function displayUtensil(){
+  utensilList = document.querySelector('#utensil');
+  for (let elem : utensilList){
+    elem.className = 'utensil_visible';
+  }
+}
