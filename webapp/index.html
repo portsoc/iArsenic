@@ -3,89 +3,61 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>iArsenic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="script.js"></script>
 </head>
 
 <body>
-  <h1>iArsenic</h1>
-  <h3>Instant Arsenic screening of hand pump tubewells in Bangladesh, V1.02</h3>
+  <header>
+    <h1>iArsenic</h1>
+  </header>
 
-  <section class="inputData">
-    <article class="location">
-      <label for="divison">Division</label>
+  <section class="inputs">
+    <h2>Please tell us your location:</h2>
 
-      <select class="division">
-        <option value="barisal">Barisal</option>
-        <option value="chittagong">Chittagong</option>
-        <option value="dhaka">Dhaka</option>
-        <option value="khulna">Khulna</option>
-        <option value="mymensingh">Mymensingh</option>
-        <option value="rajshahi">Rajshahi</option>
-        <option value="rangpur">Rangpur</option>
-        <option value="sylhet">Sylhet</option>
-      </select>
+    <label for="division">Division:</label>
+    <select id="division_dd">
 
-      <label for="district">District</label>
+    </select>
 
-      <select id="district_dd" class="district">
+    <label for="district">District:</label>
+    <select id="district_dd">
 
-      </select>
+    </select>
 
-      <label for="upazila">Upazila</label>
+    <label for="upazila">Upazila:</label>
+    <select id="upazila_dd">
 
-      <select class="upazila">
-        <option value=""></option>
-      </select>
+    </select>
+    <label for="union">Union:</label>
+    <select id="union_dd">
 
-      <label for="union">Union</label>
+    </select>
 
-      <select class="union">
-        <option value=""></option>
-      </select>
-
-
-    </article>
-    <article class="depth">
-      <label for="depth_slider">Depth of Well</label>
-      <input id="depth_slider" type="range" name="depth_slider" min="0" max="1200" value="500">
-    </article>
-
-    <article class="colour">
-      <label for="staining">What colour is the platform?</label>
-
-      <input type="radio" id="red" name="staining" value="yes" />
+    <h2>Is there staining on the platform?</h2>
+      <input type="radio" name="red" value="">
       <label for="red">Red</label>
-      <input type="radio" id="black" name="staining" value="no" />
+      <input type="radio" name="black" value="">
       <label for="black">Black</label>
-      <input type="radio" id="unsure" name="staining" value="unsure" />
-      <label for="unsure">Mixed/Unsure/No platform</label>
+      <input type="radio" name="mixed" value="">
+      <label for="mixed">Mixed or Unsure</label>
 
-      <img src="well_stain.png" alt="" height=200em width=250em>
-    </article>
+    <h2>Please tell us the depth of your well:</h2>
+    <input type="range" name="depth" value="600" min="0" max="1200" step="5">
 
-    <article class="drinking">
-      <label for="drinking">Does anybody drink water from this tubewell?</label>
-
-      <input type="radio" id="drinkingYes" name="drinking" value="yes" />
-      <label for="drinkingYes">Yes</label>
-      <input type="radio" id="drinkingNo" name="drinking" value="no" />
-      <label for="drinkingNo">No</label>
-
-    </article>
-    <article class="results">
-      <input type="text" name="results" value="Results">
-    </article>
+    <h2>Is anyone drinking from this well?</h2>
+      <input type="radio" name="yes" value="">
+      <label for="yes">Yes</label>
+      <input type="radio" name="no" value="">
+      <label for="no">No</label>
   </section>
-  <footer>
-    <p class="disclaimer">PLEASE NOTE: The application is still [Jan 2019] under development. If you would like to use it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a chemical test of
-      your well water to be sure.</p>
-    <p class="disclaimer">It is estimated that ~60% of 10 million hand pumped tubewells in rural Bangladesh remained untested for arsenic. This accounts for widespread exposure to this insidious toxin and resulting in multi-systemic effects
-      including cancer. Unfortunately, there is no specific treatment but drinking arsenic-safe water. Using this web application a tubewell can easily be assessed for arsenic. All you need to provide your Upazila name (which you can find in the
-      drop-down list), select a depth of tubewell and colour of the tubewell-platform (see 'Platform Staining Guide' section for examples). Please also tell us whether the tubewell water is used for drinking; then press 'Assess' button and then see
-      the outcome below.</p>
-  </footer>
+
+  <section class="assessments">
+    <h2>Below is your assessment</h2>
+  </section>
+
 </body>
-<script type="text/javascript" src="script.js"></script>
+
 
 </html>
