@@ -38,8 +38,8 @@ function updateRangeLabel(elemID, val) {
   document.getElementById(elemID).value = val + ' ft';
 }
 
-function displayUtensil(class){
-  utensilList = document.querySelectorAll(class);
+function displayUtensil(){
+  utensilList = document.querySelectorAll('.utensil_hidden');
   for (let i = 0; i < utensilList.length; i += 1){
     utensilList[i].className = 'utensil_visible';
   }
