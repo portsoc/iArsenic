@@ -6,11 +6,13 @@
   <title>iArsenic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script type="text/javascript" src="script.js"></script>
+  <link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body>
   <header>
     <h1>iArsenic</h1>
+    <h3>Instant Arsenic screening of hand pump tubewells in Bangladesh, Version 2019-03-18</h3>
   </header>
 
   <section class="inputs">
@@ -36,25 +38,44 @@
     </select>
 
     <h2>Is there staining on the platform?</h2>
-      <input type="radio" name="red" value="">
-      <label for="red">Red</label>
-      <input type="radio" name="black" value="">
-      <label for="black">Black</label>
-      <input type="radio" name="mixed" value="">
-      <label for="mixed">Mixed or Unsure</label>
+    <input type="radio" id="red" name="staining" value="">
+    <label for="red">Red</label>
+    <input type="radio" id="black" name="staining" value="">
+    <label for="black">Black</label>
+    <input type="radio" id="mixed" name="staining" value="">
+    <label for="mixed">Mixed or Unsure</label>
+
+    <a href="#">Don't understand the question? Click here.</a>
 
     <h2>Please tell us the depth of your well:</h2>
-    <input type="range" name="depth" value="600" min="0" max="1200" step="5">
+    <input type="range" list="range_labels" name="depth" value="600" min="0" max="1200" step="5" oninput="updateRangeLabel('depth_output', this.value)">
+    <input type="text" id="depth_output" value="600 ft">
+    <datalist id="range_labels">
+      <option value="0" label="0">
+      <option value="600" label="600">
+      <option value="1200" label="1200">
+    </datalist>
+
+
 
     <h2>Is anyone drinking from this well?</h2>
-      <input type="radio" name="yes" value="">
-      <label for="yes">Yes</label>
-      <input type="radio" name="no" value="">
-      <label for="no">No</label>
+    <input type="radio" id="yes" name="drink" value="">
+    <label for="yes">Yes</label>
+    <input type="radio" id="no" name="drink" value="">
+    <label for="no">No</label>
   </section>
 
   <section class="assessments">
     <h2>Below is your assessment</h2>
+
+    <textarea name="assessment" rows="8" cols="30"></textarea>
+
+    <h3>Disclaimer:</h3>
+    <p>PLEASE NOTE: The application is still [Jan 2019] under development. If you would like to use it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a chemical test of your well water to be
+      sure. ____________It is estimated that ~60% of 10 million hand pumped tubewells in rural Bangladesh remained untested for arsenic. This accounts for widespread exposure to this insidious toxin and resulting in multi-systemic effects including
+      cancer. Unfortunately, there is no specific treatment but drinking arsenic-safe water. Using this web application a tubewell can easily be assessed for arsenic. All you need to provide your Upazila name (which you can find in the drop-down
+      list), colour of the tubewell-platform (see 'Platform Staining Guide' tab for examples), and select a depth of tubewell. Please also tell us whether the tubewell water is used for drinking; then press 'Assess' button and then see the outcome
+      in 'Our Assessment' tab.</p>
   </section>
 
 </body>

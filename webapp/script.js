@@ -33,3 +33,7 @@ function chem_test() {
     return ", a chemical test is needed as concentration can be high, ranging around"
   }
 }
+
+function updateRangeLabel(elemID, val) {
+  document.getElementById(elemID).value = val + ' ft';
+}
