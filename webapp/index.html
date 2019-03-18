@@ -41,22 +41,22 @@
     <h2>Is there staining on the platform?</h2>
 
     <div>
-      <input type="radio" id="red" name="staining" value="">
+      <input type="radio" id="red" name="staining" value="" onchange="displayUtensil('utensil_hidden')">
       <label for="red">Red</label>
     </div>
     <div>
-      <input type="radio" id="black" name="staining" value="">
+      <input type="radio" id="black" name="staining" value="" onchange="displayUtensil('utensil_hidden')">
       <label for="black">Black</label>
     </div>
     <div>
-      <input type="radio" id="mixed" name="staining" value="" onchange="displayUtensil()">
+      <input type="radio" id="mixed" name="staining" value="" onchange="displayUtensil('utensil_visible')">
       <label for="mixed">Mixed or Unsure</label>
     </div>
 
     <a class="stain_link " href="#">Don't understand the question? Click here.</a>
 
 
-    <h2 class="utensil_hidden">Is there staining on your utensil?</h2>
+    <h2 id="utensil_header" class="utensil_hidden">Is there staining on your utensil?</h2>
     <section class="utensil_hidden">
       <input type="radio" id="red_u" name="staining_u" value="">
       <label for="red_u">Red</label>

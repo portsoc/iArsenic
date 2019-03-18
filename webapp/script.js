@@ -38,9 +38,11 @@ function updateRangeLabel(elemID, val) {
   document.getElementById(elemID).value = val + ' ft';
 }
 
-function displayUtensil(){
-  utensilList = document.querySelectorAll('.utensil_hidden');
+function displayUtensil(newClass){
+  if (newClass === document.getElementById('utensil_header').className){ return 0; }
+  currentClass = (newClass === 'utensil_hidden') ? 'utensil_visible' : 'utensil_hidden';
+  utensilList = document.querySelectorAll('.' + currentClass);
   for (let i = 0; i < utensilList.length; i += 1){
-    utensilList[i].className = 'utensil_visible';
+    utensilList[i].className = newClass;
   }
 }
