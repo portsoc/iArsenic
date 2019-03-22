@@ -1,14 +1,62 @@
-// function populateDropdown(elemStr, arr) {
-//   const dropdown = document.getElementById(elemStr);
-//   for (let i = 0; i < testList.length; i += 1) {
-//     const opt = document.createElement("option");
-//     opt.value = arr[i];
-//     opt.text = arr[i];
-//     dropdown.add(opt, null);
-//   }
-// }
-//
-//
+const div_dd = document.querySelector("#division_dd");
+const dis_dd = document.querySelector("#district_dd");
+const upa_dd = document.querySelector("#upazila_dd");
+const uni_dd = document.querySelector("#union_dd");
+
+window.addEventListener("load", init);
+
+function init(){
+  populateDropdown(div_dd, "division", "districts", dropdownData); //complete data
+
+  div_dd.dataset.nameProp = "division";
+  div_dd.dataset.subProp = "districts";
+  div_dd.nextDropdown = dis_dd;
+  dis_dd.dataset.nameProp = "district";
+  dis_dd.dataset.subProp = "upazilas";
+  dis_dd.nextDropdown = upa_dd;
+  upa_dd.dataset.nameProp = "upazila";
+  upa_dd.dataset.subProp = "unions";
+  upa_dd.nextDropdown = uni_dd;
+
+  div_dd.addEventListener("change", handleDropDownSelection);
+  dis_dd.addEventListener("change", handleDropDownSelection);
+  upa_dd.addEventListener("change", handleDropDownSelection);
+}
+
+function handleDropDownSelection(event) {
+  const dd = event.target;
+  const opt = dd.selectedOptions[0];
+  const nextDropdown = dd.nextDropdown;
+  populateDropdown(nextDropdown, nextDropdown.dataset.nameProp, nextDropdown.dataset.subProp, opt.subdivisionData);
+}
+
+//if district is choosen first, do not shorten list
+
+function populateDropdown(dropdown, nameProp, subdivProp, dropdownData) {
+  dropdown.innerHTML = "<option>Please Select&hellip;</option>";
+  dropdown.disabled = false;
+
+  cleanupDropdown(dropdown.nextDropdown);
+
+  for (let i = 0; i < dropdownData.length; i += 1) {
+    const opt = document.createElement("option");
+    let name = dropdownData[i]; // this works for unions
+    if (nameProp) name = name[nameProp]; // for divisions, districts, upazilas
+    opt.value = name;
+    opt.text = name;
+    opt.subdivisionData = dropdownData[i][subdivProp];
+    dropdown.add(opt);
+  }
+}
+
+function cleanupDropdown(dd) {
+  if (!dd) return;
+  dd.innerHTML = "<option>&hellip;</option>";
+  dd.disabled = true;
+  cleanupDropdown(dd.nextDropdown);
+}
+
+
 // const testList = ['a', 'b', 'c', 'd', 'e', 'f']
 // const elem = 'district_dd';
 // populateDropdown(elem, testList);
