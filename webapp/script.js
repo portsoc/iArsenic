@@ -56,26 +56,20 @@ function cleanupDropdown(dd) {
   cleanupDropdown(dd.nextDropdown);
 }
 
-
-// const testList = ['a', 'b', 'c', 'd', 'e', 'f']
-// const elem = 'districtDD';
-// populateDropdown(elem, testList);
-
-
-function pollution_status_u_90() {
-  if ((median_under90 > 20) && (median_under90 <= 50)) {
+function pollutionStatusU90() {
+  if ((medianUnder90 > 20) && (medianUnder90 <= 50)) {
     return "is likely to be Polluted";
-  } else if ((median_under90 > 50) && (median_under90 <= 200)) {
+  } else if ((medianUnder90 > 50) && (medianUnder90 <= 200)) {
     return "is likely to be HIGHLY Polluted";
-  } else if (median_under90 > 200) {
+  } else if (medianUnder90 > 200) {
     return "likely to be SEVERLY Polluted"
   } else {
     return "likely to be arsenic-safe"
   }
 }
 
-function chem_test() {
-  if ((max_under90 >= 0) && (max_under90 <= 100)) {
+function chemTest() {
+  if ((maxUnder90 >= 0) && (maxUnder90 <= 100)) {
     return "and concentration may be around"
   } else {
     return ", a chemical test is needed as concentration can be high, ranging around"
