@@ -1,26 +1,26 @@
-const div_dd = document.querySelector("#division_dd");
-const dis_dd = document.querySelector("#district_dd");
-const upa_dd = document.querySelector("#upazila_dd");
-const uni_dd = document.querySelector("#union_dd");
+const divDD = document.querySelector("#divisionDD");
+const disDD = document.querySelector("#districtDD");
+const upaDD = document.querySelector("#upazilaDD");
+const uniDD = document.querySelector("#unionDD");
 
 window.addEventListener("load", init);
 
 function init(){
-  populateDropdown(div_dd, "division", "districts", dropdownData); //complete data
+  populateDropdown(divDD, "division", "districts", dropdownData); //complete data
 
-  div_dd.dataset.nameProp = "division";
-  div_dd.dataset.subProp = "districts";
-  div_dd.nextDropdown = dis_dd;
-  dis_dd.dataset.nameProp = "district";
-  dis_dd.dataset.subProp = "upazilas";
-  dis_dd.nextDropdown = upa_dd;
-  upa_dd.dataset.nameProp = "upazila";
-  upa_dd.dataset.subProp = "unions";
-  upa_dd.nextDropdown = uni_dd;
+  divDD.dataset.nameProp = "division";
+  divDD.dataset.subProp = "districts";
+  divDD.nextDropdown = disDD;
+  disDD.dataset.nameProp = "district";
+  disDD.dataset.subProp = "upazilas";
+  disDD.nextDropdown = upaDD;
+  upaDD.dataset.nameProp = "upazila";
+  upaDD.dataset.subProp = "unions";
+  upaDD.nextDropdown = uniDD;
 
-  div_dd.addEventListener("change", handleDropDownSelection);
-  dis_dd.addEventListener("change", handleDropDownSelection);
-  upa_dd.addEventListener("change", handleDropDownSelection);
+  divDD.addEventListener("change", handleDropDownSelection);
+  disDD.addEventListener("change", handleDropDownSelection);
+  upaDD.addEventListener("change", handleDropDownSelection);
 }
 
 function handleDropDownSelection(event) {
@@ -58,7 +58,7 @@ function cleanupDropdown(dd) {
 
 
 // const testList = ['a', 'b', 'c', 'd', 'e', 'f']
-// const elem = 'district_dd';
+// const elem = 'districtDD';
 // populateDropdown(elem, testList);
 
 
@@ -82,13 +82,19 @@ function chem_test() {
   }
 }
 
-function updateRangeLabel(elemID, val) {
-  document.getElementById(elemID).value = val + ' ft';
+function updateRangeLabel(elemID, position) {
+  const maxPos = 100;
+  const minVal = Math.log(5);
+  const maxVal = Math.log(1000);
+  const scale = (maxVal - minVal) / maxPos;
+  const value = Math.exp(minVal + scale * position);
+
+  document.getElementById(elemID).value = Math.round(value) + ' ft';
 }
 
 function displayUtensil(newClass){
-  if (newClass === document.getElementById('utensil_header').className){ return 0; }
-  currentClass = (newClass === 'utensil_hidden') ? 'utensil_visible' : 'utensil_hidden';
+  if (newClass === document.getElementById('utensilHeader').className){ return 0; }
+  currentClass = (newClass === 'utensilHidden') ? 'utensilVisible' : 'utensilHidden';
   utensilList = document.querySelectorAll('.' + currentClass);
   for (let i = 0; i < utensilList.length; i += 1){
     utensilList[i].className = newClass;

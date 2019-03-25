@@ -3,16 +3,16 @@
   width: 75%;
 }
 
-#depth_output {
+#depthOutput {
   display: block;
   width: 35vw;
 }
 
-.utensil_hidden {
+.utensilHidden {
   display: none;
 }
 
-.utensil_visible {
+.utensilVisible {
   display: block;
 }
 
@@ -30,6 +30,6 @@ h3 {
   font-size: 75%;
 }
 
-.stain_link {
+.stainLink{
   font-size: 65%;
 }

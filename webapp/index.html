@@ -18,61 +18,61 @@
     <h2>Please tell us your location:</h2>
 
     <label for="division">Division:</label>
-    <select id="division_dd">
+    <select id="divisionDD">
 
     </select>
 
     <label for="district">District:</label>
-    <select id="district_dd">
+    <select id="districtDD">
 
     </select>
 
     <label for="upazila">Upazila:</label>
-    <select id="upazila_dd">
+    <select id="upazilaDD">
 
     </select>
 
     <label for="union">Union:</label>
-    <select id="union_dd">
+    <select id="unionDD">
 
     </select>
 
     <h2>Is there staining on the platform?</h2>
 
     <section>
-      <input type="radio" id="red" name="staining" value="" onchange="displayUtensil('utensil_hidden')">
+      <input type="radio" id="red" name="staining" value="" onchange="displayUtensil('utensilHidden')">
       <label for="red">Red</label>
     </section>
     <section>
-      <input type="radio" id="black" name="staining" value="" onchange="displayUtensil('utensil_hidden')">
+      <input type="radio" id="black" name="staining" value="" onchange="displayUtensil('utensilHidden')">
       <label for="black">Black</label>
     </section>
     <section>
-      <input type="radio" id="mixed" name="staining" value="" onchange="displayUtensil('utensil_visible')">
+      <input type="radio" id="mixed" name="staining" value="" onchange="displayUtensil('utensilVisible')">
       <label for="mixed">Mixed or Unsure</label>
     </section>
 
-    <a class="stain_link " href="#">Don't understand the question? Click here.</a>
+    <a class="stainLink" href="#">Don't understand the question? Click here.</a>
 
 
-    <h2 id="utensil_header" class="utensil_hidden">Is there staining on your utensil?</h2>
-    <section class="utensil_hidden">
-      <input type="radio" id="red_u" name="staining_u" value="">
-      <label for="red_u">Red</label>
+    <h2 id="utensilHeader" class="utensilHidden">Is there staining on your utensil?</h2>
+    <section class="utensilHidden">
+      <input type="radio" id="redU" name="stainingU" value="">
+      <label for="redU">Red</label>
     </section>
-    <section class="utensil_hidden">
-      <input type="radio" id="black_u" name="staining_u" value="">
-      <label for="black_u">No colour change to slightly blackish</label>
+    <section class="utensilHidden">
+      <input type="radio" id="blackU" name="stainingU" value="">
+      <label for="blackU">No colour change to slightly blackish</label>
     </section>
 
 
     <h2>Please tell us the depth of your well:</h2>
-    <input type="range" list="range_labels" name="depth" value="600" min="0" max="1200" step="5" oninput="updateRangeLabel('depth_output', this.value)">
-    <input type="text" id="depth_output" value="600 ft">
-    <datalist id="range_labels">
+    <input type="range" list="rangeLabel" name="depth" value="50" min="0" max="100" oninput="updateRangeLabel('depthOutput', this.value)">
+    <input type="text" id="depthOutput" value="600 ft">
+    <datalist id="rangeLabel">
       <option value="0" label="0">
-      <option value="600" label="600">
-      <option value="1200" label="1200">
+      <option value="50" label="500">
+      <option value="100" label="1000">
     </datalist>
 
     <h2>Is anyone drinking from this well?</h2>
