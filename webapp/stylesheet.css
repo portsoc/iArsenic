@@ -3,17 +3,25 @@
   width: 75%;
 }
 
+#depthContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+}
+
+#depth {
+  flex: 1 1 auto;
+}
+
 #depthOutput {
-  display: block;
-  width: 35vw;
+  margin-left: 2ch;
 }
 
-.utensilHidden {
+/* Hiding of utensil question */
+
+#utensilSection.hidden {
   display: none;
-}
-
-.utensilVisible {
-  display: block;
 }
 
 /* #mixed:checked~.utensil {
@@ -32,4 +40,82 @@ h3 {
 
 .stainLink{
   font-size: 65%;
+}
+
+.staining > label {
+  display: block;
+}
+
+
+
+/* -----------------------Transistion on Submit --------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.collapsed > :not(#chevron) {
+  display: none;
+}
+
+.disabled #chevron {
+  opacity: 0;
+}
+
+#assessment {
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+#assessment.collapsed {
+  min-height: 0;
+}
+
+#result {
+  border: 1px solid black;
+  padding: .5rem;
+}
+
+
+/*  Chevron*/
+
+#chevron {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 9vw;
+  transition: opacity .25s ease-out;
+}
+
+.chevron {
+  transition: transform .25s ease-out;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  height: 9vw;
+}
+
+.chevron::before,
+.chevron::after {
+  position: absolute;
+  display: block;
+  content: "";
+  border: 10vw solid transparent; /*adjust size*/
+  border-width: 0 10vw 5vw;
+}
+/*Change the four instances of 'top' below to rotate (top/right/bottom/left)*/
+.chevron::before {
+  top: 2vw;
+  border-top-color: #0b0; /*chevron Color*/
+  border-bottom-color: #0b0; /*chevron Color*/
+}
+.chevron::after {
+  top: 4vw; /* adjust thickness */
+  border-top-color: #fff; /*Match background colour*/
+  border-bottom-color: #fff; /*Match background colour*/
+}
+
+.collapsed .chevron {
+  transform: scale(1,-1);
+  transform-origin: center center;
 }

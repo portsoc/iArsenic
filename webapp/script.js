@@ -2,6 +2,11 @@ const divDD = document.querySelector("#divisionDD");
 const disDD = document.querySelector("#districtDD");
 const upaDD = document.querySelector("#upazilaDD");
 const uniDD = document.querySelector("#unionDD");
+const assess = document.querySelector("#assessment");
+const submit = document.querySelector('#submit');
+const chevron = document.querySelector('#chevron');
+const utensilSection = document.querySelector('#utensilSection');
+const depthOutput = document.querySelector('#depthOutput');
 
 window.addEventListener("load", init);
 
@@ -21,6 +26,48 @@ function init(){
   divDD.addEventListener("change", handleDropDownSelection);
   disDD.addEventListener("change", handleDropDownSelection);
   upaDD.addEventListener("change", handleDropDownSelection);
+
+  submit.addEventListener('click', showAssessment);
+  chevron.addEventListener('click', showAssessment);
+}
+
+function gatherInputs() {
+  const retval = {};
+
+  retval.division = divDD.value;
+  retval.district = disDD.value;
+  retval.upazila = upaDD.value;
+  retval.union = uniDD.value;
+
+  const selectedStaining = document.querySelector('input[name="staining"]:checked');
+  if (selectedStaining && selectedStaining.value !== 'mixed') {
+    retval.colour = selectedStaining.value;
+  }
+
+  if (selectedStaining && selectedStaining.value === 'mixed') {
+    const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
+    if (selectedUtensil) {
+      retval.utensil = selectedUtensil.value;
+    }
+  }
+
+  retval.depth = Number(depthOutput.value);
+
+  const selectedDrinking = document.querySelector('input[name="drink"]:checked');
+  if (selectedDrinking) {
+    retval.drinking = selectedDrinking.value;
+  }
+  console.log('gathered inputs', retval);
+
+  if (!retval.division) return null;
+  if (!retval.district) return null;
+  if (!retval.upazila) return null;
+  if (!retval.union) return null;
+  if (!retval.colour && !retval.utensil) return null;
+  if (!retval.depth) return null; // depth 0 is the default and counts as no-value-entered
+  if (!retval.drinking) return null;
+
+  return retval;
 }
 
 function handleDropDownSelection(event) {
@@ -33,7 +80,7 @@ function handleDropDownSelection(event) {
 //if district is choosen first, do not shorten list
 
 function populateDropdown(dropdown, nameProp, subdivProp, dropdownData) {
-  dropdown.innerHTML = "<option>Please Select&hellip;</option>";
+  dropdown.innerHTML = "<option value=''>Please Select&hellip;</option>";
   dropdown.disabled = false;
 
   cleanupDropdown(dropdown.nextDropdown);
@@ -51,46 +98,36 @@ function populateDropdown(dropdown, nameProp, subdivProp, dropdownData) {
 
 function cleanupDropdown(dd) {
   if (!dd) return;
-  dd.innerHTML = "<option>&hellip;</option>";
+  dd.innerHTML = "<option value=''>&hellip;</option>";
   dd.disabled = true;
   cleanupDropdown(dd.nextDropdown);
 }
 
-function pollutionStatusU90() {
-  if ((medianUnder90 > 20) && (medianUnder90 <= 50)) {
-    return "is likely to be Polluted";
-  } else if ((medianUnder90 > 50) && (medianUnder90 <= 200)) {
-    return "is likely to be HIGHLY Polluted";
-  } else if (medianUnder90 > 200) {
-    return "likely to be SEVERLY Polluted"
-  } else {
-    return "likely to be arsenic-safe"
-  }
-}
 
-function chemTest() {
-  if ((maxUnder90 >= 0) && (maxUnder90 <= 100)) {
-    return "and concentration may be around"
-  } else {
-    return ", a chemical test is needed as concentration can be high, ranging around"
-  }
-}
-
-function updateRangeLabel(elemID, position) {
+function updateRangeLabel(position) {
   const maxPos = 100;
   const minVal = Math.log(5);
   const maxVal = Math.log(1000);
   const scale = (maxVal - minVal) / maxPos;
   const value = Math.exp(minVal + scale * position);
 
-  document.getElementById(elemID).value = Math.round(value) + ' ft';
+  depthOutput.value = Math.round(value);
 }
 
-function displayUtensil(newClass){
-  if (newClass === document.getElementById('utensilHeader').className){ return 0; }
-  currentClass = (newClass === 'utensilHidden') ? 'utensilVisible' : 'utensilHidden';
-  utensilList = document.querySelectorAll('.' + currentClass);
-  for (let i = 0; i < utensilList.length; i += 1){
-    utensilList[i].className = newClass;
+function displayUtensil(show) {
+  utensilSection.classList.toggle('hidden', !show);
+}
+
+function showAssessment(){
+  //removed collapsed class
+  //scroll to Assessment
+  const inputs = gatherInputs();
+  if (!inputs) {
+    // the form isn't fully filled
+    return;
+    // todo or highlight the first thing that isn't filled in
   }
+
+  assess.classList.remove('collapsed');
+  chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
 }

@@ -15,6 +15,7 @@
   </header>
 
   <section class="inputs">
+
     <h2>Please tell us your location:</h2>
 
     <label for="division">Division:</label>
@@ -37,65 +38,82 @@
 
     </select>
 
-    <h2>Is there staining on the platform?</h2>
-
-    <section>
-      <input type="radio" id="red" name="staining" value="" onchange="displayUtensil('utensilHidden')">
-      <label for="red">Red</label>
-    </section>
-    <section>
-      <input type="radio" id="black" name="staining" value="" onchange="displayUtensil('utensilHidden')">
-      <label for="black">Black</label>
-    </section>
-    <section>
-      <input type="radio" id="mixed" name="staining" value="" onchange="displayUtensil('utensilVisible')">
-      <label for="mixed">Mixed or Unsure</label>
+    <section class='staining'>
+      <h2>Is there staining on the platform?</h2>
+      <label>
+        <input type="radio" id="red" name="staining" value="red" onchange="displayUtensil(false)">
+        Red
+      </label>
+      <label>
+        <input type="radio" id="black" name="staining" value="black" onchange="displayUtensil(false)">
+        Black
+      </label>
+      <label>
+        <input type="radio" id="mixed" name="staining" value="mixed" onchange="displayUtensil(true)">
+        Mixed or Unsure
+      </label>
     </section>
 
     <a class="stainLink" href="#">Don't understand the question? Click here.</a>
 
 
-    <h2 id="utensilHeader" class="utensilHidden">Is there staining on your utensil?</h2>
-    <section class="utensilHidden">
-      <input type="radio" id="redU" name="stainingU" value="">
-      <label for="redU">Red</label>
+    <section id="utensilSection" class="hidden staining">
+      <h2 class="utensil hidden">Is there staining on your utensil?</h2>
+      <label>
+        <input type="radio" id="redU" value="red" name="stainingUtensil">
+        Red
+      </label>
+      <label>
+        <input type="radio" id="blackU" value="black" name="stainingUtensil">
+        Black
+      </label>
+      <label>
+        <input type="radio" id="noColourU" value="black" name="stainingUtensil">
+        No colour
+      </label>
     </section>
-    <section class="utensilHidden">
-      <input type="radio" id="blackU" name="stainingU" value="">
-      <label for="blackU">No colour change to slightly blackish</label>
+
+
+    <section>
+      <h2>Please tell us the depth of your well:</h2>
+      <section id="depthContainer">
+        <input type="range" list="rangeLabel" name="depth" id="depth" value="0" min="0" max="100" oninput="updateRangeLabel(this.value)">
+        <span><input type="number" id="depthOutput" value="0" min="0" max="1000"> ft</span>
+      </div>
+      <datalist id="rangeLabel">
+        <option value="0" label="0">
+        <option value="50" label="500">
+        <option value="100" label="1000">
+      </datalist>
     </section>
 
-
-    <h2>Please tell us the depth of your well:</h2>
-    <input type="range" list="rangeLabel" name="depth" value="50" min="0" max="100" oninput="updateRangeLabel('depthOutput', this.value)">
-    <input type="text" id="depthOutput" value="600 ft">
-    <datalist id="rangeLabel">
-      <option value="0" label="0">
-      <option value="50" label="500">
-      <option value="100" label="1000">
-    </datalist>
-
-    <h2>Is anyone drinking from this well?</h2>
-    <input type="radio" id="yes" name="drink" value="">
-    <label for="yes">Yes</label>
-    <input type="radio" id="no" name="drink" value="">
-    <label for="no">No</label>
+    <section>
+      <h2>Is anyone drinking from this well?</h2>
+      <label>
+        <input type="radio" id="yes" name="drink" value="yes">
+        Yes
+      </label>
+      <label>
+        <input type="radio" id="no" name="drink" value="no">
+        No
+      </label>
+    </section>
 
     <h2>Click below to see your assessment</h2>
-    <button type="button" name="submit">Submit</button>
+    <p id="submit">Submit</p>
   </section>
 
-  <section class="assessments">
+  <section id="assessment" class="collapsed disabled">
+    <div id="chevron"><i class="chevron"></i></div>
+
     <h2>Below is your assessment</h2>
 
-    <textarea name="assessment" rows="8" cols="30"></textarea>
+    <p id="result">Here be lionesses</p>
 
     <h3>Disclaimer:</h3>
     <p>PLEASE NOTE: The application is still [Jan 2019] under development. If you would like to use it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a chemical test of your well water to be
-      sure. ____________It is estimated that ~60% of 10 million hand pumped tubewells in rural Bangladesh remained untested for arsenic. This accounts for widespread exposure to this insidious toxin and resulting in multi-systemic effects including
-      cancer. Unfortunately, there is no specific treatment but drinking arsenic-safe water. Using this web application a tubewell can easily be assessed for arsenic. All you need to provide your Upazila name (which you can find in the drop-down
-      list), colour of the tubewell-platform (see 'Platform Staining Guide' tab for examples), and select a depth of tubewell. Please also tell us whether the tubewell water is used for drinking; then press 'Assess' button and then see the outcome
-      in 'Our Assessment' tab.</p>
+      sure. It is estimated that ~60% of 10 million hand pumped tubewells in rural Bangladesh remained untested for arsenic. This accounts for widespread exposure to this insidious toxin and resulting in multi-systemic effects including
+      cancer. Unfortunately, there is no specific treatment but drinking arsenic-safe water. Using this web application a tubewell can easily be assessed for arsenic. All you need to provide your Upazila name, colour of the tubewell-platform, and select a depth of tubewell. Please also tell us whether the tubewell water is used for drinking.</p>
   </section>
 
 </body>
