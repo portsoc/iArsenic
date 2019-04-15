@@ -11,7 +11,7 @@ function round(x, magnitude, dir = 1) {
 }
 
 //Flood removed from here for time being
-function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {  
+function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {
   const division = divisions[div];
   const district = division ? division.districts[dis] : undefined;
   const upazila = district ? district.upazilas[upa] : undefined;
@@ -22,8 +22,8 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   }
 
   const notEnoughData =
-    (depth < 90 && union.as_median_under_90 == null) ||
-    (depth >= 90 && union.as_mean_over_90 == null)
+    (depth < 90 && union.med == null) ||
+    (depth >= 90 && union.mo9 == null)
       ? 'not enough data '
       : '';
 
@@ -39,22 +39,22 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   } else if (colour === 'Red' | utensil === 'Red') {
     if (depth < 90) {
       const pollutionStatus =
-        (union.as_median_under_90 > 20 && union.as_median_under_90 <= 50)
+        (union.med > 20 && union.med <= 50)
           ? 'likely to be Polluted'
-          : (union.as_median_under_90 > 50 && union.as_median_under_90 <= 200)
+          : (union.med > 50 && union.med <= 200)
             ? 'likely to be HIGHLY Polluted'
-            : (union.as_median_under_90 > 200)
+            : (union.med > 200)
               ? 'likely to be SEVERELY Polluted'
               : 'likely to be arsenic-safe';
 
       const chemTestStatus =
-        (union.as_max_under_90 <= 100)
+        (union.max <= 100)
           ? 'and concentration may be around'
           : ', a chemical test is needed as concentration can be high, ranging around';
 
-      return notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.lower_quantile_under_90, 10, 1) + ' to ' + round(union.upper_quantile_under_90, 10, 1) + ' µg/L ';
+      return notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low, 10, 1) + ' to ' + round(union.upp, 10, 1) + ' µg/L ';
     } else if (depth <= 150) {
-      if (union.as_mean_over_90 >= 50) {
+      if (union.mo9 >= 50) {
         return notEnoughData + 'Your tubewell is highly likely to be Polluted.';
       } else {
         return notEnoughData + 'Your tubewell may be arsenic-safe.';
@@ -64,5 +64,3 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     }
   }
 }
-
-module.exports = produceEstimate;
