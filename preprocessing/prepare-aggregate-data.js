@@ -37,12 +37,10 @@ const data = csvLoader();
 // get the admin region hierarchy only
 
 function extractStats(data, hierarchyPath) {
-  const retval = [];
+  const retval = {};
   for (const item of Object.keys(data)) {
     const dataObj = data[item];
     const hierarchyObj = {
-      [hierarchyPath[0]]: item,
-
       med: dataObj.as_median_under_90,
       max: dataObj.as_max_under_90,
       low: dataObj.lower_quantile_under_90,
@@ -53,18 +51,9 @@ function extractStats(data, hierarchyPath) {
       const subData = dataObj[hierarchyPath[1] + 's'];
       hierarchyObj[hierarchyPath[1] + 's'] = extractStats(subData, hierarchyPath.slice(1));
     }
-    retval.push(hierarchyObj);
+    retval[item] = hierarchyObj;
   }
-  retval.sort(compareByProperty(hierarchyPath[0]));
   return retval;
-}
-
-function compareByProperty(prop) {
-  return (a, b) => {
-    if (a[prop] < b[prop]) return -1;
-    if (a[prop] === b[prop]) return 0;
-    return 1;
-  };
 }
 
 const hierarchy = extractStats(data, ['division', 'district', 'upazila', 'union']);
