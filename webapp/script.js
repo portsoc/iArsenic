@@ -7,6 +7,7 @@ const submit = document.querySelector('#submit');
 const chevron = document.querySelector('#chevron');
 const utensilSection = document.querySelector('#utensilSection');
 const depthOutput = document.querySelector('#depthOutput');
+const result = document.querySelector('#result');
 
 window.addEventListener("load", init);
 
@@ -29,6 +30,7 @@ function init(){
 
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', showAssessment);
+  console.log(aggregateData["divisions"])
 }
 
 function gatherInputs() {
@@ -57,7 +59,7 @@ function gatherInputs() {
   if (selectedDrinking) {
     retval.drinking = selectedDrinking.value;
   }
-  console.log('gathered inputs', retval);
+  
 
   if (!retval.division) return null;
   if (!retval.district) return null;
@@ -66,7 +68,7 @@ function gatherInputs() {
   if (!retval.colour && !retval.utensil) return null;
   if (!retval.depth) return null; // depth 0 is the default and counts as no-value-entered
   if (!retval.drinking) return null;
-
+  console.log('gathered inputs', retval);
   return retval;
 }
 
@@ -126,6 +128,10 @@ function showAssessment(){
     // the form isn't fully filled
     return;
     // todo or highlight the first thing that isn't filled in
+  }
+  else { 
+    result.innerHTML = produceEstimate(aggregateData, inputs.division, inputs.district, 
+      inputs.upazilla, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
   }
 
   assess.classList.remove('collapsed');
