@@ -30,7 +30,6 @@ function init(){
 
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', showAssessment);
-  console.log(aggregateData["divisions"])
 }
 
 function gatherInputs() {
@@ -53,13 +52,14 @@ function gatherInputs() {
     }
   }
 
+  // todo do we need to convert between feet and metres here?
   retval.depth = Number(depthOutput.value);
 
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
   if (selectedDrinking) {
     retval.drinking = selectedDrinking.value;
   }
-  
+
 
   if (!retval.division) return null;
   if (!retval.district) return null;
@@ -129,9 +129,9 @@ function showAssessment(){
     return;
     // todo or highlight the first thing that isn't filled in
   }
-  else { 
-    result.innerHTML = produceEstimate(aggregateData, inputs.division, inputs.district, 
-      inputs.upazilla, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+  else {
+    result.innerHTML = produceEstimate(aggregateData, inputs.division, inputs.district,
+      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
   }
 
   assess.classList.remove('collapsed');
