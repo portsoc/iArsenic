@@ -29,11 +29,14 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
-
-    const floodWarning =
-      (depth <= 15 && flood === 'No')
-        ? ' but may be vulnerable to nitrate and pathogens'
-        : '';
+    
+    //Flood is not yet a provided input so I (Dillon) have commented it out ready for future implementation
+    
+    // const floodWarning =
+    //   (depth <= 15 && flood === 'No')
+    //     ? ' but may be vulnerable to nitrate and pathogens'
+    //     : '';
+    const floodWarning = '';
 
     return notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
   } else if (colour === 'Red' | utensil === 'Red') {

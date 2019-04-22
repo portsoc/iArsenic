@@ -54,7 +54,7 @@ function gatherInputs() {
     }
   }
 
-  // todo do we need to convert between feet and metres here?
+  // Feet being converted to metres 
   retval.depth = Number(depthOutput.value / 3.2808);
 
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
@@ -62,7 +62,7 @@ function gatherInputs() {
     retval.drinking = selectedDrinking.value;
   }
 
-
+  validateInputs();
   if (!retval.division) return null;
   if (!retval.district) return null;
   if (!retval.upazila) return null;
@@ -152,17 +152,11 @@ function showAssessment(){
   //removed collapsed class
   //scroll to Assessment
   const inputs = gatherInputs(); 
-  validateInputs(); 
-  if (!inputs) {
-    
-    return;
-    // todo or highlight the first thing that isn't filled in
-  }
-  else {
+  if (inputs) {
     result.innerHTML = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
-  }
-
-  assess.classList.remove('collapsed');
-  chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
+        
+    assess.classList.remove('collapsed');
+    chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }  
 }
