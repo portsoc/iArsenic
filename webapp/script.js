@@ -152,6 +152,9 @@ function validateInputs(){
   if (!stainingUtensilValidator) { utensilSection.classList.add("invalid"); }
   else { utensilSection.classList.remove("invalid"); }
   
+  //Handles the depth 
+  if (depthOutput.value == "0") { depthContainer.classList.add("invalid"); }
+  else { depthContainer.classList.remove("invalid"); }
 }
 
 function showAssessment(){

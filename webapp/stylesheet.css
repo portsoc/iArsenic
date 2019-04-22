@@ -6,7 +6,7 @@
 #depthContainer {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 75%;
   align-items: center;
 }
 
