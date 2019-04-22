@@ -19,7 +19,6 @@
 }
 
 /* Hiding of utensil question */
-
 #utensilSection.hidden {
   display: none;
 }
@@ -38,23 +37,24 @@ h3 {
   font-size: 75%;
 }
 
-.stainLink{
+.stainLink {
   font-size: 65%;
 }
 
-.staining > label {
+.staining>label {
   display: block;
 }
 
-
+.invalid {
+  border: 0.1em dashed red;
+}
 
 /* -----------------------Transistion on Submit --------------------------------------------- */
-
 html {
   scroll-behavior: smooth;
 }
 
-.collapsed > :not(#chevron) {
+.collapsed> :not(#chevron) {
   display: none;
 }
 
@@ -76,9 +76,7 @@ html {
   padding: .5rem;
 }
 
-
 /*  Chevron*/
-
 #chevron {
   position: relative;
   display: flex;
@@ -100,22 +98,30 @@ html {
   position: absolute;
   display: block;
   content: "";
-  border: 10vw solid transparent; /*adjust size*/
+  border: 10vw solid transparent;
+  /*adjust size*/
   border-width: 0 10vw 5vw;
 }
+
 /*Change the four instances of 'top' below to rotate (top/right/bottom/left)*/
 .chevron::before {
   top: 2vw;
-  border-top-color: #0b0; /*chevron Color*/
-  border-bottom-color: #0b0; /*chevron Color*/
+  border-top-color: #0b0;
+  /*chevron Color*/
+  border-bottom-color: #0b0;
+  /*chevron Color*/
 }
+
 .chevron::after {
-  top: 4vw; /* adjust thickness */
-  border-top-color: #fff; /*Match background colour*/
-  border-bottom-color: #fff; /*Match background colour*/
+  top: 4vw;
+  /* adjust thickness */
+  border-top-color: #fff;
+  /*Match background colour*/
+  border-bottom-color: #fff;
+  /*Match background colour*/
 }
 
 .collapsed .chevron {
-  transform: scale(1,-1);
+  transform: scale(1, -1);
   transform-origin: center center;
 }

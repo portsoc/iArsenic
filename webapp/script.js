@@ -120,12 +120,21 @@ function displayUtensil(show) {
   utensilSection.classList.toggle('hidden', !show);
 }
 
+function validateInputs(){
+  const dropdownInputs = [divDD, disDD, upaDD, uniDD]
+  for (let i = 0; i < dropdownInputs.length; i++) {
+    if (!dropdownInputs[i].value){ dropdownInputs[i].classList.add("invalid"); }
+    else { dropdownInputs[i].classList.remove("invalid"); }
+  }
+}
+
 function showAssessment(){
   //removed collapsed class
   //scroll to Assessment
-  const inputs = gatherInputs();
+  const inputs = gatherInputs(); 
+  validateInputs(); 
   if (!inputs) {
-    // the form isn't fully filled
+    
     return;
     // todo or highlight the first thing that isn't filled in
   }
