@@ -57,7 +57,7 @@ function gatherInputs() {
   }
 
   // todo do we need to convert between feet and metres here?
-  retval.depth = Number(depthOutput.value);
+  retval.depth = Number(depthOutput.value / 3.2808);
 
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
   if (selectedDrinking) {
@@ -132,25 +132,17 @@ function validateInputs(){
     else { dropdownInputs[i].classList.remove("invalid"); }
   }
   
-  //Handles the radio buttons
-  let stainingValidator = false;
-  let stainingUtensilValidator = true; 
-  for (let j = 0; j < staining.length; j++){
-    if (staining[j].checked) {
-      stainingValidator = true;
-      //Check the utensil radios if the user selects Mixed/Unsure
-      if (j == 2){
-        stainingUtensilValidator = false;
-        for (let k = 0; k < stainingUtensil.length; k++){
-          if (stainingUtensil[k].checked){ stainingUtensilValidator = true; }
-        }
-      }
-    }
+  //Handles the staining radio buttons
+  const selectedStaining = document.querySelector('input[name="staining"]:checked');
+  if (!selectedStaining) { stainingSection.classList.add("invalid"); }
+  else if (selectedStaining && selectedStaining.value === 'Mixed'){
+    const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
+    if (!selectedUtensil) { utensilSection.classList.add("invalid"); }
   }
-  if (!stainingValidator) { stainingSection.classList.add("invalid"); }
-  else { stainingSection.classList.remove("invalid"); }
-  if (!stainingUtensilValidator) { utensilSection.classList.add("invalid"); }
-  else { utensilSection.classList.remove("invalid"); }
+  else { 
+    stainingSection.classList.remove("invalid");
+    utensilSection.classList.remove("invalid"); 
+  }
   
   //Handles the depth 
   if (depthOutput.value == "0") { depthContainer.classList.add("invalid"); }
