@@ -7,9 +7,7 @@ const submit = document.querySelector('#submit');
 const chevron = document.querySelector('#chevron');
 const utensilSection = document.querySelector('#utensilSection');
 const depthOutput = document.querySelector('#depthOutput');
-const staining = document.getElementsByName('staining');
 const stainingSection = document.querySelector('#stainingSection');
-const stainingUtensil = document.getElementsByName('stainingUtensil');
 
 const result = document.querySelector('#result');
 
@@ -136,6 +134,7 @@ function validateInputs(){
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
   if (!selectedStaining) { stainingSection.classList.add("invalid"); }
   else if (selectedStaining && selectedStaining.value === 'Mixed'){
+    stainingSection.classList.remove("invalid");
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
     if (!selectedUtensil) { utensilSection.classList.add("invalid"); }
   }

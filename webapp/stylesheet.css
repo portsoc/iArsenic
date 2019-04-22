@@ -27,6 +27,10 @@
   width: 75%;
 }
 
+#result {
+  width: 75%;
+}
+
 /* #mixed:checked~.utensil {
   visibility: visible;
 } */
