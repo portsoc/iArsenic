@@ -168,5 +168,5 @@ function showAssessment(){
         
     assess.classList.remove('collapsed');
     chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
-  }  
+  } else { assess.classList.add('collapsed'); }
 }
