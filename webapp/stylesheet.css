@@ -23,6 +23,10 @@
   display: none;
 }
 
+#stainingSection {
+  width: 75%;
+}
+
 /* #mixed:checked~.utensil {
   visibility: visible;
 } */

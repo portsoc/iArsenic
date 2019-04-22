@@ -7,6 +7,10 @@ const submit = document.querySelector('#submit');
 const chevron = document.querySelector('#chevron');
 const utensilSection = document.querySelector('#utensilSection');
 const depthOutput = document.querySelector('#depthOutput');
+const staining = document.getElementsByName('staining');
+const stainingSection = document.querySelector('#stainingSection');
+const stainingUtensil = document.getElementsByName('stainingUtensil');
+
 const result = document.querySelector('#result');
 
 window.addEventListener("load", init);
@@ -121,11 +125,33 @@ function displayUtensil(show) {
 }
 
 function validateInputs(){
+  //Handles the dropdowns
   const dropdownInputs = [divDD, disDD, upaDD, uniDD]
   for (let i = 0; i < dropdownInputs.length; i++) {
     if (!dropdownInputs[i].value){ dropdownInputs[i].classList.add("invalid"); }
     else { dropdownInputs[i].classList.remove("invalid"); }
   }
+  
+  //Handles the radio buttons
+  let stainingValidator = false;
+  let stainingUtensilValidator = true; 
+  for (let j = 0; j < staining.length; j++){
+    if (staining[j].checked) {
+      stainingValidator = true;
+      //Check the utensil radios if the user selects Mixed/Unsure
+      if (j == 2){
+        stainingUtensilValidator = false;
+        for (let k = 0; k < stainingUtensil.length; k++){
+          if (stainingUtensil[k].checked){ stainingUtensilValidator = true; }
+        }
+      }
+    }
+  }
+  if (!stainingValidator) { stainingSection.classList.add("invalid"); }
+  else { stainingSection.classList.remove("invalid"); }
+  if (!stainingUtensilValidator) { utensilSection.classList.add("invalid"); }
+  else { utensilSection.classList.remove("invalid"); }
+  
 }
 
 function showAssessment(){
