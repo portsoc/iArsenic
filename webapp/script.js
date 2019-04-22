@@ -8,6 +8,7 @@ const chevron = document.querySelector('#chevron');
 const utensilSection = document.querySelector('#utensilSection');
 const depthOutput = document.querySelector('#depthOutput');
 const stainingSection = document.querySelector('#stainingSection');
+const drinkingSection = document.querySelector('#drinkingSection');
 
 const result = document.querySelector('#result');
 
@@ -43,11 +44,11 @@ function gatherInputs() {
   retval.union = uniDD.value;
 
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
-  if (selectedStaining && selectedStaining.value !== 'mixed') {
+  if (selectedStaining && selectedStaining.value !== 'Mixed') {
     retval.colour = selectedStaining.value;
   }
 
-  if (selectedStaining && selectedStaining.value === 'mixed') {
+  if (selectedStaining && selectedStaining.value === 'Mixed') {
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
     if (selectedUtensil) {
       retval.utensil = selectedUtensil.value;
@@ -132,20 +133,29 @@ function validateInputs(){
   
   //Handles the staining radio buttons
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
-  if (!selectedStaining) { stainingSection.classList.add("invalid"); }
-  else if (selectedStaining && selectedStaining.value === 'Mixed'){
+  if (!selectedStaining) { 
+    stainingSection.classList.add("invalid"); 
+  } else if (selectedStaining.value === 'Mixed'){    
     stainingSection.classList.remove("invalid");
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
-    if (!selectedUtensil) { utensilSection.classList.add("invalid"); }
-  }
-  else { 
+    if (!selectedUtensil) { 
+      utensilSection.classList.add("invalid"); 
+    } else {
+      utensilSection.classList.remove("invalid");
+    }
+  } else { 
     stainingSection.classList.remove("invalid");
-    utensilSection.classList.remove("invalid"); 
   }
   
   //Handles the depth 
   if (depthOutput.value == "0") { depthContainer.classList.add("invalid"); }
   else { depthContainer.classList.remove("invalid"); }
+  
+  //Handles the drinking from the well radio buttons 
+  const selectedDrinking = document.querySelector('input[name="drink"]:checked');
+  if (!selectedDrinking) { drinkingSection.classList.add("invalid"); }
+  else { drinkingSection.classList.remove("invalid"); }
+  
 }
 
 function showAssessment(){
