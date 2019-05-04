@@ -112,11 +112,11 @@ html {
   display: flex;
   justify-content: center;
   height: 9vw;
-  transition: opacity .25s ease-out;
+  transition: opacity .5s ease-out;
 }
 
 .chevron {
-  transition: transform .25s ease-out;
+  transition: transform .5s ease-out;
   position: absolute;
   display: flex;
   justify-content: center;
