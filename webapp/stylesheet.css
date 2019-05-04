@@ -53,19 +53,19 @@ h3 {
 }
 
 hr {
-    border: none;
-    border-top: 3px double #333;
-    overflow: visible;
-    text-align: center;
-    height: 1em;
-    max-width: 100%;
+  border: none;
+  border-top: 3px double #333;
+  overflow: visible;
+  text-align: center;
+  height: 1em;
+  max-width: 100%;
 }
 
 hr:after {
-    background: #fff;
-    padding: 0 1em;
-    position: relative;
-    top: -3em;
+  background: #fff;
+  padding: 0 1em;
+  position: relative;
+  top: -3em;
 }
 
 .stainLink {
@@ -92,7 +92,6 @@ html {
 /* .disabled #chevron {
   opacity: 0;
 } */
-
 #assessment {
   min-height: 100vh;
   box-sizing: border-box;
@@ -158,28 +157,25 @@ html {
 }
 
 /* Dropdowns */
-
 .dropdowns {
   background-color: #f2f2f2;
   max-width: 75%;
   border-radius: 2px;
-
 }
 
 .dropdowns select {
-
-    font-size: 1rem;
-    font-weight: 200;
-    max-width: 75%;
-    padding: 8px 24px 8px 10px;
-    border: none;
-    background-color: transparent;
-    -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
+  font-size: 1rem;
+  font-weight: 200;
+  max-width: 75%;
+  padding: 8px 24px 8px 10px;
+  border: none;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.dropdowns:active  {
+.dropdowns:active {
   outline: none;
   box-shadow: none;
 }
@@ -190,122 +186,117 @@ html {
 }
 
 .dropdowns ::after {
-    top: 50%;
-    margin-top: -2px;
-    right: 8px;
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 5px solid #aaa;
+  top: 50%;
+  margin-top: -2px;
+  right: 8px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #aaa;
 }
 
 /* radio buttons */
-
-
-
-
-
-
 /*Depth styling*/
 input[type=range] {
-    -webkit-appearance: none;
-    width: 100%;
+  -webkit-appearance: none;
+  width: 100%;
+  background: inherit;
 }
 
 input[type=range]:focus {
-    outline: none;
+  outline: none;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 8.4px;
-    cursor: pointer;
-    animate: 0.2s;
-    background: #b6ccdb;
-    border-radius: 1.3px;
-    box-shadow: box-shadow: 0 1px 2px rgba(0,0,0,.05),inset 0 1px 3px rgba(0,0,0,.1);
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 50px;
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #b6ccdb;
+  border-radius: 1.3px;
+  box-shadow: box-shadow: 0 1px 2px rgba(0, 0, 0, .05), inset 0 1px 3px rgba(0, 0, 0, .1);
+  border: 1px solid rgba(0, 0, 0, .1);
+  border-radius: 50px;
 }
 
 input[type=range]::-webkit-slider-thumb {
-    box-shadow: box-shadow: 0 1px 2px rgba(0,0,0,.15),inset 0 1px 3px rgba(0,0,0,.3);
-    border: 1px solid rgba(0,0,0,.3);
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: #ffffff;
-    cursor: pointer;
-    -webkit-appearance: none;
-    margin-top: -5px;
+  box-shadow: box-shadow: 0 1px 2px rgba(0, 0, 0, .15), inset 0 1px 3px rgba(0, 0, 0, .3);
+  border: 1px solid rgba(0, 0, 0, .3);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
-    background: #b6ccdb;
+  background: #b6ccdb;
 }
 
 input[type=range]::-moz-range-track {
-    width: 100%;
-    height: 8.4px;
-    cursor: pointer;
-    animate: 0.2s;
-    background: #b6ccdb;
-    border-radius: 1.3px;
-    box-shadow: box-shadow: 0 1px 2px rgba(0,0,0,.05),inset 0 1px 3px rgba(0,0,0,.1);
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 50px;
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #b6ccdb;
+  border-radius: 1.3px;
+  box-shadow: box-shadow: 0 1px 2px rgba(0, 0, 0, .05), inset 0 1px 3px rgba(0, 0, 0, .1);
+  border: 1px solid rgba(0, 0, 0, .1);
+  border-radius: 50px;
 }
 
 input[type=range]::-moz-range-thumb {
-    box-shadow: box-shadow: 0 1px 2px rgba(0,0,0,.15),inset 0 1px 3px rgba(0,0,0,.3);
-    border: 1px solid rgba(0,0,0,.3);
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: #ffffff;
-    cursor: pointer;
+  box-shadow: box-shadow: 0 1px 2px rgba(0, 0, 0, .15), inset 0 1px 3px rgba(0, 0, 0, .3);
+  border: 1px solid rgba(0, 0, 0, .3);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
 }
 
 input[type=range]::-ms-track {
-    width: 100%;
-    height: 8.4px;
-    cursor: pointer;
-    animate: 0.2s;
-    background: transparent;
-    border-color: transparent;
-    border-width: 16px 0;
-    color: transparent;
+  width: 100%;
+  height: 8.4px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
 }
 
 input[type=range]::-ms-fill-lower {
-    background: #b6ccdb;
-    border: 0.2px solid #808080;
-    border-radius: 2.6px;
-    border-radius: 50px;
+  background: #b6ccdb;
+  border: 0.2px solid #808080;
+  border-radius: 2.6px;
+  border-radius: 50px;
 }
 
 input[type=range]::-ms-fill-upper {
-    background: #b6ccdb;
-    border: 0.2px solid #808080;
-    border-radius: 2.6px;
-    border-radius: 50px;
+  background: #b6ccdb;
+  border: 0.2px solid #808080;
+  border-radius: 2.6px;
+  border-radius: 50px;
 }
 
 input[type=range]::-ms-thumb {
-    box-shadow: box-shadow: 0 1px 2px rgba(0,0,0,.15),inset 0 1px 3px rgba(0,0,0,.3);
-    border: 1px solid rgba(0,0,0,.3);
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: #ffffff;
-    cursor: pointer;
+  box-shadow: box-shadow: 0 1px 2px rgba(0, 0, 0, .15), inset 0 1px 3px rgba(0, 0, 0, .3);
+  border: 1px solid rgba(0, 0, 0, .3);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
 }
 
 input[type=range]:focus::-ms-fill-lower {
-    background: #367ebd;
+  background: #367ebd;
 }
 
 input[type=range]:focus::-ms-fill-upper {
-    background: #b6ccdb;
+  background: #b6ccdb;
 }
