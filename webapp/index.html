@@ -13,45 +13,52 @@
     <h1>iArsenic</h1>
     <h3>Instant Arsenic screening of hand pump tubewells in Bangladesh, Version 2019-03-18</h3>
   </header>
-
+  <hr>
   <section class="inputs">
 
     <h2>Please tell us your location:</h2>
 
-    <label for="division">Division:</label>
-    <select id="divisionDD">
 
-    </select>
+      <label for="division">Division:</label>
+      <select  class="dropdowns"id="divisionDD">
 
-    <label for="district">District:</label>
-    <select id="districtDD">
+      </select>
 
-    </select>
+      <label for="district">District:</label>
+      <select class="dropdowns" id="districtDD">
 
-    <label for="upazila">Upazila:</label>
-    <select id="upazilaDD">
+      </select>
 
-    </select>
+      <label for="upazila">Upazila:</label>
+      <select class="dropdowns" id="upazilaDD">
 
-    <label for="union">Union:</label>
-    <select id="unionDD">
+      </select>
 
-    </select>
+      <label for="union">Union:</label>
+      <select class="dropdowns" id="unionDD">
+
+      </select>
+  <hr>
+
+
 
     <section id="stainingSection" class='staining'>
       <h2>Is there staining on the platform?</h2>
       <label>
-        <input type="radio" id="red" name="staining" value="Red" onchange="displayUtensil(false)">
+        <input type="radio" id="red" name="staining" value="Red" onchange="displayUtensil(false)" >
         Red
       </label>
+
       <label>
-        <input type="radio" id="black" name="staining" value="Black" onchange="displayUtensil(false)">
+        <input type="radio" id="black" name="staining" value="Black" onchange="displayUtensil(false)" >
         Black
       </label>
+
       <label>
-        <input type="radio" id="mixed" name="staining" value="Mixed" onchange="displayUtensil(true)">
+        <input type="radio" id="mixed" name="staining" value="Mixed" onchange="displayUtensil(true)" >
         Mixed or Unsure
       </label>
+
     </section>
 
     <a class="stainLink" href="#">Don't understand the question? Click here.</a>
@@ -72,6 +79,7 @@
         No colour
       </label>
     </section>
+    <hr>
 
 
     <section>
@@ -86,6 +94,7 @@
           <option value="100" label="1000">
         </datalist>
       </section>
+      <hr>
 
       <section>
         <h2>Is anyone drinking from this well?</h2>
@@ -98,6 +107,7 @@
           No
         </label>
       </section>
+      <hr>
 
       <h2>Click below to see your assessment</h2>
       <p id="submit">Submit</p>
