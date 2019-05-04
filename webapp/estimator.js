@@ -27,7 +27,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
       ? 'not enough data '
       : '';
 
-  if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
+  if (colour === 'Black' || utensil === 'Black') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
     
     //Flood is not yet a provided input so I (Dillon) have commented it out ready for future implementation
@@ -65,5 +65,5 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     } else {
       return notEnoughData + 'Your tubewell is HIGHLY likely to be arsenic-safe';
     }
-  }
+  } else { return 'We are unable to assess your tubewell with the information you supplied, please fill all the sections'; }
 }
