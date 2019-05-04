@@ -58,6 +58,7 @@ hr {
     overflow: visible;
     text-align: center;
     height: 1em;
+    max-width: 100%;
 }
 
 hr:after {
@@ -88,9 +89,9 @@ html {
   display: none;
 }
 
-.disabled #chevron {
+/* .disabled #chevron {
   opacity: 0;
-}
+} */
 
 #assessment {
   min-height: 100vh;
