@@ -10,6 +10,7 @@
 
 <body>
   <header>
+    <img id="logo" src="logo.png" alt="ArsenicLogo">
     <h1>iArsenic</h1>
     <h3>Instant Arsenic screening of hand pump tubewells in Bangladesh, Version 2019-03-18</h3>
   </header>
@@ -20,7 +21,7 @@
 
 
       <label for="division">Division:</label>
-      <select  id="divisionDD">
+      <select id="divisionDD">
 
       </select>
 
@@ -86,13 +87,10 @@
       <h2>Please tell us the depth of your well:</h2>
       <section id="depthContainer">
         <input type="range" list="rangeLabel" name="depth" id="depth" value="0" min="0" max="100" oninput="updateRangeLabel(this.value)">
-        <span><input type="number" id="depthOutput" value="0" min="0" max="1000"> ft</span>
+        <span ><input type="number"  value="0" min="0" max="1000" id="depthOutput"></span>
+        <label for="depthOutput"> ft</label>
         </div>
-        <datalist id="rangeLabel">
-          <option value="0" label="0">
-          <option value="50" label="500">
-          <option value="100" label="1000">
-        </datalist>
+
       </section>
       <hr>
 
@@ -122,7 +120,7 @@
       <p id="result">Here be lionesses</p>
 
       <h3>Disclaimer:</h3>
-      <p>PLEASE NOTE: The application is still [Jan 2019] under development. If you would like to use it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a chemical test of your well water to
+      <p id="disclaimer">PLEASE NOTE: The application is still [Jan 2019] under development. If you would like to use it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a chemical test of your well water to
         be
         sure. It is estimated that ~60% of 10 million hand pumped tubewells in rural Bangladesh remained untested for arsenic. This accounts for widespread exposure to this insidious toxin and resulting in multi-systemic effects including
         cancer. Unfortunately, there is no specific treatment but drinking arsenic-safe water. Using this web application a tubewell can easily be assessed for arsenic. All you need to provide your Upazila name, colour of the tubewell-platform, and

@@ -6,6 +6,12 @@ html {
 .inputs select {
   display: flex;
   width: 75%;
+  border: .06em solid transparent;
+  border-radius: 1em;
+  background-color: #f2f2f2;
+  border-color: #c0c0c0;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 #depthContainer {
@@ -23,6 +29,8 @@ html {
   margin-left: 2ch;
 }
 
+
+
 /* Hiding of utensil question */
 #utensilSection.hidden {
   display: none;
@@ -33,7 +41,12 @@ html {
 }
 
 #result {
-  width: 75%;
+  width: 95%;
+}
+
+#logo {
+  width: 15vw;
+  height: auto;
 }
 
 /* #mixed:checked~.utensil {
@@ -42,6 +55,7 @@ html {
 /* ------------------------- Textual ------------------------ */
 h1 {
   font-size: 200%;
+  display: inline;
 }
 
 h2 {
@@ -50,6 +64,10 @@ h2 {
 
 h3 {
   font-size: 75%;
+}
+
+#disclaimer {
+  font-size: 70%;
 }
 
 hr {
@@ -145,9 +163,9 @@ html {
 .chevron::after {
   top: 4vw;
   /* adjust thickness */
-  border-top-color: #fff;
+  border-top-color: #fffaf0;
   /*Match background colour*/
-  border-bottom-color: #fff;
+  border-bottom-color:#fffaf0;
   /*Match background colour*/
 }
 
@@ -156,47 +174,7 @@ html {
   transform-origin: center center;
 }
 
-/* Dropdowns */
-.dropdowns {
-  background-color: #f2f2f2;
-  max-width: 75%;
-  border-radius: 2px;
-}
 
-.dropdowns select {
-  font-size: 1rem;
-  font-weight: 200;
-  max-width: 75%;
-  padding: 8px 24px 8px 10px;
-  border: none;
-  background-color: transparent;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-.dropdowns:active {
-  outline: none;
-  box-shadow: none;
-}
-
-.dropdowns:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.dropdowns ::after {
-  top: 50%;
-  margin-top: -2px;
-  right: 8px;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid #aaa;
-}
-
-/* radio buttons */
 /*Depth styling*/
 input[type=range] {
   -webkit-appearance: none;
