@@ -29,8 +29,6 @@ html {
   margin-left: 2ch;
 }
 
-
-
 /* Hiding of utensil question */
 #utensilSection.hidden {
   display: none;
@@ -79,6 +77,10 @@ hr {
   max-width: 100%;
 }
 
+input, select {
+  border: 0.1em dashed #fffaf0;
+}
+
 hr:after {
   background: #fff;
   padding: 0 1em;
@@ -95,7 +97,7 @@ hr:after {
 }
 
 .invalid {
-  border: 0.1em dashed red;
+  border: 0.1em dashed red !important;
 }
 
 /* -----------------------Transistion on Submit --------------------------------------------- */
@@ -165,7 +167,7 @@ html {
   /* adjust thickness */
   border-top-color: #fffaf0;
   /*Match background colour*/
-  border-bottom-color:#fffaf0;
+  border-bottom-color: #fffaf0;
   /*Match background colour*/
 }
 
@@ -173,7 +175,6 @@ html {
   transform: scale(1, -1);
   transform-origin: center center;
 }
-
 
 /*Depth styling*/
 input[type=range] {
