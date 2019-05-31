@@ -39,7 +39,7 @@ function init(){
   disDD.addEventListener("change", handleDropDownSelection);
   upaDD.addEventListener("change", handleDropDownSelection);
   
-  depthOutput.addEventListener("change", updateSlider)
+  depthOutput.addEventListener("input", updateSlider)
 
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', showAssessment);
