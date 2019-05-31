@@ -6,9 +6,17 @@ const assess = document.querySelector("#assessment");
 const submit = document.querySelector('#submit');
 const chevron = document.querySelector('#chevron');
 const utensilSection = document.querySelector('#utensilSection');
+const depth = document.querySelector('#depth');
 const depthOutput = document.querySelector('#depthOutput');
 const stainingSection = document.querySelector('#stainingSection');
 const drinkingSection = document.querySelector('#drinkingSection');
+
+//Depth scale constants
+const minPos = 0;
+const maxPos = 100;
+const minVal = Math.log(5);
+const maxVal = Math.log(1000);
+const scale = (maxVal - minVal) / (maxPos - minPos);
 
 const result = document.querySelector('#result');
 
@@ -30,6 +38,8 @@ function init(){
   divDD.addEventListener("change", handleDropDownSelection);
   disDD.addEventListener("change", handleDropDownSelection);
   upaDD.addEventListener("change", handleDropDownSelection);
+  
+  depthOutput.addEventListener("change", updateSlider)
 
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', showAssessment);
@@ -110,13 +120,13 @@ function cleanupDropdown(dd) {
 
 
 function updateRangeLabel(position) {
-  const maxPos = 100;
-  const minVal = Math.log(5);
-  const maxVal = Math.log(1000);
-  const scale = (maxVal - minVal) / maxPos;
-  const value = Math.exp(minVal + scale * position);
+  depthOutput.value = Math.round(Math.exp(minVal + scale * position));
+}
 
-  depthOutput.value = Math.round(value);
+function updateSlider(){
+  if (depthOutput.value > 0) {
+    depth.value = (Math.log(depthOutput.value) - minVal) / scale + minPos;
+  } else { depth.value = 0; }
 }
 
 function displayUtensil(show) {
