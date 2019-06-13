@@ -6,11 +6,11 @@ which looks like this:
 [
   division: '..',
 
-  as_median_under_90: ...,
-  as_max_under_90: ...,
-  lower_quantile_under_90: ...,
-  upper_quantile_under_90: ...,
-  as_mean_over_90: ...,
+  med: ...,   // short for as_median_under_90
+  max: ...,   // short for as_max_under_90
+  low: ...,   // short for lower_quantile_under_90
+  upp: ...,   // short for upper_quantile_under_90
+  mo9: ...,   // short for as_mean_over_90
 
   districts: [
     district: '..',
