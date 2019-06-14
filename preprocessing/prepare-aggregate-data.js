@@ -4,13 +4,22 @@ This script generates a JSON representation of the location hierarchy including 
 which looks like this:
 
 [
-  division: '..',
+  division: '..',  
 
-  med: ...,   // short for as_median_under_90
-  max: ...,   // short for as_max_under_90
-  low: ...,   // short for lower_quantile_under_90
-  upp: ...,   // short for upper_quantile_under_90
-  mo9: ...,   // short for as_mean_over_90
+  med_s: ...,   // short for as_median_shallow
+  max_s: ...,   // short for as_max_shallow
+  low_s: ...,   // short for lower_quantile_shallow
+  upp_s: ...,   // short for upper_quantile_shallow
+  
+  med_m: ...,   // short for as_median_med
+  max_m: ...,   // short for as_max_med
+  low_m: ...,   // short for lower_quantile_med
+  upp_m: ...,   // short for upper_quantile_med
+  
+  med_d: ...,   // short for as_median_deep
+  max_d: ...,   // short for as_max_deep
+  low_d: ...,   // short for lower_quantile_deep
+  upp_d: ...,   // short for upper_quantile_deep
 
   districts: [
     district: '..',
@@ -41,11 +50,18 @@ function extractStats(data, hierarchyPath) {
   for (const item of Object.keys(data)) {
     const dataObj = data[item];
     const hierarchyObj = {
-      med: dataObj.as_median_under_90,
-      max: dataObj.as_max_under_90,
-      low: dataObj.lower_quantile_under_90,
-      upp: dataObj.upper_quantile_under_90,
-      mo9: dataObj.as_mean_over_90,
+      med_s: dataObj.as_median_shallow,
+      max_s: dataObj.as_max_shallow,
+      low_s: dataObj.lower_quantile_shallow,
+      upp_s: dataObj.upper_quantile_shallow,
+      med_m: dataObj.as_median_med,
+      max_m: dataObj.as_max_med,
+      low_m: dataObj.lower_quantile_med,
+      upp_m: dataObj.upper_quantile_med,
+      med_d: dataObj.as_median_deep,
+      max_d: dataObj.as_max_deep,
+      low_d: dataObj.lower_quantile_deep,
+      upp_d: dataObj.upper_quantile_deep
     };
     if (hierarchyPath.length > 1) {
       const subData = dataObj[hierarchyPath[1] + 's'];
