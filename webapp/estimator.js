@@ -40,7 +40,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     const floodWarning = '';
 
     return notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
-  } else if (colour === 'Red' | utensil === 'Red') {
+  } else if (colour === 'Red' || utensil === 'Red') {
     if (depth < 90) {
       const pollutionStatus =
         (union.med_s > 20 && union.med_s <= 50)
