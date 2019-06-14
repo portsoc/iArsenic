@@ -194,6 +194,7 @@ function computeWellStats(location) {
     location.lower_quantile_deep = stats.quantile(location.wells_deep, 0.1);
     location.upper_quantile_deep = stats.quantile(location.wells_deep, 0.9);
   }
+}
 
 function numericalCompare(a, b) {
   return a - b;
