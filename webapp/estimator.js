@@ -30,9 +30,9 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 
   if (colour === 'Black' || utensil === 'Black') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
-    
+
     //Flood is not yet a provided input so I (Dillon) have commented it out ready for future implementation
-    
+
     // const floodWarning =
     //   (depth <= 15 && flood === 'No')
     //     ? ' but may be vulnerable to nitrate and pathogens'
@@ -92,3 +92,5 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     }
   } else { return 'We are unable to assess your tubewell with the information you supplied, please fill all the sections'; }
 }
+
+module.exports = produceEstimate;
