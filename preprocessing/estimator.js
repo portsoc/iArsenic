@@ -26,7 +26,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
       ? 'not enough data '
       : '';
 
-  if (colour === 'Black' || utensil === 'No colour change to slightly Blackish') {
+  if (colour === 'Black' || utensil === 'Black') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
     const floodWarning =
