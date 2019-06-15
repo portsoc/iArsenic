@@ -142,7 +142,7 @@ function computeWellStats(location) {
   //   take the computations from the parent or complain
   if (location.wells_shallow.length < MIN_DATA_COUNT) {
     if (!location.parent) {
-      console.debug(`Division ${location.name} does not have enough wells under 90`);
+      console.debug(`Division ${location.name} does not have enough shallow wells`);
     } else {
       location.as_median_shallow = location.parent.as_median_shallow;
       location.as_max_shallow = location.parent.as_max_shallow;
@@ -161,7 +161,7 @@ function computeWellStats(location) {
   //   take the computations from the parent or complain
   if (location.wells_med.length < MIN_DATA_COUNT) {
     if (!location.parent) {
-      console.debug(`Division ${location.name} does not have enough wells under 90`);
+      console.debug(`Division ${location.name} does not have enough med wells`);
     } else {
       location.as_median_med = location.parent.as_median_med;
       location.as_max_med = location.parent.as_max_med;
@@ -175,12 +175,12 @@ function computeWellStats(location) {
     location.lower_quantile_med = stats.quantile(location.wells_med, 0.1);
     location.upper_quantile_med = stats.quantile(location.wells_med, 0.9);
   }
-  
+
   // if we don't have enough deep well data (150<=d)
   //   take the computations from the parent or complain
   if (location.wells_deep.length < MIN_DATA_COUNT) {
     if (!location.parent) {
-      console.debug(`Division ${location.name} does not have enough wells under 90`);
+      console.debug(`Division ${location.name} does not have enough deep wells`);
     } else {
       location.as_median_deep = location.parent.as_median_deep;
       location.as_max_deep = location.parent.as_max_deep;
