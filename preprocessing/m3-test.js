@@ -1,4 +1,4 @@
-const csvLoader = require('./load-csv');
+const csvLoader = require('./load-csv-model-3');
 const produceEstimate = require('../webapp/estimator');
 
 function runTests(divisions, div, dis, upa, uni) {

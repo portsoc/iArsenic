@@ -22,9 +22,9 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   }
 
   const notEnoughData =
-    (depth < 90 && union.med_s == null) ||
-    (depth < 150 && union.med_m == null) ||
-    (depth >= 150 && union.med_d == null)
+    (depth < 90 && union.med_s === null) ||
+    (depth < 150 && union.med_m === null) ||
+    (depth >= 150 && union.med_d === null)
       ? 'not enough data '
       : '';
 

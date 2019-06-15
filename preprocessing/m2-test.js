@@ -7,9 +7,9 @@ function runTests(divisions, div, dis, upa, uni) {
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
         produceEstimate(divisions, div, dis, upa, uni, depth, colour, null, null));
     }
-    for (const utensil of ['Red', 'No colour change to slightly blackish']) {
+    for (const utensil of ['Red', 'No colour change to slightly Blackish']) {
       const colour = 'none';
-      const utensilshort = utensil.substring(0, 2);
+      const utensilshort = utensil.substring(29, 31);
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" -  ` +
         produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, null));
     }
