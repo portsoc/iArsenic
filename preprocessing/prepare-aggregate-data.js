@@ -4,18 +4,18 @@ This script generates a JSON representation of the location hierarchy including 
 which looks like this:
 
 [
-  division: '..',  
+  division: '..',
 
   med_s: ...,   // short for as_median_shallow
   max_s: ...,   // short for as_max_shallow
   low_s: ...,   // short for lower_quantile_shallow
   upp_s: ...,   // short for upper_quantile_shallow
-  
+
   med_m: ...,   // short for as_median_med
   max_m: ...,   // short for as_max_med
   low_m: ...,   // short for lower_quantile_med
   upp_m: ...,   // short for upper_quantile_med
-  
+
   med_d: ...,   // short for as_median_deep
   max_d: ...,   // short for as_max_deep
   low_d: ...,   // short for lower_quantile_deep
@@ -38,7 +38,7 @@ which looks like this:
 
 */
 
-const csvLoader = require('./load-csv');
+const csvLoader = require('./load-csv-model-3');
 
 console.debug = () => {};
 const data = csvLoader();
