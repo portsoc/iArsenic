@@ -168,11 +168,19 @@ function validateInputs(){
 
 }
 
+let logImage; // global to prevent too quick garbage collection before we get the log
+
 function showAssessment(){
   //removed collapsed class
   //scroll to Assessment
   const inputs = gatherInputs();
+
   if (inputs) {
+    // log the inputs
+    logImage = new Image();
+    logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
+
+    // show the user an estimate
     const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
 
