@@ -3,16 +3,17 @@ const produceEstimate = require('../webapp/estimator');
 const aggregateData = require('../webapp/aggregate-data')
 
 function runTests(divisions, div, dis, upa, uni) {
-  const depth = 60;
-  for (const colour of ['Red', 'Black']) {
-    console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
-      produceEstimate(divisions, div, dis, upa, uni, depth, colour, null));
-  }
-  for (const utensil of ['Red', 'Black']) {
-    const colour = 'none';
-    const utensilshort = utensil.substring(0, 2);
-    console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" -  ` +
-      produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil));
+  for (const depth of [20, 60]) {
+    for (const colour of ['Red', 'Black']) {
+      console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
+        produceEstimate(divisions, div, dis, upa, uni, depth, colour, null));
+    }
+    for (const utensil of ['Red', 'No colour change to slightly blackish']) {
+      const colour = 'none';
+      const utensilshort = utensil.substring(0, 2);
+      console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" -  ` +
+        produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil));
+    }
   }
 }
 
@@ -33,7 +34,7 @@ function runTests(divisions, div, dis, upa, uni) {
 // }
 
 function main() {
-  const divisions = aggregateData;
+  const divisions = csvLoader();
 
   /* eslint-disable */
   runTests(divisions, "Barisal", "Barguna", "Amtali", "Amtali");
