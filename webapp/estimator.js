@@ -43,7 +43,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     const floodWarning = '';
 
     retval.message =  notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
-    retval.severity = (warningSeverity === '') ? 'safe' : 'verySafe';
+    retval.severity = 'safe';
   } else if (colour === 'Red' || utensil === 'Red') {
     let pollutionStatus = '';
     if (depth < 90) {
@@ -55,7 +55,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
             retval.severity = 'highlyPolluted'
           } else if (union.med_s > 200){
               pollutionStatus =  'likely to be SEVERELY Polluted';
-              retval.severity = 'severelyPolluted'
+              retval.severity = 'highlyPolluted'
             } else {
               pollutionStatus = 'likely to be arsenic-safe';
               retval.severity = 'safe'
@@ -76,7 +76,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
             retval.severity = 'highlyPolluted'
           } else if (union.med_m > 200){
               pollutionStatus =  'likely to be SEVERELY Polluted';
-              retval.severity = 'severelyPolluted'
+              retval.severity = 'highlyPolluted'
             } else {
               pollutionStatus = 'likely to be arsenic-safe';
               retval.severity = 'safe'
@@ -97,7 +97,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
             retval.severity = 'highlyPolluted'
           } else if (union.med_d > 200){
               pollutionStatus =  'likely to be SEVERELY Polluted';
-              retval.severity = 'severelyPolluted'
+              retval.severity = 'highlyPolluted'
             } else {
               pollutionStatus = 'likely to be arsenic-safe';
               retval.severity = 'safe'
