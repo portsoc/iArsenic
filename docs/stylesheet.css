@@ -109,25 +109,16 @@ html {
   display: none;
 }
 
-
-.verySafe {
-  background-color: rgb(0, 255, 0);
-}
-
 .safe {
-  background-color: rgb(163, 255, 0);
+  background-color: #78ff78;
 }
 
 .polluted {
-  background-color: rgb(255, 255, 0);
+  background-color: #ffc878;
 }
 
 .highlyPolluted {
-  background-color: rgb(255, 163, 0);
-}
-
-.severelyPolluted {
-  background-color: rgb(255, 0, 0);
+  background-color: #ff7878;
 }
 
 
