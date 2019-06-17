@@ -2,19 +2,19 @@ const csvLoader = require('./load-csv-model-2');
 const produceEstimate = require('./estimator');
 
 function runTests(divisions, div, dis, upa, uni) {
-  for (const depth of [60]) {
-    for (const colour of ['Red', 'Black']) {
-      console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
-        produceEstimate(divisions, div, dis, upa, uni, depth, colour, null, null));
-    }
-    for (const utensil of ['Red', 'Black']) {
-      const colour = 'none';
-      const utensilshort = utensil.substring(0, 2);
-      console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" -  ` +
-        produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, null));
-    }
+  const depth = 60
+  for (const colour of ['Red', 'Black']) {
+    console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
+      produceEstimate(divisions, div, dis, upa, uni, depth, colour, null, null));
+  }
+  for (const utensil of ['Red', 'Black']) {
+    const colour = 'none';
+    const utensilshort = utensil.substring(0, 2);
+    console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" -  ` +
+      produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, null));
   }
 }
+
 
 //   const depth = 10;
 //   for (const flooding of ['Yes', 'No']) {
