@@ -17,8 +17,11 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   const upazila = district ? district.upazilas[upa] : undefined;
   const union = upazila ? upazila.unions[uni] : undefined;
 
+  const retval = {}
+
+
   if (!union) {
-    return 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    retval.message =  'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }
 
   const notEnoughData =
@@ -28,7 +31,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
       ? 'not enough data '
       : '';
 
-  if (colour === 'Black' || utensil === 'Black') {
+  if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
     //Flood is not yet a provided input so I (Dillon) have commented it out ready for future implementation
@@ -39,58 +42,77 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     //     : '';
     const floodWarning = '';
 
-    return notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
+    retval.message =  notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
+    retval.severity = (warningSeverity === '') ? 'safe' : 'verySafe';
   } else if (colour === 'Red' || utensil === 'Red') {
+    let pollutionStatus = '';
     if (depth < 90) {
-      const pollutionStatus =
-        (union.med_s > 20 && union.med_s <= 50)
-          ? 'likely to be Polluted'
-          : (union.med_s > 50 && union.med_s <= 200)
-            ? 'likely to be HIGHLY Polluted'
-            : (union.med_s > 200)
-              ? 'likely to be SEVERELY Polluted'
-              : 'likely to be arsenic-safe';
+      if (union.med_s > 20 && union.med_s <= 50){
+          pollutionStatus = 'likely to be Polluted';
+          retval.severity = 'polluted'
+        } else if (union.med_s > 50 && union.med_s <= 200){
+            pollutionStatus = 'likely to be HIGHLY Polluted';
+            retval.severity = 'highlyPolluted'
+          } else if (union.med_s > 200){
+              pollutionStatus =  'likely to be SEVERELY Polluted';
+              retval.severity = 'severelyPolluted'
+            } else {
+              pollutionStatus = 'likely to be arsenic-safe';
+              retval.severity = 'safe'
+            }
 
       const chemTestStatus =
         (union.max_s <= 100)
           ? 'and concentration may be around'
           : ', a chemical test is needed as concentration can be high, ranging around';
 
-      return notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low_s, 10, 1) + ' to ' + round(union.upp_s, 10, 1) + ' µg/L ';
+      retval.message =  notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low_s, 10, 1) + ' to ' + round(union.upp_s, 10, 1) + ' µg/L ';
     } else if (depth < 150) {
-      const pollutionStatus =
-        (union.med_m > 20 && union.med_m <= 50)
-          ? 'likely to be Polluted'
-          : (union.med_m > 50 && union.med_m <= 200)
-            ? 'likely to be HIGHLY Polluted'
-            : (union.med_m > 200)
-              ? 'likely to be SEVERELY Polluted'
-              : 'likely to be arsenic-safe';
+      if (union.med_m > 20 && union.med_m <= 50){
+          pollutionStatus = 'likely to be Polluted';
+          retval.severity = 'polluted'
+        } else if (union.med_m > 50 && union.med_m <= 200){
+            pollutionStatus = 'likely to be HIGHLY Polluted';
+            retval.severity = 'highlyPolluted'
+          } else if (union.med_m > 200){
+              pollutionStatus =  'likely to be SEVERELY Polluted';
+              retval.severity = 'severelyPolluted'
+            } else {
+              pollutionStatus = 'likely to be arsenic-safe';
+              retval.severity = 'safe'
+            }
 
       const chemTestStatus =
         (union.max_m <= 100)
           ? 'and concentration may be around'
           : ', a chemical test is needed as concentration can be high, ranging around';
 
-      return notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low_m, 10, 1) + ' to ' + round(union.upp_m, 10, 1) + ' µg/L ';
+      retval.message =  notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low_m, 10, 1) + ' to ' + round(union.upp_m, 10, 1) + ' µg/L ';
     } else {
-      const pollutionStatus =
-        (union.med_d > 20 && union.med_d <= 50)
-          ? 'likely to be Polluted'
-          : (union.med_d > 50 && union.med_d <= 200)
-            ? 'likely to be HIGHLY Polluted'
-            : (union.med_d > 200)
-              ? 'likely to be SEVERELY Polluted'
-              : 'likely to be arsenic-safe';
+      if (union.med_d > 20 && union.med_d <= 50){
+          pollutionStatus = 'likely to be Polluted';
+          retval.severity = 'polluted'
+        } else if (union.med_d > 50 && union.med_d <= 200){
+            pollutionStatus = 'likely to be HIGHLY Polluted';
+            retval.severity = 'highlyPolluted'
+          } else if (union.med_d > 200){
+              pollutionStatus =  'likely to be SEVERELY Polluted';
+              retval.severity = 'severelyPolluted'
+            } else {
+              pollutionStatus = 'likely to be arsenic-safe';
+              retval.severity = 'safe'
+            }
 
       const chemTestStatus =
         (union.max_d <= 100)
           ? 'and concentration may be around'
           : ', a chemical test is needed as concentration can be high, ranging around';
 
-      return notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low_d, 10, 1) + ' to ' + round(union.upp_d, 10, 1) + ' µg/L ';
+      retval.message =  notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low_d, 10, 1) + ' to ' + round(union.upp_d, 10, 1) + ' µg/L ';
     }
-  } else { return 'We are unable to assess your tubewell with the information you supplied, please fill all the sections'; }
+  } else { retval.message =  'We are unable to assess your tubewell with the information you supplied, please fill all the sections'; }
+  console.log(retval);
+  return retval
 }
 
 module.exports = produceEstimate;

@@ -18,7 +18,7 @@ const minVal = Math.log(5);
 const maxVal = Math.log(1000);
 const scale = (maxVal - minVal) / (maxPos - minPos);
 
-const result = document.querySelector('#result');
+const resultSection = document.querySelector('#result');
 
 window.addEventListener("load", init);
 
@@ -38,7 +38,7 @@ function init(){
   divDD.addEventListener("change", handleDropDownSelection);
   disDD.addEventListener("change", handleDropDownSelection);
   upaDD.addEventListener("change", handleDropDownSelection);
-  
+
   depthOutput.addEventListener("input", updateSlider)
 
   submit.addEventListener('click', showAssessment);
@@ -65,7 +65,7 @@ function gatherInputs() {
     }
   }
 
-  // Feet being converted to metres 
+  // Feet being converted to metres
   retval.depth = Number(depthOutput.value / 3.2808);
 
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
@@ -140,42 +140,45 @@ function validateInputs(){
     if (!dropdownInputs[i].value){ dropdownInputs[i].classList.add("invalid"); }
     else { dropdownInputs[i].classList.remove("invalid"); }
   }
-  
+
   //Handles the staining radio buttons
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
-  if (!selectedStaining) { 
-    stainingSection.classList.add("invalid"); 
-  } else if (selectedStaining.value === 'Mixed'){    
+  if (!selectedStaining) {
+    stainingSection.classList.add("invalid");
+  } else if (selectedStaining.value === 'Mixed'){
     stainingSection.classList.remove("invalid");
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
-    if (!selectedUtensil) { 
-      utensilSection.classList.add("invalid"); 
+    if (!selectedUtensil) {
+      utensilSection.classList.add("invalid");
     } else {
       utensilSection.classList.remove("invalid");
     }
-  } else { 
+  } else {
     stainingSection.classList.remove("invalid");
   }
-  
-  //Handles the depth 
+
+  //Handles the depth
   if (depthOutput.value == "0") { depthContainer.classList.add("invalid"); }
   else { depthContainer.classList.remove("invalid"); }
-  
-  //Handles the drinking from the well radio buttons 
+
+  //Handles the drinking from the well radio buttons
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
   if (!selectedDrinking) { drinkingSection.classList.add("invalid"); }
   else { drinkingSection.classList.remove("invalid"); }
-  
+
 }
 
 function showAssessment(){
   //removed collapsed class
   //scroll to Assessment
-  const inputs = gatherInputs(); 
+  const inputs = gatherInputs();
   if (inputs) {
-    result.innerHTML = produceEstimate(aggregateData, inputs.division, inputs.district,
+    const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
-        
+
+    resultSection.innerHTML = resultObj.message;
+    resultSection.className = resultObj.severity;
+
     assess.classList.remove('collapsed');
     chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
   } else { assess.classList.add('collapsed'); }
