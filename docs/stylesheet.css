@@ -121,10 +121,6 @@ html {
   background-color: #ff7878;
 }
 
-
-/* .disabled #chevron {
-  opacity: 0;
-} */
 #assessment {
   min-height: 100vh;
   box-sizing: border-box;
@@ -155,7 +151,7 @@ html {
   justify-content: center;
   height: 9vw;
   transform-origin: center center;
-  transform: rotate(180deg);
+  transform: scale(1, -1);
 }
 
 .chevron::before,
@@ -186,14 +182,9 @@ html {
   /*Match background colour*/
 }
 
-/* .collapsed .chevron {
-  transform: scale(1, -1);
-} */
-
 .flip .chevron {
-  transform: rotate(0deg);
+  transform: scale(1, 1);
 }
-
 
 /*Depth styling*/
 input[type=range] {
