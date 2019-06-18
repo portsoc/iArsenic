@@ -191,3 +191,16 @@ function showAssessment(){
     chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
   } else { assess.classList.add('collapsed'); }
 }
+
+
+
+
+
+
+/*
+TODO List:
+  [] chevron stuff
+    [] allow for reverse usage
+  [] Add delay 
+
+*/
