@@ -225,14 +225,3 @@ function chevronClick() {
     chevron.classList.remove('flip');
   }
 }
-
-
-
-
-/*
-TODO List:
-  [x] chevron stuff
-    [x] allow for reverse usage
-  [] Add delay
-
-*/
