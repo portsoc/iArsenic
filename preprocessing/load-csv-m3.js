@@ -144,17 +144,17 @@ function computeWellStats(location) {
     if (!location.parent) {
       console.debug(`Division ${location.name} does not have enough shallow wells`);
     } else {
-      location.as_median_shallow = location.parent.as_median_shallow;
-      location.as_max_shallow = location.parent.as_max_shallow;
-      location.lower_quantile_shallow = location.parent.lower_quantile_shallow;
-      location.upper_quantile_shallow = location.parent.upper_quantile_shallow;
+      location.med_s = location.parent.med_s;
+      location.max_s = location.parent.max_s;
+      location.low_s = location.parent.low_s;
+      location.upp_s = location.parent.upp_s;
     }
   } else {
     // we do have enough data
-    location.as_median_shallow = stats.median(location.wells_shallow);
-    location.as_max_shallow = stats.max(location.wells_shallow);
-    location.lower_quantile_shallow = stats.quantile(location.wells_shallow, 0.1);
-    location.upper_quantile_shallow = stats.quantile(location.wells_shallow, 0.9);
+    location.med_s = stats.median(location.wells_shallow);
+    location.max_s = stats.max(location.wells_shallow);
+    location.low_s = stats.quantile(location.wells_shallow, 0.1);
+    location.upp_s = stats.quantile(location.wells_shallow, 0.9);
   }
 
   // if we don't have enough med well data (90<=d<150)
@@ -163,17 +163,17 @@ function computeWellStats(location) {
     if (!location.parent) {
       console.debug(`Division ${location.name} does not have enough med wells`);
     } else {
-      location.as_median_med = location.parent.as_median_med;
-      location.as_max_med = location.parent.as_max_med;
-      location.lower_quantile_med = location.parent.lower_quantile_med;
-      location.upper_quantile_med = location.parent.upper_quantile_med;
+      location.med_m = location.parent.med_m;
+      location.max_m = location.parent.max_m;
+      location.low_m = location.parent.low_m;
+      location.upp_m = location.parent.upp_m;
     }
   } else {
     // we do have enough data
-    location.as_median_med = stats.median(location.wells_med);
-    location.as_max_med = stats.max(location.wells_med);
-    location.lower_quantile_med = stats.quantile(location.wells_med, 0.1);
-    location.upper_quantile_med = stats.quantile(location.wells_med, 0.9);
+    location.med_m = stats.median(location.wells_med);
+    location.max_m = stats.max(location.wells_med);
+    location.low_m = stats.quantile(location.wells_med, 0.1);
+    location.upp_m = stats.quantile(location.wells_med, 0.9);
   }
 
   // if we don't have enough deep well data (150<=d)
@@ -182,17 +182,17 @@ function computeWellStats(location) {
     if (!location.parent) {
       console.debug(`Division ${location.name} does not have enough deep wells`);
     } else {
-      location.as_median_deep = location.parent.as_median_deep;
-      location.as_max_deep = location.parent.as_max_deep;
-      location.lower_quantile_deep = location.parent.lower_quantile_deep;
-      location.upper_quantile_deep = location.parent.upper_quantile_deep;
+      location.med_d = location.parent.med_d;
+      location.max_d = location.parent.max_d;
+      location.low_d = location.parent.low_d;
+      location.upp_d = location.parent.upp_d;
     }
   } else {
     // we do have enough data
-    location.as_median_deep = stats.median(location.wells_deep);
-    location.as_max_deep = stats.max(location.wells_deep);
-    location.lower_quantile_deep = stats.quantile(location.wells_deep, 0.1);
-    location.upper_quantile_deep = stats.quantile(location.wells_deep, 0.9);
+    location.med_d = stats.median(location.wells_deep);
+    location.max_d = stats.max(location.wells_deep);
+    location.low_d = stats.quantile(location.wells_deep, 0.1);
+    location.upp_d = stats.quantile(location.wells_deep, 0.9);
   }
 }
 

@@ -111,7 +111,6 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
       retval.message =  notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.low_d, 10, 1) + ' to ' + round(union.upp_d, 10, 1) + ' µg/L ';
     }
   } else { retval.message =  'We are unable to assess your tubewell with the information you supplied, please fill all the sections'; }
-  console.log(retval);
   return retval
 }
 

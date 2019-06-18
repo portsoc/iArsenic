@@ -1,5 +1,5 @@
-const csvLoader = require('./load-csv-model-2');
-const produceEstimate = require('./estimator');
+const csvLoader = require('./load-csv-m1');
+const produceEstimate = require('./estimator-m1');
 
 function runTests(divisions, div, dis, upa, uni) {
   for (const depth of [20, 60]) {

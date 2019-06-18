@@ -1,18 +1,18 @@
-const csvLoader = require('./load-csv-model-3');
-const produceEstimate = require('../webapp/estimator-m3');
-const aggregateData = require('../webapp/aggregate-data')
+const csvLoader = require('./load-csv-m3');
+const produceEstimate = require('../docs/estimator-m3');
+const aggregateData = require('../docs/aggregate-data')
 
 function runTests(divisions, div, dis, upa, uni) {
   for (const depth of [20, 60]) {
     for (const colour of ['Red', 'Black']) {
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
-        produceEstimate(divisions, div, dis, upa, uni, depth, colour, null));
+        produceEstimate(divisions, div, dis, upa, uni, depth, colour, null).message);
     }
     for (const utensil of ['Red', 'No colour change to slightly blackish']) {
       const colour = 'none';
       const utensilshort = utensil.substring(0, 2);
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" -  ` +
-        produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil));
+        produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil).message);
     }
   }
 }
