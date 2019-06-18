@@ -114,4 +114,4 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   return retval
 }
 
-module.exports = produceEstimate;
+if (typeof module === 'object') module.exports = produceEstimate;

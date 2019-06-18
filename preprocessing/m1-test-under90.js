@@ -14,23 +14,21 @@ function runTests(divisions, div, dis, upa, uni) {
         produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, null));
     }
   }
+
+  // const depth = 10;
+  // for (const flooding of ['Yes', 'No']) {
+  //   for (const colour of ['Red', 'Black']) {
+  //     console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - "${flooding}"  ` +
+  //       produceEstimate(divisions, div, dis, upa, uni, depth, colour, null, flooding));
+  //   }
+  //   for (const utensil of ['Red', 'No colour change to slightly blackish']) {
+  //     const colour = 'none';
+  //     const utensilshort = utensil.substring(0, 2);
+  //     console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" "${flooding}"  ` +
+  //       produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, flooding));
+  //   }
+  // }
 }
-
-
-//   const depth = 10;
-//   for (const flooding of ['Yes', 'No']) {
-//     for (const colour of ['Red', 'Black']) {
-//       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - "${flooding}"  ` +
-//         produceEstimate(divisions, div, dis, upa, uni, depth, colour, null, flooding));
-//     }
-//     for (const utensil of ['Red', 'No colour change to slightly blackish']) {
-//       const colour = 'none';
-//       const utensilshort = utensil.substring(0, 2);
-//       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" "${flooding}"  ` +
-//         produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, flooding));
-//     }
-//   }
-// }
 
 function main() {
   const divisions = csvLoader();
