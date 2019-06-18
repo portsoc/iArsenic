@@ -170,6 +170,11 @@ function validateInputs(){
 
 let logImage; // global to prevent too quick garbage collection before we get the log
 
+// add slight delay to simulate server interaction
+function submitDelay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function showAssessment(){
   //removed collapsed class
   //scroll to Assessment
@@ -177,19 +182,21 @@ function showAssessment(){
 
   if (inputs) {
     // log the inputs
-    // logImage = new Image();
-    // logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
+    logImage = new Image();
+    logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
 
-    // show the user an estimate
-    chevron.classList.add('flip');
-    const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
-      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+    submitDelay(500).then(function() {
+      // show the user an estimate
+      chevron.classList.add('flip');
+      const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
+        inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
 
-    resultSection.innerHTML = resultObj.message;
-    resultSection.className = resultObj.severity;
+      resultSection.innerHTML = resultObj.message;
+      resultSection.className = resultObj.severity;
 
-    assess.classList.remove('collapsed');
-    chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
+      assess.classList.remove('collapsed');
+      chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
   } else {
       assess.classList.add('collapsed');
       chevron.classList.remove('flip');
@@ -215,8 +222,8 @@ function chevronClick() {
 
 /*
 TODO List:
-  [] chevron stuff
-    [] allow for reverse usage
+  [x] chevron stuff
+    [x] allow for reverse usage
   [] Add delay
 
 */
