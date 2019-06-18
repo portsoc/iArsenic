@@ -46,17 +46,17 @@
     <section id="stainingSection" class='staining'>
       <h2>Is there staining on the platform?</h2>
       <label>
-        <input type="radio" id="red" name="staining" value="Red" onchange="displayUtensil(false)" >
+        <input type="radio" id="red" name="staining" value="Red">
         Red
       </label>
 
       <label>
-        <input type="radio" id="black" name="staining" value="Black" onchange="displayUtensil(false)" >
+        <input type="radio" id="black" name="staining" value="Black">
         Black
       </label>
 
       <label>
-        <input type="radio" id="mixed" name="staining" value="Mixed" onchange="displayUtensil(true)" >
+        <input type="radio" id="mixed" name="staining" value="Mixed">
         Mixed or Unsure
       </label>
 
@@ -86,7 +86,7 @@
     <section>
       <h2>Please tell us the depth of your well:</h2>
       <section id="depthContainer">
-        <input type="range" list="rangeLabel" name="depth" id="depth" value="0" min="0" max="100" oninput="updateRangeLabel(this.value)">
+        <input type="range" list="rangeLabel" name="depth" id="depth" value="0" min="0" max="100">
         <span ><input type="number"  value="0" min="0" max="1000" id="depthOutput"></span>
         <label for="depthOutput"> ft</label>
         </div>

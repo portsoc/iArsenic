@@ -10,6 +10,9 @@ const depth = document.querySelector('#depth');
 const depthOutput = document.querySelector('#depthOutput');
 const stainingSection = document.querySelector('#stainingSection');
 const drinkingSection = document.querySelector('#drinkingSection');
+const redStain = document.querySelector('#red');
+const blackStain = document.querySelector('#black');
+const mixedStain = document.querySelector('#mixed');
 
 //Depth scale constants
 const minPos = 0;
@@ -43,6 +46,12 @@ function init(){
 
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', chevronClick);
+
+  redStain.addEventListener('change', () => { displayUtensil(false); });
+  blackStain.addEventListener('change', () => { displayUtensil(false); });
+  mixedStain.addEventListener('change', () => { displayUtensil(true); });
+
+  depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
 }
 
 function gatherInputs() {
