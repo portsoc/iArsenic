@@ -42,7 +42,7 @@ function init(){
   depthOutput.addEventListener("input", updateSlider)
 
   submit.addEventListener('click', showAssessment);
-  chevron.addEventListener('click', showAssessment);
+  chevron.addEventListener('click', chevronClick);
 }
 
 function gatherInputs() {
@@ -177,10 +177,11 @@ function showAssessment(){
 
   if (inputs) {
     // log the inputs
-    logImage = new Image();
-    logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
+    // logImage = new Image();
+    // logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
 
     // show the user an estimate
+    chevron.classList.add('flip');
     const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
 
@@ -189,10 +190,25 @@ function showAssessment(){
 
     assess.classList.remove('collapsed');
     chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
-  } else { assess.classList.add('collapsed'); }
+  } else {
+      assess.classList.add('collapsed');
+      chevron.classList.remove('flip');
+    }
 }
 
-
+function chevronClick() {
+  if (!chevron.classList.contains('flip')) {
+    showAssessment();
+  } else {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+    });
+    // validateInputs();
+    chevron.classList.remove('flip');
+  }
+}
 
 
 
@@ -201,6 +217,6 @@ function showAssessment(){
 TODO List:
   [] chevron stuff
     [] allow for reverse usage
-  [] Add delay 
+  [] Add delay
 
 */

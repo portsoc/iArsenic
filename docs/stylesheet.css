@@ -154,6 +154,8 @@ html {
   display: flex;
   justify-content: center;
   height: 9vw;
+  transform-origin: center center;
+  transform: rotate(180deg);
 }
 
 .chevron::before,
@@ -184,10 +186,14 @@ html {
   /*Match background colour*/
 }
 
-.collapsed .chevron {
+/* .collapsed .chevron {
   transform: scale(1, -1);
-  transform-origin: center center;
+} */
+
+.flip .chevron {
+  transform: rotate(0deg);
 }
+
 
 /*Depth styling*/
 input[type=range] {
