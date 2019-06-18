@@ -1,5 +1,5 @@
 const csvLoader = require('./load-csv-model-3');
-const produceEstimate = require('../webapp/estimator');
+const produceEstimate = require('../webapp/estimator-m3');
 const aggregateData = require('../webapp/aggregate-data')
 
 function runTests(divisions, div, dis, upa, uni) {
