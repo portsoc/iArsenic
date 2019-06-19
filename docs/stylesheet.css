@@ -3,7 +3,7 @@ html {
   font-family: Arial;
 }
 
-.inputs select {
+#inputs select {
   display: flex;
   width: 75%;
   border: .06em solid transparent;

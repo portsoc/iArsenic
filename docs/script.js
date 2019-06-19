@@ -14,6 +14,7 @@ const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
 const mixedStain = document.querySelector('#mixed');
 const resultSection = document.querySelector('#result');
+const inputs = document.querySelectorAll('#inputs select, #inputs input');
 
 //Depth scale constants
 const minPos = 0;
@@ -25,21 +26,27 @@ const scale = (maxVal - minVal) / (maxPos - minPos);
 window.addEventListener("load", init);
 
 function init() {
-  populateDropdown(divDD, "division", "districts", dropdownData); //complete data
-
   divDD.dataset.nameProp = "division";
   divDD.dataset.subProp = "districts";
   divDD.nextDropdown = disDD;
+
   disDD.dataset.nameProp = "district";
   disDD.dataset.subProp = "upazilas";
   disDD.nextDropdown = upaDD;
+  disDD.prevDropdown = divDD;
+
   upaDD.dataset.nameProp = "upazila";
   upaDD.dataset.subProp = "unions";
   upaDD.nextDropdown = uniDD;
+  upaDD.prevDropdown = disDD;
+
+  uniDD.prevDropdown = upaDD;
 
   divDD.addEventListener("change", handleDropDownSelection);
   disDD.addEventListener("change", handleDropDownSelection);
   upaDD.addEventListener("change", handleDropDownSelection);
+
+  populateDropdown(divDD, divDD.dataset.nameProp, divDD.dataset.subProp, dropdownData); //complete data
 
   depthOutput.addEventListener("input", updateSlider)
 
@@ -51,6 +58,10 @@ function init() {
   mixedStain.addEventListener('change', () => { displayUtensil(true); });
 
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
+
+  for (let i = 0; i < inputs.length; i += 1){
+    inputs[i].addEventListener('change', inputChange);
+  }
 }
 
 function gatherInputs() {
@@ -93,7 +104,49 @@ function gatherInputs() {
   return retval;
 }
 
-function handleDropDownSelection(event) {
+function inputChange() {
+  assess.classList.add('collapsed');
+  chevron.classList.remove('flip');
+}
+
+function handleDropDownSelection(e) {
+  const dd = e.target;
+  const opt = dd.selectedOptions[0];
+  const nextDD = dd.nextDropdown;
+  const prevDD = dd.prevDropdown;
+
+  populateDropdown(nextDD, nextDD.dataset.nameProp, nextDD.dataset.subProp, opt.subdivisionData);
+}
+
+function populateDropdown(dd, nameProp, subDivProp, ddData) {
+  dd.innerHTML = "<option value=''>Please Select&hellip;</option>";
+  dd.disabled = false;
+
+  cleanupDropdown(dd.nextDropdown);
+
+  for (let i = 0; i < ddData.length; i += 1) {
+    let name = ddData[i]; // this works for unions
+    if (nameProp) name = name[nameProp]; // for divisions, districts, upazilas
+
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.text = name;
+    opt.subdivisionData = ddData[i][subDivProp];
+
+    dd.add(opt);
+  }
+}
+
+function cleanupDropdown(dd) {
+  if (!dd) return;
+
+  dd.innerHTML = "<option value=''>&hellip;</option>";
+  dd.disabled = true;
+
+  cleanupDropdown(dd.nextDropdown)
+}
+
+/* function handleDropDownSelection(event) {
   const dd = event.target;
   const opt = dd.selectedOptions[0];
   const nextDropdown = dd.nextDropdown;
@@ -123,7 +176,7 @@ function cleanupDropdown(dd) {
   dd.innerHTML = "<option value=''>&hellip;</option>";
   dd.disabled = true;
   cleanupDropdown(dd.nextDropdown);
-}
+} */
 
 function updateRangeLabel(position) {
   depthOutput.value = Math.round(Math.exp(minVal + scale * position));
