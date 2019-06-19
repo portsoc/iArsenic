@@ -55,7 +55,7 @@ function init() {
 
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
 
-  for (let i = 0; i < inputs.length; i += 1){
+  for (let i = 0; i < inputs.length; i += 1) {
     inputs[i].addEventListener('change', inputChange);
   }
 }
@@ -115,8 +115,8 @@ function populateDropdown(dd, nameProp, subDivProp, ddData) {
     dd.innerHTML = "<option value=''>Please Select&hellip;</option>";
     dd.disabled = false;
     for (let i = 0; i < ddData.length; i += 1) {
-      let name = ddData[i]; // this works for unions
-      if (nameProp) name = name[nameProp]; // for divisions, districts, upazilas
+      let name = ddData[i]; // names for unions
+      if (nameProp) name = name[nameProp]; // names for divisions, districts, upazilas
 
       const opt = document.createElement("option");
       opt.value = name;
