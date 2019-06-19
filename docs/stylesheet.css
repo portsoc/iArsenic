@@ -47,9 +47,6 @@ html {
   height: auto;
 }
 
-/* #mixed:checked~.utensil {
-  visibility: visible;
-} */
 /* ------------------------- Textual ------------------------ */
 h1 {
   font-size: 200%;
@@ -77,7 +74,8 @@ hr {
   max-width: 100%;
 }
 
-input, select {
+input,
+select {
   border: 0.1em dashed #fffaf0;
 }
 
@@ -168,18 +166,13 @@ html {
 .chevron::before {
   top: 2vw;
   border-top-color: #0b0;
-  /*chevron Color*/
   border-bottom-color: #0b0;
-  /*chevron Color*/
 }
 
 .chevron::after {
   top: 4vw;
-  /* adjust thickness */
   border-top-color: #fffaf0;
-  /*Match background colour*/
   border-bottom-color: #fffaf0;
-  /*Match background colour*/
 }
 
 .flip .chevron {
