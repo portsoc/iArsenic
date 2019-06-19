@@ -13,6 +13,7 @@ const drinkingSection = document.querySelector('#drinkingSection');
 const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
 const mixedStain = document.querySelector('#mixed');
+const resultSection = document.querySelector('#result');
 
 //Depth scale constants
 const minPos = 0;
@@ -21,11 +22,9 @@ const minVal = Math.log(5);
 const maxVal = Math.log(1000);
 const scale = (maxVal - minVal) / (maxPos - minPos);
 
-const resultSection = document.querySelector('#result');
-
 window.addEventListener("load", init);
 
-function init(){
+function init() {
   populateDropdown(divDD, "division", "districts", dropdownData); //complete data
 
   divDD.dataset.nameProp = "division";
@@ -102,7 +101,6 @@ function handleDropDownSelection(event) {
 }
 
 //if district is choosen first, do not shorten list
-
 function populateDropdown(dropdown, nameProp, subdivProp, dropdownData) {
   dropdown.innerHTML = "<option value=''>Please Select&hellip;</option>";
   dropdown.disabled = false;
@@ -127,12 +125,11 @@ function cleanupDropdown(dd) {
   cleanupDropdown(dd.nextDropdown);
 }
 
-
 function updateRangeLabel(position) {
   depthOutput.value = Math.round(Math.exp(minVal + scale * position));
 }
 
-function updateSlider(){
+function updateSlider() {
   if (depthOutput.value > 0) {
     depth.value = (Math.log(depthOutput.value) - minVal) / scale + minPos;
   } else { depth.value = 0; }
@@ -142,11 +139,11 @@ function displayUtensil(show) {
   utensilSection.classList.toggle('hidden', !show);
 }
 
-function validateInputs(){
+function validateInputs() {
   //Handles the dropdowns
   const dropdownInputs = [divDD, disDD, upaDD, uniDD]
   for (let i = 0; i < dropdownInputs.length; i++) {
-    if (!dropdownInputs[i].value){ dropdownInputs[i].classList.add("invalid"); }
+    if (!dropdownInputs[i].value) { dropdownInputs[i].classList.add("invalid"); }
     else { dropdownInputs[i].classList.remove("invalid"); }
   }
 
@@ -154,7 +151,7 @@ function validateInputs(){
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
   if (!selectedStaining) {
     stainingSection.classList.add("invalid");
-  } else if (selectedStaining.value === 'Mixed'){
+  } else if (selectedStaining.value === 'Mixed') {
     stainingSection.classList.remove("invalid");
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
     if (!selectedUtensil) {
@@ -184,7 +181,7 @@ function submitDelay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function showAssessment(){
+function showAssessment() {
   //removed collapsed class
   //scroll to Assessment
   const inputs = gatherInputs();
@@ -194,7 +191,7 @@ function showAssessment(){
     logImage = new Image();
     logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
 
-    submitDelay(500).then(function() {
+    submitDelay(500).then(function () {
       // show the user an estimate
       chevron.classList.add('flip');
       const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
@@ -204,22 +201,22 @@ function showAssessment(){
       resultSection.className = resultObj.severity;
 
       assess.classList.remove('collapsed');
-      chevron.scrollIntoView({behavior: 'smooth', block: 'start'});
+      chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   } else {
-      assess.classList.add('collapsed');
-      chevron.classList.remove('flip');
-    }
+    assess.classList.add('collapsed');
+    chevron.classList.remove('flip');
+  }
 }
 
 function chevronClick() {
   if (!chevron.classList.contains('flip')) {
     showAssessment();
   } else {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
     });
     // validateInputs();
     chevron.classList.remove('flip');
