@@ -33,14 +33,10 @@ function init() {
   disDD.dataset.nameProp = "district";
   disDD.dataset.subProp = "upazilas";
   disDD.nextDropdown = upaDD;
-  disDD.prevDropdown = divDD;
 
   upaDD.dataset.nameProp = "upazila";
   upaDD.dataset.subProp = "unions";
   upaDD.nextDropdown = uniDD;
-  upaDD.prevDropdown = disDD;
-
-  uniDD.prevDropdown = upaDD;
 
   divDD.addEventListener("change", handleDropDownSelection);
   disDD.addEventListener("change", handleDropDownSelection);
@@ -104,36 +100,31 @@ function gatherInputs() {
   return retval;
 }
 
-function inputChange() {
-  assess.classList.add('collapsed');
-  chevron.classList.remove('flip');
-}
-
 function handleDropDownSelection(e) {
   const dd = e.target;
   const opt = dd.selectedOptions[0];
   const nextDD = dd.nextDropdown;
-  const prevDD = dd.prevDropdown;
 
   populateDropdown(nextDD, nextDD.dataset.nameProp, nextDD.dataset.subProp, opt.subdivisionData);
 }
 
 function populateDropdown(dd, nameProp, subDivProp, ddData) {
-  dd.innerHTML = "<option value=''>Please Select&hellip;</option>";
-  dd.disabled = false;
+  cleanupDropdown(dd);
 
-  cleanupDropdown(dd.nextDropdown);
+  if (ddData) {
+    dd.innerHTML = "<option value=''>Please Select&hellip;</option>";
+    dd.disabled = false;
+    for (let i = 0; i < ddData.length; i += 1) {
+      let name = ddData[i]; // this works for unions
+      if (nameProp) name = name[nameProp]; // for divisions, districts, upazilas
 
-  for (let i = 0; i < ddData.length; i += 1) {
-    let name = ddData[i]; // this works for unions
-    if (nameProp) name = name[nameProp]; // for divisions, districts, upazilas
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.text = name;
+      opt.subdivisionData = ddData[i][subDivProp];
 
-    const opt = document.createElement("option");
-    opt.value = name;
-    opt.text = name;
-    opt.subdivisionData = ddData[i][subDivProp];
-
-    dd.add(opt);
+      dd.add(opt);
+    }
   }
 }
 
@@ -146,37 +137,10 @@ function cleanupDropdown(dd) {
   cleanupDropdown(dd.nextDropdown)
 }
 
-/* function handleDropDownSelection(event) {
-  const dd = event.target;
-  const opt = dd.selectedOptions[0];
-  const nextDropdown = dd.nextDropdown;
-  populateDropdown(nextDropdown, nextDropdown.dataset.nameProp, nextDropdown.dataset.subProp, opt.subdivisionData);
+function inputChange() {
+  assess.classList.add('collapsed');
+  chevron.classList.remove('flip');
 }
-
-//if district is choosen first, do not shorten list
-function populateDropdown(dropdown, nameProp, subdivProp, dropdownData) {
-  dropdown.innerHTML = "<option value=''>Please Select&hellip;</option>";
-  dropdown.disabled = false;
-
-  cleanupDropdown(dropdown.nextDropdown);
-
-  for (let i = 0; i < dropdownData.length; i += 1) {
-    const opt = document.createElement("option");
-    let name = dropdownData[i]; // this works for unions
-    if (nameProp) name = name[nameProp]; // for divisions, districts, upazilas
-    opt.value = name;
-    opt.text = name;
-    opt.subdivisionData = dropdownData[i][subdivProp];
-    dropdown.add(opt);
-  }
-}
-
-function cleanupDropdown(dd) {
-  if (!dd) return;
-  dd.innerHTML = "<option value=''>&hellip;</option>";
-  dd.disabled = true;
-  cleanupDropdown(dd.nextDropdown);
-} */
 
 function updateRangeLabel(position) {
   depthOutput.value = Math.round(Math.exp(minVal + scale * position));
