@@ -1,9 +1,9 @@
 const csvLoader = require('./load-csv-m3');
-const produceEstimate = require('../docs/estimator-m3');
+const produceEstimate = require('../docs/estimator-m3-refactor');
 const aggregateData = require('../docs/aggregate-data')
 
 function runTests(divisions, div, dis, upa, uni) {
-  for (const depth of [20, 60]) {
+  for (const depth of [60, 100, 200]) {
     for (const colour of ['Red', 'Black']) {
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
         produceEstimate(divisions, div, dis, upa, uni, depth, colour, null).message);
