@@ -56,7 +56,7 @@ function init() {
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
 
   for (let i = 0; i < inputs.length; i += 1) {
-    inputs[i].addEventListener('change', inputChange);
+    inputs[i].addEventListener('change', hideAssessment);
   }
 }
 
@@ -137,7 +137,7 @@ function cleanupDropdown(dd) {
   cleanupDropdown(dd.nextDropdown)
 }
 
-function inputChange() {
+function hideAssessment() {
   assess.classList.add('collapsed');
   chevron.classList.remove('flip');
 }
@@ -221,8 +221,7 @@ function showAssessment() {
       chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   } else {
-    assess.classList.add('collapsed');
-    chevron.classList.remove('flip');
+    hideAssessment();
   }
 }
 
