@@ -29,7 +29,7 @@ function listDefaultFiles() {
   const filePathList = [];
   const files = fs.readdirSync(dirPath);
   for (const file of files) {
-    if (file.includes('.csv')) {
+    if (file.endsWith('.csv')) {
       let filePath = path.join(dirPath, file);
       filePathList.push(filePath);
     }
