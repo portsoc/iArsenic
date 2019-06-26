@@ -1,15 +1,11 @@
 const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
-const stats = require('./stats');
 
-const MIN_DATA_COUNT = 7;
 const CSV_PARSE_OPTIONS = {
   columns: true,
   skip_empty_lines: true,
 };
-
-
 
 function readTheCSVFiles(filePathList) {
   if (!Array.isArray(filePathList)) filePathList = [filePathList];
@@ -17,28 +13,27 @@ function readTheCSVFiles(filePathList) {
   const records = [];
 
   // parse each csv file and merge into records[]
-  for (const filePath of filePathList){
+  for (const filePath of filePathList) {
     let file = fs.readFileSync(filePath);
     let data = parse(file, CSV_PARSE_OPTIONS);
     records.push(...data);
-  };
+  }
 
   return records;
 }
 
-function listDefaultFiles(){
+function listDefaultFiles() {
   const dirPath = path.join(__dirname, '..', '..', 'data');
-
 
   // gather file paths for each csv file in /data/
   const filePathList = [];
-  const files =  fs.readdirSync(dirPath)
-  for (file of files) {
-    if (file.includes(".csv")) {
+  const files = fs.readdirSync(dirPath);
+  for (const file of files) {
+    if (file.includes('.csv')) {
       let filePath = path.join(dirPath, file);
       filePathList.push(filePath);
     }
-  };
+  }
 
   return filePathList;
 }
@@ -113,10 +108,10 @@ function fillArsenicData(divisions, records) {
       depth: Number(r.Depth)
     };
 
-      division.wells.push(wellValues);
-      district.wells.push(wellValues);
-      upazila.wells.push(wellValues);
-      union.wells.push(wellValues);
+    division.wells.push(wellValues);
+    district.wells.push(wellValues);
+    upazila.wells.push(wellValues);
+    union.wells.push(wellValues);
   }
 }
 
@@ -128,10 +123,7 @@ function loadData(paths) {
 
   fillArsenicData(divisions, records);
   console.debug(`Parsed ${records.length} records.`);
-  console.log(divisions)
   return divisions;
 }
-
-loadData();
 
 module.exports = loadData;
