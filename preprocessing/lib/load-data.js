@@ -4,6 +4,12 @@ const path = require('path');
 const stats = require('./stats');
 
 const MIN_DATA_COUNT = 7;
+const CSV_PARSE_OPTIONS = {
+  columns: true,
+  skip_empty_lines: true,
+};
+
+
 
 function readTheCSVFiles(filePathList) {
   if (!Array.isArray(filePathList)) filePathList = [filePathList];
@@ -13,10 +19,7 @@ function readTheCSVFiles(filePathList) {
   // parse each csv file and merge into records[]
   for (const filePath of filePathList){
     let file = fs.readFileSync(filePath);
-    let data = parse(file, {
-      columns: true,
-      skip_empty_lines: true,
-    });
+    let data = parse(file, CSV_PARSE_OPTIONS);
     records.push(...data);
   };
 
