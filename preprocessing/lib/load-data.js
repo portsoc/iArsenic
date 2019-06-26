@@ -5,19 +5,19 @@ const stats = require('./stats');
 
 const MIN_DATA_COUNT = 7;
 
-function readTheCSVFiles(filePaths) {
-  if (!Array.isArray(filePaths)) filePaths = [filePaths];
+function readTheCSVFiles(filePathList) {
+  if (!Array.isArray(filePathList)) filePathList = [filePathList];
 
   const records = [];
 
   // parse each csv file and merge into records[]
-  for (let i = 0; i < filePaths.length; i += 1){
-    let file = fs.readFileSync(filePaths[i]);
+  for (const filePath of filePathList){
+    let file = fs.readFileSync(filePath);
     let data = parse(file, {
       columns: true,
       skip_empty_lines: true,
     });
-    Array.prototype.push.apply(records, data);
+    records.push(...data);
   };
 
   return records;
@@ -26,17 +26,18 @@ function readTheCSVFiles(filePaths) {
 function listDefaultFiles(){
   const dirPath = path.join(__dirname, '..', '..', 'data');
 
-  files = [];
 
   // gather file paths for each csv file in /data/
-  fs.readdirSync(dirPath).forEach(file => {
+  const filePathList = [];
+  const files =  fs.readdirSync(dirPath)
+  for (file of files) {
     if (file.includes(".csv")) {
       let filePath = path.join(dirPath, file);
-      files.push(filePath);
+      filePathList.push(filePath);
     }
-  });
+  };
 
-  return files;
+  return filePathList;
 }
 
 // prepare the location-based data hierarchy if the location is new
