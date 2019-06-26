@@ -1,4 +1,4 @@
-const parse = require('../preprocessing/node_modules/csv-parse/lib/sync');
+const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
 const stats = require('./stats');
@@ -24,7 +24,7 @@ function readTheCSVFiles(filePaths) {
 }
 
 function listDefaultFiles(){
-  const dirPath = path.join(__dirname, '..', 'data');
+  const dirPath = path.join(__dirname, '..', '..', 'data');
 
   files = [];
 
@@ -124,7 +124,7 @@ function loadData(paths) {
 
   fillArsenicData(divisions, records);
   console.debug(`Parsed ${records.length} records.`);
-
+  console.log(divisions)
   return divisions;
 }
 
