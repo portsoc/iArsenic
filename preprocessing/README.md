@@ -1,78 +1,58 @@
-# iArsenic data preprocessing
+# iArsenic Data Preprocessing
 
-## data structures
+## Requirements
 
-We deal with a 4-level hierarchy of administrative units:
-division, district, upazila, and union.
+* Ensure the csv headers are as follows:
+  * 'Division,District,Upazila,Depth,Arsenic,Union'
 
-For every area, on every level, we compute the following:
+## How to Use It
 
-* `as_median_under_90`
-* `as_max_under_90`
-* `lower_quantile_under_90`
-* `upper_quantile_under_90`
-* `as_mean_over_90`
+* Run ./cli/produce-aggregate-data-files.js
+  * Run ./lib/load-data.js to parse the csv reads
+    * If no file path is provided, load-data.js will use the default files in ../data/
+  * Use CLI to create model-specific output
+  * Output:
+    * JSON of geographical hierarchy
+    * JSON of aggregate data
+    * Copy current model's estimator into ../docs/
 
-The in-memory structure that we get from the data looks like this:
+## Output Structures
 
-```javascript
-const divisions = {
-  wells_under_90: [],
-  wells_over_90: [],
-  name: '..',
+```
+if (!(r.Division in divisions)) {
+  divisions[r.Division] = {
+    wells: [],
+    districts: {},
+    name: r.Division,
+  };
+}
+const division = divisions[r.Division];
 
-  as_median_under_90,
-  as_max_under_90,
-  lower_quantile_under_90,
-  upper_quantile_under_90,
-  as_mean_over_90,
+if (!(r.District in division.districts)) {
+  division.districts[r.District] = {
+    wells: [],
+    upazilas: {},
+    name: r.District,
+    parent: division,
+  };
+}
+const district = division.districts[r.District];
 
-  districts: {
-    wells_under_90: [],
-    wells_over_90: [],
-    name: '..',
-    parent: the division above,
+if (!(r.Upazila in district.upazilas)) {
+  district.upazilas[r.Upazila] = {
+    wells: [],
+    unions: {},
+    name: r.Upazila,
+    parent: district,
+  };
+}
+const upazila = district.upazilas[r.Upazila];
 
-    as_median_under_90,
-    as_max_under_90,
-    lower_quantile_under_90,
-    upper_quantile_under_90,
-    as_mean_over_90,
-
-    upazilas: {
-      wells_under_90: [],
-      wells_over_90: [],
-      name: '..',
-      parent: the district above,
-
-      as_median_under_90,
-      as_max_under_90,
-      lower_quantile_under_90,
-      upper_quantile_under_90,
-      as_mean_over_90,
-
-      unions: {
-        wells_under_90: [],
-        wells_over_90: [],
-        name: '..',
-        parent: the upazila above,
-
-        as_median_under_90,
-        as_max_under_90,
-        lower_quantile_under_90,
-        upper_quantile_under_90,
-        as_mean_over_90,
-      }
-    }
-  }
+if (!(r.Union in upazila.unions)) {
+  upazila.unions[r.Union] = {
+    wells: [],
+    name: r.Union,
+    parent: upazila,
+  };
 }
 ```
-
-## testing machine in the cloud
-
-Setup:
-* install node and npm
-  * https://github.com/nodesource/distributions/blob/master/README.md
-* install R
-  * https://www.linode.com/docs/development/r/how-to-install-r-on-ubuntu-and-debian/
-* make directory ~/auto-tests
