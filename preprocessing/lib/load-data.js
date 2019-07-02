@@ -103,15 +103,15 @@ function fillArsenicData(divisions, records) {
     const upazila = district.upazilas[r.Upazila];
     const union = upazila.unions[r.Union];
 
-    const wellValues = {
+    const well = {
       arsenic: Number(r.Arsenic),
       depth: Number(r.Depth)
     };
 
-    division.wells.push(wellValues);
-    district.wells.push(wellValues);
-    upazila.wells.push(wellValues);
-    union.wells.push(wellValues);
+    division.wells.push(well);
+    district.wells.push(well);
+    upazila.wells.push(well);
+    union.wells.push(well);
   }
 }
 
