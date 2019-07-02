@@ -1,13 +1,12 @@
 const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
-
 const stats = require('./lib/stats');
 
 const MIN_DATA_COUNT = 7;
 
 function readTheCSVFile() {
-  const filePath = path.join(__dirname, '..', 'data', 'disabled','29k-original.csv');
+  const filePath = path.join(__dirname, '..', 'data', 'disabled', '29k-original.csv');
   const data = fs.readFileSync(filePath);
 
   const records = parse(data, {
@@ -118,7 +117,7 @@ function fillArsenicData(divisions, records) {
       district.wells_shallow.push(Number(r.Arsenic));
       upazila.wells_shallow.push(Number(r.Arsenic));
       union.wells_shallow.push(Number(r.Arsenic));
-    } else if (Number(r.Depth) < 150){
+    } else if (Number(r.Depth) < 150) {
       division.wells_med.push(Number(r.Arsenic));
       district.wells_med.push(Number(r.Arsenic));
       upazila.wells_med.push(Number(r.Arsenic));

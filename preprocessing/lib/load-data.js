@@ -56,6 +56,7 @@ function extractLocations(records) {
         name: r.Division,
       };
     }
+
     const division = divisions[r.Division];
 
     if (!(r.District in division.districts)) {
@@ -66,6 +67,7 @@ function extractLocations(records) {
         parent: division,
       };
     }
+
     const district = division.districts[r.District];
 
     if (!(r.Upazila in district.upazilas)) {
@@ -76,6 +78,7 @@ function extractLocations(records) {
         parent: district,
       };
     }
+
     const upazila = district.upazilas[r.Upazila];
 
     if (!(r.Union in upazila.unions)) {
@@ -86,6 +89,7 @@ function extractLocations(records) {
       };
     }
   }
+
   return divisions;
 }
 
@@ -123,6 +127,7 @@ function loadData(paths) {
 
   fillArsenicData(divisions, records);
   console.debug(`Parsed ${records.length} records.`);
+
   return divisions;
 }
 

@@ -26,6 +26,7 @@ function extractNames(data, hierarchyPath) {
     }
     retval.sort(compareByProperty(hierarchyPath[0]));
   }
+
   return retval;
 }
 
@@ -40,11 +41,11 @@ function compareByProperty(prop) {
 function main(model) {
   if (!model) model = DEFAULT_MODEL;
   const processorPath = path.join(__dirname, '..', 'models', model + '-preprocessor');
-  const dropdownDataPath = path.join(__dirname, '..', 'prepare-dropdown-data');
 
   const modelProcessor = require(processorPath);
   const aggregateData = modelProcessor(DATA);
   const dropdownData = extractNames(DATA, ['division', 'district', 'upazila', 'union']);
+
   console.log('const aggregateData = \n' + JSON.stringify(aggregateData));
   console.log('const dropdownData = \n' + JSON.stringify(dropdownData));
 }
