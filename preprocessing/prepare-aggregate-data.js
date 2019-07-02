@@ -38,7 +38,7 @@ which looks like this:
 
 */
 
-const csvLoader = require('./load-csv-model-3');
+const csvLoader = require('./load-csv-m3');
 
 console.debug = () => {};
 const data = csvLoader();
@@ -50,18 +50,18 @@ function extractStats(data, hierarchyPath) {
   for (const item of Object.keys(data)) {
     const dataObj = data[item];
     const hierarchyObj = {
-      med_s: dataObj.as_median_shallow,
-      max_s: dataObj.as_max_shallow,
-      low_s: dataObj.lower_quantile_shallow,
-      upp_s: dataObj.upper_quantile_shallow,
-      med_m: dataObj.as_median_med,
-      max_m: dataObj.as_max_med,
-      low_m: dataObj.lower_quantile_med,
-      upp_m: dataObj.upper_quantile_med,
-      med_d: dataObj.as_median_deep,
-      max_d: dataObj.as_max_deep,
-      low_d: dataObj.lower_quantile_deep,
-      upp_d: dataObj.upper_quantile_deep
+      med_s: dataObj.med_s,
+      max_s: dataObj.max_s,
+      low_s: dataObj.low_s,
+      upp_s: dataObj.upp_s,
+      med_m: dataObj.med_m,
+      max_m: dataObj.max_m,
+      low_m: dataObj.low_m,
+      upp_m: dataObj.upp_m,
+      med_d: dataObj.med_d,
+      max_d: dataObj.max_d,
+      low_d: dataObj.low_d,
+      upp_d: dataObj.upp_d
     };
     if (hierarchyPath.length > 1) {
       const subData = dataObj[hierarchyPath[1] + 's'];
@@ -73,4 +73,4 @@ function extractStats(data, hierarchyPath) {
 }
 
 const hierarchy = extractStats(data, ['division', 'district', 'upazila', 'union']);
-console.log(JSON.stringify(hierarchy));
+console.log('const aggregateData =\n' + JSON.stringify(hierarchy));
