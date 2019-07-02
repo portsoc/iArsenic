@@ -2,12 +2,12 @@ const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
 
-const stats = require('./stats');
+const stats = require('./lib/stats');
 
 const MIN_DATA_COUNT = 7;
 
 function readTheCSVFile() {
-  const filePath = path.join(__dirname, '..', 'rscripts', 'data', 'AdmBnd1b.csv');
+  const filePath = path.join(__dirname, '..', 'data', 'disabled','29k-original.csv');
   const data = fs.readFileSync(filePath);
 
   const records = parse(data, {
