@@ -1,6 +1,6 @@
 /* global describe, it, expect */
 
-const stats = require('../stats');
+const stats = require('../lib/stats');
 
 describe('stats', () => {
   describe('quantile', () => {
