@@ -8,51 +8,58 @@
 ## How to Use It
 
 * Run ./cli/produce-aggregate-data-files.js
-  * Run ./lib/load-data.js to parse the csv reads
-    * If no file path is provided, load-data.js will use the default files in ../data/
-  * Use CLI to create model-specific output
-  * Output:
-    * JSON of geographical hierarchy
-    * JSON of aggregate data
-    * Copy current model's estimator into ../docs/
+  * This will parse the csv file (using load-data.js)
+    * If no file path is provided, it will use the default files in ../data/
+  * Produces geographical hierarchy data
+  * Model-specific pre-processor will:
+    * Describe model-specific data structure
+    * Prepare the aggregate data from the output of load-data.js (described below)
+  * Puts a copy of <modelid>-estimator.js in ./docs/estimator.js
+  * Puts a copy of the geographical hierarchy in ./docs/dropdown-data.js
 
 ## Output Structures
 
+### load-data.js Output
+
 ```
-if (!(r.Division in divisions)) {
-  divisions[r.Division] = {
-    wells: [],
-    districts: {},
-    name: r.Division,
-  };
-}
-const division = divisions[r.Division];
+const divisions = {
+  wells: [],
+  name: '..',
 
-if (!(r.District in division.districts)) {
-  division.districts[r.District] = {
+  districts: {
     wells: [],
-    upazilas: {},
-    name: r.District,
-    parent: division,
-  };
-}
-const district = division.districts[r.District];
+    name: '..',
+    parent: the division above,
 
-if (!(r.Upazila in district.upazilas)) {
-  district.upazilas[r.Upazila] = {
-    wells: [],
-    unions: {},
-    name: r.Upazila,
-    parent: district,
-  };
-}
-const upazila = district.upazilas[r.Upazila];
+    upazilas: {
+      wells: [],
+      name: '..',
+      parent: the district above,
 
-if (!(r.Union in upazila.unions)) {
-  upazila.unions[r.Union] = {
-    wells: [],
-    name: r.Union,
-    parent: upazila,
-  };
+      unions: {
+        wells: [],
+        name: '..',
+        parent: the upazila above,
+        },
+      },
+  }
+}
+```
+
+### dropdown-data.js Output
+
+```
+const dropdownData = {
+  division: division name,
+  districts: [{
+    district: district name,
+    upazilas: [{
+      upazila: upazila name,
+      unions: [
+        union name
+        ...
+      ]
+      }]
+    }]
 }
 ```
