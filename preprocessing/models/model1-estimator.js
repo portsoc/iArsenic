@@ -16,8 +16,11 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
   const upazila = district ? district.upazilas[upa] : undefined;
   const union = upazila ? upazila.unions[uni] : undefined;
 
+  const retval = {};
+
   if (!union) {
-    return 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    return retval;
   }
 
   const notEnoughData =
@@ -34,7 +37,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
         ? ' but may be vulnerable to nitrate and pathogens'
         : '';
 
-    return notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
+    retval.message = notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
   } else if (colour === 'Red' | utensil === 'Red') {
     if (depth < 90) {
       const pollutionStatus =
@@ -51,17 +54,18 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
           ? 'and concentration may be around'
           : ', a chemical test is needed as concentration can be high, ranging around';
 
-      return notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.lower_quantile_under_90, 10, 1) + ' to ' + round(union.upper_quantile_under_90, 10, 1) + ' µg/L ';
+      retval.message = notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.lower_quantile_under_90, 10, 1) + ' to ' + round(union.upper_quantile_under_90, 10, 1) + ' µg/L ';
     } else if (depth <= 150) {
       if (union.as_mean_over_90 >= 50) {
-        return notEnoughData + 'Your tubewell is highly likely to be Polluted.';
+        retval.message = notEnoughData + 'Your tubewell is highly likely to be Polluted.';
       } else {
-        return notEnoughData + 'Your tubewell may be arsenic-safe.';
+        retval.message = notEnoughData + 'Your tubewell may be arsenic-safe.';
       }
     } else {
-      return notEnoughData + 'Your tubewell is HIGHLY likely to be arsenic-safe';
+      retval.message = notEnoughData + 'Your tubewell is HIGHLY likely to be arsenic-safe';
     }
   }
+  return retval;
 }
 
 if (typeof module === 'object') module.exports = produceEstimate;
