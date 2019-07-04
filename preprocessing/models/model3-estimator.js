@@ -38,7 +38,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
-    // Flood is not yet a provided input so I (Dillon) have commented it out ready for future implementation
+    // Flood is not yet a provided input so we have commented it out ready for future implementation
 
     // const floodWarning =
     //   (depth <= 15 && flood === 'No')

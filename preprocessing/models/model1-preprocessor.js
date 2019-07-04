@@ -1,77 +1,34 @@
-// const parse = require('csv-parse/lib/sync');
-// const fs = require('fs');
-// const path = require('path');
+/*
+
+This script generates a JSON representation of the location hierarchy including pre-processed arsenic level data
+which looks like this:
+
+[
+  division: '..',
+    as_median_under_90,
+    as_max_under_90,
+    lower_quantile_under_90,
+    upper_quantile_under_90,
+    as_mean_over_90
+
+  districts: [
+    district: '..',
+    stats as above,
+    upazilas: [
+      upazila: '..',
+      stats as above,
+      unions: [
+        union: '..',
+        stats as above,
+      ]
+    ]
+  ]
+]
+*/
 
 const stats = require('../lib/stats');
 
 const MIN_DATA_COUNT = 7;
-
-// function readTheCSVFile() {
-//   const filePath = path.join(__dirname, '..', 'rscripts', 'data', 'AdmBnd1b.csv');
-//   const data = fs.readFileSync(filePath);
-//
-//   const records = parse(data, {
-//     columns: true,
-//     skip_empty_lines: true,
-//   });
-//
-//   return records;
-// }
-
-// prepare the location-based data hierarchy if the location is new
-// function extractLocations(records) {
-//   const divisions = {};
-//
-//   for (const r of records) {
-//     if (!r.Division || !r.District || !r.Upazila || !r.Union) {
-//       // skip because we don't have location
-//       continue;
-//     }
-//
-//     if (!(r.Division in divisions)) {
-//       divisions[r.Division] = {
-//         wells_under_90: [],
-//         wells_over_90: [],
-//         districts: {},
-//         name: r.Division,
-//       };
-//     }
-//     const division = divisions[r.Division];
-//
-//     if (!(r.District in division.districts)) {
-//       division.districts[r.District] = {
-//         wells_under_90: [],
-//         wells_over_90: [],
-//         upazilas: {},
-//         name: r.District,
-//         parent: division,
-//       };
-//     }
-//     const district = division.districts[r.District];
-//
-//     if (!(r.Upazila in district.upazilas)) {
-//       district.upazilas[r.Upazila] = {
-//         wells_under_90: [],
-//         wells_over_90: [],
-//         unions: {},
-//         name: r.Upazila,
-//         parent: district,
-//       };
-//     }
-//     const upazila = district.upazilas[r.Upazila];
-//
-//     if (!(r.Union in upazila.unions)) {
-//       upazila.unions[r.Union] = {
-//         wells_under_90: [],
-//         wells_over_90: [],
-//         name: r.Union,
-//         parent: upazila,
-//       };
-//     }
-//   }
-//
-//   return divisions;
-// }
 
 function structureLocation(region) {
   region.wells_under_90 = [];
@@ -102,34 +59,6 @@ function organiseArsenicData(divisions) {
 
   return divisions;
 }
-
-// put each well's arsenic level data into the location hierarchy
-// function fillArsenicData(divisions, records) {
-//   for (const r of records) {
-//     if (!r.Division || !r.District || !r.Upazila || !r.Union ||
-//         !r.Depth || isNaN(r.Depth) || r.Arsenic === '' || isNaN(r.Arsenic)) {
-//       // skip because we don't have location or depth or arsenic level
-//       continue;
-//     }
-//
-//     const division = divisions[r.Division];
-//     const district = division.districts[r.District];
-//     const upazila = district.upazilas[r.Upazila];
-//     const union = upazila.unions[r.Union];
-//
-//     if (Number(r.Depth) < 90) {
-//       division.wells_under_90.push(Number(r.Arsenic));
-//       district.wells_under_90.push(Number(r.Arsenic));
-//       upazila.wells_under_90.push(Number(r.Arsenic));
-//       union.wells_under_90.push(Number(r.Arsenic));
-//     } else {
-//       division.wells_over_90.push(Number(r.Arsenic));
-//       district.wells_over_90.push(Number(r.Arsenic));
-//       upazila.wells_over_90.push(Number(r.Arsenic));
-//       union.wells_over_90.push(Number(r.Arsenic));
-//     }
-//   }
-// }
 
 function computeWellStats(location) {
   // sort the arsenic concentration data arrays
