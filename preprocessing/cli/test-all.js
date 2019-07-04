@@ -1,6 +1,9 @@
-const DEFAULT_MODEL = 'model3';
 const path = require('path');
+
 const csvLoader = require('../lib/load-data');
+const cli = require('../lib/cli-common');
+
+const DEFAULT_MODEL = 'model3';
 
 function runTests(produceEstimate, divisions, div, dis, upa, uni) {
   for (const depth of [20, 60, 100, 200]) {
@@ -31,15 +34,18 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni) {
   }
 }
 
-function main(model, paths) {
-  if (!model) model = DEFAULT_MODEL;
-  const estimatorPath = path.join(__dirname, '..', 'models', model + '-estimator');
-  const preprocessorPath = path.join(__dirname, '..', 'models', model + '-preprocessor');
+function main(opts) {
+  const options = Object.assign({
+    model: DEFAULT_MODEL,
+  }, opts);
+
+  const estimatorPath = path.join(__dirname, '..', 'models', options.model + '-estimator');
+  const preprocessorPath = path.join(__dirname, '..', 'models', options.model + '-preprocessor');
 
   const preprocessor = require(preprocessorPath);
   const produceEstimate = require(estimatorPath);
 
-  const data = csvLoader(paths);
+  const data = csvLoader(options.paths);
   const divisions = preprocessor(data);
 
   /* eslint-disable */
@@ -5215,4 +5221,4 @@ function main(model, paths) {
   // }, 2000);
 }
 
-main();
+main(cli.getParameters());

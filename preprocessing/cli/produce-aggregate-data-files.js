@@ -1,5 +1,7 @@
-const loadData = require('../lib/load-data');
 const path = require('path');
+
+const loadData = require('../lib/load-data');
+const cli = require('../lib/cli-common');
 
 const DEFAULT_MODEL = 'model3';
 
@@ -37,11 +39,14 @@ function compareByProperty(prop) {
   };
 }
 
-function main(model, paths) {
-  if (!model) model = DEFAULT_MODEL;
-  const processorPath = path.join(__dirname, '..', 'models', model + '-preprocessor');
+function main(opts) {
+  const options = Object.assign({
+    model: DEFAULT_MODEL,
+  }, opts);
 
-  const data = loadData(paths);
+  const processorPath = path.join(__dirname, '..', 'models', options.model + '-preprocessor');
+
+  const data = loadData(options.paths);
 
   const modelProcessor = require(processorPath);
   const aggregateData = modelProcessor(data);
@@ -51,4 +56,4 @@ function main(model, paths) {
   console.log('const dropdownData = \n' + JSON.stringify(dropdownData));
 }
 
-main();
+main(cli.getParameters());

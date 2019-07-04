@@ -1,0 +1,50 @@
+const commandLineArgs = require('command-line-args');
+
+const optionDefinitions = [
+  { name: 'help', alias: 'h', type: Boolean },
+  {
+    name: 'paths',
+    alias: 'p',
+    type: String,
+    defaultOption: true,
+    defaultValue: [],
+    multiple: true,
+  },
+  {
+    name: 'model',
+    alias: 'm',
+    type: String,
+    defaultValue: 'model3',
+  },
+];
+
+function usage() {
+  console.log(`Available command-line options:
+
+Options:
+
+  -h, --help               Show this help
+
+  -m modelid
+  --model=modelid          Use model <modelid> instead of the default.
+                           Too see what models are available, look in models/
+
+  [-p] path1 path2 ...
+                           Use the given CSV files as input data.
+`.trim());
+}
+
+const options = commandLineArgs(optionDefinitions);
+
+if (options.help) {
+  usage();
+  process.exit(0);
+}
+
+function getParameters() {
+  return null; // not implemented
+}
+
+module.exports = {
+  getParameters,
+};
