@@ -1,7 +1,6 @@
 const loadData = require('../lib/load-data');
 const path = require('path');
 
-const DATA = loadData();
 const DEFAULT_MODEL = 'model3';
 
 function extractNames(data, hierarchyPath) {
@@ -38,13 +37,15 @@ function compareByProperty(prop) {
   };
 }
 
-function main(model) {
+function main(model, paths) {
   if (!model) model = DEFAULT_MODEL;
   const processorPath = path.join(__dirname, '..', 'models', model + '-preprocessor');
 
+  const data = loadData(paths);
+
   const modelProcessor = require(processorPath);
-  const aggregateData = modelProcessor(DATA);
-  const dropdownData = extractNames(DATA, ['division', 'district', 'upazila', 'union']);
+  const aggregateData = modelProcessor(data);
+  const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union']);
 
   console.log('const aggregateData = \n' + JSON.stringify(aggregateData));
   console.log('const dropdownData = \n' + JSON.stringify(dropdownData));

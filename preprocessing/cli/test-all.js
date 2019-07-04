@@ -31,7 +31,7 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni) {
   }
 }
 
-function main(model) {
+function main(model, paths) {
   if (!model) model = DEFAULT_MODEL;
   const estimatorPath = path.join(__dirname, '..', 'models', model + '-estimator');
   const preprocessorPath = path.join(__dirname, '..', 'models', model + '-preprocessor');
@@ -39,7 +39,7 @@ function main(model) {
   const preprocessor = require(preprocessorPath);
   const produceEstimate = require(estimatorPath);
 
-  const data = csvLoader();
+  const data = csvLoader(paths);
   const divisions = preprocessor(data);
 
   /* eslint-disable */
