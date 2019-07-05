@@ -52,8 +52,21 @@ function main(opts) {
   const aggregateData = modelProcessor(data);
   const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union']);
 
-  console.log('const aggregateData = \n' + JSON.stringify(aggregateData));
-  console.log('const dropdownData = \n' + JSON.stringify(dropdownData));
+  console.log(
+    `// model: ${options.model}` + '\n' +
+    `// generated: ${(new Date()).toString()}` + '\n' +
+    '// input data: default' + '\n' +
+    'const aggregateData = \n' +
+    JSON.stringify(aggregateData)
+  );
+
+  console.log(
+    `// model: ${options.model}` + '\n' +
+    `// generated: ${(new Date()).toString()}` + '\n' +
+    '// input data: default' + '\n' +
+    'const dropdownData = \n' +
+    JSON.stringify(dropdownData)
+  );
 }
 
 main(cli.getParameters());
