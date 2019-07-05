@@ -23,26 +23,28 @@
 
 ```
 const divisions = {
-  wells: [],
-  name: '..',
-
-  districts: {
+  'division name': {
     wells: [],
-    name: '..',
-    parent: the division above,
-
-    upazilas: {
+    name: 'division name',
+    'district name': {
       wells: [],
-      name: '..',
-      parent: the district above,
-
-      unions: {
+      name: 'district name',
+      parent: the division above,
+      'upazila name': {
         wells: [],
-        name: '..',
-        parent: the upazila above,
+        name: 'upazila name',
+        parent: the district above,
+        'union name': {
+          wells: [],
+          name: 'union name',
+          parent: the upazila above,
         },
       },
-  }
+    }
+  },
+  'division name': {
+    ...
+  },
 }
 ```
 
