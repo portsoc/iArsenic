@@ -64,7 +64,6 @@ function extractLocations(records) {
         wells: [],
         upazilas: {},
         name: r.District,
-        parent: division,
       };
     }
 
@@ -75,7 +74,6 @@ function extractLocations(records) {
         wells: [],
         unions: {},
         name: r.Upazila,
-        parent: district,
       };
     }
 
@@ -85,7 +83,6 @@ function extractLocations(records) {
       upazila.unions[r.Union] = {
         wells: [],
         name: r.Union,
-        parent: upazila,
       };
     }
   }

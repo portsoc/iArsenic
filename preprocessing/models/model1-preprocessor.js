@@ -60,7 +60,7 @@ function organiseArsenicData(divisions) {
   return divisions;
 }
 
-function computeWellStats(location) {
+function computeWellStats(location, parent) {
   // sort the arsenic concentration data arrays
   location.wells_under_90.sort(numericalCompare);
   location.wells_over_90.sort(numericalCompare);
@@ -68,13 +68,13 @@ function computeWellStats(location) {
   // if we don't have enough data under 90
   //   take the computations from the parent or complain
   if (location.wells_under_90.length < MIN_DATA_COUNT) {
-    if (!location.parent) {
+    if (!parent) {
       console.debug(`Division ${location.name} does not have enough wells under 90`);
     } else {
-      location.as_median_under_90 = location.parent.as_median_under_90;
-      location.as_max_under_90 = location.parent.as_max_under_90;
-      location.lower_quantile_under_90 = location.parent.lower_quantile_under_90;
-      location.upper_quantile_under_90 = location.parent.upper_quantile_under_90;
+      location.as_median_under_90 = parent.as_median_under_90;
+      location.as_max_under_90 = parent.as_max_under_90;
+      location.lower_quantile_under_90 = parent.lower_quantile_under_90;
+      location.upper_quantile_under_90 = parent.upper_quantile_under_90;
     }
   } else {
     // we do have enough data under 90
@@ -87,10 +87,10 @@ function computeWellStats(location) {
   // if we don't have enough data over 90
   //   take the computations from the parent or complain
   if (location.wells_over_90.length < MIN_DATA_COUNT) {
-    if (!location.parent) {
+    if (!parent) {
       console.debug(`Division ${location.name} does not have enough wells under 90`);
     } else {
-      location.as_mean_over_90 = location.parent.as_mean_over_90;
+      location.as_mean_over_90 = parent.as_mean_over_90;
     }
   } else {
     // we do have enough data over 90
@@ -128,11 +128,11 @@ function main(data) {
   for (const div of Object.values(divisions)) {
     computeWellStats(div);
     for (const dis of Object.values(div.districts)) {
-      computeWellStats(dis);
+      computeWellStats(dis, div);
       for (const upa of Object.values(dis.upazilas)) {
-        computeWellStats(upa);
+        computeWellStats(upa, dis);
         for (const uni of Object.values(upa.unions)) {
-          computeWellStats(uni);
+          computeWellStats(uni, upa);
         }
       }
     }

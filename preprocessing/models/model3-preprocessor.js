@@ -79,7 +79,7 @@ function organiseArsenicData(divisions) {
   return divisions;
 }
 
-function computeWellStats(location) {
+function computeWellStats(location, parent) {
   // sort the arsenic concentration data arrays
   location.wells_shallow.sort(numericalCompare);
   location.wells_med.sort(numericalCompare);
@@ -88,13 +88,13 @@ function computeWellStats(location) {
   // if we don't have enough shallow well data (d<90)
   //   take the computations from the parent or complain
   if (location.wells_shallow.length < MIN_DATA_COUNT) {
-    if (!location.parent) {
+    if (!parent) {
       console.debug(`Division ${location.name} does not have enough shallow wells`);
     } else {
-      location.med_s = location.parent.med_s;
-      location.max_s = location.parent.max_s;
-      location.low_s = location.parent.low_s;
-      location.upp_s = location.parent.upp_s;
+      location.med_s = parent.med_s;
+      location.max_s = parent.max_s;
+      location.low_s = parent.low_s;
+      location.upp_s = parent.upp_s;
     }
   } else {
     // we do have enough data
@@ -107,13 +107,13 @@ function computeWellStats(location) {
   // if we don't have enough med well data (90<=d<150)
   //   take the computations from the parent or complain
   if (location.wells_med.length < MIN_DATA_COUNT) {
-    if (!location.parent) {
+    if (!parent) {
       console.debug(`Division ${location.name} does not have enough med wells`);
     } else {
-      location.med_m = location.parent.med_m;
-      location.max_m = location.parent.max_m;
-      location.low_m = location.parent.low_m;
-      location.upp_m = location.parent.upp_m;
+      location.med_m = parent.med_m;
+      location.max_m = parent.max_m;
+      location.low_m = parent.low_m;
+      location.upp_m = parent.upp_m;
     }
   } else {
     // we do have enough data
@@ -126,13 +126,13 @@ function computeWellStats(location) {
   // if we don't have enough deep well data (150<=d)
   //   take the computations from the parent or complain
   if (location.wells_deep.length < MIN_DATA_COUNT) {
-    if (!location.parent) {
+    if (!parent) {
       console.debug(`Division ${location.name} does not have enough deep wells`);
     } else {
-      location.med_d = location.parent.med_d;
-      location.max_d = location.parent.max_d;
-      location.low_d = location.parent.low_d;
-      location.upp_d = location.parent.upp_d;
+      location.med_d = parent.med_d;
+      location.max_d = parent.max_d;
+      location.low_d = parent.low_d;
+      location.upp_d = parent.upp_d;
     }
   } else {
     // we do have enough data
@@ -186,11 +186,11 @@ function main(data) {
   for (const div of Object.values(divisions)) {
     computeWellStats(div);
     for (const dis of Object.values(div.districts)) {
-      computeWellStats(dis);
+      computeWellStats(dis, div);
       for (const upa of Object.values(dis.upazilas)) {
-        computeWellStats(upa);
+        computeWellStats(upa, dis);
         for (const uni of Object.values(upa.unions)) {
-          computeWellStats(uni);
+          computeWellStats(uni, upa);
         }
       }
     }

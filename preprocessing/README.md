@@ -26,23 +26,26 @@ const divisions = {
   'division name': {
     wells: [],
     name: 'division name',
-    'district name': {
-      wells: [],
-      name: 'district name',
-      parent: the division above,
-      'upazila name': {
+    districts: {
+      'district name': {
         wells: [],
-        name: 'upazila name',
-        parent: the district above,
-        'union name': {
-          wells: [],
-          name: 'union name',
-          parent: the upazila above,
+        name: 'district name',
+        upazilas: {
+          'upazila name': {
+            wells: [],
+            name: 'upazila name',
+            unions: {
+              'union name': {
+                wells: [],
+                name: 'union name',
+              },
+            },
+          },
         },
       },
-    }
+    },
   },
-  'division name': {
+  'next division name': {
     ...
   },
 }
@@ -51,17 +54,26 @@ const divisions = {
 ### dropdown-data.js Output
 
 ```
-const dropdownData = {
-  division: division name,
-  districts: [{
-    district: district name,
-    upazilas: [{
-      upazila: upazila name,
-      unions: [
-        union name
-        ...
-      ]
-      }]
-    }]
-}
+const dropdownData = [
+  {
+    division: 'division name',
+    districts: [
+      {
+        district: 'district name',
+        upazilas: [
+          {
+            upazila: 'upazila name',
+            unions: [
+              'union name'
+              ...
+            ],
+          },
+          ...
+        ],
+      },
+      ...
+    ],
+  },
+  ...
+]
 ```
