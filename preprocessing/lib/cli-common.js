@@ -7,7 +7,6 @@ const optionDefinitions = [
     alias: 'p',
     type: String,
     defaultOption: true,
-    defaultValue: null,
     multiple: true,
   },
   {
