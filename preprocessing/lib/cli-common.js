@@ -7,7 +7,7 @@ const optionDefinitions = [
     alias: 'p',
     type: String,
     defaultOption: true,
-    defaultValue: [],
+    defaultValue: null,
     multiple: true,
   },
   {
@@ -42,11 +42,7 @@ if (options.help) {
 }
 
 function getParameters() {
-  if (!Array.isArray(options.paths) || !options.paths.length) {
-    options.paths = null;
-  }
   return options;
-  // not implemented
 }
 
 module.exports = {
