@@ -2,8 +2,8 @@
 
 ## Requirements
 
-* Ensure the csv headers are as follows:
-  * 'Division,District,Upazila,Depth,Arsenic,Union'
+* Ensure the csv headers are as follows (**Case matters!**):
+  * `Division,District,Upazila,Depth,Arsenic,Union`
 
 ## How to Use It
 
