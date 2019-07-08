@@ -47,27 +47,22 @@ function main(opts) {
   const processorPath = path.join(__dirname, '..', 'models', options.model + '-preprocessor');
 
   const data = loadData(options.paths);
-  const inputData = (options.paths === null) ? 'default' : options.paths;
 
   const modelProcessor = require(processorPath);
   const aggregateData = modelProcessor(data);
   const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union']);
 
-  console.log(
-    `// model: ${options.model}` + '\n' +
-    `// generated: ${(new Date()).toString()}` + '\n' +
-    `// input data: ${inputData}` + '\n' +
-    'const aggregateData = \n' +
-    JSON.stringify(aggregateData)
-  );
+  console.log(fileHeading(options) + 'const aggregateData = ' + JSON.stringify(aggregateData));
+  console.log(fileHeading(options) + 'const dropdownData = ' + JSON.stringify(dropdownData));
+}
 
-  console.log(
-    `// model: ${options.model}` + '\n' +
-    `// generated: ${(new Date()).toString()}` + '\n' +
-    `// input data: ${inputData}` + '\n' +
-    'const dropdownData = \n' +
-    JSON.stringify(dropdownData)
-  );
+function fileHeading(options) {
+  const inputData = (options.paths == null) ? 'default' : `[${options.paths.join(', ')}]`;
+
+  return `// model: ${options.model}
+// generated: ${(new Date()).toString()}
+// input data: ${inputData}
+`;
 }
 
 main(cli.getParameters());
