@@ -4,7 +4,7 @@
         "browser": true
     },
     "rules": {
-      "comma-dangle": "off",
+      "comma-dangle": ["error", "always-multiline"],
       "space-before-function-paren": ["error", {
         "anonymous": "always",
         "named": "never",

@@ -111,7 +111,7 @@ function extractStats(data, hierarchyPath) {
       as_max_under_90: dataObj.as_max_under_90,
       lower_quantile_under_90: dataObj.lower_quantile_under_90,
       upper_quantile_under_90: dataObj.upper_quantile_under_90,
-      as_mean_over_90: dataObj.as_mean_over_90
+      as_mean_over_90: dataObj.as_mean_over_90,
     };
     if (hierarchyPath.length > 1) {
       const subData = dataObj[hierarchyPath[1] + 's'];

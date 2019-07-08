@@ -109,7 +109,7 @@ function fillArsenicData(divisions, records) {
 
     const well = {
       arsenic: Number(r.Arsenic),
-      depth: Number(r.Depth)
+      depth: Number(r.Depth),
     };
 
     division.wells.push(well);

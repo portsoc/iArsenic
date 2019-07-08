@@ -156,20 +156,20 @@ function extractStats(data, hierarchyPath) {
         md: dataObj.med_s,
         mx: dataObj.max_s,
         lo: dataObj.low_s,
-        up: dataObj.upp_s
+        up: dataObj.upp_s,
       },
       m: {
         md: dataObj.med_m,
         mx: dataObj.max_m,
         lo: dataObj.low_m,
-        up: dataObj.upp_m
+        up: dataObj.upp_m,
       },
       d: {
         md: dataObj.med_d,
         mx: dataObj.max_d,
         lo: dataObj.low_d,
-        up: dataObj.upp_d
-      }
+        up: dataObj.upp_d,
+      },
     };
     if (hierarchyPath.length > 1) {
       const subData = dataObj[hierarchyPath[1] + 's'];
