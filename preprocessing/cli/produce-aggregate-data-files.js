@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const loadData = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 
@@ -36,6 +39,8 @@ function compareByProperty(prop) {
 }
 
 function main(options) {
+  checkOutputDirectory(options);
+
   const data = loadData(options.paths);
 
   const modelPreprocessor = options.model.preprocessor;
@@ -43,17 +48,50 @@ function main(options) {
   const aggregateData = modelPreprocessor(data);
   const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union']);
 
-  console.log(fileHeading(options) + 'const aggregateData = ' + JSON.stringify(aggregateData));
-  console.log(fileHeading(options) + 'const dropdownData = ' + JSON.stringify(dropdownData));
+  const estimatorContent = fs.readFileSync(options.model.estimatorPath);
+
+  output(options, 'aggregate-data.js', 'const aggregateData = ' + JSON.stringify(aggregateData));
+  output(options, 'dropdown-data.js', 'const dropdownData = ' + JSON.stringify(dropdownData));
+  output(options, 'estimator.js', estimatorContent);
 }
 
 function fileHeading(options) {
   const inputData = (options.paths == null) ? 'default' : `[ ${options.paths.join(', ')} ]`;
 
-  return `// model: ${options.model}
+  return `// model: ${options.model.id}
 // generated: ${(new Date()).toString()}
 // input data: ${inputData}
 `;
+}
+
+function output(options, filename, content) {
+  content = fileHeading(options) + content;
+  if (!options.output) {
+    // if no output directory, output to console
+    console.log(filename + ':');
+    console.log(content);
+  } else {
+    // put it in the file
+    const filePath = path.join(options.output, filename);
+    console.log('writing', filePath);
+    fs.writeFileSync(filePath, content);
+  }
+}
+
+function checkOutputDirectory(options) {
+  // check the output directory exists
+  if (options.output) {
+    try {
+      const fileInfo = fs.statSync(options.output);
+      if (!fileInfo.isDirectory()) {
+        console.error(`error: not a directory: ${options.output}`);
+        process.exit(1);
+      }
+    } catch (e) {
+      console.error(`error: cannot access directory: ${e.message}`);
+      process.exit(1);
+    }
+  }
 }
 
 main(cli.getParameters());

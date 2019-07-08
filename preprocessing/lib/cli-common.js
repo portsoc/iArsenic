@@ -18,6 +18,11 @@ const optionDefinitions = [
     type: String,
     defaultValue: DEFAULT_MODEL,
   },
+  {
+    name: 'output',
+    alias: 'o',
+    type: String,
+  },
 ];
 
 function usage() {
@@ -33,6 +38,9 @@ Options:
 
   [-p] path1 path2 ...
                            Use the given CSV files as input data.
+
+  -o directory             If any files are produced, they will be in <directory>.
+                           Without -o, the content of those files will go in the console.
 `.trim());
 }
 
@@ -49,12 +57,15 @@ function getParameters() {
 }
 
 function loadModelScripts(model) {
-  const preprocessorPath = path.join(__dirname, '..', 'models', model + '-preprocessor');
-  const estimatorPath = path.join(__dirname, '..', 'models', model + '-estimator');
+  const preprocessorPath = path.join(__dirname, '..', 'models', model + '-preprocessor.js');
+  const estimatorPath = path.join(__dirname, '..', 'models', model + '-estimator.js');
 
   try {
     return {
+      id: model,
+      preprocessorPath,
       preprocessor: require(preprocessorPath),
+      estimatorPath,
       estimator: require(estimatorPath),
     };
   } catch (e) {
