@@ -42,7 +42,11 @@ if (options.help) {
 }
 
 function getParameters() {
-  return null; // not implemented
+  if (!Array.isArray(options.paths) || !options.paths.length) {
+    options.paths = null;
+  }
+  return options;
+  // not implemented
 }
 
 module.exports = {

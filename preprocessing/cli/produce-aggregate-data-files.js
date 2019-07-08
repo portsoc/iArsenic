@@ -47,6 +47,7 @@ function main(opts) {
   const processorPath = path.join(__dirname, '..', 'models', options.model + '-preprocessor');
 
   const data = loadData(options.paths);
+  const inputData = (options.paths === null) ? 'default' : options.paths;
 
   const modelProcessor = require(processorPath);
   const aggregateData = modelProcessor(data);
@@ -55,7 +56,7 @@ function main(opts) {
   console.log(
     `// model: ${options.model}` + '\n' +
     `// generated: ${(new Date()).toString()}` + '\n' +
-    '// input data: default' + '\n' +
+    `// input data: ${inputData}` + '\n' +
     'const aggregateData = \n' +
     JSON.stringify(aggregateData)
   );
@@ -63,7 +64,7 @@ function main(opts) {
   console.log(
     `// model: ${options.model}` + '\n' +
     `// generated: ${(new Date()).toString()}` + '\n' +
-    '// input data: default' + '\n' +
+    `// input data: ${inputData}` + '\n' +
     'const dropdownData = \n' +
     JSON.stringify(dropdownData)
   );
