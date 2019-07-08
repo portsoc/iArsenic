@@ -1,4 +1,7 @@
 const commandLineArgs = require('command-line-args');
+const path = require('path');
+
+const DEFAULT_MODEL = 'model3';
 
 const optionDefinitions = [
   { name: 'help', alias: 'h', type: Boolean },
@@ -13,7 +16,7 @@ const optionDefinitions = [
     name: 'model',
     alias: 'm',
     type: String,
-    defaultValue: 'model3',
+    defaultValue: DEFAULT_MODEL,
   },
 ];
 
@@ -41,7 +44,24 @@ if (options.help) {
 }
 
 function getParameters() {
+  options.model = loadModelScripts(options.model);
   return options;
+}
+
+function loadModelScripts(model) {
+  const preprocessorPath = path.join(__dirname, '..', 'models', model + '-preprocessor');
+  const estimatorPath = path.join(__dirname, '..', 'models', model + '-estimator');
+
+  try {
+    return {
+      preprocessor: require(preprocessorPath),
+      estimator: require(estimatorPath),
+    };
+  } catch (e) {
+    console.error(`error: cannot find model '${model}-preprocessor' or '${model}-estimator'`);
+    console.error(`in ${path.join(__dirname, '..', 'models')}`);
+    process.exit(1);
+  }
 }
 
 module.exports = {

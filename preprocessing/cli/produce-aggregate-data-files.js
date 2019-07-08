@@ -1,9 +1,5 @@
-const path = require('path');
-
 const loadData = require('../lib/load-data');
 const cli = require('../lib/cli-common');
-
-const DEFAULT_MODEL = 'model3';
 
 function extractNames(data, hierarchyPath) {
   const retval = [];
@@ -39,17 +35,12 @@ function compareByProperty(prop) {
   };
 }
 
-function main(opts) {
-  const options = Object.assign({
-    model: DEFAULT_MODEL,
-  }, opts);
-
-  const processorPath = path.join(__dirname, '..', 'models', options.model + '-preprocessor');
-
+function main(options) {
   const data = loadData(options.paths);
 
-  const modelProcessor = require(processorPath);
-  const aggregateData = modelProcessor(data);
+  const modelPreprocessor = options.model.preprocessor;
+
+  const aggregateData = modelPreprocessor(data);
   const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union']);
 
   console.log(fileHeading(options) + 'const aggregateData = ' + JSON.stringify(aggregateData));
@@ -57,7 +48,7 @@ function main(opts) {
 }
 
 function fileHeading(options) {
-  const inputData = (options.paths == null) ? 'default' : `[${options.paths.join(', ')}]`;
+  const inputData = (options.paths == null) ? 'default' : `[ ${options.paths.join(', ')} ]`;
 
   return `// model: ${options.model}
 // generated: ${(new Date()).toString()}

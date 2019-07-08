@@ -1,9 +1,5 @@
-const path = require('path');
-
 const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
-
-const DEFAULT_MODEL = 'model3';
 
 function runTests(produceEstimate, divisions, div, dis, upa, uni) {
   for (const depth of [20, 60, 100, 200]) {
@@ -34,16 +30,9 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni) {
   }
 }
 
-function main(opts) {
-  const options = Object.assign({
-    model: DEFAULT_MODEL,
-  }, opts);
-
-  const estimatorPath = path.join(__dirname, '..', 'models', options.model + '-estimator');
-  const preprocessorPath = path.join(__dirname, '..', 'models', options.model + '-preprocessor');
-
-  const preprocessor = require(preprocessorPath);
-  const produceEstimate = require(estimatorPath);
+function main(options) {
+  const preprocessor = options.model.preprocessor;
+  const produceEstimate = options.model.estimator;
 
   const data = csvLoader(options.paths);
   const divisions = preprocessor(data);
