@@ -151,26 +151,29 @@ function extractStats(data, hierarchyPath) {
   const retval = {};
   for (const item of Object.keys(data)) {
     const dataObj = data[item];
-    const hierarchyObj = {
-      s: {
+    const hierarchyObj = {};
+
+    if (hierarchyPath.length === 1) {
+      hierarchyObj.s = {
         md: dataObj.med_s,
         mx: dataObj.max_s,
         lo: dataObj.low_s,
         up: dataObj.upp_s,
-      },
-      m: {
+      };
+      hierarchyObj.m = {
         md: dataObj.med_m,
         mx: dataObj.max_m,
         lo: dataObj.low_m,
         up: dataObj.upp_m,
-      },
-      d: {
+      };
+      hierarchyObj.d = {
         md: dataObj.med_d,
         mx: dataObj.max_d,
         lo: dataObj.low_d,
         up: dataObj.upp_d,
-      },
-    };
+      };
+    }
+
     if (hierarchyPath.length > 1) {
       const subData = dataObj[hierarchyPath[1] + 's'];
       hierarchyObj[hierarchyPath[1] + 's'] = extractStats(subData, hierarchyPath.slice(1));
