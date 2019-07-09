@@ -33,7 +33,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     arsenicValues = union.d;
   }
 
-  const notEnoughData = (arsenicValues.md === null) ? 'not enough data ' : '';
+  const notEnoughData = (arsenicValues.md == null) ? 'not enough data ' : '';
 
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
