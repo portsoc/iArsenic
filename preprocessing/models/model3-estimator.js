@@ -33,8 +33,6 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     arsenicValues = union.d;
   }
 
-  const notEnoughData = (arsenicValues.md == null) ? 'not enough data ' : '';
-
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
@@ -46,8 +44,11 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     //     : '';
     const floodWarning = '';
 
-    retval.message = notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
+    retval.message = 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
     retval.severity = 'safe';
+  } else if (arsenicValues.md == null) {
+    // we can't make an estimate
+    retval.message = 'We do not have enough data to make an estimate for your well';
   } else if (colour === 'Red' || utensil === 'Red') {
     let pollutionStatus = '';
     if (arsenicValues.md > 20 && arsenicValues.md <= 50) {
@@ -69,8 +70,10 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
         ? 'and concentration may be around'
         : ', a chemical test is needed as concentration can be high, ranging around';
 
-    retval.message = notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
-  } else { retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections'; }
+    retval.message = 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
+  } else {
+    retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+  }
   return retval;
 }
 
