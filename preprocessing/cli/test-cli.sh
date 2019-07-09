@@ -1,7 +1,7 @@
 #!/bin/bash
 modelCommands=( "" "-m model1" "-m model3" )
 preprocessor="produce-aggregate-data-files.js"
-pathCommands=( "" "-p /iArsenic/data/disabled/29k-original.csv" )
+pathCommands=( "" "-p ../../data/disabled/29k-original.csv" )
 testDirectory="$(date +"%F")-test"
 benchmarkDirectory="benchmark-test"
 
@@ -28,7 +28,7 @@ do
     fi
     completeDirectory="$testDirectory/$modelSubDirectory/$dataDirectory"
     mkdir -p $completeDirectory
-    node $preprocessor $m -o $completeDirectory
+    node $preprocessor $m $p -o $completeDirectory
   done
 done
 
