@@ -98,8 +98,8 @@ function computeWellStats(location, parent) {
     }
   } else {
     // we do have enough data
-    location.med_s = stats.median(location.wells_shallow);
-    location.max_s = stats.max(location.wells_shallow);
+    location.med_s = stats.round1(stats.median(location.wells_shallow));
+    location.max_s = stats.round1(stats.max(location.wells_shallow));
     location.low_s = stats.quantile(location.wells_shallow, 0.1);
     location.upp_s = stats.quantile(location.wells_shallow, 0.9);
   }
@@ -117,8 +117,8 @@ function computeWellStats(location, parent) {
     }
   } else {
     // we do have enough data
-    location.med_m = stats.median(location.wells_med);
-    location.max_m = stats.max(location.wells_med);
+    location.med_m = stats.round1(stats.median(location.wells_med));
+    location.max_m = stats.round1(stats.max(location.wells_med));
     location.low_m = stats.quantile(location.wells_med, 0.1);
     location.upp_m = stats.quantile(location.wells_med, 0.9);
   }
@@ -136,8 +136,8 @@ function computeWellStats(location, parent) {
     }
   } else {
     // we do have enough data
-    location.med_d = stats.median(location.wells_deep);
-    location.max_d = stats.max(location.wells_deep);
+    location.med_d = stats.round1(stats.median(location.wells_deep));
+    location.max_d = stats.round1(stats.max(location.wells_deep));
     location.low_d = stats.quantile(location.wells_deep, 0.1);
     location.upp_d = stats.quantile(location.wells_deep, 0.9);
   }
