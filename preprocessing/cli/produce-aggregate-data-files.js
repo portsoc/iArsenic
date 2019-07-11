@@ -39,6 +39,10 @@ function compareByProperty(prop) {
 }
 
 function main(options) {
+  if (options.output) {
+    console.log = function () {};
+    console.debug = function () {};
+  }
   checkOutputDirectory(options);
 
   const data = loadData(options.paths);
