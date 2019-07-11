@@ -1,41 +1,66 @@
 #!/bin/bash
-modelCommands=( "" "-m model1" "-m model3" )
-preprocessor="produce-aggregate-data-files.js"
-pathCommands=( "" "-p ../../data/disabled/29k-original.csv" )
-testDirectory="$(date +"%F")-test"
-benchmarkDirectory="benchmark-test"
 
-#generates the directory structure
-#uses node to create the model and data specific JS files
-for m in "${modelCommands[@]}"
-do
-  if [ "$m" = "" ]; then
-    modelSubDirectory="default-model"
-  else
-    modelSubDirectory="$(echo $m | cut -b 4-)"
+#static global variables
+dataPaths=( "" "../../data/disabled/*.csv" )
+models=( "" "model1" "model3" )
+preprocessor="produce-aggregate-data-files.js"
+testDirectory="test-$(date +"%F-%H-%M-%S")"
+benchmarkDirectory="./test-benchmark"
+invokeOutputPath="-o"
+
+generateDataDirectory () {
+  parentDirectory="${dataPath%/*}"
+  parentDirectory="${parentDirectory##*/}"
+
+  dataFilename="${dataPath##*/}"
+  dataFilename="${dataFilename%.*}"
+  if [ "$dataFilename" = "*" ]; then
+    dataFilename="all-files"
   fi
 
-  for p in "${pathCommands[@]}"
-  do
-    if [ "$p" = "" ]; then
-      dataDirectory="default-data"
-    else
-      #use parent directory + csv filename to use as test directory name
-      #logic: reverse the string, take fields 1-2 with '/' as delimiter
-        #remove the file extensions and put the string back in normal order
-        #replace '/' with _ and '*' with all-files
-      dataDirectory=$(echo "$p" | rev | cut -d '/' -f 1-2 | cut -d '.' -f 2- | rev | sed 's/\//_/g; s/*/all-files/g')
-    fi
-    completeDirectory="$testDirectory/$modelSubDirectory/$dataDirectory"
-    mkdir -p $completeDirectory
-    node $preprocessor $m $p -o $completeDirectory
-  done
-done
+  dataOutputDirectory="$parentDirectory"_"$dataFilename"
+}
 
-#comapre test directory against the benchmark directory ignoring JS comments
-diffOutput="$(diff -q -r -I '//' $testDirectory $benchmarkDirectory)"
-if [ "$diffOutput" = "" ]; then
-  echo Test successful: the directories are identical
-else
-  echo $diffOutput
-fi
+compareOutput () {
+  if [ -d "$benchmarkDirectory" ]; then
+    diffOutput="$(diff -q -r -I '//' $testDirectory $benchmarkDirectory)"
+    if [ "$diffOutput" = "" ]; then
+      echo -e "\nTest successful: \n$testDirectory and $benchmarkDirectory are identical"
+    else
+      echo -e "\nTest failed: \n$diffOutput"
+    fi
+  else
+    echo -e "\nDirectory $benchmarkDirectory/ not found"
+    echo -e "To make $testDirectory the benchmark directory, execute the following:\n"
+    echo "mv $testDirectory $benchmarkDirectory"
+  fi
+}
+
+main () {
+  for model in "${models[@]}"
+  do
+    modelID="$model"
+    invokeModel="-m"
+    if [ "$model" = "" ]; then
+      modelID="default-model"
+      invokeModel=""
+    fi
+
+    for dataPath in "${dataPaths[@]}"
+    do
+      dataOutputDirectory="default-data"
+      invokeDataPath=""
+      if [ "$dataPath" != "" ]; then
+        generateDataDirectory
+        invokeDataPath="-p"
+      fi
+      outputPath="$testDirectory/$modelID/$dataOutputDirectory"
+      mkdir -p $outputPath
+      node $preprocessor $invokeModel $model $invokeDataPath $dataPath $invokeOutputPath $outputPath
+    done
+  done
+  
+  compareOutput
+}
+
+main
