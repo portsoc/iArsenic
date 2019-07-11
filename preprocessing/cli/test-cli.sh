@@ -25,12 +25,12 @@ compareOutput () {
   if [ -d "$benchmarkDirectory" ]; then
     diffOutput="$(diff -q -r -I '//' $testDirectory $benchmarkDirectory)"
     if [ "$diffOutput" = "" ]; then
-      echo -e "\nTest successful: \n$testDirectory and $benchmarkDirectory are identical"
+      echo -e "Test successful: \n$testDirectory and $benchmarkDirectory are identical"
     else
-      echo -e "\nTest failed: \n$diffOutput"
+      echo -e "Test failed: \n$diffOutput"
     fi
   else
-    echo -e "\nDirectory $benchmarkDirectory/ not found"
+    echo -e "Directory $benchmarkDirectory/ not found"
     echo -e "To make $testDirectory the benchmark directory, execute the following:\n"
     echo "mv $testDirectory $benchmarkDirectory"
   fi
@@ -59,7 +59,7 @@ main () {
       node $preprocessor $invokeModel $model $invokeDataPath $dataPath $invokeOutputPath $outputPath
     done
   done
-  
+
   compareOutput
 }
 
