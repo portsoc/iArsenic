@@ -39,11 +39,11 @@ compareOutput () {
 main () {
   for model in "${models[@]}"
   do
-    modelID="$model"
-    invokeModel="-m"
-    if [ "$model" = "" ]; then
-      modelID="default-model"
-      invokeModel=""
+    modelID="default-model"
+    invokeModel=""
+    if [ "$model" != "" ]; then
+      modelID="$model"
+      invokeModel="-m"
     fi
 
     for dataPath in "${dataPaths[@]}"
