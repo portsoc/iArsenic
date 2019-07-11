@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #static global variables
-dataPaths=( "" "../../data/disabled/*.csv" )
+dataPaths=( "" "../../data/disabled/29k-original.csv" )
 models=( "" "model1" "model3" )
 preprocessor="produce-aggregate-data-files.js"
 testDirectory="test-$(date +"%F-%H-%M-%S")"
