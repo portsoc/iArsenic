@@ -28,6 +28,11 @@ mapSVG.call(mapZoom);
 
 let topo;
 
+const pollutionDataBtn = d3.select('#pollutionDataBtn');
+pollutionDataBtn.on('click', () => {
+    showPollutionData()
+});
+
 function displayError(e) {
     console.warn(`Error: [${e.code}] ${e.message}`)
 }
@@ -83,6 +88,8 @@ function drawMapFeatures(path, topo) {
         .enter()
         .append('path')
         .attr('d', path)
+        .attr('fill', 'lightgreen')
+        .attr('data-area', (d) => d.properties.area)
         .attr('data-div', (d) => d.properties.div)
         .attr('data-dis', (d) => d.properties.dis);
 }
@@ -100,6 +107,21 @@ async function loadMapData(mapUrl) {
     centerMap(proj, topo);
 
     drawMapFeatures(path, topo);
+}
+
+function showPollutionData() {
+    const colourScale = d3.scaleLinear()
+        .domain([0.5, 150])
+        .range(['white', 'darkred']);
+
+    featureGroup.selectAll('path')
+        .attr('data-s-md', (d, i, nodes) => aggregateData[nodes[i].dataset.div].s.md)
+        .attr('fill', (d, i, nodes) => {
+            let div = nodes[i].dataset.div;
+            let divSMDValue = aggregateData[div].s.md;
+
+            return colourScale(divSMDValue);
+        });
 }
 
 function main() {
