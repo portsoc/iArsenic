@@ -1,3 +1,12 @@
+const coordsBtn = d3.select('#coordsBtn');
+coordsBtn.on('click', getUserCoordinates);
+
+const posOptions = {
+    timeout: 1000,
+    maximumAge: 0,
+    enableHighAccuracy: true,
+};
+
 const mapArea = d3.select('#map-area');
 
 const w = mapArea.node().clientWidth;
@@ -16,6 +25,47 @@ const featureGroup = mapSVG.append('g');
 
 const mapZoom = d3.zoom().on('zoom', () => featureGroup.attr('transform', d3.event.transform));
 mapSVG.call(mapZoom);
+
+let topo;
+
+function displayError(e) {
+    console.warn(`Error: [${e.code}] ${e.message}`)
+}
+
+function getUserCoordinates() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(focusOnRegion, displayError, posOptions);
+    }
+}
+
+function focusOnRegion(pos) {
+    let userPos = pos;
+
+    // Test with Rajshahi Co-ordinates
+    // let userPos = {};
+    // userPos.coords = {
+    //     latitude: 24.035,
+    //     longitude: 89.78,
+    // }
+
+    console.log(`Lat: ${userPos.coords.latitude}`);
+    console.log(`Long: ${userPos.coords.longitude}`);
+    console.log(`Accuracy: ${userPos.coords.accuracy} metres`);
+
+    let foundRegion = "";
+
+    for (region of topo.features) {
+        if (d3.geoContains(region, [userPos.coords.longitude, userPos.coords.latitude])) {
+            foundRegion = region.properties.div;
+        }
+    }
+
+    if (foundRegion) {
+        console.log(`Your co-ordinates were found in ${foundRegion}.`);
+    } else {
+        console.warn('Sorry, we could not determine your location.');
+    }
+}
 
 function centerMap(proj, topo) {
     const bounds = d3.geoBounds(topo);
@@ -40,7 +90,7 @@ function drawMapFeatures(path, topo) {
 async function loadMapData(mapUrl) {
     const map = await d3.json(mapUrl);
 
-    const topo = topojson.feature(map, map['objects']['map']);
+    topo = topojson.feature(map, map['objects']['map']);
 
     const proj = d3.geoMercator()
         .translate([w / 2, h / 2]);
