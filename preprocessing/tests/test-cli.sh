@@ -3,9 +3,9 @@
 #static global variables
 dataPaths=( "" "../../data/disabled/29k-original.csv" )
 models=( "" "model1" "model3" )
-preprocessor="produce-aggregate-data-files.js"
+preprocessor="../cli/produce-aggregate-data-files.js"
 testDirectory="test-$(date +"%F-%H-%M-%S")"
-benchmarkDirectory="./test-benchmark"
+benchmarkDirectory="test-benchmark"
 invokeOutputPath="-o"
 
 generateDataDirectory () {
@@ -14,6 +14,7 @@ generateDataDirectory () {
 
   dataFilename="${dataPath##*/}"
   dataFilename="${dataFilename%.*}"
+  # dataFilename="$(echo $dataFilename | sed 's/*/all-files/g')"
   if [ "$dataFilename" = "*" ]; then
     dataFilename="all-files"
   fi
@@ -25,14 +26,14 @@ compareOutput () {
   if [ -d "$benchmarkDirectory" ]; then
     diffOutput="$(diff -q -r -I '//' $testDirectory $benchmarkDirectory)"
     if [ "$diffOutput" = "" ]; then
-      echo -e "Test successful: \n$testDirectory and $benchmarkDirectory are identical"
+      echo -e "Test successful: \n$testDirectory/ and $benchmarkDirectory/ are identical"
     else
       echo -e "Test failed: \n$diffOutput"
     fi
   else
     echo -e "Directory $benchmarkDirectory/ not found"
-    echo -e "To make $testDirectory the benchmark directory, execute the following:\n"
-    echo "mv $testDirectory $benchmarkDirectory"
+    echo -e "To make $testDirectory/ the benchmark directory, execute the following:\n"
+    echo "mv $testDirectory/ $benchmarkDirectory/"
   fi
 }
 
