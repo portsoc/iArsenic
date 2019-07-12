@@ -62,26 +62,6 @@ function runGeoLocTests() {
     }
   }
 
-  const corners = [
-    null, // we number corners from 1
-    [ 1, 0],
-    [ 0, 1],
-    [ 1, 2],
-    [ 2, 0],
-    [ 2, 2],
-    [ 4, 2],
-    [ 4, 0],
-    [ 3, 1],
-  ];
-
-  // corner behaviour
-  for (const c of [2, 3, 4, 5]) {
-    expectNull(`on corner ${c}`, findRegion(...corners[c]));
-  }
-  for (const c of [1, 6, 7, 8]) {
-    expectNonNull(`on corner ${c}`, findRegion(...corners[c]));
-  }
-
   // horiz/vert line behaviour should be consistent
   expectTrue('line between 5 and 6', testHLineConsistency(2, 4, 2));
   expectTrue('line between 1 and 3', testVLineConsistency(1, 0, 2));
