@@ -2,9 +2,9 @@ const coordsBtn = d3.select('#coordsBtn');
 coordsBtn.on('click', getUserCoordinates);
 
 const posOptions = {
-    timeout: 1000,
-    maximumAge: 0,
-    enableHighAccuracy: true,
+    // timeout: 10000,
+    // maximumAge: 0,
+    // enableHighAccuracy: true,
 };
 
 const mapArea = d3.select('#map-area');
@@ -33,6 +33,74 @@ pollutionDataBtn.on('click', () => {
     showPollutionData()
 });
 
+document.querySelector('#runGeoLocTests').addEventListener('click', runGeoLocTests);
+
+function runGeoLocTests() {
+  function c(latitude, longitude) { return { coords: { latitude, longitude }}};
+
+  function expectTrue(msg, value) {
+    if (!value) {
+      console.error(`fail: ${msg} not true`);
+    } else {
+      console.log(`pass: ${msg} is true`);
+    }
+  }
+
+  function expectNull(msg, value) {
+    if (value != null) {
+      console.error(`fail: ${msg} expected null, got`, value);
+    } else {
+      console.log(`pass: ${msg} is null`);
+    }
+  }
+
+  function expectNonNull(msg, value) {
+    if (value == null) {
+      console.error(`fail: ${msg} expected a value, got null`);
+    } else {
+      console.log(`pass: ${msg} is non-null`);
+    }
+  }
+
+  const corners = [
+    null, // we number corners from 1
+    [ 1, 0],
+    [ 0, 1],
+    [ 1, 2],
+    [ 2, 0],
+    [ 2, 2],
+    [ 4, 2],
+    [ 4, 0],
+    [ 3, 1],
+  ];
+
+  // corner behaviour
+  for (const c of [2, 3, 4, 5]) {
+    expectNull(`on corner ${c}`, findRegion(...corners[c]));
+  }
+  for (const c of [1, 6, 7, 8]) {
+    expectNonNull(`on corner ${c}`, findRegion(...corners[c]));
+  }
+
+  // horiz/vert line behaviour should be consistent
+  expectTrue('line between 5 and 6', testHLineConsistency(2, 4, 2));
+  expectTrue('line between 1 and 3', testVLineConsistency(1, 0, 2));
+  expectTrue('line between 4 and 5', testVLineConsistency(2, 0, 2));
+  expectTrue('line between 6 and 7', testVLineConsistency(4, 0, 2));
+
+  // line going from inside to outside
+  expectTrue('line from inside to outside', !testHLineConsistency(2.5, 4.5, 1.1));
+
+  expectNull('outside', findRegion(0,0));
+  expectNull('left of corner 2', findRegion(-.0001,1));
+  expectNull('up of corner 2', findRegion(0,1.0001));
+  expectNull('outside of line between 1 and 2', findRegion(.49,.5));
+  expectNull('between shapes', findRegion(1.5,1));
+
+  expectNonNull('off corner 2, inside', findRegion(0.0001,1));
+  expectNonNull('inside of line between 1 and 2', findRegion(.51,.5));
+}
+
 function displayError(e) {
     console.warn(`Error: [${e.code}] ${e.message}`)
 }
@@ -43,9 +111,32 @@ function getUserCoordinates() {
     }
 }
 
-function focusOnRegion(pos) {
-    let userPos = pos;
+// gives a value between a and b, if i=0 then it's a, if i=1 then it's b
+function between(a, b, i) {
+  return a + (b-a)*i;
+}
 
+function testHLineConsistency(lon1, lon2, lat) {
+  const N = 100;
+  const expectedResult = findRegion(between(lon1, lon2, 1/N), lat);
+  for (let i=2; i<N; i+=1) {
+    if (expectedResult !== findRegion(between(lon1, lon2, i/N), lat))
+      return false;
+  }
+  return true;
+}
+
+function testVLineConsistency(lon, lat1, lat2) {
+  const N = 100;
+  const expectedResult = findRegion(lon, between(lat1, lat2, 1/N));
+  for (let i=2; i<N; i+=1) {
+    if (expectedResult !== findRegion(lon, between(lat1, lat2, i/N)))
+      return false;
+  }
+  return true;
+}
+
+function focusOnRegion(userPos) {
     // Test with Rajshahi Co-ordinates
     // let userPos = {};
     // userPos.coords = {
@@ -57,18 +148,23 @@ function focusOnRegion(pos) {
     console.log(`Long: ${userPos.coords.longitude}`);
     console.log(`Accuracy: ${userPos.coords.accuracy} metres`);
 
-    let foundRegion = "";
+    let foundDivision = "";
 
-    for (region of topo.features) {
-        if (d3.geoContains(region, [userPos.coords.longitude, userPos.coords.latitude])) {
-            foundRegion = region.properties.div;
-        }
-    }
+    const foundRegion = findRegion(userPos.coords.longitude, userPos.coords.latitude);
+    if (foundRegion) foundDivision = foundRegion.properties.div;
 
-    if (foundRegion) {
-        console.log(`Your co-ordinates were found in ${foundRegion}.`);
+    if (foundDivision) {
+        console.log(`Your co-ordinates were found in ${foundDivision}.`);
     } else {
         console.warn('Sorry, we could not determine your location.');
+    }
+}
+
+function findRegion(lon, lat) {
+    for (region of topo.features) {
+        if (d3.geoContains(region, [lon, lat])) {
+            return region;
+        }
     }
 }
 
@@ -124,15 +220,18 @@ function showPollutionData() {
         });
 }
 
-function main() {
+async function main() {
     const mapsDir = 'maps/dist/';
 
     const divMapUrl = mapsDir + 'div/div_c005_s010--vw--pr.json';
     const disMapUrl = mapsDir + 'dis/dis_c005_s010--vw--pr.json';
     const upaMapUrl = mapsDir + 'upa/upa_c005_s010--vw--pr.json';
     const uniMapUrl = mapsDir + 'uni/uni_c005_s010--vw--pr.json';
+    const testUrl = 'maps/simple-test.json';
 
-    loadMapData(divMapUrl);
+    await loadMapData(testUrl);
+
+    runGeoLocTests();
 }
 
 main();
