@@ -1,11 +1,12 @@
 #!/bin/bash
 
 #static global variables
-dataPaths=( "" "../../data/disabled/29k-original.csv" )
+scriptDir=`dirname $0`
+dataPaths=( "" "$scriptDir/../../data/disabled/29k-original.csv" )
 models=( "" "model1" "model3" )
-preprocessor="../cli/produce-aggregate-data-files.js"
-testDirectory="test-$(date +"%F-%H-%M-%S")"
-benchmarkDirectory="test-benchmark"
+producer="$scriptDir/../cli/produce-aggregate-data-files.js"
+testDirectory="$scriptDir/test-outputs/$(date +"%F-%H-%M-%S")"
+benchmarkDirectory="$scriptDir/benchmark-data"
 invokeOutputPath="-o"
 
 generateDataDirectory () {
@@ -57,7 +58,7 @@ main () {
       fi
       outputPath="$testDirectory/$modelID/$dataOutputDirectory"
       mkdir -p $outputPath
-      node $preprocessor $invokeModel $model $invokeDataPath $dataPath $invokeOutputPath $outputPath
+      node $producer $invokeModel $model $invokeDataPath $dataPath $invokeOutputPath $outputPath
     done
   done
 
