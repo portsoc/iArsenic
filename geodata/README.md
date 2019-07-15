@@ -4,6 +4,31 @@ NOTE: Currently under development and not ready for deployment.
 
 ## Map Files
 
+## Conversion
+
+1. Load source files (.shp, .shx, .dbf, .prj) into QGIS
+2. Edit attributes for clarity
+  * e.g. Rename attributes:
+    * 'ADM1\_EN' to 'div'
+    * 'ADM2\_EN' to 'dis'
+    * 'ADM3\_EN' to 'upa'
+    * 'ADM4\_EN' to 'uni'
+    * 'Shape\_Area' to 'area'
+  * e.g. Remove unused attributes:
+    * ADM0\_EN
+    * ADM[0-4]\_PCODE
+    * ADM4\_REF
+    * ADM4\_ALT1EN
+    * ADM4\_ALT2EN
+    * Shape\_Leng
+    * date
+    * validOn
+    * validTo
+3. Export > Save Features As...
+  * Format: GeoJSON
+  * COORDINATE_PRECISION: 5
+4. Run geo2topo from topojson module to convert GeoJSON to TopoJSON
+
 ### Naming and Organisation
 
 Two different sets of map files may be found in maps/:
