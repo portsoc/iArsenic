@@ -1,109 +1,147 @@
-html {
-  background-color: #fffaf0;
-  font-family: Arial;
+/*
+  light-blue: #59c1c2
+  dark-blue: #1b3e58
+  neutral: #f9f1cc
+  text: #212121
+  gold: #f4bc42
+  red: #e62f35
+*/
+
+/* Base Styles */
+html,
+body,
+div,
+span,
+main,
+section,
+input,
+fieldset,
+select,
+button,
+a,
+p,
+img,
+h1,
+h2,
+h3 {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 100%;
+  box-sizing: border-box;
 }
 
-#inputs select {
+body {
+  background: #fff;
+  color: #212121;
+  line-height: 1.5;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  margin: 0 0 1rem;
+}
+
+h3 {
+  margin: 1rem 0;
+}
+
+/* Header Styles */
+header {
+  padding: 0 1rem;
+}
+
+#homeRow,
+#logoContainer {
   display: flex;
-  width: 75%;
-  border: 0.06em solid transparent;
-  border-radius: 1em;
-  background-color: #f2f2f2;
-  border-color: #c0c0c0;
-  margin-top: 4px;
-  margin-bottom: 4px;
+}
+
+#homeRow {
+  margin: 0 0 1rem;
+}
+
+#logoContainer img {
+  margin: 0 1rem 0 0;
+}
+
+/* Container Styles */
+.wrapper {
+  max-width: 43.75rem;
+  margin: 0 auto;
+}
+
+.sideBySide {
+  display: flex;
 }
 
 #depthContainer {
   display: flex;
-  flex-direction: row;
-  width: 75%;
+}
+
+main {
+  margin: 2rem 0;
+}
+
+main section:not(#inputs) {
+  margin: 1rem 0;
+  border-top: thin solid transparent;
+  border-left: thin solid transparent;
+  border-right: thin solid transparent;
+}
+
+main section:not(#inputs):not(#utensilSection):not(#assessment) {
+  border-bottom: thin solid #1b3e58;
+  padding: 0 1rem 1rem;
+}
+
+#resultContainer {
+  padding: 1rem;
+  display: flex;
   align-items: center;
 }
 
-#depth {
-  flex: 1 1 auto;
-}
-
-#depthOutput {
-  margin-left: 2ch;
-}
-
-/* Hiding of utensil question */
-#utensilSection.hidden {
-  display: none;
-}
-
-#stainingSection {
-  width: 75%;
-}
-
 #result {
-  width: 95%;
+  flex: 1;
+  padding: 0.5rem;
 }
 
-#logo {
-  width: 15vw;
-  height: auto;
-}
-
-/* ------------------------- Textual ------------------------ */
-h1 {
-  font-size: 200%;
-  display: inline;
-}
-
-h2 {
-  font-size: 110%;
-}
-
-h3 {
-  font-size: 75%;
+#resultContainer .placeholder {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 0.5rem 0 0;
 }
 
 #disclaimer {
-  font-size: 70%;
+  padding: 0 0 20rem;
+  font-size: .75rem;
 }
 
-hr {
-  border: none;
-  border-top: 3px double #333;
-  overflow: visible;
-  text-align: center;
-  height: 1em;
-  max-width: 100%;
-}
-
-input,
-select {
-  border: 0.1em dashed #fffaf0;
-}
-
-hr:after {
-  background: #fff;
-  padding: 0 1em;
-  position: relative;
-  top: -3em;
-}
-
-.stainLink {
-  font-size: 65%;
-}
-
-.staining > label {
-  display: block;
-}
-
+/* Interactive Styles */
 .invalid {
-  border: 0.1em dashed red !important;
+  border-color: #e62f35 !important;
 }
 
-/* -----------------------Transistion on Submit --------------------------------------------- */
-html {
-  scroll-behavior: smooth;
+select {
+  border: thin solid #1b3e58;
+  margin: 0 0 0.5rem;
 }
 
-.collapsed > :not(#chevron) {
+select:disabled {
+  border-color: #212121;
+}
+
+.hidden {
   display: none;
 }
 
@@ -119,67 +157,51 @@ html {
   background-color: #ff7878;
 }
 
-#assessment {
-  min-height: 100vh;
-  box-sizing: border-box;
+.flip {
+  transform: scale(1, 1) !important;
 }
 
-#assessment.collapsed {
-  min-height: 0;
-}
-
-#result {
-  border: 1px solid black;
-  padding: 0.5rem;
-}
-
-/*  Chevron*/
-#chevron {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  height: 9vw;
-  transition: opacity 0.5s ease-out;
-}
-
-.chevron {
-  transition: transform 0.5s ease-out;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  height: 9vw;
-  transform-origin: center center;
-  transform: scale(1, -1);
-}
-
-.chevron::before,
-.chevron::after {
-  position: absolute;
+/* Input Styles */
+#inputs select {
   display: block;
-  content: "";
-  border: 10vw solid transparent;
-  /*adjust size*/
-  border-width: 0 10vw 5vw;
 }
 
-/*Change the four instances of 'top' below to rotate (top/right/bottom/left)*/
-.chevron::before {
-  top: 2vw;
-  border-top-color: #0b0;
-  border-bottom-color: #0b0;
+#depthOutput {
+  display: inline-block;
+  width: 3.5rem;
+  outline: none;
+  text-align: right;
+  border-bottom: medium solid transparent;
 }
 
-.chevron::after {
-  top: 4vw;
-  border-top-color: #fffaf0;
-  border-bottom-color: #fffaf0;
+#depthOutput:focus {
+  border-bottom: medium solid #367ebd;
 }
 
-.flip .chevron {
-  transform: scale(1, 1);
+#submit {
+  background: #367ebd;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
 }
 
-/*Depth styling*/
+#depthContainer input {
+  flex: 1;
+  margin: 0 0.5rem 0 0;
+}
+
+.radioLabel {
+  display: block;
+}
+
+.radioLabel:not(:last-of-type) {
+  margin: 0 0 0.5rem;
+}
+
+input[type="radio"] {
+  display: inline;
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
@@ -281,4 +303,85 @@ input[type="range"]:focus::-ms-fill-lower {
 
 input[type="range"]:focus::-ms-fill-upper {
   background: #b6ccdb;
+}
+
+/* To be changed to image */
+.placeholder {
+  background: black;
+  width: 10rem;
+  height: 10rem;
+}
+
+/* Chevron Styles */
+#chevron {
+  width: 5rem;
+  height: 5rem;
+  transform: scale(1, -1);
+  transition: transform 0.5s ease-out;
+}
+
+#chevronContainer {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+@media screen and (max-width: 37.49em) {
+  #homeRow {
+    flex-direction: column;
+  }
+
+  #langContainer {
+    margin: 1rem 0 0;
+    text-align: right;
+  }
+
+  #logoContainer img {
+    height: 3.5rem;
+    width: 3.5rem;
+  }
+
+  #inputs select {
+    width: 100%;
+  }
+
+  .wrapper {
+    padding: 0.5rem;
+  }
+
+  .sideBySide {
+    flex-direction: column-reverse;
+  }
+
+  .placeholder,
+  .radioLabel {
+    margin: 0 0 1rem;
+  }
+}
+
+@media screen and (min-width: 37.5em) {
+  #inputs select {
+    width: 50%;
+  }
+
+  #homeRow,
+  #logoContainer {
+    align-items: center;
+  }
+
+  #logoContainer img {
+    height: 7rem;
+    width: 7rem;
+  }
+
+  #logoContainer {
+    flex: 1;
+  }
+
+  .wrapper {
+    padding: 1rem;
+  }
+
+  .sideBySide {
+    justify-content: space-between;
+  }
 }

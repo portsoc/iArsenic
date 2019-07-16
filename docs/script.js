@@ -15,7 +15,8 @@ const drinkingSection = document.querySelector('#drinkingSection');
 const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
 const mixedStain = document.querySelector('#mixed');
-const resultSection = document.querySelector('#result');
+const result = document.querySelector('#result');
+const resultContainer = document.querySelector('#resultContainer');
 const inputs = document.querySelectorAll('#inputs select, #inputs input');
 
 //Depth scale constants
@@ -140,7 +141,7 @@ function cleanupDropdown(dd) {
 }
 
 function hideAssessment() {
-  assess.classList.add('collapsed');
+  assess.classList.add('hidden');
   chevron.classList.remove('flip');
 }
 
@@ -182,16 +183,18 @@ function validateInputs() {
     stainingSection.classList.remove("invalid");
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
     if (!selectedUtensil) {
-      utensilSection.classList.add("invalid");
+      stainingSection.classList.add("invalid");
     } else {
-      utensilSection.classList.remove("invalid");
+      stainingSection.classList.remove("invalid");
     }
   } else {
     stainingSection.classList.remove("invalid");
   }
 
   //Handles the depth
-  if (depthOutput.value == "0") { depthSection.classList.add("invalid"); }
+  const depthOutputValue = Number(depthOutput.value);
+
+  if (depthOutputValue === 0 || depthOutputValue > 1000) { depthSection.classList.add("invalid"); }
   else { depthSection.classList.remove("invalid"); }
 
   //Handles the drinking from the well radio buttons
@@ -209,7 +212,7 @@ function submitDelay(ms) {
 }
 
 function showAssessment() {
-  //removed collapsed class
+  //removed hidden class
   //scroll to Assessment
   const inputs = gatherInputs();
 
@@ -224,10 +227,10 @@ function showAssessment() {
       const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
         inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
 
-      resultSection.innerHTML = resultObj.message;
-      resultSection.className = resultObj.severity || '';
+      result.innerHTML = resultObj.message;
+      resultContainer.className = resultObj.severity || '';
 
-      assess.classList.remove('collapsed');
+      assess.classList.remove('hidden');
       chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   } else {
