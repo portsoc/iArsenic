@@ -16,7 +16,6 @@ const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
 const mixedStain = document.querySelector('#mixed');
 const result = document.querySelector('#result');
-const resultContainer = document.querySelector('#resultContainer');
 const inputs = document.querySelectorAll('#inputs select, #inputs input');
 
 //Depth scale constants
@@ -227,8 +226,8 @@ function showAssessment() {
       const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
         inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
 
-      result.innerHTML = resultObj.message;
-      resultContainer.className = resultObj.severity || '';
+      result.textContent = resultObj.message;
+      result.className = resultObj.severity || '';
 
       assess.classList.remove('hidden');
       chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });

@@ -9,143 +9,134 @@
 </head>
 
 <body>
-  <div class="wrapper">
-    <header>
-      <div id="homeRow">
-        <div id="logoContainer">
-          <img id="logo" src="img/logo.png" alt="iArsenic Logo">
-          <h1>iArsenic</h1>
-        </div>
+  <header>
+    <div id="lang">
+      <a href="#">English</a> |
+      <a href="#" hreflang="bn" lang="bn">বাংলা</a>
+    </div>
 
-        <div id="langContainer">
-          <a href="#">English</a> |
-          <a href="#" hreflang="bn" lang="bn">বাংলা</a>
-        </div>
-      </div>
+    <img id="logo" src="img/logo.png" alt="iArsenic Logo">
 
-      <span>Instant Arsenic screening of hand pump tubewells in Bangladesh, version 2019-06-17</span>
-    </header>
+    <h1>iArsenic</h1>
+    <h2>Instant Arsenic screening of hand pump tubewells in Bangladesh, version&nbsp;<time>2019-06-17</time></h2>
+  </header>
 
-    <main>
-      <section id="inputs">
-        <section id="locationSection">
-          <h2>Please tell us your location:</h2>
+  <main>
+    <section id="inputs">
+      <section id="locationSection">
+        <h2>Please tell us your location:</h2>
 
-          <label for="divisionDD">Division:</label>
-          <select id="divisionDD"></select>
+        <label for="divisionDD">Division:</label>
+        <select id="divisionDD"></select>
 
-          <label for="districtDD">District:</label>
-          <select id="districtDD" disabled>
-            <option value=''>&hellip;</option>
-          </select>
+        <label for="districtDD">District:</label>
+        <select id="districtDD" disabled>
+          <option value=''>&hellip;</option>
+        </select>
 
-          <label for="upazilaDD">Upazila:</label>
-          <select id="upazilaDD" disabled>
-            <option value=''>&hellip;</option>
-          </select>
+        <label for="upazilaDD">Upazila:</label>
+        <select id="upazilaDD" disabled>
+          <option value=''>&hellip;</option>
+        </select>
 
-          <label for="unionDD">Union:</label>
-          <select id="unionDD" disabled>
-            <option value=''>&hellip;</option>
-          </select>
-        </section>
+        <label for="unionDD">Union:</label>
+        <select id="unionDD" disabled>
+          <option value=''>&hellip;</option>
+        </select>
+      </section>
 
-        <section id="stainingSection" class='staining'>
-          <h2>Is there staining on the platform?</h2>
+      <section id="stainingSection" class='staining'>
+        <h2>Is there staining on the platform?</h2>
 
-          <div class="sideBySide">
-            <fieldset>
-              <label class="radioLabel">
-                <input type="radio" id="red" name="staining" value="Red">
-                Red
-              </label>
-
-              <label class="radioLabel">
-                <input type="radio" id="black" name="staining" value="Black">
-                Black
-              </label>
-
-              <label class="radioLabel">
-                <input type="radio" id="mixed" name="staining" value="Mixed">
-                Mixed or Unsure
-              </label>
-            </fieldset>
-
-            <!-- Change to well image / staining image -->
-            <div class="placeholder"></div>
-          </div>
-
-          <section id="utensilSection" class="hidden staining">
-            <h2 class="utensil">Is there staining on your utensil?</h2>
-
-            <fieldset>
-              <label class="radioLabel">
-                <input type="radio" id="redU" value="Red" name="stainingUtensil">
-                Red
-              </label>
-
-              <label class="radioLabel">
-                <input type="radio" id="blackU" value="No colour change to slightly blackish" name="stainingUtensil">
-                No colour change to slightly blackish
-              </label>
-
-              <label class="radioLabel">
-                <input type="radio" id="noColourU" value="Black" name="stainingUtensil">
-                No colour
-              </label>
-            </fieldset>
-          </section>
-
-          <a class="stainLink" href="#">Don't understand the question? Click here.</a>
-        </section>
-
-        <section id="depthSection">
-          <h2>Please tell us the depth of your well:</h2>
-
-          <div id="depthContainer">
-            <input type="range" name="depth" id="depth" value="0" min="0" max="100">
+        <div class="sideBySide">
+          <fieldset>
+            <label class="radioLabel">
+              <input type="radio" id="red" name="staining" value="Red">
+              Red
+            </label>
 
             <label class="radioLabel">
-              <input type="number" value="0" min="0" max="1000" id="depthOutput">
-              ft
+              <input type="radio" id="black" name="staining" value="Black">
+              Black
             </label>
-          </div>
-        </section>
 
-        <section id="drinkingSection">
-          <h2>Is anyone drinking from this well?</h2>
+            <label class="radioLabel">
+              <input type="radio" id="mixed" name="staining" value="Mixed">
+              Mixed or Unsure
+            </label>
+          </fieldset>
 
-          <label class="radioLabel">
-            <input type="radio" id="yes" name="drink" value="yes">
-            Yes
-          </label>
-
-          <label class="radioLabel">
-            <input type="radio" id="no" name="drink" value="no">
-            No
-          </label>
-        </section>
-      </section>
-
-      <section id="submitSection">
-        <h2>Click below to see your assessment</h2>
-        <button id="submit">Submit</button>
-      </section>
-
-      <div id="chevronContainer">
-        <img id="chevron" src="img/chevron.svg" alt="Chevron">
-      </div>
-
-      <section id="assessment" class="hidden">
-        <h2>Below is your assessment</h2>
-
-        <div id="resultContainer">
+          <!-- Change to well image / staining image -->
           <div class="placeholder"></div>
-          <p id="result">Here be lionesses</p>
         </div>
 
-        <h3>Disclaimer:</h3>
-        <p id="disclaimer">PLEASE NOTE: The application is still [Jan 2019] under development. If you would like to use
+        <section id="utensilSection" class="hidden staining">
+          <h2 class="utensil">Is there staining on your utensil?</h2>
+
+          <fieldset>
+            <label class="radioLabel">
+              <input type="radio" id="redU" value="Red" name="stainingUtensil">
+              Red
+            </label>
+
+            <label class="radioLabel">
+              <input type="radio" id="blackU" value="No colour change to slightly blackish" name="stainingUtensil">
+              No colour change to slightly blackish
+            </label>
+
+            <label class="radioLabel">
+              <input type="radio" id="noColourU" value="Black" name="stainingUtensil">
+              No colour
+            </label>
+          </fieldset>
+        </section>
+
+        <a class="stainLink" href="#">Don't understand the question? Click here.</a>
+      </section>
+
+      <section id="depthSection">
+        <h2>Please tell us the depth of your well:</h2>
+
+        <input type="range" name="depth" id="depth" value="0" min="0" max="100">
+
+        <label class="radioLabel">
+          <input type="number" value="0" min="0" max="1000" id="depthOutput">
+          ft
+        </label>
+      </section>
+
+      <section id="drinkingSection">
+        <h2>Is anyone drinking from this well?</h2>
+
+        <label class="radioLabel">
+          <input type="radio" id="yes" name="drink" value="yes">
+          Yes
+        </label>
+
+        <label class="radioLabel">
+          <input type="radio" id="no" name="drink" value="no">
+          No
+        </label>
+      </section>
+    </section>
+
+    <section id="submitSection">
+      <h2>Click below to see your assessment</h2>
+      <button id="submit">Submit</button>
+    </section>
+
+    <div id="chevronContainer">
+      <img id="chevron" src="img/chevron.svg" alt="Chevron">
+    </div>
+
+    <section id="assessment" class="hidden">
+      <h2>Below is your assessment</h2>
+
+      <p id="result">Here be lionesses</p>
+
+      <section id="disclaimer">
+        <h2>Disclaimer:</h2>
+        <p>PLEASE NOTE: The application is still under development. If you would like to use
           it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a
           chemical test of your well water to
           be
@@ -157,8 +148,8 @@
           of the tubewell-platform, and
           select a depth of tubewell. Please also tell us whether the tubewell water is used for drinking.</p>
       </section>
-    </main>
-  </div>
+    </section>
+  </main>
 
   <script type="text/javascript" src="script.js"></script>
   <script type="text/javascript" src="aggregate-data.js"></script>
