@@ -6,7 +6,7 @@ dataPaths=( "" "$scriptDir/../../data/disabled/29k-original.csv" )
 models=( "" "model1" "model3" )
 producer="$scriptDir/../cli/produce-aggregate-data-files.js"
 tester="$scriptDir/../cli/test-all.js"
-testerOutputFile="comprehensive-model-test.txt"
+testerOutputFile="test-all-output.txt"
 testDirectory="$scriptDir/test-outputs/$(date +"%F-%H-%M-%S")"
 benchmarkDirectory="$scriptDir/benchmark-data"
 invokeOutputPath="-o"
@@ -41,6 +41,9 @@ compareOutput () {
 }
 
 main () {
+  echo "outputing into $testDirectory"
+  echo "running:"
+
   for model in "${models[@]}"
   do
     modelID="default-model"
@@ -58,9 +61,10 @@ main () {
         generateDataDirectory
         invokeDataPath="-p"
       fi
+      echo "  model ${model:-'default'} with data ${dataPath:-'default'}"
       outputPath="$testDirectory/$modelID/$dataOutputDirectory"
       mkdir -p $outputPath
-      node $producer $invokeModel $model $invokeDataPath $dataPath $invokeOutputPath $outputPath
+      node $producer $invokeModel $model $invokeDataPath $dataPath $invokeOutputPath $outputPath >/dev/null # suppress output
       node $tester $invokeModel $model $invokeDataPath $dataPath > $outputPath/$testerOutputFile
     done
   done
