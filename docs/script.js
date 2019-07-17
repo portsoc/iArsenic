@@ -215,7 +215,7 @@ function showAssessment() {
         inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
 
       resultSection.innerHTML = resultObj.message;
-      resultSection.className = resultObj.severity;
+      resultSection.className = resultObj.severity || '';
 
       assess.classList.remove('collapsed');
       chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });

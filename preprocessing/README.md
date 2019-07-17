@@ -1,78 +1,79 @@
-# iArsenic data preprocessing
+# iArsenic Data Preprocessing
 
-## data structures
+## Requirements
 
-We deal with a 4-level hierarchy of administrative units:
-division, district, upazila, and union.
+* Ensure the csv headers are as follows (**Case matters!**):
+  * `Division,District,Upazila,Depth,Arsenic,Union`
 
-For every area, on every level, we compute the following:
+## How to Use It
 
-* `as_median_under_90`
-* `as_max_under_90`
-* `lower_quantile_under_90`
-* `upper_quantile_under_90`
-* `as_mean_over_90`
+* Run ./cli/produce-aggregate-data-files.js
+  * This will parse the csv file (using load-data.js)
+    * If no file path is provided, it will use the default files in ../data/
+  * Produces geographical hierarchy data
+  * Model-specific pre-processor will:
+    * Describe model-specific data structure
+    * Prepare the aggregate data from the output of load-data.js (described below)
+  * Puts a copy of <modelid>-estimator.js in ./docs/estimator.js
+  * Puts a copy of the geographical hierarchy in ./docs/dropdown-data.js
 
-The in-memory structure that we get from the data looks like this:
+## Output Structures
 
-```javascript
+### load-data.js Output
+
+```
 const divisions = {
-  wells_under_90: [],
-  wells_over_90: [],
-  name: '..',
-
-  as_median_under_90,
-  as_max_under_90,
-  lower_quantile_under_90,
-  upper_quantile_under_90,
-  as_mean_over_90,
-
-  districts: {
-    wells_under_90: [],
-    wells_over_90: [],
-    name: '..',
-    parent: the division above,
-
-    as_median_under_90,
-    as_max_under_90,
-    lower_quantile_under_90,
-    upper_quantile_under_90,
-    as_mean_over_90,
-
-    upazilas: {
-      wells_under_90: [],
-      wells_over_90: [],
-      name: '..',
-      parent: the district above,
-
-      as_median_under_90,
-      as_max_under_90,
-      lower_quantile_under_90,
-      upper_quantile_under_90,
-      as_mean_over_90,
-
-      unions: {
-        wells_under_90: [],
-        wells_over_90: [],
-        name: '..',
-        parent: the upazila above,
-
-        as_median_under_90,
-        as_max_under_90,
-        lower_quantile_under_90,
-        upper_quantile_under_90,
-        as_mean_over_90,
-      }
-    }
-  }
+  'division name': {
+    wells: [],
+    name: 'division name',
+    districts: {
+      'district name': {
+        wells: [],
+        name: 'district name',
+        upazilas: {
+          'upazila name': {
+            wells: [],
+            name: 'upazila name',
+            unions: {
+              'union name': {
+                wells: [],
+                name: 'union name',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  'next division name': {
+    ...
+  },
 }
 ```
 
-## testing machine in the cloud
+### dropdown-data.js Output
 
-Setup:
-* install node and npm
-  * https://github.com/nodesource/distributions/blob/master/README.md
-* install R
-  * https://www.linode.com/docs/development/r/how-to-install-r-on-ubuntu-and-debian/
-* make directory ~/auto-tests
+```
+const dropdownData = [
+  {
+    division: 'division name',
+    districts: [
+      {
+        district: 'district name',
+        upazilas: [
+          {
+            upazila: 'upazila name',
+            unions: [
+              'union name'
+              ...
+            ],
+          },
+          ...
+        ],
+      },
+      ...
+    ],
+  },
+  ...
+]
+```
