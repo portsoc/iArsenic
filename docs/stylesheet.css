@@ -32,9 +32,10 @@ body > header {
   padding: 0 1rem;
   display: grid;
   grid-template:
-    "logo     title    lang"     auto
-    "subtitle subtitle subtitle" auto
-    / auto 1fr auto;
+    "logo     title"    auto
+    "lang     lang"     auto
+    "subtitle subtitle" auto
+    / auto 1fr;
   gap: 1rem;
   align-items: center;
 }
@@ -62,6 +63,7 @@ time {
 
 #lang {
   grid-area: lang;
+  justify-self: end;
 }
 
 
@@ -104,6 +106,10 @@ main section {
 
 #inputs > section {
   border-bottom: thin solid #1b3e58;
+}
+
+#inputs > section,
+#submitSection {
   padding: 0 1rem 1rem;
 }
 
@@ -343,22 +349,15 @@ body {
     width: 50%;
   }
 
-  #homeRow,
-  #logoContainer {
-    align-items: center;
-  }
-
-  #logoContainer img {
-    height: 7rem;
-    width: 7rem;
-  }
-
-  #logoContainer {
-    flex: 1;
-  }
-
   body {
     padding: 1rem;
+  }
+
+  body > header {
+    grid-template:
+    "logo     title    lang"     auto
+    "subtitle subtitle subtitle" auto
+    / auto 1fr auto;
   }
 
   .sideBySide {
