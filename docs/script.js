@@ -91,15 +91,33 @@ function gatherInputs() {
   }
 
   validateInputs();
-  if (!retval.division) return null;
-  if (!retval.district) return null;
-  if (!retval.upazila) return null;
-  if (!retval.union) return null;
-  if (!retval.colour && !retval.utensil) return null;
-  if (!retval.depth) return null; // depth 0 is the default and counts as no-value-entered
-  if (!retval.drinking) return null;
+  if (!retval.division || !retval.district || !retval.upazila || !retval.union) {
+    scrollToSection(locationSection);
+    return null;
+  }
+
+  if (!retval.colour && !retval.utensil) {
+    scrollToSection(stainingSection);
+    return null;
+  }
+
+  if (!retval.depth) {
+    // depth 0 is the default and counts as no-value-entered
+    scrollToSection(depthSection);
+    return null; 
+  }
+
+  if (!retval.drinking) {
+    scrollToSection(drinkingSection);
+    return null;
+  }
+
   console.log('gathered inputs', retval);
   return retval;
+}
+
+function scrollToSection(input) {
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function handleDropDownSelection(e) {

@@ -98,7 +98,7 @@ main section {
 }
 
 #inputs > section {
-  border-bottom: thin solid #1b3e58;
+  border-bottom-color: #1b3e58;
 }
 
 #inputs > section,
@@ -134,6 +134,7 @@ fieldset {
 /* Interactive Styles */
 .invalid {
   border-color: #e62f35 !important;
+  background: #ffd6d8;
 }
 
 .hidden {
@@ -154,6 +155,10 @@ fieldset {
 
 #chevron.flip {
   transform: scale(1, -1);
+}
+
+#submit.disabled {
+  background: #363636;
 }
 
 /* Input Styles */
