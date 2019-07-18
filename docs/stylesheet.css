@@ -312,12 +312,19 @@ input[type="range"]:focus::-ms-fill-upper {
   background: #b6ccdb;
 }
 
-/* To be changed to image */
-.placeholder {
-  background: black;
-  width: 10rem;
-  height: 10rem;
+#stainingSection fieldset,
+#stainingSection figure {
+  flex: 1;
+}
+
+#stainingSection figure {
   margin: 0 0 1rem;
+  text-align: center;
+}
+
+#stainingSection img {
+  width: 100%;
+  height: auto;
 }
 
 /* Chevron Styles */
