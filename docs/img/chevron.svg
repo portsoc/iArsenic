@@ -1,1 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122 80.19"><defs><style>.cls-1{fill:#1b3e58;}</style></defs><title>Asset 1</title><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cls-1" d="M122,80.19,61,29V0l61,51.19Zm-122,0L61,29V0L0,51.19Z"/></g></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 122 80.2" xml:space="preserve">
+<title>Chevron</title>
+<style type="text/css">
+	#chevronG {
+	fill: #1b3e58;
+	}
+</style>
+<g>
+	<g id="chevronG">
+		<path d="M0,0l61,51.2v29L0,29V0z M122,0L61,51.2v29L122,29V0z"/>
+	</g>
+</g>
+</svg>
