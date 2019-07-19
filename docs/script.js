@@ -160,6 +160,8 @@ function cleanupDropdown(dd) {
 function hideAssessment() {
   assess.classList.add('hidden');
   chevron.classList.remove('flip');
+  result.innerHTML = 'Please wait&hellip;';
+  result.className = '';
 }
 
 function updateRangeLabel(position) {
@@ -228,7 +230,7 @@ function submitDelay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function showAssessment() {
+async function showAssessment() {
   //removed hidden class
   //scroll to Assessment
   const inputs = gatherInputs();
@@ -238,18 +240,18 @@ function showAssessment() {
     logImage = new Image();
     logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
 
-    submitDelay(500).then(function () {
-      // show the user an estimate
-      chevron.classList.add('flip');
-      const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
-        inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+    chevron.classList.add('flip');
+    assess.classList.remove('hidden');
+    chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      result.textContent = resultObj.message;
-      result.className = resultObj.severity || '';
+    await submitDelay(1500);
 
-      assess.classList.remove('hidden');
-      chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    // show the user an estimate
+    const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
+      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+
+    result.textContent = resultObj.message;
+    result.className = resultObj.severity || '';
   } else {
     hideAssessment();
   }
