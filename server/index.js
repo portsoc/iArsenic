@@ -64,7 +64,8 @@ async function logRequest(req, res) {
   const data = {
     timestamp: Date.now(),
     ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-    inputs: req.body.value,
+    inputs: req.body.value.inputs,
+    estimate: req.body.value.estimate,
   };
 
   try {

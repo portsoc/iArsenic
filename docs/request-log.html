@@ -10,6 +10,17 @@ table {
   border-collapse: collapse;
 }
 
+td.message {
+  white-space: nowrap;
+  max-width: 10rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+td.message abbr {
+  text-decoration: none;
+}
+
 th[data-active-sort='asc']::after {
   content: "△";
 }

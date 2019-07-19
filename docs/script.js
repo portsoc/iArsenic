@@ -272,8 +272,11 @@ async function showAssessment() {
   const inputs = gatherInputs();
 
   if (inputs) {
+    const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
+      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+
     // log the inputs
-    logToServer(inputs);
+    logToServer({ inputs, estimate });
 
     chevron.classList.add('flip');
     assess.classList.remove('hidden');
@@ -281,12 +284,9 @@ async function showAssessment() {
 
     await submitDelay(1500);
 
-    // show the user an estimate
-    const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
-      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
-
-    result.textContent = resultObj.message;
-    result.className = resultObj.severity || '';
+    // show the estimate
+    result.textContent = estimate.message;
+    result.className = estimate.severity || '';
   } else {
     hideAssessment();
   }

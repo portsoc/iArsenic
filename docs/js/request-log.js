@@ -17,6 +17,13 @@ async function loadRequests() {
     }
 
     const data = await response.json();
+
+    // sanitize the data so missing data doesn't throw us off
+    for (const item of data) {
+      if (!item.inputs) item.inputs = {};
+      if (!item.estimate) item.estimate = {};
+    }
+
     logEl.textContent = '';
     logEl.appendChild(makeTable(data, [
       {
@@ -51,6 +58,20 @@ async function loadRequests() {
       {
         name: 'drinking',
         f: (x) => x.inputs.drinking,
+      },
+      {
+        name: 'est. severity',
+        f: (x) => x.estimate.severity,
+      },
+      {
+        name: 'message',
+        f: (x) => {
+          const el = document.createElement('abbr');
+          el.textContent = x.estimate.message;
+          el.title = x.estimate.message;
+          return el;
+        },
+        className: 'message',
       },
     ]));
   } catch (e) {
@@ -91,11 +112,9 @@ function makeTable(arr, columns) {
 
   const tbody = t.createTBody();
   for (const item of arr) {
-    console.log(item);
     const tr = tbody.insertRow();
     for (const col of columns) {
       const d = col.f(item);
-      console.log({d});
       const td = tr.insertCell();
       if (d instanceof Node) {
         td.appendChild(d);
