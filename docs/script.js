@@ -18,13 +18,6 @@ const mixedStain = document.querySelector('#mixed');
 const result = document.querySelector('#result');
 const inputs = document.querySelectorAll('#inputs select, #inputs input');
 
-//Depth scale constants
-const minPos = 0;
-const maxPos = 100;
-const minVal = Math.log(5);
-const maxVal = Math.log(1000);
-const scale = (maxVal - minVal) / (maxPos - minPos);
-
 window.addEventListener("load", init);
 
 function init() {
@@ -164,13 +157,36 @@ function hideAssessment() {
   result.className = '';
 }
 
+const minPos = 0;
+const maxPos = 100;
+
+// //logarithmic code
+// const minVal = Math.log(5);
+// const maxVal = Math.log(1000);
+// const scale = (maxVal - minVal) / (maxPos - minPos);
+//
+// function updateRangeLabel(position) {
+//   depthOutput.value = Math.round(Math.exp(minVal + scale * position));
+// }
+//
+// function updateSlider() {
+//   if (depthOutput.value > 0) {
+//     depth.value = (Math.log(depthOutput.value) - minVal) / scale + minPos;
+//   } else { depth.value = 0; }
+// }
+
+// linear code
+const minVal = 5;
+const maxVal = 1000;
+const scale = (maxVal - minVal) / (maxPos - minPos);
+
 function updateRangeLabel(position) {
-  depthOutput.value = Math.round(Math.exp(minVal + scale * position));
+  depthOutput.value = Math.round(minVal + scale * position);
 }
 
 function updateSlider() {
   if (depthOutput.value > 0) {
-    depth.value = (Math.log(depthOutput.value) - minVal) / scale + minPos;
+    depth.value = (depthOutput.value - minVal) / scale + minPos;
   } else { depth.value = 0; }
 }
 

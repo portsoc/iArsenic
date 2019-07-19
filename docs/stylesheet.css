@@ -106,6 +106,10 @@ main section {
   padding: 0 1rem 1rem;
 }
 
+.hint {
+  margin-top: 1rem;
+}
+
 #result {
   display: flex;
   align-items: center;
