@@ -1,15 +1,17 @@
-const divDD = document.querySelector("#divisionDD");
-const disDD = document.querySelector("#districtDD");
-const upaDD = document.querySelector("#upazilaDD");
-const uniDD = document.querySelector("#unionDD");
+/* global produceEstimate, dropdownData, aggregateData */
+
+const divDD = document.querySelector('#divisionDD');
+const disDD = document.querySelector('#districtDD');
+const upaDD = document.querySelector('#upazilaDD');
+const uniDD = document.querySelector('#unionDD');
 const locationSection = document.querySelector('#locationSection');
-const assess = document.querySelector("#assessment");
+const assess = document.querySelector('#assessment');
 const submit = document.querySelector('#submit');
 const chevron = document.querySelector('#chevron');
 const utensilSection = document.querySelector('#utensilSection');
 const depth = document.querySelector('#depth');
 const depthOutput = document.querySelector('#depthOutput');
-const depthSection = document.querySelector('#depthSection')
+const depthSection = document.querySelector('#depthSection');
 const stainingSection = document.querySelector('#stainingSection');
 const drinkingSection = document.querySelector('#drinkingSection');
 const redStain = document.querySelector('#red');
@@ -18,28 +20,28 @@ const mixedStain = document.querySelector('#mixed');
 const result = document.querySelector('#result');
 const inputs = document.querySelectorAll('#inputs select, #inputs input');
 
-window.addEventListener("load", init);
+window.addEventListener('load', init);
 
 function init() {
-  divDD.dataset.nameProp = "division";
-  divDD.dataset.subProp = "districts";
+  divDD.dataset.nameProp = 'division';
+  divDD.dataset.subProp = 'districts';
   divDD.nextDropdown = disDD;
 
-  disDD.dataset.nameProp = "district";
-  disDD.dataset.subProp = "upazilas";
+  disDD.dataset.nameProp = 'district';
+  disDD.dataset.subProp = 'upazilas';
   disDD.nextDropdown = upaDD;
 
-  upaDD.dataset.nameProp = "upazila";
-  upaDD.dataset.subProp = "unions";
+  upaDD.dataset.nameProp = 'upazila';
+  upaDD.dataset.subProp = 'unions';
   upaDD.nextDropdown = uniDD;
 
-  divDD.addEventListener("change", handleDropDownSelection);
-  disDD.addEventListener("change", handleDropDownSelection);
-  upaDD.addEventListener("change", handleDropDownSelection);
+  divDD.addEventListener('change', handleDropDownSelection);
+  disDD.addEventListener('change', handleDropDownSelection);
+  upaDD.addEventListener('change', handleDropDownSelection);
 
-  populateDropdown(divDD, divDD.dataset.nameProp, divDD.dataset.subProp, dropdownData); //complete data
+  populateDropdown(divDD, divDD.dataset.nameProp, divDD.dataset.subProp, dropdownData); // complete data
 
-  depthOutput.addEventListener("input", updateSlider)
+  depthOutput.addEventListener('input', updateSlider);
 
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', chevronClick);
@@ -131,7 +133,7 @@ function populateDropdown(dd, nameProp, subDivProp, ddData) {
       let name = ddData[i]; // names for unions
       if (nameProp) name = name[nameProp]; // names for divisions, districts, upazilas
 
-      const opt = document.createElement("option");
+      const opt = document.createElement('option');
       opt.value = name;
       opt.text = name;
       opt.subdivisionData = ddData[i][subDivProp];
@@ -147,7 +149,7 @@ function cleanupDropdown(dd) {
   dd.innerHTML = "<option value=''>&hellip;</option>";
   dd.disabled = true;
 
-  cleanupDropdown(dd.nextDropdown)
+  cleanupDropdown(dd.nextDropdown);
 }
 
 function hideAssessment() {
@@ -195,11 +197,11 @@ function displayUtensil(show) {
 }
 
 function validateInputs() {
-  //Handles the dropdowns
+  // Handles the dropdowns
   const dropdownInputs = {
     dropdowns: [divDD, disDD, upaDD, uniDD],
     valid: true,
-  }
+  };
   for (let dropdown of dropdownInputs.dropdowns) {
     if (!dropdown.value) {
       dropdownInputs.valid = false;
@@ -210,36 +212,54 @@ function validateInputs() {
     locationSection.classList.add('invalid');
   } else { locationSection.classList.remove('invalid'); }
 
-  //Handles the staining radio buttons
+  // Handles the staining radio buttons
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
   if (!selectedStaining) {
-    stainingSection.classList.add("invalid");
+    stainingSection.classList.add('invalid');
   } else if (selectedStaining.value === 'Mixed') {
-    stainingSection.classList.remove("invalid");
+    stainingSection.classList.remove('invalid');
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
     if (!selectedUtensil) {
-      stainingSection.classList.add("invalid");
+      stainingSection.classList.add('invalid');
     } else {
-      stainingSection.classList.remove("invalid");
+      stainingSection.classList.remove('invalid');
     }
   } else {
-    stainingSection.classList.remove("invalid");
+    stainingSection.classList.remove('invalid');
   }
 
-  //Handles the depth
+  // Handles the depth
   const depthOutputValue = Number(depthOutput.value);
 
-  if (depthOutputValue === 0 || depthOutputValue > 1000) { depthSection.classList.add("invalid"); }
-  else { depthSection.classList.remove("invalid"); }
+  if (depthOutputValue === 0 || depthOutputValue > 1000) {
+    depthSection.classList.add('invalid');
+  } else {
+    depthSection.classList.remove('invalid');
+  }
 
-  //Handles the drinking from the well radio buttons
+  // Handles the drinking from the well radio buttons
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
-  if (!selectedDrinking) { drinkingSection.classList.add("invalid"); }
-  else { drinkingSection.classList.remove("invalid"); }
-
+  if (!selectedDrinking) {
+    drinkingSection.classList.add('invalid');
+  } else {
+    drinkingSection.classList.remove('invalid');
+  }
 }
 
-let logImage; // global to prevent too quick garbage collection before we get the log
+let fallbackLogImage; // global to prevent too quick garbage collection before the data is logged
+// needs to be kept in sync with request-log.js
+const LOG_URL = 'https://europe-west2-uop-iarsenic-01.cloudfunctions.net/requests';
+const FALLBACK_URL = 'http://jacek.soc.port.ac.uk/tmp/iArsenic';
+
+function logToServer(data) {
+  if (typeof navigator.sendBeacon === 'function') {
+    const message = { value: data };
+    navigator.sendBeacon(LOG_URL, JSON.stringify(message));
+  } else {
+    fallbackLogImage = new Image();
+    fallbackLogImage.src = FALLBACK_URL + '?inputs=' + encodeURIComponent(btoa(JSON.stringify(data)));
+  }
+}
 
 // add slight delay to simulate server interaction
 function submitDelay(ms) {
@@ -247,14 +267,16 @@ function submitDelay(ms) {
 }
 
 async function showAssessment() {
-  //removed hidden class
-  //scroll to Assessment
+  // removed hidden class
+  // scroll to Assessment
   const inputs = gatherInputs();
 
   if (inputs) {
+    const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
+      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+
     // log the inputs
-    logImage = new Image();
-    logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
+    logToServer({ inputs, estimate });
 
     chevron.classList.add('flip');
     assess.classList.remove('hidden');
@@ -262,12 +284,9 @@ async function showAssessment() {
 
     await submitDelay(1500);
 
-    // show the user an estimate
-    const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
-      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
-
-    result.textContent = resultObj.message;
-    result.className = resultObj.severity || '';
+    // show the estimate
+    result.textContent = estimate.message;
+    result.className = estimate.severity || '';
   } else {
     hideAssessment();
   }
@@ -280,7 +299,7 @@ function chevronClick() {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
     // validateInputs();
     chevron.classList.remove('flip');
