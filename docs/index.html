@@ -10,133 +10,150 @@
 
 <body>
   <header>
-    <img id="logo" src="logo.png" alt="ArsenicLogo">
+    <div id="lang">
+      <a href="#">English</a> |
+      <span title="Bengali"><a href="#" hreflang="bn" lang="bn">বাংলা</a></span>
+    </div>
+
+    <img id="logo" src="img/logo.png" alt="iArsenic Logo">
+
     <h1>iArsenic</h1>
-    <h3>Instant Arsenic screening of hand pump tubewells in Bangladesh, version 2019-06-17</h3>
+    <h2>Instant Arsenic screening of hand pump tubewells in Bangladesh, version&nbsp;<time>2019-06-17</time></h2>
   </header>
-  <hr>
 
-  <section id="inputs">
-    <section id="locationSection">
-      <h2>Please tell us your location:</h2>
+  <main>
+    <section id="inputs">
+      <section id="locationSection">
+        <h2>Please tell us your location:</h2>
 
-      <label for="divisionDD">Division:</label>
-      <select id="divisionDD"></select>
+        <label for="divisionDD">Division:</label>
+        <select id="divisionDD"></select>
 
-      <label for="districtDD">District:</label>
-      <select id="districtDD" disabled>
-        <option value=''>&hellip;</option>
-      </select>
+        <label for="districtDD">District:</label>
+        <select id="districtDD" disabled>
+          <option value=''>&hellip;</option>
+        </select>
 
-      <label for="upazilaDD">Upazila:</label>
-      <select id="upazilaDD" disabled>
-        <option value=''>&hellip;</option>
-      </select>
+        <label for="upazilaDD">Upazila:</label>
+        <select id="upazilaDD" disabled>
+          <option value=''>&hellip;</option>
+        </select>
 
-      <label for="unionDD">Union:</label>
-      <select id="unionDD" disabled>
-        <option value=''>&hellip;</option>
-      </select>
-    </section>
-    <hr>
+        <label for="unionDD">Union:</label>
+        <select id="unionDD" disabled>
+          <option value=''>&hellip;</option>
+        </select>
+      </section>
 
-    <section id="stainingSection" class='staining'>
-      <h2>Is there staining on the platform?</h2>
+      <section id="stainingSection" class='staining'>
+        <h2>Is there staining on the platform?</h2>
 
-      <label>
-        <input type="radio" id="red" name="staining" value="Red">
-        Red
-      </label>
+        <div class="sideBySide">
+          <fieldset>
+            <label class="radioLabel">
+              <input type="radio" id="red" name="staining" value="Red">
+              Red
+            </label>
 
-      <label>
-        <input type="radio" id="black" name="staining" value="Black">
-        Black
-      </label>
+            <label class="radioLabel">
+              <input type="radio" id="black" name="staining" value="Black">
+              Black
+            </label>
 
-      <label>
-        <input type="radio" id="mixed" name="staining" value="Mixed">
-        Mixed or Unsure
-      </label>
+            <label class="radioLabel">
+              <input type="radio" id="mixed" name="staining" value="Mixed">
+              Mixed or Unsure
+            </label>
+          </fieldset>
 
-      <a class="stainLink" href="#">Don't understand the question? Click here.</a>
-    </section>
+          <figure>
+            <img src="img/red_platform_1.jpg">
+            <figcaption>Example of a tube well platform with red staining.</figcaption>
+          </figure>
+        </div>
 
-    <section id="utensilSection" class="hidden staining">
-      <h2 class="utensil hidden">Is there staining on your utensil?</h2>
+        <section id="utensilSection" class="hidden staining">
+          <h2 class="utensil">Is there staining on your utensil?</h2>
 
-      <label>
-        <input type="radio" id="redU" value="Red" name="stainingUtensil">
-        Red
-      </label>
+          <fieldset>
+            <label class="radioLabel">
+              <input type="radio" id="redU" value="Red" name="stainingUtensil">
+              Red
+            </label>
 
-      <label>
-        <input type="radio" id="blackU" value="No colour change to slightly blackish" name="stainingUtensil">
-        No colour change to slightly blackish
-      </label>
+            <label class="radioLabel">
+              <input type="radio" id="blackU" value="No colour change to slightly blackish" name="stainingUtensil">
+              No colour change to slightly blackish
+            </label>
 
-      <label>
-        <input type="radio" id="noColourU" value="Black" name="stainingUtensil">
-        No colour
-      </label>
-    </section>
-    <hr>
+            <label class="radioLabel">
+              <input type="radio" id="noColourU" value="Black" name="stainingUtensil">
+              No colour
+            </label>
+          </fieldset>
+        </section>
 
-    <section id="depthSection">
-      <h2>Please tell us the depth of your well:</h2>
+        <p class="hint">Don't understand the question? Read our <a class="stainLink" href="#">Platform Staining Guide</a>.</p>
+      </section>
 
-      <section id="depthContainer">
+      <section id="depthSection">
+        <h2>Please tell us the depth of your well:</h2>
+
         <input type="range" name="depth" id="depth" value="0" min="0" max="100">
 
-        <span>
+        <label class="radioLabel">
           <input type="number" value="0" min="0" max="1000" id="depthOutput">
-        </span>
+          ft
+        </label>
 
-        <label for="depthOutput"> ft</label>
+        <p class="hint">If your well is over 1000ft-deep, please enter 1000ft.</p>
+      </section>
+
+      <section id="drinkingSection">
+        <h2>Is anyone drinking from this well?</h2>
+
+        <fieldset>
+          <label class="radioLabel">
+            <input type="radio" id="yes" name="drink" value="yes">
+            Yes
+          </label>
+
+          <label class="radioLabel">
+            <input type="radio" id="no" name="drink" value="no">
+            No
+          </label>
+        </fieldset>
       </section>
     </section>
-    <hr>
 
-    <section id="drinkingSection">
-      <h2>Is anyone drinking from this well?</h2>
-
-      <label>
-        <input type="radio" id="yes" name="drink" value="yes">
-        Yes
-      </label>
-
-      <label>
-        <input type="radio" id="no" name="drink" value="no">
-        No
-      </label>
+    <section id="submitSection">
+      <h2>Click below to see your assessment</h2>
+      <button id="submit">Submit</button>
     </section>
-    <hr>
-  </section>
 
-  <section id="submitSection">
-    <h2>Click below to see your assessment</h2>
-    <p id="submit">Submit</p>
-  </section>
+    <img id="chevron" src="img/chevron.svg" alt="Chevron">
 
-  <section id="assessment" class="collapsed disabled">
-    <div id="chevron"><i class="chevron"></i></div>
+    <section id="assessment" class="hidden">
+      <h2>Below is your assessment</h2>
 
-    <h2>Below is your assessment</h2>
+      <p id="result" placeholder="Please wait&hellip;"></p>
 
-    <p id="result">Here be lionesses</p>
-
-    <h3>Disclaimer:</h3>
-    <p id="disclaimer">PLEASE NOTE: The application is still [Jan 2019] under development. If you would like to use
-      it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a
-      chemical test of your well water to
-      be
-      sure. It is estimated that ~60% of 10 million hand pumped tubewells in rural Bangladesh remained untested for
-      arsenic. This accounts for widespread exposure to this insidious toxin and resulting in multi-systemic effects
-      including
-      cancer. Unfortunately, there is no specific treatment but drinking arsenic-safe water. Using this web
-      application a tubewell can easily be assessed for arsenic. All you need to provide your Upazila name, colour
-      of the tubewell-platform, and
-      select a depth of tubewell. Please also tell us whether the tubewell water is used for drinking.</p>
-  </section>
+      <section id="disclaimer">
+        <h2>Disclaimer:</h2>
+        <p>PLEASE NOTE: The application is still under development. If you would like to use
+          it, please do so at YOUR OWN RISK and the assessment should be treated as INDICATIVE. You need to carry out a
+          chemical test of your well water to
+          be
+          sure. It is estimated that ~60% of 10 million hand pumped tubewells in rural Bangladesh remained untested for
+          arsenic. This accounts for widespread exposure to this insidious toxin and resulting in multi-systemic effects
+          including
+          cancer. Unfortunately, there is no specific treatment but drinking arsenic-safe water. Using this web
+          application a tubewell can easily be assessed for arsenic. All you need to provide your Upazila name, colour
+          of the tubewell-platform, and
+          select a depth of tubewell. Please also tell us whether the tubewell water is used for drinking.</p>
+      </section>
+    </section>
+  </main>
 
   <script type="text/javascript" src="script.js"></script>
   <script type="text/javascript" src="aggregate-data.js"></script>

@@ -2,26 +2,21 @@ const divDD = document.querySelector("#divisionDD");
 const disDD = document.querySelector("#districtDD");
 const upaDD = document.querySelector("#upazilaDD");
 const uniDD = document.querySelector("#unionDD");
+const locationSection = document.querySelector('#locationSection');
 const assess = document.querySelector("#assessment");
 const submit = document.querySelector('#submit');
 const chevron = document.querySelector('#chevron');
 const utensilSection = document.querySelector('#utensilSection');
 const depth = document.querySelector('#depth');
 const depthOutput = document.querySelector('#depthOutput');
+const depthSection = document.querySelector('#depthSection')
 const stainingSection = document.querySelector('#stainingSection');
 const drinkingSection = document.querySelector('#drinkingSection');
 const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
 const mixedStain = document.querySelector('#mixed');
-const resultSection = document.querySelector('#result');
+const result = document.querySelector('#result');
 const inputs = document.querySelectorAll('#inputs select, #inputs input');
-
-//Depth scale constants
-const minPos = 0;
-const maxPos = 100;
-const minVal = Math.log(5);
-const maxVal = Math.log(1000);
-const scale = (maxVal - minVal) / (maxPos - minPos);
 
 window.addEventListener("load", init);
 
@@ -89,15 +84,33 @@ function gatherInputs() {
   }
 
   validateInputs();
-  if (!retval.division) return null;
-  if (!retval.district) return null;
-  if (!retval.upazila) return null;
-  if (!retval.union) return null;
-  if (!retval.colour && !retval.utensil) return null;
-  if (!retval.depth) return null; // depth 0 is the default and counts as no-value-entered
-  if (!retval.drinking) return null;
+  if (!retval.division || !retval.district || !retval.upazila || !retval.union) {
+    scrollToSection(locationSection);
+    return null;
+  }
+
+  if (!retval.colour && !retval.utensil) {
+    scrollToSection(stainingSection);
+    return null;
+  }
+
+  if (!retval.depth) {
+    // depth 0 is the default and counts as no-value-entered
+    scrollToSection(depthSection);
+    return null;
+  }
+
+  if (!retval.drinking) {
+    scrollToSection(drinkingSection);
+    return null;
+  }
+
   console.log('gathered inputs', retval);
   return retval;
+}
+
+function scrollToSection(input) {
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function handleDropDownSelection(e) {
@@ -138,17 +151,42 @@ function cleanupDropdown(dd) {
 }
 
 function hideAssessment() {
-  assess.classList.add('collapsed');
+  assess.classList.add('hidden');
   chevron.classList.remove('flip');
+  result.textContent = '';
+  result.className = '';
 }
 
+const minPos = 0;
+const maxPos = 100;
+
+// //logarithmic code
+// const minVal = Math.log(5);
+// const maxVal = Math.log(1000);
+// const scale = (maxVal - minVal) / (maxPos - minPos);
+//
+// function updateRangeLabel(position) {
+//   depthOutput.value = Math.round(Math.exp(minVal + scale * position));
+// }
+//
+// function updateSlider() {
+//   if (depthOutput.value > 0) {
+//     depth.value = (Math.log(depthOutput.value) - minVal) / scale + minPos;
+//   } else { depth.value = 0; }
+// }
+
+// linear code
+const minVal = 5;
+const maxVal = 1000;
+const scale = (maxVal - minVal) / (maxPos - minPos);
+
 function updateRangeLabel(position) {
-  depthOutput.value = Math.round(Math.exp(minVal + scale * position));
+  depthOutput.value = Math.round(minVal + scale * position);
 }
 
 function updateSlider() {
   if (depthOutput.value > 0) {
-    depth.value = (Math.log(depthOutput.value) - minVal) / scale + minPos;
+    depth.value = (depthOutput.value - minVal) / scale + minPos;
   } else { depth.value = 0; }
 }
 
@@ -158,11 +196,19 @@ function displayUtensil(show) {
 
 function validateInputs() {
   //Handles the dropdowns
-  const dropdownInputs = [divDD, disDD, upaDD, uniDD]
-  for (let i = 0; i < dropdownInputs.length; i++) {
-    if (!dropdownInputs[i].value) { dropdownInputs[i].classList.add("invalid"); }
-    else { dropdownInputs[i].classList.remove("invalid"); }
+  const dropdownInputs = {
+    dropdowns: [divDD, disDD, upaDD, uniDD],
+    valid: true,
   }
+  for (let dropdown of dropdownInputs.dropdowns) {
+    if (!dropdown.value) {
+      dropdownInputs.valid = false;
+      break;
+    }
+  }
+  if (!dropdownInputs.valid) {
+    locationSection.classList.add('invalid');
+  } else { locationSection.classList.remove('invalid'); }
 
   //Handles the staining radio buttons
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
@@ -172,17 +218,19 @@ function validateInputs() {
     stainingSection.classList.remove("invalid");
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
     if (!selectedUtensil) {
-      utensilSection.classList.add("invalid");
+      stainingSection.classList.add("invalid");
     } else {
-      utensilSection.classList.remove("invalid");
+      stainingSection.classList.remove("invalid");
     }
   } else {
     stainingSection.classList.remove("invalid");
   }
 
   //Handles the depth
-  if (depthOutput.value == "0") { depthContainer.classList.add("invalid"); }
-  else { depthContainer.classList.remove("invalid"); }
+  const depthOutputValue = Number(depthOutput.value);
+
+  if (depthOutputValue === 0 || depthOutputValue > 1000) { depthSection.classList.add("invalid"); }
+  else { depthSection.classList.remove("invalid"); }
 
   //Handles the drinking from the well radio buttons
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
@@ -198,8 +246,8 @@ function submitDelay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function showAssessment() {
-  //removed collapsed class
+async function showAssessment() {
+  //removed hidden class
   //scroll to Assessment
   const inputs = gatherInputs();
 
@@ -208,18 +256,18 @@ function showAssessment() {
     logImage = new Image();
     logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
 
-    submitDelay(500).then(function () {
-      // show the user an estimate
-      chevron.classList.add('flip');
-      const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
-        inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+    chevron.classList.add('flip');
+    assess.classList.remove('hidden');
+    chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      resultSection.innerHTML = resultObj.message;
-      resultSection.className = resultObj.severity || '';
+    await submitDelay(1500);
 
-      assess.classList.remove('collapsed');
-      chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    // show the user an estimate
+    const resultObj = produceEstimate(aggregateData, inputs.division, inputs.district,
+      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+
+    result.textContent = resultObj.message;
+    result.className = resultObj.severity || '';
   } else {
     hideAssessment();
   }
