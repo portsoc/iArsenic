@@ -111,6 +111,7 @@ main section {
   align-items: center;
   flex: 1;
   padding: 1rem;
+  transition: background-color 0.5s ease;
 }
 
 #result.safe::before {
