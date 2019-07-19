@@ -107,18 +107,34 @@ main section {
 }
 
 #result {
+  display: flex;
+  align-items: center;
   flex: 1;
   padding: 1rem;
 }
 
+#result.safe::before {
+  content: '✓';
+}
+
+#result.polluted::before {
+  content: '!';
+}
+
+#result.highlyPolluted::before {
+  content: '✖';
+}
+
 #result::before {
-  content: ' ';
+  content: '?';
   display: block;
   float: left;
   width: 3rem;
   height: 3rem;
-  margin: 0 0.5rem 0 0;
-  background: black;
+  font-weight: bold;
+  font-size: 2rem;
+  text-align: center;
+  margin: 0 1rem 0 0;
 }
 
 #disclaimer {
