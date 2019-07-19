@@ -1,6 +1,6 @@
 # iArsenic –  Instant Arsenic screening of hand pump tubewells in Bangladesh
 
-live at https://portsoc.github.io/iArsenic
+Live at https://portsoc.github.io/iArsenic
 
 Components:
 
