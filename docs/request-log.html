@@ -1,0 +1,40 @@
+<!doctype html>
+<title>Log of iArsenic requests</title>
+<style>
+td,th {
+  border: 1px solid black;
+  padding: .2rem .5rem;
+}
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+th[data-active-sort='asc']::after {
+  content: "△";
+}
+
+th[data-active-sort='desc']::after {
+  content: "▽";
+}
+
+th[data-active-sort]::after {
+  padding-left: .5rem;
+  display: block;
+  position: absolute;
+  right: .2rem;
+  top: calc(50% - .5em);
+  font: normal normal normal 1rem/1 monospace;
+}
+
+th[data-active-sort] {
+  position: relative;
+}
+</style>
+
+<h1>Log of iArsenic requests</h1>
+
+<section id="log">loading&hellip;</section>
+
+<script src="js/sort-table.js" defer></script>
+<script src="js/request-log.js"></script>

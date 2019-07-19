@@ -37,7 +37,7 @@ const KIND = 'Request';
 
 async function listLoggedRequests(req, res) {
   try {
-    const query = await datastore.createQuery(KIND);
+    const query = datastore.createQuery(KIND).order('timestamp');
     const [results] = await datastore.runQuery(query);
     res.json(results);
   } catch (err) {

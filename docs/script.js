@@ -240,6 +240,7 @@ function validateInputs() {
 }
 
 let fallbackLogImage; // global to prevent too quick garbage collection before the data is logged
+// needs to be kept in sync with request-log.js
 const LOG_URL = 'https://europe-west2-uop-iarsenic-01.cloudfunctions.net/requests';
 const FALLBACK_URL = 'http://jacek.soc.port.ac.uk/tmp/iArsenic';
 
