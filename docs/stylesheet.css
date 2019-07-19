@@ -326,16 +326,12 @@ input[type="range"]::-ms-thumb {
   height: auto;
 }
 
-/* Chevron Styles */
 #chevron {
   width: 5rem;
   height: 5rem;
   transition: transform .5s ease-out;
-}
-
-#chevronContainer {
-  text-align: center;
-  margin: 1rem 0;
+  margin: 1rem auto 0;
+  display: block;
 }
 
 @media screen and (min-width: 37.5em) {
