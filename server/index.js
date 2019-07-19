@@ -5,7 +5,16 @@
 'use strict';
 
 const { Datastore } = require('@google-cloud/datastore');
+const GoogleAuth = require('simple-google-openid');
+
+const CLIENT_ID = '486607360747-fcdn62e6mh2t2gl0tmarvdae5r756png.apps.googleusercontent.com';
+const AUTHORIZED_USERS = [
+  'jacek.kopecky@port.ac.uk',
+  'mo.hoque@port.ac.uk',
+];
+
 const datastore = new Datastore();
+const auth = GoogleAuth(CLIENT_ID);
 
 // returns whether the request should be allowed to proceed
 function cors(req, res) {
@@ -37,6 +46,18 @@ const KIND = 'Request';
 
 async function listLoggedRequests(req, res) {
   try {
+    const token = req.query.id_token;
+    if (!token) {
+      res.status(401).send('you need to include id_token in the URL query');
+      return;
+    }
+
+    const user = await auth.verifyToken(token);
+    if (!user || AUTHORIZED_USERS.indexOf(user.emails[0].value) === -1) {
+      res.sendStatus(403);
+      return;
+    }
+
     const query = datastore.createQuery(KIND).order('timestamp');
     const [results] = await datastore.runQuery(query);
     res.json(results);
