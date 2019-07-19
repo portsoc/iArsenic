@@ -104,7 +104,7 @@ function gatherInputs() {
   if (!retval.depth) {
     // depth 0 is the default and counts as no-value-entered
     scrollToSection(depthSection);
-    return null; 
+    return null;
   }
 
   if (!retval.drinking) {
@@ -160,7 +160,7 @@ function cleanupDropdown(dd) {
 function hideAssessment() {
   assess.classList.add('hidden');
   chevron.classList.remove('flip');
-  result.innerHTML = 'Please wait&hellip;';
+  result.textContent = '';
   result.className = '';
 }
 

@@ -114,6 +114,10 @@ main section {
   transition: background-color .5s ease;
 }
 
+#result:empty::after {
+  content: attr(placeholder);
+}
+
 #result.safe::before {
   content: '✓';
 }
