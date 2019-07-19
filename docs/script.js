@@ -239,7 +239,19 @@ function validateInputs() {
 
 }
 
-let logImage; // global to prevent too quick garbage collection before we get the log
+let fallbackLogImage; // global to prevent too quick garbage collection before the data is logged
+const LOG_URL = 'https://europe-west2-uop-iarsenic-01.cloudfunctions.net/requests';
+const FALLBACK_URL = 'http://jacek.soc.port.ac.uk/tmp/iArsenic';
+
+function logToServer(data) {
+  if (typeof navigator.sendBeacon === 'function') {
+    const message = {value:data};
+    navigator.sendBeacon(LOG_URL, JSON.stringify(message));
+  } else {
+    fallbackLogImage = new Image();
+    fallbackLogImage.src = FALLBACK_URL + "?inputs=" + encodeURIComponent(btoa(JSON.stringify(data)));
+  }
+}
 
 // add slight delay to simulate server interaction
 function submitDelay(ms) {
@@ -253,8 +265,7 @@ async function showAssessment() {
 
   if (inputs) {
     // log the inputs
-    logImage = new Image();
-    logImage.src = "http://jacek.soc.port.ac.uk/tmp/iArsenic?inputs=" + encodeURIComponent(btoa(JSON.stringify(inputs)));
+    logToServer(inputs);
 
     chevron.classList.add('flip');
     assess.classList.remove('hidden');

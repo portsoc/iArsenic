@@ -47,18 +47,30 @@ async function listLoggedRequests(req, res) {
 }
 
 async function logRequest(req, res) {
+  if (typeof req.body === 'string') {
+    try {
+      req.body = JSON.parse(req.body);
+    } catch (e) {
+      res.status(400).send('cannot parse body as JSON');
+      return;
+    }
+  }
   if (!req.body.value) {
     res.status(400).send('need data');
     return;
   }
 
   // we should validate the incoming data
-  // we should add timestamps
+  const data = {
+    timestamp: Date.now(),
+    ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+    inputs: req.body.value,
+  };
 
   try {
     const entity = {
       key: datastore.key([KIND]),
-      data: req.body.value,
+      data,
     };
 
     await datastore.save(entity);
