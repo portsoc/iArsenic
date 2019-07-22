@@ -134,8 +134,18 @@ main section {
   content: '✖';
 }
 
-#result::before {
+#result.unsure::before {
   content: '?';
+}
+
+#result.loading::before {
+  content: '';
+  background: #000;
+  border-radius: 100%;
+  animation: loadingResult 1s ease infinite;
+}
+
+#result::before {
   display: block;
   float: left;
   width: 3rem;
@@ -144,6 +154,15 @@ main section {
   font-size: 2rem;
   text-align: center;
   margin-right: 1rem;
+}
+
+@keyframes loadingResult {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 #disclaimer {
@@ -340,6 +359,7 @@ input[type="range"]::-ms-thumb {
   transition: transform .5s ease-out;
   margin: 1rem auto 0;
   display: block;
+  cursor: pointer;
 }
 
 @media screen and (min-width: 37.5em) {

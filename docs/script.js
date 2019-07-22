@@ -267,6 +267,8 @@ function submitDelay(ms) {
 }
 
 async function showAssessment() {
+  result.className = 'loading';
+
   // removed hidden class
   // scroll to Assessment
   const inputs = gatherInputs();
@@ -286,7 +288,7 @@ async function showAssessment() {
 
     // show the estimate
     result.textContent = estimate.message;
-    result.className = estimate.severity || '';
+    result.className = estimate.severity || 'unsure';
   } else {
     hideAssessment();
   }
