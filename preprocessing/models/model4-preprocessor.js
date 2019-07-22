@@ -11,6 +11,47 @@ which looks like this:
   Strata150
   StrataDeep
 
+  division: '..',
+    district: '..',
+      upazila: '..',
+        union: '..',
+        s15: {
+          md: ...,   // short for median
+          mx: ...,   // short for maximum
+          lo: ...,   // short for lower quantile
+          up: ...,   // short for upper quantile
+        }
+        s45: {
+          md: ...,   // short for median
+          mx: ...,   // short for maximum
+          lo: ...,   // short for lower quantile
+          up: ...,   // short for upper quantile
+        }
+        s65: {
+          md: ...,   // short for median
+          mx: ...,   // short for maximum
+          lo: ...,   // short for lower quantile
+          up: ...,   // short for upper quantile
+        }
+        s90: {
+          md: ...,   // short for median
+          mx: ...,   // short for maximum
+          lo: ...,   // short for lower quantile
+          up: ...,   // short for upper quantile
+        }
+        s150: {
+          md: ...,   // short for median
+          mx: ...,   // short for maximum
+          lo: ...,   // short for lower quantile
+          up: ...,   // short for upper quantile
+        }
+        sD: {
+          md: ...,   // short for median
+          mx: ...,   // short for maximum
+          lo: ...,   // short for lower quantile
+          up: ...,   // short for upper quantile
+        }
+
   districts: [
     district: '..',
     stats as above,
