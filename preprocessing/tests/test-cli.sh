@@ -3,7 +3,7 @@
 #static global variables
 scriptDir=`dirname $0`
 dataPaths=( "" "$scriptDir/../../data/disabled/29k-original.csv" )
-models=( "" "model1" "model3" )
+models=( "" "model1" "model3" "model4")
 producer="$scriptDir/../cli/produce-aggregate-data-files.js"
 tester="$scriptDir/../cli/test-all.js"
 testerOutputFile="test-all-output.txt"
