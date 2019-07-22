@@ -101,6 +101,7 @@ main section {
   border-bottom-color: #1b3e58;
 }
 
+#staining > section,
 #inputs > section,
 #submitSection {
   padding: 0 1rem 1rem;
@@ -343,12 +344,16 @@ input[type="range"]::-ms-thumb {
   flex: 1;
 }
 
-#stainingSection figure {
+#staining figure {
+  margin: 1rem 0;
+}
+
+figure {
   margin: 0 0 1rem;
   text-align: center;
 }
 
-#stainingSection img {
+img {
   width: 100%;
   height: auto;
 }
