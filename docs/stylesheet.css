@@ -115,8 +115,9 @@ main section {
   display: flex;
   align-items: center;
   flex: 1;
-  padding: 1rem;
+  padding: 1rem 1rem 1rem 4rem;
   transition: background-color .5s ease;
+  position: relative;
 }
 
 #result:empty::after {
@@ -148,9 +149,10 @@ main section {
 
 #result::before {
   display: block;
-  float: left;
+  position: absolute;
   width: 3rem;
   height: 3rem;
+  left: .5rem;
   font-weight: bold;
   font-size: 2rem;
   text-align: center;
