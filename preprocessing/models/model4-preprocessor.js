@@ -126,7 +126,7 @@ function computeWellStats(location, parent) {
   //   take the computations from the parent or complain
   if (location.strata15 < MIN_DATA_COUNT) {
     if (!parent) {
-      console.debug(`Division ${location.name} does not have enough shallow wells`);
+      console.debug(`Division ${location.name} does not have enough s15`);
     } else {
       location.s15_med = parent.s15_med;
       location.s15_max = parent.s15_max;
@@ -144,7 +144,7 @@ function computeWellStats(location, parent) {
   //   take the computations from the parent or complain
   if (location.strata45 < MIN_DATA_COUNT) {
     if (!parent) {
-      console.debug(`Division ${location.name} does not have enough shallow wells`);
+      console.debug(`Division ${location.name} does not have enough s45`);
     } else {
       location.s45_med = parent.s45_med;
       location.s45_max = parent.s45_max;
@@ -162,7 +162,7 @@ function computeWellStats(location, parent) {
   //   take the computations from the parent or complain
   if (location.strata65 < MIN_DATA_COUNT) {
     if (!parent) {
-      console.debug(`Division ${location.name} does not have enough shallow wells`);
+      console.debug(`Division ${location.name} does not have enough s65`);
     } else {
       location.s65_med = parent.s65_med;
       location.s65_max = parent.s65_max;
@@ -180,7 +180,7 @@ function computeWellStats(location, parent) {
   //   take the computations from the parent or complain
   if (location.strata90 < MIN_DATA_COUNT) {
     if (!parent) {
-      console.debug(`Division ${location.name} does not have enough shallow wells`);
+      console.debug(`Division ${location.name} does not have enough s90`);
     } else {
       location.s90_med = parent.s90_med;
       location.s90_max = parent.s90_max;
@@ -198,7 +198,7 @@ function computeWellStats(location, parent) {
   //   take the computations from the parent or complain
   if (location.strata150 < MIN_DATA_COUNT) {
     if (!parent) {
-      console.debug(`Division ${location.name} does not have enough shallow wells`);
+      console.debug(`Division ${location.name} does not have enough s150`);
     } else {
       location.s150_med = parent.s150_med;
       location.s150_max = parent.s150_max;
@@ -216,7 +216,7 @@ function computeWellStats(location, parent) {
   //   take the computations from the parent or complain
   if (location.strataDeep < MIN_DATA_COUNT) {
     if (!parent) {
-      console.debug(`Division ${location.name} does not have enough shallow wells`);
+      console.debug(`Division ${location.name} does not have enough Deep`);
     } else {
       location.sD_med = parent.sD_med;
       location.sD_max = parent.sD_max;
