@@ -19,6 +19,10 @@ svg {
     fill: skyblue;
 }
 
+#map-area path {
+    stroke: black;
+    stroke-width: .01rem;
+}
 
 #map-area svg path:hover {
     fill: red;

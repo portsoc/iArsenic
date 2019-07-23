@@ -2,9 +2,8 @@ const coordsBtn = d3.select('#coordsBtn');
 coordsBtn.on('click', getUserCoordinates);
 
 const posOptions = {
-  // timeout: 10000,
-  // maximumAge: 0,
-  // enableHighAccuracy: true,
+  maximumAge: 0,
+  enableHighAccuracy: true,
 };
 
 const mapArea = d3.select('#map-area');
@@ -181,7 +180,6 @@ async function loadMapData(mapUrl) {
     .projection(proj);
 
   centerMap(proj, topo);
-
   drawMapFeatures(path, topo);
 }
 
@@ -209,9 +207,7 @@ async function main() {
   const uniMapUrl = mapsDir + 'uni/uni_c005_s010--vw--pr.json';
   const testUrl = 'maps/simple-test.json';
 
-  await loadMapData(testUrl);
-
-  runGeoLocTests();
+  await loadMapData(divMapUrl);
 }
 
 main();
