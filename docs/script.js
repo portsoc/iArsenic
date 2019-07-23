@@ -19,6 +19,10 @@ const blackStain = document.querySelector('#black');
 const mixedStain = document.querySelector('#mixed');
 const result = document.querySelector('#result');
 const inputs = document.querySelectorAll('#inputs select, #inputs input');
+const redImg = document.querySelector('#redImg');
+const redLabel = document.querySelector('#redLabel');
+const blackImg = document.querySelector('#blackImg');
+const blackLabel = document.querySelector('#blackLabel');
 
 window.addEventListener('load', init);
 
@@ -45,6 +49,11 @@ function init() {
 
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', chevronClick);
+
+  redLabel.addEventListener('mouseover', () => {swapStainingImage('red')});
+  redStain.addEventListener('click', () => {swapStainingImage('red')});
+  blackLabel.addEventListener('mouseover', () => {swapStainingImage('black')});
+  blackLabel.addEventListener('click', () => {swapStainingImage('black')});
 
   redStain.addEventListener('change', () => { displayUtensil(false); });
   blackStain.addEventListener('change', () => { displayUtensil(false); });
@@ -305,5 +314,15 @@ function chevronClick() {
     });
     // validateInputs();
     chevron.classList.remove('flip');
+  }
+}
+
+function swapStainingImage(type) {
+  if (type === 'red') {
+    redImg.classList.remove('hidden');
+    blackImg.classList.add('hidden');
+  } else if (type === 'black') {
+    redImg.classList.add('hidden');
+    blackImg.classList.remove('hidden');
   }
 }
