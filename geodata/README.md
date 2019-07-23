@@ -15,22 +15,22 @@ NOTES:
 
 ### Naming and Organisation
 
-Two different sets of map files may be found in maps/:
+Two different sets of map files may be found in `maps/`:
 
-* /dist - for displaying on the web (.geojson, .json)
-* /src - for editing (.shp, .shx, .dbf, .prj, .qgz)
+* `/dist` - for displaying on the web (`.geojson`, `.json`)
+* `/src` - for editing (`.shp`, `.shx`, `.dbf`, `.prj`, `.qgz`)
 
 The map files are kept in separate folders and given a suitable prefix to group them by their upper location container (district, division, upazila, or union).
 
-To work with all maps used thus far, open the QGIS project file (all-maps.qgz). This contains each map as its own layer, organised into a group based on any simplification applied.
+To work with all maps used thus far, open the QGIS project file (`all-maps.qgz`). This contains each map as its own layer, organised into a group based on any simplification applied.
 
 ## Conversion
 
 To convert the original map files to GeoJSON and TopoJSON, follow the steps below.
 
-NOTE: If you use the QGIS project file (all-maps.qgz), you can skip straight to step 3; steps 1 and 2 are for individual map files.
+NOTE: If you use the QGIS project file (`all-maps.qgz`), you can skip straight to step 3; steps 1 and 2 are for individual map files.
 
-1. Load source files (.shp, .shx, .dbf, .prj) into QGIS
+1. Load source files (`.shp`, `.shx`, `.dbf`, `.prj`) into QGIS
 2. Edit attributes for clarity
   * e.g. Rename attributes:
     * 'ADM1\_EN' to 'div'
@@ -49,8 +49,8 @@ NOTE: If you use the QGIS project file (all-maps.qgz), you can skip straight to 
     * validOn
     * validTo
 3. Export > Save Features As...
-  * Format: GeoJSON
-  * COORDINATE_PRECISION: 5
+    * Format: GeoJSON
+    * COORDINATE_PRECISION: 5
 4. Run geo2topo from topojson module to convert GeoJSON to TopoJSON
 
 ### Simplification
@@ -67,32 +67,32 @@ For maps that have undergone some simplification, the following characters are u
         * Lower numbers denote higher levels of simplification
     * (Optional) Followed by simplification method and option(s) (see Simplification below)
 
-For example, maps/dist/dis/*dis_c005_s020--vw--pr.json* contains:
+For example, `maps/dist/dis/dis_c005_s020--vw--pr.json` contains:
 
-* *dis* to denote its separation of features into districts
-* *c005* to denote its co-ordinate precision value of 5
-* *s020* to denote its simplification factor value of 20
-* *--vw* to denote is simplification method (Visvalingam / Weighted Area)
-* *--pr* to denote is simplification option (Prevent Shape Removal)
+* `dis` to denote its separation of features into districts
+* `c005` to denote its co-ordinate precision value of 5
+* `s020` to denote its simplification factor value of 20
+* `--vw` to denote is simplification method (Visvalingam / Weighted Area)
+* `--pr` to denote is simplification option (Prevent Shape Removal)
 
 #### Methods
 
 The methods that may be applied include:
 
-* Douglas-Peucker (--dp)
-* Visvalingam / Effective Area (--ve)
-* Visvalingam / Weighted Area (--vw)
+* Douglas-Peucker (`--dp`)
+* Visvalingam / Effective Area (`--ve`)
+* Visvalingam / Weighted Area (`--vw`)
 
 #### Options
 
 The options that may be applied include:
 
-* Prevent Shape Removal (--pr)
-* Use Planar Geometry (--up)
+* Prevent Shape Removal (`--pr`)
+* Use Planar Geometry (`--up`)
 
 ### Attributes
 
-Individual map files found in maps/src should retain all their original fields as defined in their respective .dbf files. Optimised maps in maps/dist should only contain those that are necessary, such as:
+Individual map files found in `maps/src` should retain all their original fields as defined in their respective `.dbf` files. Optimised maps in `maps/dist` should only contain those that are necessary, such as:
 
 * area
 * div
@@ -115,7 +115,7 @@ However, there may be additional fields when merging a map for a Bangladeshi adm
 
 
 \* Please note:
-* If using source files, you need to open each file individually i.e. .shp first, then .prj, then .dbf, and so on
+* If using source files, you need to open each file individually i.e. `.shp` first, then `.prj`, then `.dbf`, and so on
 * If using GeoJSON or TopoJSON, you need only open the file once
 
 ##### Using QGIS
