@@ -1,4 +1,5 @@
 document.querySelector('#runGeoLocTests').addEventListener('click', runGeoLocTests);
+document.querySelector('#runDistanceTests').addEventListener('click', runDistanceTests);
 
 function runGeoLocTests() {
     function c(latitude, longitude) { return { coords: { latitude, longitude } } };
@@ -69,4 +70,37 @@ function testVLineConsistency(lon, lat1, lat2) {
             return false;
     }
     return true;
+}
+
+function runDistanceTests() {
+    /* 
+        geoDistance
+        geoCentroid
+        MAX_DISTANCE = 100km
+    */
+    console.log(`The topo's centroid is ${d3.geoCentroid(topo)}`);
+
+    const middleShape = topo.features[1];
+    const middleCentroid = d3.geoCentroid(middleShape);
+
+    const closestShape = {
+        distance: null
+    }
+
+    for (const feature of topo.features) {
+        let shapeId = feature.properties.id;
+        let shapeCentroid = d3.geoCentroid(feature);
+
+        let currentDistance = d3.geoDistance(middleCentroid, shapeCentroid);
+
+        console.log(`Shape #${shapeId}'s centroid is ${shapeCentroid}`);
+        console.log(`Distance between Middle and Shape ${shapeId} is ${currentDistance}`);
+
+        if (closestShape.distance == null || currentDistance < closestShape.distance && currentDistance !== 0) {
+            closestShape.id = shapeId;
+            closestShape.distance = currentDistance;
+        }
+    }
+
+    console.log(`Shape ${closestShape.id} is the closest`);
 }
