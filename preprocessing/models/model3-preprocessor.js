@@ -1,52 +1,60 @@
 /*
 
-This script generates a JSON representation of the location hierarchy including pre-processed arsenic level data
-which looks like this:
+This script generates a JSON representation of the location hierarchy
+including pre-processed arsenic level data which looks like this:
 
 [
-  division: '..',
-  s: {
-    md: ...,   // short for as_median_shallow
-    mx: ...,   // short for as_max_shallow
-    lo: ...,   // short for lower_quantile_shallow
-    up: ...,   // short for upper_quantile_shallow
-  }
+  {
+    division: '..',
+    districts: [
+      {
+        district: '..',
+        upazilas: [
+          {
+            upazila: '..',
+            unions: [
+              {
+                union: '..',
+                s: {
+                  md: ...,   // short for as_median_shallow
+                  mx: ...,   // short for as_max_shallow
+                  lo: ...,   // short for lower_quantile_shallow
+                  up: ...,   // short for upper_quantile_shallow
+                },
 
-  m: {
-    md: ...,   // short for as_median_med
-    mx: ...,   // short for as_max_med
-    lo: ...,   // short for lower_quantile_med
-    up: ...,   // short for upper_quantile_med
-  }
+                m: {
+                  md: ...,
+                  mx: ...,
+                  lo: ...,
+                  up: ...,
+                },
 
-  d: {
-    md: ...,   // short for as_median_med
-    mx: ...,   // short for as_max_med
-    lo: ...,   // short for lower_quantile_med
-    up: ...,   // short for upper_quantile_med
-  }
-
-  districts: [
-    district: '..',
-    stats as above,
-    upazilas: [
-      upazila: '..',
-      stats as above,
-      unions: [
-        union: '..',
-        stats as above,
-      ]
+                d: {
+                  md: ...,
+                  mx: ...,
+                  lo: ...,
+                  up: ...,
+                },
+              },
+              ... further unions
+            ]
+          },
+          ... further upazilas
+        ]
+      },
+      ... further districts
     ]
-  ]
+  },
+  ... further divisions
 ]
-```
 */
 
 const stats = require('../lib/stats');
 
 const MIN_DATA_COUNT = 7;
 
-function structureLocation(region) {
+// splits wells in the given region by depth
+function partitionWells(region) {
   region.wells_shallow = [];
   region.wells_med = [];
   region.wells_deep = [];
@@ -64,13 +72,13 @@ function structureLocation(region) {
 
 function organiseArsenicData(divisions) {
   for (const div of Object.values(divisions)) {
-    structureLocation(div);
+    partitionWells(div);
     for (const dis of Object.values(div.districts)) {
-      structureLocation(dis);
+      partitionWells(dis);
       for (const upa of Object.values(dis.upazilas)) {
-        structureLocation(upa);
+        partitionWells(upa);
         for (const uni of Object.values(upa.unions)) {
-          structureLocation(uni);
+          partitionWells(uni);
         }
       }
     }
@@ -80,7 +88,7 @@ function organiseArsenicData(divisions) {
 }
 
 function computeWellStats(location, parent) {
-  // sort the arsenic concentration data arrays
+  // sort the arsenic concentration data arrays for the stats library
   location.wells_shallow.sort(numericalCompare);
   location.wells_med.sort(numericalCompare);
   location.wells_deep.sort(numericalCompare);

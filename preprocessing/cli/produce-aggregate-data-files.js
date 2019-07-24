@@ -59,7 +59,7 @@ function fileHeading(options) {
   const inputData = (options.paths == null) ? 'default' : `[ ${options.paths.join(', ')} ]`;
 
   return `// model: ${options.model.id}
-// generated: ${(new Date()).toString()}
+// generated: ${process.env.OVERRIDE_DATE || (new Date()).toString()}
 // input data: ${inputData}
 `;
 }

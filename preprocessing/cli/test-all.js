@@ -2,7 +2,7 @@ const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 
 function runTests(produceEstimate, divisions, div, dis, upa, uni) {
-  for (const depth of [20, 60, 100, 200]) {
+  for (const depth of [20, 60, 80, 100, 200]) {
     for (const colour of ['Red', 'Black']) {
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - -  ` +
         produceEstimate(divisions, div, dis, upa, uni, depth, colour, null).message);

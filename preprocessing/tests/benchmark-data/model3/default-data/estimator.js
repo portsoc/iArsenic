@@ -1,5 +1,5 @@
 // model: model3
-// generated: Wed Jul 17 2019 10:51:12 GMT+0100 (British Summer Time)
+// generated: overridden date for test output comparability
 // input data: default
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
