@@ -15,10 +15,11 @@ NOTES:
 
 ### Naming and Organisation
 
-Two different sets of map files may be found in `maps/`:
+Two different sets of map files may be found in `maps/` (on GitHub and the Shared Drive):
 
 * `/dist` - for displaying on the web (`.geojson`, `.json`)
 * `/src` - for editing (`.shp`, `.shx`, `.dbf`, `.prj`, `.qgz`)
+  * For the time being, this folder is only on the Shared Drive. This is due to there being large file sizes.
 
 The map files are kept in separate folders and given a suitable prefix to group them by their upper location container (district, division, upazila, or union).
 
