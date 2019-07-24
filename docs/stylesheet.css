@@ -208,6 +208,18 @@ fieldset {
   background: #363636;
 }
 
+.shown {
+  background: linear-gradient(to right, transparent 25%, #d5d5d5);
+}
+
+.shown::after {
+  content: '●';
+  position: absolute;
+  font-size: 2rem;
+  right: 1rem;
+  top: -.2rem;
+}
+
 /* Input Styles */
 input,
 label,
@@ -251,6 +263,7 @@ select:disabled {
 
 .radioLabel {
   display: block;
+  position: relative;
   line-height: 2em;
 }
 

@@ -320,9 +320,13 @@ function chevronClick() {
 function swapStainingImage(type) {
   if (type === 'red') {
     redImg.classList.remove('hidden');
+    redLabel.classList.add('shown');
     blackImg.classList.add('hidden');
+    blackLabel.classList.remove('shown');
   } else if (type === 'black') {
     redImg.classList.add('hidden');
+    redLabel.classList.remove('shown');
     blackImg.classList.remove('hidden');
+    blackLabel.classList.add('shown');
   }
 }
