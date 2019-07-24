@@ -134,7 +134,7 @@ function computeWellStats(location, parent) {
   for (const stratum of STRATA) {
     // if we don't have enough well data on a given stratum
     //   take the computations from the parent or complain
-    if (location[stratum] < MIN_DATA_COUNT) {
+    if (location[stratum].length < MIN_DATA_COUNT) {
       if (!parent) {
         const stratumName = stratum === 'sD' ? 'Deep' : stratum;
         console.debug(`Division ${location.name} does not have enough ${stratumName}`);
