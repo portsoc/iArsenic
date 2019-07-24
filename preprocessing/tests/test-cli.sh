@@ -29,7 +29,7 @@ generateDataDirectory () {
 
 compareOutput () {
   if [ -d "$benchmarkDirectory" ]; then
-    diffOutput="$(diff -q -r -I '//' $testDirectory $benchmarkDirectory)"
+    diffOutput="$(diff -q -r $testDirectory $benchmarkDirectory)"
     if [ "$diffOutput" = "" ]; then
       echo
       echo "Test successful: $scriptDir/$testDirectory/ is identical to benchmark"
@@ -49,6 +49,8 @@ compareOutput () {
 main () {
   echo "outputing into $scriptDir/$testDirectory"
   echo "running:"
+
+  export OVERRIDE_DATE="overridden date for test output comparability"
 
   for model in "${models[@]}"
   do
