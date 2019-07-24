@@ -2,13 +2,15 @@
 
 #static global variables
 scriptDir=`dirname $0`
-dataPaths=( "" "$scriptDir/../../data/disabled/29k-original.csv" )
+cd "$scriptDir"
+
+dataPaths=( "" "../../data/disabled/29k-original.csv" )
 models=( "" "model1" "model3" "model4")
-producer="$scriptDir/../cli/produce-aggregate-data-files.js"
-tester="$scriptDir/../cli/test-all.js"
+producer="../cli/produce-aggregate-data-files.js"
+tester="../cli/test-all.js"
 testerOutputFile="test-all-output.txt"
-testDirectory="$scriptDir/test-outputs/$(date +"%F-%H-%M-%S")"
-benchmarkDirectory="$scriptDir/benchmark-data"
+testDirectory="test-outputs/$(date +"%F-%H-%M-%S")"
+benchmarkDirectory="benchmark-data"
 invokeOutputPath="-o"
 
 generateDataDirectory () {
@@ -29,21 +31,23 @@ compareOutput () {
   if [ -d "$benchmarkDirectory" ]; then
     diffOutput="$(diff -q -r -I '//' $testDirectory $benchmarkDirectory)"
     if [ "$diffOutput" = "" ]; then
-      echo -e "Test successful: \n$testDirectory/ and $benchmarkDirectory/ are identical"
+      echo
+      echo "Test successful: $scriptDir/$testDirectory/ is identical to benchmark"
+      echo
       echo "The test output is big, you may want to delete it:"
-      echo "rm -r $testDirectory/"
+      echo "rm -r $scriptDir/$testDirectory/"
     else
-      echo -e "Test failed: \n$diffOutput"
+      echo -e "Test failed in $scriptDir/: \n$diffOutput"
     fi
   else
-    echo -e "Directory $benchmarkDirectory/ not found"
-    echo -e "To make $testDirectory/ the benchmark directory, execute the following:\n"
-    echo "mv $testDirectory/ $benchmarkDirectory/"
+    echo -e "Directory $scriptDir/$benchmarkDirectory/ not found"
+    echo -e "To make $scriptDir/$testDirectory/ the benchmark directory, execute the following:\n"
+    echo "mv $scriptDir/$testDirectory/ $scriptDir/$benchmarkDirectory/"
   fi
 }
 
 main () {
-  echo "outputing into $testDirectory"
+  echo "outputing into $scriptDir/$testDirectory"
   echo "running:"
 
   for model in "${models[@]}"
