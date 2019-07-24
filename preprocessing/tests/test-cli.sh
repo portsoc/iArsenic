@@ -30,6 +30,8 @@ compareOutput () {
     diffOutput="$(diff -q -r -I '//' $testDirectory $benchmarkDirectory)"
     if [ "$diffOutput" = "" ]; then
       echo -e "Test successful: \n$testDirectory/ and $benchmarkDirectory/ are identical"
+      echo "The test output is big, you may want to delete it:"
+      echo "rm -r $testDirectory/"
     else
       echo -e "Test failed: \n$diffOutput"
     fi
