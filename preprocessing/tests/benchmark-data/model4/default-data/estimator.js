@@ -1,5 +1,5 @@
 // model: model4
-// generated: Wed Jul 24 2019 09:46:23 GMT+0100 (BST)
+// generated: overridden date for test output comparability
 // input data: default
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
@@ -61,13 +61,13 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   } else if (colour === 'Red' || utensil === 'Red') {
     let pollutionStatus = '';
     if (arsenicValues.md > 20 && arsenicValues.md <= 50) {
-      pollutionStatus = 'likely to be Polluted';
+      pollutionStatus = 'likely to be polluted';
       retval.severity = 'polluted';
     } else if (arsenicValues.md > 50 && arsenicValues.md <= 200) {
-      pollutionStatus = 'likely to be HIGHLY Polluted';
+      pollutionStatus = 'likely to be HIGHLY polluted';
       retval.severity = 'highlyPolluted';
     } else if (arsenicValues.md > 200) {
-      pollutionStatus = 'likely to be SEVERELY Polluted';
+      pollutionStatus = 'likely to be SEVERELY polluted';
       retval.severity = 'highlyPolluted';
     } else {
       pollutionStatus = 'likely to be arsenic-safe';
@@ -76,10 +76,10 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 
     const chemTestStatus =
       (arsenicValues.mx <= 100)
-        ? 'and concentration may be around'
+        ? ' and concentration may be around'
         : ', a chemical test is needed as concentration can be high, ranging around';
 
-    retval.message = 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
+    retval.message = 'Your tubewell is ' + pollutionStatus + chemTestStatus + ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }

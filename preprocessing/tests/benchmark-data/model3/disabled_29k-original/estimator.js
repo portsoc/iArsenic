@@ -1,6 +1,6 @@
 // model: model3
-// generated: Wed Jul 24 2019 09:46:20 GMT+0100 (BST)
-// input data: [ ./../../data/disabled/29k-original.csv ]
+// generated: overridden date for test output comparability
+// input data: [ ../../data/disabled/29k-original.csv ]
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
     return x;
