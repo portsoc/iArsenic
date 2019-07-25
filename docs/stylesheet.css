@@ -213,7 +213,7 @@ fieldset {
 }
 
 .shown::after {
-  content: '●';
+  content: '↑';
   position: absolute;
   font-size: 2rem;
   right: 1rem;
@@ -401,5 +401,9 @@ img {
 
   #inputs select {
     width: 50%;
+  }
+
+  .shown::after {
+    content: '→';
   }
 }
