@@ -127,13 +127,14 @@ async function loadMapData(mapUrl) {
 
 async function main() {
   const mapsDir = 'maps/dist/';
+  const testDir = 'maps/test/';
 
-  const divMapUrl = mapsDir + 'div/div_c005_s010--vw--pr.json';
-  const disMapUrl = mapsDir + 'dis/dis_c005_s010--vw--pr.json';
-  const upaMapUrl = mapsDir + 'upa/upa_c005_s010--vw--pr.json';
-  const uniMapUrl = mapsDir + 'uni/uni_c005_s010--vw--pr.json';
-  const simpleTestUrl = 'maps/simple-test.json';
-  const distanceTestUrl = 'maps/distance-test.json';
+  const divMapUrl = mapsDir + 'div/div-c005-s010-vw-pr.json';
+  const disMapUrl = mapsDir + 'dis/dis-c005-s010-vw-pr.json';
+  const upaMapUrl = mapsDir + 'upa/upa-c005-s010-vw-pr.json';
+  const uniMapUrl = mapsDir + 'uni/uni-c005-s010-vw-pr.json';
+  const simpleTestUrl = testDir + 'simple-test.json';
+  const distanceTestUrl = testDir + 'distance-test.json';
 
   await loadMapData(distanceTestUrl);
 }
