@@ -105,7 +105,7 @@ The options available on mapshaper are:
 * Apply simplification method and options as required
 * Apply the amount of simplification by moving the slider in the top bar
   * Alternatively enter a percentage value in the input field to the side
-* todo add something about saving
+* Export using the Export menu found inside the top bar
 
 
 \* Please note:
@@ -120,7 +120,7 @@ The options available on mapshaper are:
 * Select the simplification method
 * Specify the simplified (output) layer
   * Alternatively leave blank to create a temporary layer without saving
-* todo add something about saving
+* Export > Save Features As...
 
 \*\* Please note:
 * QGIS has fewer methods and options to mapshaper.
