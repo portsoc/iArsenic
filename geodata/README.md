@@ -1,25 +1,26 @@
 # iArsenic Geodata Visualisation
 
-NOTES: 
+NOTES:
 * This is currently under development and not ready for deployment.
-* All work has been based on the original map source files, which went down to union level only (no Mauzas).
+* All work has been based on the original map source files, which went down to Union-level only (no Mauzas).
 
 ## Key Resources
 
-* [QGIS](https://qgis.org/) - Geographic Information System used to manipulate and simplify map files
-* [mapshaper](https://mapshaper.org) - website used to quickly preview and simplify map files
-* [D3.js](https://d3js.org/) - library used to display maps on the web
-* [TopoJSON](https://github.com/topojson/topojson) - extension used to encode the topologies of files saved as GeoJSON for improved performance on the web
+* [QGIS](https://qgis.org/) – Geographic Information System used to manipulate and simplify map files
+* [mapshaper](https://mapshaper.org) – website used to quickly preview and simplify map files
+* [D3.js](https://d3js.org/) – library used to display maps on the web
+* [TopoJSON](https://github.com/topojson/topojson) – extension used to encode the topologies of files saved as GeoJSON for improved performance on the web
 
 ## Map Files
 
 ### Naming and Organisation
 
-Two different sets of map files may be found in `maps/` (on GitHub and the Shared Drive):
+Different sets of map files may be found in `maps/` (on GitHub and the Shared Drive):
 
-* `/dist` - for displaying on the web (`.geojson`, `.json`)
-* `/src` - for editing (`.shp`, `.shx`, `.dbf`, `.prj`, `.qgz`)
-  * For the time being, this folder is only on the Shared Drive. This is due to there being large file sizes.
+* `/dist` – for displaying on the web (`.geojson`, `.json`)
+* `/src` – for editing (`.shp`, `.shx`, `.dbf`, `.prj`, `.qgz`)
+  * For the time being, this folder is only on the Shared Drive. This is due to there being large binary files.
+* `/test` – simple shapes for testing our code
 
 The map files are kept in separate folders and given a suitable prefix to group them by their upper location container (district, division, upazila, or union).
 
@@ -52,67 +53,59 @@ NOTE: If you use the QGIS project file (`all-maps.qgz`), you can skip straight t
 3. Export > Save Features As...
     * Format: GeoJSON
     * COORDINATE_PRECISION: 5
-4. Run geo2topo from topojson module to convert GeoJSON to TopoJSON
+4. Run `geo2topo` from topojson module to convert GeoJSON to TopoJSON
 
 ### Simplification
+
+The map files contain detailed borders, which makes the files large and slow to render. Simplification reduces the resolution of the borders, which improves the usability at negligible loss of detail.
 
 All simplification thus far has been completed by using mapshaper to apply the methods and options, and using QGIS to specify the co-ordinate precision (when exporting to GeoJSON).
 
 For maps that have undergone some simplification, the following characters are used when naming them:
 
-* __c__ - Co-ordinate Precision
+* __c__ – Co-ordinate Precision
     * Followed by a number (original: 15, max: 100, min: 1)
+    * Precision of 5 is accurate to within 4ft
 
-* __s__ - Simplification Factor
-    * Followed by a number (original: 100, max: 100, min: 1)
+* __s__ – Simplification Factor
+    * Followed by a percentage number (original: 100%, min: 1%)
         * Lower numbers denote higher levels of simplification
-    * (Optional) Followed by simplification method and option(s) (see Simplification below)
+    * (Optional) Followed by simplification method and option(s) that affect the simplification process (see Methods and Options below)
 
-For example, `maps/dist/dis/dis_c005_s020--vw--pr.json` contains:
+For example, `maps/dist/dis/dis-c005-s020-vw-pr.json` means:
 
-* `dis` to denote its separation of features into districts
-* `c005` to denote its co-ordinate precision value of 5
-* `s020` to denote its simplification factor value of 20
-* `--vw` to denote is simplification method (Visvalingam / Weighted Area)
-* `--pr` to denote is simplification option (Prevent Shape Removal)
+* `dis` – features are separated into districts
+* `-c005` – co-ordinate precision value is 5
+* `-s020` – simplification factor value is 20%
+* `-vw` – simplification method is Visvalingam / Weighted Area
+* `-pr` – simplification option is Prevent Shape Removal
 
 #### Methods
 
-The methods that may be applied include:
+The methods available on mapshaper are:
 
-* Douglas-Peucker (`--dp`)
-* Visvalingam / Effective Area (`--ve`)
-* Visvalingam / Weighted Area (`--vw`)
+* Douglas-Peucker (`-dp`)
+* Visvalingam / Effective Area (`-ve`)
+* Visvalingam / Weighted Area (`-vw`)
 
 #### Options
 
-The options that may be applied include:
+The options available on mapshaper are:
 
-* Prevent Shape Removal (`--pr`)
-* Use Planar Geometry (`--up`)
+* Prevent Shape Removal (`-pr`)
+* Use Planar Geometry (`-up`)
 
-### Attributes
-
-Individual map files found in `maps/src` should retain all their original fields as defined in their respective `.dbf` files. Optimised maps in `maps/dist` should only contain those that are necessary, such as:
-
-* area
-* div
-* dis
-* upa
-* uni
-
-However, there may be additional fields when merging a map for a Bangladeshi administrative region with the map for the surrounding countries (Bhutan, India, Myanmar, Nepal, and Sri Lanka). By default, QGIS will use an ID for these countries and set any of the fields used for such regions to NULL.
-
-#### Process
+#### Simplification Process
 
 ##### Using mapshaper
 
-* Import a map file (source or converted file format) \*
+* Import a map file (source or converted file format)\*
   * Select the 'detect line intersections' option (optional, but recommended)
 * Open the *Simplification* menu found inside the top bar
 * Apply simplification method and options as required
 * Apply the amount of simplification by moving the slider in the top bar
   * Alternatively enter a percentage value in the input field to the side
+* todo add something about saving
 
 
 \* Please note:
@@ -121,13 +114,26 @@ However, there may be additional fields when merging a map for a Bangladeshi adm
 
 ##### Using QGIS
 
-* Import a map file (source or converted file format) \*\*
+* Import a map file (source or converted file format)\*\*
 * Open the *Simplify* window found in Vector > Geometry Tools > Simplify...
 * Specify the input layer (defaults to any layer highlighted in the *Layers* panel)
-* Select the simplification method and tolerance
+* Select the simplification method
 * Specify the simplified (output) layer
   * Alternatively leave blank to create a temporary layer without saving
+* todo add something about saving
 
-\*\* Please note: 
+\*\* Please note:
 * QGIS has fewer methods and options to mapshaper.
+* QGIS also lets us set _tolerance_ which we haven't investigated yet.
 * If importing TopoJSON, the following warning message may appear: `CRS was undefined: defaulting to CRS EPSG:4326 - WGS 84`. This is due to the spatial reference information missing for the Co-ordinate Reference System in this file format. `EPSG:4326 - WGS 84` has been used thus far as the default, since this was pre-defined in the original source files.
+
+
+### Attributes
+
+Source map files found in `maps/src` retain all their original fields as defined in their respective `.dbf` files. Optimised maps only contain those attributes that are necessary for our further processing:
+
+* div
+* dis
+* upa
+* uni
+* area
