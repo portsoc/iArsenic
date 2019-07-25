@@ -1,34 +1,36 @@
 const d3 = require('d3');
 const topojson = require('topojson');
-const map = require('./maps/test/distance-test.json');
+const map = require('./maps/dist/div/div-c005-s010-vw-pr.json');
 const topo = topojson.feature(map, map['objects']['map']);
 
 function runDistanceTests() {
-    console.log(`The topo's centroid is ${d3.geoCentroid(topo)}`);
+    const prop = 'div';
+    const closestRegion = {};
 
-    const middleShape = topo.features[1];
-    const middleCentroid = d3.geoCentroid(middleShape);
+    console.log(`The topo centroid is ${d3.geoCentroid(topo)}`);
 
-    const closestShape = {
-        distance: null
-    }
+    for (const selectedRegion of topo.features) {
+        closestRegion.distance = null;
 
-    for (const feature of topo.features) {
-        let shapeId = feature.properties.id;
-        let shapeCentroid = d3.geoCentroid(feature);
+        let selectedRegionName = selectedRegion.properties[prop];
+        let selectedRegionCentroid = d3.geoCentroid(selectedRegion);
 
-        let currentDistance = d3.geoDistance(middleCentroid, shapeCentroid);
+        for (const feature of topo.features) {
+            let region = feature.properties[prop];
 
-        console.log(`Shape #${shapeId}'s centroid is ${shapeCentroid}`);
-        console.log(`Distance between Middle and Shape ${shapeId} is ${currentDistance}`);
+            if (region !== selectedRegionName) {
+                let regionCentroid = d3.geoCentroid(feature);
 
-        if (closestShape.distance == null || currentDistance < closestShape.distance && currentDistance !== 0) {
-            closestShape.id = shapeId;
-            closestShape.distance = currentDistance;
+                let currentDistance = d3.geoDistance(selectedRegionCentroid, regionCentroid);
+
+                if (closestRegion.distance == null || currentDistance < closestRegion.distance) {
+                    closestRegion[prop] = region;
+                    closestRegion.distance = currentDistance;
+                }
+            }
         }
+        console.log(`\nThe closest region to ${selectedRegionName} is ${closestRegion[prop]}`);
     }
-
-    console.log(`Shape ${closestShape.id} is the closest`);
 }
 
 runDistanceTests();
