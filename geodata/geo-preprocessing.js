@@ -10,21 +10,21 @@ function runDistanceTests() {
   console.log(`The topo centroid is ${d3.geoCentroid(topo)}`);
 
   for (const selectedRegion of topo.features) {
-    closestRegion.distance = null;
+    closestRegion.distance = Infinity;
 
     let selectedRegionName = selectedRegion.properties[prop];
     let selectedRegionCentroid = d3.geoCentroid(selectedRegion);
 
     for (const feature of topo.features) {
-      let region = feature.properties[prop];
+      let regionName = feature.properties[prop];
 
-      if (region !== selectedRegionName) {
+      if (feature !== selectedRegion) {
         let regionCentroid = d3.geoCentroid(feature);
 
         let currentDistance = d3.geoDistance(selectedRegionCentroid, regionCentroid);
 
-        if (closestRegion.distance == null || currentDistance < closestRegion.distance) {
-          closestRegion[prop] = region;
+        if (currentDistance < closestRegion.distance) {
+          closestRegion[prop] = regionName;
           closestRegion.distance = currentDistance;
         }
       }
