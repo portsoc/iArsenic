@@ -78,7 +78,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     return retval;
   }
 
-  if (depth < 15) {
+  if (depth < 15.3) {
     arsenicValues = union.s15;
   } else if (depth < 45) {
     arsenicValues = union.s45;

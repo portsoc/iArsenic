@@ -2,10 +2,14 @@
 Model 4 is like model 3 but with different stratification of the depths.
 In model 4, we use the following depth boundaries:
 
-15m, 45m, 65m, 90m, and 150m
+15.3m, 45m, 65m, 90m, and 150m
 
-Strata are named with the top-boundary, so e.g. s45 covers depths of 15 to 45,
-including 15 and excluding 45. The last stratum is sD for "deeper than 150m".
+The first stratum ends at 15.3m because the users will indicate well depth
+in feet and they are likely to round up, so a well under 15m might be reported as
+50ft which is just under 15.3m. The stratum is still called s15 below.
+
+Strata are named with the top-boundary, so e.g. s45 covers depths of 15.3 to 45,
+including 15.3 and excluding 45. The last stratum is sD for "deeper than 150m".
 
 This script generates a JSON representation of the location hierarchy
 including pre-processed arsenic concentration data which looks like this:
@@ -80,7 +84,7 @@ function partitionWells(region) {
   region.sD = [];
 
   for (const well of region.wells) {
-    if (well.depth < 15) {
+    if (well.depth < 15.3) {
       region.s15.push(well.arsenic);
     } else if (well.depth < 45) {
       region.s45.push(well.arsenic);
