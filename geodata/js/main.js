@@ -1,3 +1,5 @@
+/* global d3, topojson */
+
 const coordsBtn = d3.select('#coordsBtn');
 coordsBtn.on('click', getUserCoordinates);
 
@@ -33,7 +35,7 @@ pollutionDataBtn.on('click', () => {
 });
 
 function displayError(e) {
-  console.warn(`Error: [${e.code}] ${e.message}`)
+  console.warn(`Error: [${e.code}] ${e.message}`);
 }
 
 function getUserCoordinates() {
@@ -54,7 +56,7 @@ function focusOnRegion(userPos) {
   console.log(`Long: ${userPos.coords.longitude}`);
   console.log(`Accuracy: ${userPos.coords.accuracy} metres`);
 
-  let foundDivision = "";
+  let foundDivision = '';
 
   const foundRegion = findRegion(userPos.coords.longitude, userPos.coords.latitude);
   if (foundRegion) foundDivision = foundRegion.properties.div;
@@ -67,7 +69,7 @@ function focusOnRegion(userPos) {
 }
 
 function findRegion(lon, lat) {
-  for (region of topo.features) {
+  for (const region of topo.features) {
     if (d3.geoContains(region, [lon, lat])) {
       return region;
     }
