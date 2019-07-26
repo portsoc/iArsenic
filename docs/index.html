@@ -50,25 +50,30 @@
 
         <div class="sideBySide">
           <fieldset>
-            <label class="radioLabel">
+            <label id="redLabel" class="radioLabel shown">
               <input type="radio" id="red" name="staining" value="Red">
               Red
             </label>
 
-            <label class="radioLabel">
+            <label id="blackLabel" class="radioLabel">
               <input type="radio" id="black" name="staining" value="Black">
               Black
             </label>
 
-            <label class="radioLabel">
+            <label id="mixedLabel" class="radioLabel">
               <input type="radio" id="mixed" name="staining" value="Mixed">
               Mixed or Unsure
             </label>
           </fieldset>
 
-          <figure>
+          <figure id="blackImg" class="hidden">
+            <img src="img/black_platform_1.jpg">
+            <figcaption>A tube well platform with black staining.</figcaption>
+          </figure>
+
+          <figure id="redImg">
             <img src="img/red_platform_1.jpg">
-            <figcaption>Example of a tube well platform with red staining.</figcaption>
+            <figcaption>A tube well platform with red staining.</figcaption>
           </figure>
         </div>
 
