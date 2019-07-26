@@ -10,6 +10,58 @@ function round(x, magnitude, dir = 1) {
   }
 }
 
+function extractIdMessage(id) {
+  const pollutionOutput = [
+    'likely to be arsenic-safe',
+    'likely to be polluted',
+    'likely to be HIGHLY polluted',
+    'likely to be SEVERELY polluted',
+  ];
+
+  const chemTestOutput = [
+    ' and concentration may be around',
+    ', a chemical test is needed as concentration can be high, ranging around',
+  ];
+
+  const aggregateOutput = {
+    0: { message: 'We do not have enough data to make an estimate for your well' },
+    1: {
+      message: 'Your tubewell is ' + pollutionOutput[0] + chemTestOutput[0],
+      severity: 'safe',
+    },
+    2: {
+      message: 'Your tubewell is ' + pollutionOutput[0] + chemTestOutput[1],
+      severity: 'safe',
+    },
+    3: {
+      message: 'Your tubewell is ' + pollutionOutput[1] + chemTestOutput[0],
+      severity: 'polluted',
+    },
+    4: {
+      message: 'Your tubewell is ' + pollutionOutput[1] + chemTestOutput[1],
+      severity: 'polluted',
+    },
+    5: {
+      message: 'Your tubewell is ' + pollutionOutput[2] + chemTestOutput[0],
+      severity: 'highlyPolluted',
+    },
+    6: {
+      message: 'Your tubewell is ' + pollutionOutput[2] + chemTestOutput[1],
+      severity: 'highlyPolluted',
+    },
+    7: {
+      message: 'Your tubewell is ' + pollutionOutput[3] + chemTestOutput[0],
+      severity: 'highlyPolluted',
+    },
+    8: {
+      message: 'Your tubewell is ' + pollutionOutput[3] + chemTestOutput[1],
+      severity: 'highlyPolluted',
+    },
+  };
+
+  return aggregateOutput[id];
+}
+
 // Flood removed from here for time being
 function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {
   const division = divisions[div];
@@ -17,13 +69,8 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   const upazila = district ? district.upazilas[upa] : undefined;
   const union = upazila ? upazila.unions[uni] : undefined;
 
-  const retval = {};
-
   let arsenicValues = {};
-
-  if (!union) {
-    retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
-  }
+  let retval = {};
 
   if (depth < 15) {
     arsenicValues = union.s15;
@@ -39,6 +86,10 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     arsenicValues = union.sD;
   }
 
+  if (!union) {
+    retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+  }
+
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
@@ -52,31 +103,11 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 
     retval.message = 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
     retval.severity = 'safe';
-  } else if (arsenicValues.md == null) {
-    // we can't make an estimate
-    retval.message = 'We do not have enough data to make an estimate for your well';
   } else if (colour === 'Red' || utensil === 'Red') {
-    let pollutionStatus = '';
-    if (arsenicValues.md > 20 && arsenicValues.md <= 50) {
-      pollutionStatus = 'likely to be polluted';
-      retval.severity = 'polluted';
-    } else if (arsenicValues.md > 50 && arsenicValues.md <= 200) {
-      pollutionStatus = 'likely to be HIGHLY polluted';
-      retval.severity = 'highlyPolluted';
-    } else if (arsenicValues.md > 200) {
-      pollutionStatus = 'likely to be SEVERELY polluted';
-      retval.severity = 'highlyPolluted';
-    } else {
-      pollutionStatus = 'likely to be arsenic-safe';
-      retval.severity = 'safe';
+    retval = extractIdMessage(arsenicValues.id);
+    if (arsenicValues.id > 0) {
+      retval.message += ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
     }
-
-    const chemTestStatus =
-      (arsenicValues.mx <= 100)
-        ? ' and concentration may be around'
-        : ', a chemical test is needed as concentration can be high, ranging around';
-
-    retval.message = 'Your tubewell is ' + pollutionStatus + chemTestStatus + ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }

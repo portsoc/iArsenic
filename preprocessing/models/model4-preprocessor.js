@@ -158,6 +158,24 @@ function numericalCompare(a, b) {
   return a - b;
 }
 
+function produceEstimateId(med, max) {
+  if (med == null) return 0;
+  let pollutionStatus = '';
+  if (med > 20 && med <= 50) {
+    pollutionStatus = 3;
+  } else if (med > 50 && med <= 200) {
+    pollutionStatus = 5;
+  } else if (med > 200) {
+    pollutionStatus = 7;
+  } else {
+    pollutionStatus = 1;
+  }
+
+  const chemTestStatus = (max <= 100) ? 0 : 1;
+
+  return pollutionStatus + chemTestStatus;
+}
+
 function extractStats(data, hierarchyPath) {
   const retval = {};
   for (const item of Object.keys(data)) {
@@ -167,8 +185,7 @@ function extractStats(data, hierarchyPath) {
     if (hierarchyPath.length === 1) {
       for (const stratum of STRATA) {
         hierarchyObj[stratum] = {
-          md: dataObj[`${stratum}_med`],
-          mx: dataObj[`${stratum}_max`],
+          id: produceEstimateId(dataObj[`${stratum}_med`], dataObj[`${stratum}_max`]),
           lo: dataObj[`${stratum}_low`],
           up: dataObj[`${stratum}_upp`],
         };
