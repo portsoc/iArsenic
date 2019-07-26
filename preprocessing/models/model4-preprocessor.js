@@ -185,9 +185,9 @@ function extractStats(data, hierarchyPath) {
     if (hierarchyPath.length === 1) {
       for (const stratum of STRATA) {
         hierarchyObj[stratum] = {
-          id: produceEstimateId(dataObj[`${stratum}_med`], dataObj[`${stratum}_max`]),
-          lo: dataObj[`${stratum}_low`],
-          up: dataObj[`${stratum}_upp`],
+          m: produceEstimateId(dataObj[`${stratum}_med`], dataObj[`${stratum}_max`]),
+          l: dataObj[`${stratum}_low`],
+          u: dataObj[`${stratum}_upp`],
         };
       }
     }
