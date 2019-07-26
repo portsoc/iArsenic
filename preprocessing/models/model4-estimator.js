@@ -10,7 +10,7 @@ function round(x, magnitude, dir = 1) {
   }
 }
 
-function extractIdMessage(id) {
+function extractMessage(id) {
   const pollutionOutput = [
     'likely to be arsenic-safe',
     'likely to be polluted',
@@ -104,7 +104,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     retval.message = 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
     retval.severity = 'safe';
   } else if (colour === 'Red' || utensil === 'Red') {
-    retval = extractIdMessage(arsenicValues.m);
+    retval = extractMessage(arsenicValues.m);
     if (arsenicValues.m > 0) {
       retval.message += ' ' + round(arsenicValues.l, 10, 1) + ' to ' + round(arsenicValues.u, 10, 1) + ' µg/L ';
     }
