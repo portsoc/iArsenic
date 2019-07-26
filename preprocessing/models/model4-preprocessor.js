@@ -158,7 +158,7 @@ function numericalCompare(a, b) {
   return a - b;
 }
 
-function produceEstimateId(med, max) {
+function produceMessage(med, max) {
   if (med == null) return 0;
   let pollutionStatus = '';
   if (med > 20 && med <= 50) {
@@ -185,7 +185,7 @@ function extractStats(data, hierarchyPath) {
     if (hierarchyPath.length === 1) {
       for (const stratum of STRATA) {
         hierarchyObj[stratum] = {
-          m: produceEstimateId(dataObj[`${stratum}_med`], dataObj[`${stratum}_max`]),
+          m: produceMessage(dataObj[`${stratum}_med`], dataObj[`${stratum}_max`]),
           l: dataObj[`${stratum}_low`],
           u: dataObj[`${stratum}_upp`],
         };
