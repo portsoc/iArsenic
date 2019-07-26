@@ -23,40 +23,34 @@ including pre-processed arsenic concentration data which looks like this:
               {
                 union: '..',
                 s15: {
-                  md: ...,   // short for median
-                  mx: ...,   // short for maximum
-                  lo: ...,   // short for lower quantile
-                  up: ...,   // short for upper quantile
+                  m: ...,   // short for message ID
+                  l: ...,   // short for lower quantile
+                  u: ...,   // short for upper quantile
                 },
                 s45: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 s65: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 s90: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 s150: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 sD: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
               },
               ... further unions
