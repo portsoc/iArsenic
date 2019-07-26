@@ -1,7 +1,7 @@
 const commandLineArgs = require('command-line-args');
 const path = require('path');
 
-const DEFAULT_MODEL = 'model3';
+const DEFAULT_MODEL = 'model4';
 
 const optionDefinitions = [
   { name: 'help', alias: 'h', type: Boolean },

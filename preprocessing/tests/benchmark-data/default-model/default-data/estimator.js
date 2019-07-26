@@ -1,4 +1,4 @@
-// model: model3
+// model: model4
 // generated: overridden date for test output comparability
 // input data: default
 function round(x, magnitude, dir = 1) {
@@ -13,6 +13,59 @@ function round(x, magnitude, dir = 1) {
   }
 }
 
+const pollutionOutput = {
+  safe: 'likely to be arsenic-safe',
+  polluted: 'likely to be polluted',
+  highly: 'likely to be HIGHLY polluted',
+  severely: 'likely to be SEVERELY polluted',
+};
+
+const chemTestOutput = {
+  noTest: ' and concentration may be around',
+  test: ', a chemical test is needed as concentration can be high, ranging around',
+};
+
+const aggregateOutput = {
+  0: { message: 'We do not have enough data to make an estimate for your well' },
+  1: {
+    message: 'Your tubewell is ' + pollutionOutput.safe + chemTestOutput.noTest,
+    severity: 'safe',
+  },
+  2: {
+    message: 'Your tubewell is ' + pollutionOutput.safe + chemTestOutput.test,
+    severity: 'safe',
+  },
+  3: {
+    message: 'Your tubewell is ' + pollutionOutput.polluted + chemTestOutput.noTest,
+    severity: 'polluted',
+  },
+  4: {
+    message: 'Your tubewell is ' + pollutionOutput.polluted + chemTestOutput.test,
+    severity: 'polluted',
+  },
+  5: {
+    message: 'Your tubewell is ' + pollutionOutput.highly + chemTestOutput.noTest,
+    severity: 'highlyPolluted',
+  },
+  6: {
+    message: 'Your tubewell is ' + pollutionOutput.highly + chemTestOutput.test,
+    severity: 'highlyPolluted',
+  },
+  7: {
+    message: 'Your tubewell is ' + pollutionOutput.severely + chemTestOutput.noTest,
+    severity: 'highlyPolluted',
+  },
+  8: {
+    message: 'Your tubewell is ' + pollutionOutput.severely + chemTestOutput.test,
+    severity: 'highlyPolluted',
+  },
+};
+
+function createMessage(id) {
+  // clone the message because it's changed in produceEstimate
+  return Object.assign({}, aggregateOutput[id]);
+}
+
 // Flood removed from here for time being
 function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {
   const division = divisions[div];
@@ -20,20 +73,26 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   const upazila = district ? district.upazilas[upa] : undefined;
   const union = upazila ? upazila.unions[uni] : undefined;
 
-  const retval = {};
-
+  let retval = {};
   let arsenicValues = {};
 
   if (!union) {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    return retval;
   }
 
-  if (depth < 90) {
-    arsenicValues = union.s;
+  if (depth < 15) {
+    arsenicValues = union.s15;
+  } else if (depth < 45) {
+    arsenicValues = union.s45;
+  } else if (depth < 65) {
+    arsenicValues = union.s65;
+  } else if (depth < 90) {
+    arsenicValues = union.s90;
   } else if (depth < 150) {
-    arsenicValues = union.m;
+    arsenicValues = union.s150;
   } else {
-    arsenicValues = union.d;
+    arsenicValues = union.sD;
   }
 
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
@@ -49,31 +108,11 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 
     retval.message = 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
     retval.severity = 'safe';
-  } else if (arsenicValues.md == null) {
-    // we can't make an estimate
-    retval.message = 'We do not have enough data to make an estimate for your well';
   } else if (colour === 'Red' || utensil === 'Red') {
-    let pollutionStatus = '';
-    if (arsenicValues.md > 20 && arsenicValues.md <= 50) {
-      pollutionStatus = 'likely to be Polluted';
-      retval.severity = 'polluted';
-    } else if (arsenicValues.md > 50 && arsenicValues.md <= 200) {
-      pollutionStatus = 'likely to be HIGHLY Polluted';
-      retval.severity = 'highlyPolluted';
-    } else if (arsenicValues.md > 200) {
-      pollutionStatus = 'likely to be SEVERELY Polluted';
-      retval.severity = 'highlyPolluted';
-    } else {
-      pollutionStatus = 'likely to be arsenic-safe';
-      retval.severity = 'safe';
+    retval = createMessage(arsenicValues.m);
+    if (arsenicValues.m > 0) {
+      retval.message += ' ' + round(arsenicValues.l, 10, 1) + ' to ' + round(arsenicValues.u, 10, 1) + ' µg/L ';
     }
-
-    const chemTestStatus =
-      (arsenicValues.mx <= 100)
-        ? 'and concentration may be around'
-        : ', a chemical test is needed as concentration can be high, ranging around';
-
-    retval.message = 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }

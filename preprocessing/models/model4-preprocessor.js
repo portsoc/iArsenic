@@ -23,40 +23,34 @@ including pre-processed arsenic concentration data which looks like this:
               {
                 union: '..',
                 s15: {
-                  md: ...,   // short for median
-                  mx: ...,   // short for maximum
-                  lo: ...,   // short for lower quantile
-                  up: ...,   // short for upper quantile
+                  m: ...,   // short for message ID
+                  l: ...,   // short for lower quantile
+                  u: ...,   // short for upper quantile
                 },
                 s45: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 s65: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 s90: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 s150: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
                 sD: {
-                  md: ...,
-                  mx: ...,
-                  lo: ...,
-                  up: ...,
+                  m: ...,
+                  l: ...,
+                  u: ...,
                 },
               },
               ... further unions
@@ -158,6 +152,24 @@ function numericalCompare(a, b) {
   return a - b;
 }
 
+function produceMessage(med, max) {
+  if (med == null) return 0;
+  let pollutionStatus = '';
+  if (med > 20 && med <= 50) {
+    pollutionStatus = 3;
+  } else if (med > 50 && med <= 200) {
+    pollutionStatus = 5;
+  } else if (med > 200) {
+    pollutionStatus = 7;
+  } else {
+    pollutionStatus = 1;
+  }
+
+  const chemTestStatus = (max <= 100) ? 0 : 1;
+
+  return pollutionStatus + chemTestStatus;
+}
+
 function extractStats(data, hierarchyPath) {
   const retval = {};
   for (const item of Object.keys(data)) {
@@ -167,10 +179,9 @@ function extractStats(data, hierarchyPath) {
     if (hierarchyPath.length === 1) {
       for (const stratum of STRATA) {
         hierarchyObj[stratum] = {
-          md: dataObj[`${stratum}_med`],
-          mx: dataObj[`${stratum}_max`],
-          lo: dataObj[`${stratum}_low`],
-          up: dataObj[`${stratum}_upp`],
+          m: produceMessage(dataObj[`${stratum}_med`], dataObj[`${stratum}_max`]),
+          l: dataObj[`${stratum}_low`],
+          u: dataObj[`${stratum}_upp`],
         };
       }
     }
