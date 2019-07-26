@@ -213,11 +213,17 @@ fieldset {
 }
 
 .shown::after {
-  content: '↑';
+  content: ' ';
   position: absolute;
-  font-size: 2rem;
   right: 1rem;
-  top: -.2rem;
+  width: 1.5rem;
+  height: 2rem;
+  background-image: url(img/chevron.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  transform: rotate(180deg);
+  transform-origin: center center;
 }
 
 /* Input Styles */
@@ -404,6 +410,7 @@ img {
   }
 
   .shown::after {
-    content: '→';
+    transform: rotate(-90deg);
+    width: 1.2rem;
   }
 }
