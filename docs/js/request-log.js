@@ -79,6 +79,10 @@ function putLogInPage(data) {
       f: (x) => x.inputs.drinking,
     },
     {
+      name: 'flooding',
+      f: (x) => x.inputs.flooding,
+    },
+    {
       name: 'est. severity',
       f: (x) => x.estimate.severity,
     },
