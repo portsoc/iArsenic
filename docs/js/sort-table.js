@@ -1,7 +1,7 @@
 ((exports) => {
   'use strict';
 
-  exports.instrumentSortableTable = (table, presort) => {
+  exports.instrumentSortableTable = (table, presort, direction) => {
     table.classList.add('sortable');
     if (table.tHead) {
       const ths = table.tHead.rows[0].children;
@@ -15,13 +15,11 @@
       }
     }
 
-    if (presort != null) sort(table, presort);
+    if (presort != null) sort(table, presort, direction === 'desc');
   };
 
-  function sort(table, n) {
+  function sort(table, n, reverse = false) {
     const tbody = table.tBodies[0];
-
-    let reverse = false;
 
     if (table.tHead && table.tHead.rows[0] && table.tHead.rows[0].children[n]) {
       const th = table.tHead.rows[0].children[n];

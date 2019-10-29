@@ -153,7 +153,7 @@ function makeTable(arr, columns) {
     }
   }
 
-  if (window.SortTable) window.SortTable.instrumentSortableTable(t, 0);
+  if (window.SortTable) window.SortTable.instrumentSortableTable(t, 0, 'desc');
 
   return t;
 }
