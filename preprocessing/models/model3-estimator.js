@@ -39,7 +39,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     // Flood is not yet a provided input so we have commented it out ready for future implementation
 
     // const floodWarning =
-    //   (depth <= 15 && flood === 'No')
+    //   (depth <= 15.3 && flood === 'No')
     //     ? ' but may be vulnerable to nitrate and pathogens'
     //     : '';
     const floodWarning = '';
