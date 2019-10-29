@@ -114,17 +114,33 @@
         <p class="hint">If your well is over 1000ft-deep, please enter 1000ft.</p>
       </section>
 
+      <section id="floodingSection" class="hidden">
+        <h2>Is this area susceptible to flooding?</h2>
+
+        <fieldset>
+          <label class="radioLabel">
+            <input type="radio" id="floodingYes" name="flooding" value="yes">
+            Yes
+          </label>
+
+          <label class="radioLabel">
+            <input type="radio" id="floodingNo" name="flooding" value="no">
+            No
+          </label>
+        </fieldset>
+      </section>
+
       <section id="drinkingSection">
         <h2>Is anyone drinking from this well?</h2>
 
         <fieldset>
           <label class="radioLabel">
-            <input type="radio" id="yes" name="drink" value="yes">
+            <input type="radio" id="drinkingYes" name="drink" value="yes">
             Yes
           </label>
 
           <label class="radioLabel">
-            <input type="radio" id="no" name="drink" value="no">
+            <input type="radio" id="drinkingNo" name="drink" value="no">
             No
           </label>
         </fieldset>

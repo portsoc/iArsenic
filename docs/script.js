@@ -13,6 +13,7 @@ const depth = document.querySelector('#depth');
 const depthOutput = document.querySelector('#depthOutput');
 const depthSection = document.querySelector('#depthSection');
 const stainingSection = document.querySelector('#stainingSection');
+const floodingSection = document.querySelector('#floodingSection');
 const drinkingSection = document.querySelector('#drinkingSection');
 const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
@@ -55,11 +56,13 @@ function init() {
   blackLabel.addEventListener('mouseover', () => {swapStainingImage('black')});
   blackLabel.addEventListener('click', () => {swapStainingImage('black')});
 
-  redStain.addEventListener('change', () => { displayUtensil(false); });
-  blackStain.addEventListener('change', () => { displayUtensil(false); });
-  mixedStain.addEventListener('change', () => { displayUtensil(true); });
+  redStain.addEventListener('change', () => { displayElement(utensilSection, false); });
+  blackStain.addEventListener('change', () => { displayElement(utensilSection, false); });
+  mixedStain.addEventListener('change', () => { displayElement(utensilSection, true); });
 
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
+  depth.addEventListener('change', () => { toggleFlooding() });
+  depthOutput.addEventListener('change', () => { toggleFlooding() });
 
   for (let i = 0; i < inputs.length; i += 1) {
     inputs[i].addEventListener('change', hideAssessment);
@@ -108,6 +111,11 @@ function gatherInputs() {
   if (!retval.depth) {
     // depth 0 is the default and counts as no-value-entered
     scrollToSection(depthSection);
+    return null;
+  }
+
+  if (!retval.flooding && depthOutput.value < 50 && floodingSection.classList.contains('invalid')) {
+    scrollToSection(floodingSection);
     return null;
   }
 
@@ -201,8 +209,13 @@ function updateSlider() {
   } else { depth.value = 0; }
 }
 
-function displayUtensil(show) {
-  utensilSection.classList.toggle('hidden', !show);
+function displayElement(element, show) {
+  element.classList.toggle('hidden', !show);
+}
+
+function toggleFlooding() {
+  if (depthOutput.value < 50) { displayElement(floodingSection, true); }
+  else { displayElement(floodingSection, false); }
 }
 
 function validateInputs() {
@@ -244,6 +257,14 @@ function validateInputs() {
     depthSection.classList.add('invalid');
   } else {
     depthSection.classList.remove('invalid');
+  }
+
+  // Handles the flooding
+  const selectedFlooding = document.querySelector('input[name="flooding"]:checked');
+  if (!selectedFlooding && !floodingSection.classList.contains('hidden')) {
+    floodingSection.classList.add('invalid');
+  } else {
+    floodingSection.classList.remove('invalid');
   }
 
   // Handles the drinking from the well radio buttons
