@@ -206,7 +206,9 @@ function updateRangeLabel(position) {
 function updateSlider() {
   if (depthOutput.value > 0) {
     depth.value = (depthOutput.value - minVal) / scale + minPos;
-  } else { depth.value = 0; }
+  } else {
+    depth.value = 0;
+  }
 }
 
 function displayElement(element, show) {
@@ -214,11 +216,7 @@ function displayElement(element, show) {
 }
 
 function toggleFlooding() {
-  if (depthOutput.value < 50) {
-    displayElement(floodingSection, true);
-  } else {
-    displayElement(floodingSection, false);
-  }
+  displayElement(floodingSection, depthOutput.value < 50);
 }
 
 function validateInputs() {
