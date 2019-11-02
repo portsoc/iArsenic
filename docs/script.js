@@ -51,18 +51,18 @@ function init() {
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', chevronClick);
 
-  redLabel.addEventListener('mouseover', () => {swapStainingImage('red')});
-  redStain.addEventListener('click', () => {swapStainingImage('red')});
-  blackLabel.addEventListener('mouseover', () => {swapStainingImage('black')});
-  blackLabel.addEventListener('click', () => {swapStainingImage('black')});
+  redLabel.addEventListener('mouseover', () => { swapStainingImage('red'); });
+  redStain.addEventListener('click', () => { swapStainingImage('red'); });
+  blackLabel.addEventListener('mouseover', () => { swapStainingImage('black'); });
+  blackLabel.addEventListener('click', () => { swapStainingImage('black'); });
 
   redStain.addEventListener('change', () => { displayElement(utensilSection, false); });
   blackStain.addEventListener('change', () => { displayElement(utensilSection, false); });
   mixedStain.addEventListener('change', () => { displayElement(utensilSection, true); });
 
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
-  depth.addEventListener('change', () => { toggleFlooding() });
-  depthOutput.addEventListener('change', () => { toggleFlooding() });
+  depth.addEventListener('change', () => { toggleFlooding(); });
+  depthOutput.addEventListener('change', () => { toggleFlooding(); });
 
   for (let i = 0; i < inputs.length; i += 1) {
     inputs[i].addEventListener('change', hideAssessment);
@@ -214,8 +214,11 @@ function displayElement(element, show) {
 }
 
 function toggleFlooding() {
-  if (depthOutput.value < 50) { displayElement(floodingSection, true); }
-  else { displayElement(floodingSection, false); }
+  if (depthOutput.value < 50) {
+    displayElement(floodingSection, true);
+  } else {
+    displayElement(floodingSection, false);
+  }
 }
 
 function validateInputs() {
