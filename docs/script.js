@@ -233,50 +233,31 @@ function validateInputs() {
       break;
     }
   }
-  if (!dropdownInputs.valid) {
-    locationSection.classList.add('invalid');
-  } else { locationSection.classList.remove('invalid'); }
+
+  locationSection.classList.toggle('invalid', !dropdownInputs.valid);
 
   // Handles the staining radio buttons
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
-  if (!selectedStaining) {
-    stainingSection.classList.add('invalid');
-  } else if (selectedStaining.value === 'Mixed') {
-    stainingSection.classList.remove('invalid');
+  stainingSection.classList.toggle('invalid', !selectedStaining);
+
+  // Handles the utensil radio buttons
+  if (selectedStaining && selectedStaining.value === 'Mixed') {
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
-    if (!selectedUtensil) {
-      stainingSection.classList.add('invalid');
-    } else {
-      stainingSection.classList.remove('invalid');
-    }
-  } else {
-    stainingSection.classList.remove('invalid');
+    stainingSection.classList.toggle('invalid', !selectedUtensil);
   }
 
   // Handles the depth
   const depthOutputValue = Number(depthOutput.value);
-
-  if (depthOutputValue === 0 || depthOutputValue > 1000) {
-    depthSection.classList.add('invalid');
-  } else {
-    depthSection.classList.remove('invalid');
-  }
+  depthSection.classList.toggle('invalid', depthOutputValue === 0 || depthOutputValue > 1000);
 
   // Handles the flooding
   const selectedFlooding = document.querySelector('input[name="flooding"]:checked');
-  if (!selectedFlooding && !floodingSection.classList.contains('hidden')) {
-    floodingSection.classList.add('invalid');
-  } else {
-    floodingSection.classList.remove('invalid');
-  }
+  floodingSection.classList.toggle('invalid',
+    !selectedFlooding && !floodingSection.classList.contains('hidden'));
 
   // Handles the drinking from the well radio buttons
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
-  if (!selectedDrinking) {
-    drinkingSection.classList.add('invalid');
-  } else {
-    drinkingSection.classList.remove('invalid');
-  }
+  drinkingSection.classList.toggle('invalid', !selectedDrinking);
 }
 
 let fallbackLogImage; // global to prevent too quick garbage collection before the data is logged
