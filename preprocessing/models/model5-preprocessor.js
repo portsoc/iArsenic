@@ -1,6 +1,6 @@
 /*
-Model 5 is like model 4 but with different stratification of the depths
-and different approach to dealing with areas that don't have enough wells.
+Model 5 is like model 4 but with different approach to dealing
+with areas that don't have enough wells.
 
 In model 4 and 5, we use the following depth boundaries:
 
@@ -13,12 +13,11 @@ in feet and they are likely to round up, so a well under 15m might be reported a
 Strata are named with the top-boundary, so e.g. s45 covers depths of 15.3 to 45,
 including 15.3 and excluding 45. The last stratum is sD for "deeper than 150m".
 
-MODEL5
+MODEL 5
 
 In model 5:
  * if we don't have enough wells somewhere, we can combine strata and
    look for geographically nearby areas within some radius
- * at >90m, we can take about 100km radius
  * at <15m, first look at <45m, then widen geographically still
    at <45m up to 10km, meaning we take <15m together with 15-45
  * at 15-45, first try 15-65, then widen 15-45 geographically
@@ -29,8 +28,7 @@ In model 5:
    widen 65 to 150 up to 20km
  * at 90-150, first try 90+, then widen 90-150 up to 100km, then
    widen 90+ up to 100km
- * we can test things like this to see how many places have not
-   enough data at the above limits
+ * at >150m, we can take about 100km radius
 
 For example, if a union doesn't have enough wells at <15m, we will take
 all wells at <45m instead. If that's still not enough, we find the nearest
@@ -132,14 +130,16 @@ function stratifyWells(locationArr) {
       region.sD.push(well.arsenic);
     }
   }
+}
+
+function sortWells(locationArr) {
+  const region = locationArr[locationArr.length - 1];
 
   // sort the arsenic concentration data arrays for the stats library
-  region.s15.sort(numericalCompare);
-  region.s45.sort(numericalCompare);
-  region.s65.sort(numericalCompare);
-  region.s90.sort(numericalCompare);
-  region.s150.sort(numericalCompare);
-  region.sD.sort(numericalCompare);
+  for (const stratum of STRATA) {
+    region[stratum].sort(numericalCompare);
+    if (region[stratum + 'Wider']) region[stratum + 'Wider'].sort(numericalCompare);
+  }
 }
 
 function formatUnionName(locationArr) {
@@ -185,8 +185,6 @@ function getEnoughData(locationArr) {
   // look for geographically nearby areas within some radius
   // the rules are at the top of the file
 
-  // * at >90m, we can take about 100km radius
-  //         - generate sD until 100km
   // * at <15m, first look at <45m, then widen geographically still
   //   at <45m up to 10km, meaning we take <15m together with 15-45
   //         - generate local s45, then s15+s45 up to 10km
@@ -202,34 +200,84 @@ function getEnoughData(locationArr) {
   //   widen 65 to 150 up to 20km
   //         - generate local s150, then s90 up to 20km
   //         - second try: generate local s150, then s90+s150 up to 20km
+
   // * at 90-150, first try 90+, then widen 90-150 up to 100km, then
   //   widen 90+ up to 100km
-  //         - generate local sD, then s150 up to 100km
-  //         - second try: generate local s150, then s150+sD up to 100km
-  // * we can test things like this to see how many places have not
-  //   enough data at the above limits
-  //         -
+  //         - generate local sD
+  //         - second try: generate s150 up to 100km
+  //         - third try: generate local sD, then s150+sD up to 100km
+  if (!isEnoughData(location.s150)) {
+    const nearbyLocations = listNearbyLocations(locationArr, 100);
+
+    // this will contain arrays of wells gathered from the given strata in the nearby locations
+    const wellsArrays150 = nearbyLocations.map(strataSelector('s150'));
+    const wellsArrays150plus = nearbyLocations.map(strataSelector(['s150', 'sD']));
+
+    location.s150Wider =
+      widen(location.s150, [location.sD]) ||
+      widen(location.s150, wellsArrays150) ||
+      widen(location.s150, wellsArrays150plus);
+  }
+
+  // * at >150m, we can take about 100km radius
+  //         - generate sD until 100km
   if (!isEnoughData(location.sD)) {
     const nearbyLocations = listNearbyLocations(locationArr, 100);
-    let wider = location.sD;
-    for (const loc of nearbyLocations) {
-      wider = wider.concat(loc.sD);
-      if (isEnoughData(wider)) break;
-    }
 
-    if (isEnoughData(wider)) {
-      location.sDWider = wider;
-    } else {
-      console.debug(`getEnoughData: Union ${formatUnionName(locationArr)} does not have enough deep wells`);
+    // this will contain arrays of wells gathered from the given strata in the nearby locations
+    const wellsArrays = nearbyLocations.map(strataSelector('sD'));
+
+    location.sDWider = widen(location.sD, wellsArrays);
+  }
+
+  for (const stratum of STRATA) {
+    if (!isEnoughData(location[stratum]) && !isEnoughData(location[stratum + 'Wider'])) {
+      // complain if we don't have enough well data on a given stratum
+      const stratumName = stratum === 'sD' ? 'deep' : stratum;
+      console.debug(`Union ${formatUnionName(locationArr)} does not have enough ${stratumName} wells`);
     }
   }
 }
+
+//  for (const wells of  {
+
+// starting with startingArray, until we reach isEnoughData(), keep adding arrays from
+// arraysToAdd
+function widen(startingArray, arraysToAdd) {
+  let wider = startingArray;
+
+  for (const wells of arraysToAdd) {
+    if (isEnoughData(wider)) break;
+    wider = wider.concat(wells);
+  }
+
+  return isEnoughData(wider) ? wider : null;
+}
+
+function strataSelector(strata) {
+  // make sure we always have an array
+  if (typeof strata === 'string') strata = [strata];
+
+  return function (location) {
+    let wellsInLocation = [];
+    for (const stratum of strata) {
+      wellsInLocation = wellsInLocation.concat(location[stratum]);
+    }
+    return wellsInLocation;
+  };
+}
+
+// todo we will want to see stats on how far in the widening did we have to go
 
 function listNearbyLocations(locationArr, kmDistance) {
   // todo find locations (at same administrative depth as locationArr)
   // that are near locationArr; sort them from nearest to farthest
   // the array must not include locationArr itself
   return [];
+
+  // get a list of distances with code like geodata/geo-preprocessing.js
+  // then construct an array of locations up to the given distance
+  // and then sort by distance
 }
 
 function numericalCompare(a, b) {
@@ -297,6 +345,9 @@ function main(divisions) {
 
   // if a stratum doesn't have enough wells, widen the search
   forEachUnion(divisions, getEnoughData);
+
+  // sort the wells so the stats functions work well
+  forEachUnion(divisions, sortWells);
 
   // get the actual stats
   forEachUnion(divisions, computeWellStats);
