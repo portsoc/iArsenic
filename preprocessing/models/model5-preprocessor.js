@@ -192,7 +192,7 @@ function getEnoughData(locationArr) {
     const nearbyLocations = listNearbyLocations(locationArr, 10);
 
     // this will contain arrays of wells gathered from the given strata in the nearby locations
-    const wellsArrays15and45 = nearbyLocations.map(strataSelector(['s15', 's45']));
+    const wellsArrays15and45 = nearbyLocations.map(strataSelector('s15', 's45'));
 
     location.s15Wider =
       widen(location.s15, [location.s45].concat(wellsArrays15and45));
@@ -228,7 +228,7 @@ function getEnoughData(locationArr) {
 
     // this will contain arrays of wells gathered from the given strata in the nearby locations
     const wellsArrays65 = nearbyLocations10.map(strataSelector('s65'));
-    const wellsArrays65and90 = nearbyLocations20.map(strataSelector(['s65', 's90']));
+    const wellsArrays65and90 = nearbyLocations20.map(strataSelector('s65', 's90'));
 
     location.s65Wider =
       widen(location.s65, [location.s90]) ||
@@ -246,7 +246,7 @@ function getEnoughData(locationArr) {
 
     // this will contain arrays of wells gathered from the given strata in the nearby locations
     const wellsArrays90 = nearbyLocations.map(strataSelector('s90'));
-    const wellsArrays90and150 = nearbyLocations.map(strataSelector(['s90', 's150']));
+    const wellsArrays90and150 = nearbyLocations.map(strataSelector('s90', 's150'));
 
     location.s90Wider =
       widen(location.s90, [location.s150]) ||
@@ -264,7 +264,7 @@ function getEnoughData(locationArr) {
 
     // this will contain arrays of wells gathered from the given strata in the nearby locations
     const wellsArrays150 = nearbyLocations.map(strataSelector('s150'));
-    const wellsArrays150plus = nearbyLocations.map(strataSelector(['s150', 'sD']));
+    const wellsArrays150plus = nearbyLocations.map(strataSelector('s150', 'sD'));
 
     location.s150Wider =
       widen(location.s150, [location.sD]) ||
@@ -307,10 +307,7 @@ function widen(startingArray, arraysToAdd) {
   return isEnoughData(wider) ? wider : null;
 }
 
-function strataSelector(strata) {
-  // make sure we always have an array
-  if (typeof strata === 'string') strata = [strata];
-
+function strataSelector(...strata) {
   return function (location) {
     let wellsInLocation = [];
     for (const stratum of strata) {
