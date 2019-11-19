@@ -188,53 +188,28 @@ function getEnoughData(locationArr) {
   // * at <15m, first look at <45m, then widen geographically still
   //   at <45m up to 10km, meaning we take <15m together with 15-45
   //         - generate local s45, then s15+s45 up to 10km
-  if (!isEnoughData(location.s15)) {
-    const nearbyLocations = listNearbyLocations(locationArr, 10);
-
-    // this will contain arrays of wells gathered from the given strata in the nearby locations
-    const wellsArrays15and45 = nearbyLocations.map(strataSelector('s15', 's45'));
-
-    location.s15Wider =
-      widen(location.s15, [location.s45].concat(wellsArrays15and45));
-  }
+  location.s15Wider =
+    widen(location.s15, location.s45, ...near(locationArr, 10).map(strataSelector('s15', 's45')));
 
   // * at 15-45, first try 15-65, then widen 15-45 geographically
   //   up to 10km, then widen 15-65 up to 20km
   //         - generate local s65
   //         - second try: generate s45 up to 10km
   //         - third try: generate local s65, then s45+s65 up to 20km
-  if (!isEnoughData(location.s45)) {
-    const nearbyLocations10 = listNearbyLocations(locationArr, 10);
-    const nearbyLocations20 = listNearbyLocations(locationArr, 20);
-
-    // this will contain arrays of wells gathered from the given strata in the nearby locations
-    const wellsArrays45 = nearbyLocations10.map(strataSelector('s45'));
-    const wellsArrays45and65 = nearbyLocations20.map(strataSelector(['s45', 's65']));
-
-    location.s45Wider =
-      widen(location.s45, [location.s65]) ||
-      widen(location.s45, wellsArrays45) ||
-      widen(location.s45.concat(location.s65), wellsArrays45and65);
-  }
+  location.s45Wider =
+    widen(location.s45, location.s65) ||
+    widen(location.s45, ...near(locationArr, 10).map(strataSelector('s45'))) ||
+    widen(location.s45, location.s65, ...near(locationArr, 20).map(strataSelector('s45', 's65')));
 
   // * at 45-65, first try 45-90, then widen 45-65 up to 10km, then
   //   widen 45-90 up to 20km
   //         - generate local s90
   //         - second try: generate s65 up to 10km
   //         - third try: generate local s90, then s65+s90 up to 20km
-  if (!isEnoughData(location.s65)) {
-    const nearbyLocations10 = listNearbyLocations(locationArr, 10);
-    const nearbyLocations20 = listNearbyLocations(locationArr, 20);
-
-    // this will contain arrays of wells gathered from the given strata in the nearby locations
-    const wellsArrays65 = nearbyLocations10.map(strataSelector('s65'));
-    const wellsArrays65and90 = nearbyLocations20.map(strataSelector('s65', 's90'));
-
-    location.s65Wider =
-      widen(location.s65, [location.s90]) ||
-      widen(location.s65, wellsArrays65) ||
-      widen(location.s65.concat(location.s90), wellsArrays65and90);
-  }
+  location.s65Wider =
+    widen(location.s65, location.s90) ||
+    widen(location.s65, ...near(locationArr, 10).map(strataSelector('s65'))) ||
+    widen(location.s65, location.s90, ...near(locationArr, 20).map(strataSelector('s65', 's90')));
 
   // * at 65-90, first try 65-150, then widen 65-90 up to 20km, then
   //   widen 65 to 150 up to 20km
@@ -242,7 +217,7 @@ function getEnoughData(locationArr) {
   //         - second try: generate s90 up to 20km
   //         - third try: generate local s150, then s90+s150 up to 20km
   if (!isEnoughData(location.s90)) {
-    const nearbyLocations = listNearbyLocations(locationArr, 20);
+    const nearbyLocations = near(locationArr, 20);
 
     // this will contain arrays of wells gathered from the given strata in the nearby locations
     const wellsArrays90 = nearbyLocations.map(strataSelector('s90'));
@@ -260,7 +235,7 @@ function getEnoughData(locationArr) {
   //         - second try: generate s150 up to 100km
   //         - third try: generate local sD, then s150+sD up to 100km
   if (!isEnoughData(location.s150)) {
-    const nearbyLocations = listNearbyLocations(locationArr, 100);
+    const nearbyLocations = near(locationArr, 100);
 
     // this will contain arrays of wells gathered from the given strata in the nearby locations
     const wellsArrays150 = nearbyLocations.map(strataSelector('s150'));
@@ -275,7 +250,7 @@ function getEnoughData(locationArr) {
   // * at >150m, we can take about 100km radius
   //         - generate sD until 100km
   if (!isEnoughData(location.sD)) {
-    const nearbyLocations = listNearbyLocations(locationArr, 100);
+    const nearbyLocations = near(locationArr, 100);
 
     // this will contain arrays of wells gathered from the given strata in the nearby locations
     const wellsArrays = nearbyLocations.map(strataSelector('sD'));
@@ -296,7 +271,7 @@ function getEnoughData(locationArr) {
 
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
 // arraysToAdd
-function widen(startingArray, arraysToAdd) {
+function widen(startingArray, ...arraysToAdd) {
   let wider = startingArray;
 
   for (const wells of arraysToAdd) {
@@ -319,7 +294,7 @@ function strataSelector(...strata) {
 
 // todo we will want to see stats on how far in the widening did we have to go
 
-function listNearbyLocations(locationArr, kmDistance) {
+function near(locationArr, kmDistance) {
   // todo find locations (at same administrative depth as locationArr)
   // that are near locationArr; sort them from nearest to farthest
   // the array must not include locationArr itself
