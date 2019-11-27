@@ -142,14 +142,6 @@ function sortWells(locationArr) {
   }
 }
 
-function formatUnionName(locationArr) {
-  return (
-    locationArr
-      .map(region => region.name)
-      .join(' -> ')
-  );
-}
-
 const STRATA = ['s15', 's45', 's65', 's90', 's150', 'sD'];
 
 function computeWellStats(locationArr) {
@@ -174,12 +166,21 @@ function computeWellStats(locationArr) {
       // getEnoughData should have already reported that, but
       // complain here for consistency check
       const stratumName = stratum === 'sD' ? 'deep' : stratum;
-      console.debug(`Union ${formatUnionName(locationArr)} does not have enough ${stratumName} wells`);
+      const unionName = locationArr.map(region => region.name).join(' -> ');
+      console.log(`Union ${unionName} does not have enough ${stratumName} wells`);
     }
   }
 }
 
 function getEnoughData(locationArr) {
+  // a shortcut function for notation
+  // it finds regions within `km` of locationArr, and extracts wells from them, combining the provided strata.
+  // returns an array of well arrays
+  function nearbyWells(km, ...strata) {
+    const locations = nearbyLocations(locationArr, km);
+    return locations.map(strataSelector(...strata));
+  }
+
   const location = locationArr[locationArr.length - 1];
   // if we don't have enough wells somewhere, we can combine strata and
   // look for geographically nearby areas within some radius
@@ -189,7 +190,7 @@ function getEnoughData(locationArr) {
   //   at <45m up to 10km, meaning we take <15m together with 15-45
   //         - generate local s45, then s15+s45 up to 10km
   location.s15Wider =
-    widen(location.s15, location.s45, ...near(locationArr, 10).map(strataSelector('s15', 's45')));
+    widen(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
 
   // * at 15-45, first try 15-65, then widen 15-45 geographically
   //   up to 10km, then widen 15-65 up to 20km
@@ -198,8 +199,8 @@ function getEnoughData(locationArr) {
   //         - third try: generate local s65, then s45+s65 up to 20km
   location.s45Wider =
     widen(location.s45, location.s65) ||
-    widen(location.s45, ...near(locationArr, 10).map(strataSelector('s45'))) ||
-    widen(location.s45, location.s65, ...near(locationArr, 20).map(strataSelector('s45', 's65')));
+    widen(location.s45, ...nearbyWells(10, 's45')) ||
+    widen(location.s45, location.s65, ...nearbyWells(20, 's45', 's65'));
 
   // * at 45-65, first try 45-90, then widen 45-65 up to 10km, then
   //   widen 45-90 up to 20km
@@ -208,66 +209,33 @@ function getEnoughData(locationArr) {
   //         - third try: generate local s90, then s65+s90 up to 20km
   location.s65Wider =
     widen(location.s65, location.s90) ||
-    widen(location.s65, ...near(locationArr, 10).map(strataSelector('s65'))) ||
-    widen(location.s65, location.s90, ...near(locationArr, 20).map(strataSelector('s65', 's90')));
+    widen(location.s65, ...nearbyWells(10, 's65')) ||
+    widen(location.s65, location.s90, ...nearbyWells(20, 's65', 's90'));
 
   // * at 65-90, first try 65-150, then widen 65-90 up to 20km, then
   //   widen 65 to 150 up to 20km
   //         - generate local s150
   //         - second try: generate s90 up to 20km
   //         - third try: generate local s150, then s90+s150 up to 20km
-  if (!isEnoughData(location.s90)) {
-    const nearbyLocations = near(locationArr, 20);
-
-    // this will contain arrays of wells gathered from the given strata in the nearby locations
-    const wellsArrays90 = nearbyLocations.map(strataSelector('s90'));
-    const wellsArrays90and150 = nearbyLocations.map(strataSelector('s90', 's150'));
-
-    location.s90Wider =
-      widen(location.s90, [location.s150]) ||
-      widen(location.s90, wellsArrays90) ||
-      widen(location.s90.concat(location.s150), wellsArrays90and150);
-  }
+  location.s90Wider =
+    widen(location.s90, location.s150) ||
+    widen(location.s90, ...nearbyWells(20, 's90')) ||
+    widen(location.s90.concat(location.s150), ...nearbyWells(20, 's90', 's150'));
 
   // * at 90-150, first try 90+, then widen 90-150 up to 100km, then
   //   widen 90+ up to 100km
   //         - generate local sD
   //         - second try: generate s150 up to 100km
   //         - third try: generate local sD, then s150+sD up to 100km
-  if (!isEnoughData(location.s150)) {
-    const nearbyLocations = near(locationArr, 100);
-
-    // this will contain arrays of wells gathered from the given strata in the nearby locations
-    const wellsArrays150 = nearbyLocations.map(strataSelector('s150'));
-    const wellsArrays150plus = nearbyLocations.map(strataSelector('s150', 'sD'));
-
-    location.s150Wider =
-      widen(location.s150, [location.sD]) ||
-      widen(location.s150, wellsArrays150) ||
-      widen(location.s150.concat(location.sD), wellsArrays150plus);
-  }
+  location.s150Wider =
+    widen(location.s150, location.sD) ||
+    widen(location.s150, ...nearbyWells(100, 's150')) ||
+    widen(location.s150.concat(location.sD), ...nearbyWells(100, 's150', 'sD'));
 
   // * at >150m, we can take about 100km radius
   //         - generate sD until 100km
-  if (!isEnoughData(location.sD)) {
-    const nearbyLocations = near(locationArr, 100);
-
-    // this will contain arrays of wells gathered from the given strata in the nearby locations
-    const wellsArrays = nearbyLocations.map(strataSelector('sD'));
-
-    location.sDWider = widen(location.sD, wellsArrays);
-  }
-
-  for (const stratum of STRATA) {
-    if (!isEnoughData(location[stratum]) && !isEnoughData(location[stratum + 'Wider'])) {
-      // complain if we don't have enough well data on a given stratum
-      const stratumName = stratum === 'sD' ? 'deep' : stratum;
-      console.debug(`Union ${formatUnionName(locationArr)} does not have enough ${stratumName} wells`);
-    }
-  }
+  location.sDWider = widen(location.sD, ...nearbyWells(100, 'sD'));
 }
-
-//  for (const wells of  {
 
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
 // arraysToAdd
@@ -294,7 +262,7 @@ function strataSelector(...strata) {
 
 // todo we will want to see stats on how far in the widening did we have to go
 
-function near(locationArr, kmDistance) {
+function nearbyLocations(locationArr, kmDistance) {
   // todo find locations (at same administrative depth as locationArr)
   // that are near locationArr; sort them from nearest to farthest
   // the array must not include locationArr itself
