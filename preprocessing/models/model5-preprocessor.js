@@ -184,7 +184,7 @@ function getEnoughData(locationArr) {
   const location = locationArr[locationArr.length - 1];
   // if we don't have enough wells somewhere, we can combine strata and
   // look for geographically nearby areas within some radius
-  // the rules are at the top of the file
+  // the rules are also at the top of the file
 
   // * at <15m, first look at <45m, then widen geographically still
   //   at <45m up to 10km, meaning we take <15m together with 15-45
@@ -200,7 +200,7 @@ function getEnoughData(locationArr) {
   location.s45Wider =
     widen(location.s45, location.s65) ||
     widen(location.s45, ...nearbyWells(10, 's45')) ||
-    widen(location.s45, location.s65, ...nearbyWells(20, 's45', 's65'));
+    widen(location.s45.concat(location.s65), ...nearbyWells(20, 's45', 's65'));
 
   // * at 45-65, first try 45-90, then widen 45-65 up to 10km, then
   //   widen 45-90 up to 20km
@@ -210,7 +210,7 @@ function getEnoughData(locationArr) {
   location.s65Wider =
     widen(location.s65, location.s90) ||
     widen(location.s65, ...nearbyWells(10, 's65')) ||
-    widen(location.s65, location.s90, ...nearbyWells(20, 's65', 's90'));
+    widen(location.s65.concat(location.s90), ...nearbyWells(20, 's65', 's90'));
 
   // * at 65-90, first try 65-150, then widen 65-90 up to 20km, then
   //   widen 65 to 150 up to 20km
@@ -240,11 +240,13 @@ function getEnoughData(locationArr) {
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
 // arraysToAdd
 function widen(startingArray, ...arraysToAdd) {
+  if (isEnoughData(startingArray)) return startingArray;
+
   let wider = startingArray;
 
   for (const wells of arraysToAdd) {
-    if (isEnoughData(wider)) break;
     wider = wider.concat(wells);
+    if (isEnoughData(wider)) break;
   }
 
   return isEnoughData(wider) ? wider : null;
