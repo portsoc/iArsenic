@@ -16,55 +16,58 @@ function runDistanceTests() {
   }
   console.log('centroids done');
   console.log('number of features', topo.features.length);
-  let max10 = 0, max20 = 0, max100 = 0, i = 0;
-  const retval = {};
 
+  // Counter variable used to reduce the file size for testing
+  let i = 0;
+
+  const retReg = {};
 
   for (const selectedRegion of topo.features) {
     closestRegion.distance = Infinity;
 
     let selectedRegionName = selectedRegion.properties[prop];
 
-    let retReg = retval[selectedRegionName] = {
+    retReg[selectedRegionName] = {
       within10km: [],
       within20km: [],
       within100km: [],
+      properties: {
+        div: selectedRegion.properties.div,
+        dis: selectedRegion.properties.dis,
+        upa: selectedRegion.properties.upa,
+      },
     };
 
     for (const feature of topo.features) {
-      let regionName = feature.properties[prop];
+      let regionProperties = {
+        div: feature.properties.div,
+        dis: feature.properties.dis,
+        upa: feature.properties.upa,
+        uni: feature.properties.uni,
+      };
 
       if (feature !== selectedRegion) {
         let currentDistance = d3.geoDistance(feature.centroid, selectedRegion.centroid) * RADIUS;
 
-        if (++i < 10) console.log({ currentDistance, selectedRegionName, regionName });
-
         if (currentDistance < 10) {
-          retReg.within10km.push(regionName);
+          retReg[selectedRegionName].within10km.push(regionProperties);
         }
 
         if (currentDistance < 20) {
-          retReg.within20km.push(regionName);
+          retReg[selectedRegionName].within20km.push(regionProperties);
         }
 
         if (currentDistance < 100) {
-          retReg.within100km.push(regionName);
+          retReg[selectedRegionName].within100km.push(regionProperties);
         }
       }
     }
-    retReg.properties = {
-      div: selectedRegion.div,
-      dis: selectedRegion.dis,
-      upa: selectedRegion.upa,
-      uni: selectedRegion.uni,
-    };
 
-    if (retReg.within10km.length > max10) max10 = retReg.within10km.length;
-    if (retReg.within20km.length > max20) max20 = retReg.within20km.length;
-    if (retReg.within100km.length > max100) max100 = retReg.within100km.length;
+    // Reduces output for testing
+    if (i++ === 10) break;
   }
-  console.log('done', { max10, max20, max100 });
-  console.log(JSON.stringify(retval));
+
+  console.log(JSON.stringify(retReg));
 }
 
 runDistanceTests();
