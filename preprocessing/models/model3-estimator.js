@@ -23,6 +23,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 
   if (!union) {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    return retval;
   }
 
   if (depth < 90) {
