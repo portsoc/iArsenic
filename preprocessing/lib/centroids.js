@@ -1,4 +1,4 @@
-const getSimpleList = require('../../geodata/create-simple-geo-list.js');
+const getSimpleList = require('../../geodata/create-geo-list.js');
 const d3 = require('d3');
 const {round1} = require('./stats.js');
 const RADIUS = 6378.137;
