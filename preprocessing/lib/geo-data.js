@@ -1,12 +1,14 @@
-const getSimpleList = require('../../geodata/create-geo-list.js');
+const centroids = require('../../geodata/centroids');
 const d3 = require('d3');
 const RADIUS = 6378.137;
 
-function computeNearbyWells() {
-  const data = getSimpleList();
+function computeNearbyAreas(divisions) {
+  const data = centroids();
 
   for (const area of data) {
     area.nearbyAreas = [];
+    area.divisionsObj = divisions[area.div].districts[area.dis].upazilas[area.upa].unions[area.uni];
+    area.divisionsObj.nearbyAreas = area.nearbyAreas;
   }
 
   for (let i = 0; i < data.length; i++) {
@@ -14,24 +16,25 @@ function computeNearbyWells() {
       const distance = d3.geoDistance(data[i].centroid, data[j].centroid) * RADIUS;
 
       data[i].nearbyAreas.push({
-        km: distance,
-        area: data[j],
+        distance: distance,
+        area: data[j].divisionsObj,
       });
 
       data[j].nearbyAreas.push({
-        km: distance,
-        area: data[i],
+        distance: distance,
+        area: data[i].divisionsObj,
       });
     }
   }
 
   for (const area of data) {
-    area.nearbyAreas.sort((a, b) => a.km - b.km);
+    area.nearbyAreas.sort((a, b) => a.distance - b.distance);
   }
 
-  return data;
+  return divisions;
 }
 
-computeNearbyWells();
+// test
+computeNearbyAreas(require('./load-data')());
 
-module.exports = computeNearbyWells;
+module.exports = computeNearbyAreas;
