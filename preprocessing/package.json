@@ -7,7 +7,8 @@
   "license": "ISC",
   "dependencies": {
     "command-line-args": "^5.1.1",
-    "csv-parse": "^4.3.3"
+    "csv-parse": "^4.3.3",
+    "d3": "^5.15.0"
   },
   "devDependencies": {
     "jest": "^24.4.0",
