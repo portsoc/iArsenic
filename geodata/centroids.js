@@ -1,5 +1,6 @@
 const d3 = require('d3');
 const topojson = require('topojson');
+const nameCorrections = require('./name-corrections');
 const ADMINISTRATIVE_LEVEL = 'uni';
 
 function computeCentroids() {
@@ -16,6 +17,8 @@ function computeCentroids() {
       uni: selectedRegion.properties.uni,
       centroid: d3.geoCentroid(selectedRegion),
     };
+
+    nameCorrections.correct(geoObj);
     geoList.push(geoObj);
   }
 
