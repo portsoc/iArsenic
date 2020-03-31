@@ -97,6 +97,7 @@ including pre-processed arsenic concentration data which looks like this:
 */
 
 const stats = require('../lib/stats');
+const { computeNearbyAreas } = require('../lib/geo-data');
 
 const MIN_DATA_COUNT = 7;
 
@@ -264,15 +265,23 @@ function strataSelector(...strata) {
 
 // todo we will want to see stats on how far in the widening did we have to go
 
+/*
+ * returns an array of locations (at same administrative depth as locationArr)
+ * e.g. if locationArr points to a union, we return an array of unions in order
+ * of increasing distance, up to kmDistance.
+ */
 function nearbyLocations(locationArr, kmDistance) {
-  // todo find locations (at same administrative depth as locationArr)
-  // that are near locationArr; sort them from nearest to farthest
-  // the array must not include locationArr itself
-  return [];
+  const location = locationArr[locationArr.length - 1];
+  const nearbyAreas = location.nearbyAreas;
+  const firstOutsideDistance = nearbyAreas.findIndex(a => a.distance > kmDistance);
 
-  // get a list of distances with code like geodata/geo-preprocessing.js
-  // then construct an array of locations up to the given distance
-  // and then sort by distance
+  const areasWithinDistance =
+    firstOutsideDistance === -1
+      ? nearbyAreas
+      : nearbyAreas.slice(0, firstOutsideDistance);
+
+  // extract areas, ignore distances
+  return areasWithinDistance.map(a => a.area);
 }
 
 function numericalCompare(a, b) {
@@ -337,6 +346,8 @@ function forEachUnion(divisions, f) {
 function main(divisions) {
   // split wells into strata
   forEachUnion(divisions, stratifyWells);
+
+  computeNearbyAreas(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
   forEachUnion(divisions, getEnoughData);
