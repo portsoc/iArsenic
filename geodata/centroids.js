@@ -25,4 +25,6 @@ function computeCentroids() {
   return geoList;
 }
 
-module.exports = computeCentroids;
+module.exports = {
+  computeCentroids,
+};
