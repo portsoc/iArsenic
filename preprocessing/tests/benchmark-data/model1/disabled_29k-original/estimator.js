@@ -36,7 +36,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
     const floodWarning =
-      (depth <= 15 && flood === 'No')
+      (depth <= 15.3 && flood === 'No')
         ? ' but may be vulnerable to nitrate and pathogens'
         : '';
 
