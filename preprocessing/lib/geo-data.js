@@ -1,33 +1,33 @@
-const centroids = require('../../geodata/centroids');
+const { computeCentroids } = require('../../geodata/centroids');
 const d3 = require('d3');
 const RADIUS = 6378.137;
 
 function computeNearbyAreas(divisions) {
-  const data = centroids();
+  const centroids = computeCentroids();
 
-  for (const area of data) {
+  for (const area of centroids) {
     area.nearbyAreas = [];
     area.divisionsObj = divisions[area.div].districts[area.dis].upazilas[area.upa].unions[area.uni];
     area.divisionsObj.nearbyAreas = area.nearbyAreas;
   }
 
-  for (let i = 0; i < data.length; i++) {
-    for (let j = i + 1; j < data.length; j++) {
-      const distance = d3.geoDistance(data[i].centroid, data[j].centroid) * RADIUS;
+  for (let i = 0; i < centroids.length; i++) {
+    for (let j = i + 1; j < centroids.length; j++) {
+      const distance = d3.geoDistance(centroids[i].centroid, centroids[j].centroid) * RADIUS;
 
-      data[i].nearbyAreas.push({
+      centroids[i].nearbyAreas.push({
         distance: distance,
-        area: data[j].divisionsObj,
+        area: centroids[j].divisionsObj,
       });
 
-      data[j].nearbyAreas.push({
+      centroids[j].nearbyAreas.push({
         distance: distance,
-        area: data[i].divisionsObj,
+        area: centroids[i].divisionsObj,
       });
     }
   }
 
-  for (const area of data) {
+  for (const area of centroids) {
     area.nearbyAreas.sort((a, b) => a.distance - b.distance);
   }
 
@@ -35,6 +35,8 @@ function computeNearbyAreas(divisions) {
 }
 
 // test
-computeNearbyAreas(require('./load-data')());
+// computeNearbyAreas(require('./load-data')());
 
-module.exports = computeNearbyAreas;
+module.exports = {
+  computeNearbyAreas,
+};
