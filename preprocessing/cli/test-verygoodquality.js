@@ -3,12 +3,62 @@ This file tests against a "very good quality" data set from Mo, located in the
 drive as iArsenic_test_Data_verygoodquality.xlsx
 */
 
+const parse = require('csv-parse/lib/sync');
+const path = require('path');
+const fs = require('fs');
 const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 
+const DATA_PATH = path.join(__dirname, '..', '..', 'data', 'vgqd', 'vgqd-all-data.csv');
+const CSV_PARSE_OPTIONS = {
+  columns: true,
+  skip_empty_lines: true,
+};
+
+const VGQD_DATA = parse(fs.readFileSync(DATA_PATH), CSV_PARSE_OPTIONS);
+
+function getVGQDArsenicValue(div, dis, upa, uni) {
+  for (const well of VGQD_DATA) {
+    if (well.Division === div) {
+      if (well.District === dis) {
+        if (well.Upazila === upa) {
+          if (well.Union === uni) {
+            return Number(well.Arsenic);
+          }
+        }
+      }
+    }
+  }
+}
+
+function discernAccuracy(arsenic, message) {
+  const safeMessage = 'likely to be arsenic-safe';
+  let accuracy;
+
+  if (arsenic < 50) {
+    if (message.includes(safeMessage)) {
+      accuracy = 'accurate';
+    } else {
+      accuracy = "we say polluted, it isn't";
+    }
+  } else {
+    if (message.includes(safeMessage)) {
+      accuracy = "we say safe, it isn't";
+    } else {
+      accuracy = 'accurate';
+    }
+  }
+
+  return accuracy;
+}
+
 function runTests(produceEstimate, divisions, div, dis, upa, uni, depth, colour) {
-  console.log(`"${div}"\t"${dis}"\t"${upa}"\t"${uni}"\t${depth}\t${colour}\t` +
-    produceEstimate(divisions, div, dis, upa, uni, depth, colour, null).message);
+  const locationArsenicValue = getVGQDArsenicValue(div, dis, upa, uni);
+  const message = produceEstimate(divisions, div, dis, upa, uni, depth, colour, null).message;
+
+  const accuracy = discernAccuracy(locationArsenicValue, message);
+
+  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},${locationArsenicValue},"${message}",${accuracy}`);
 }
 
 function main(options) {
@@ -17,6 +67,8 @@ function main(options) {
 
   const data = csvLoader(options.paths);
   const divisions = preprocessor(data);
+
+  console.log('div,dis,upa,uni,depth,stain,arsenic,message,accuracy');
 
   /* eslint-disable */
   runTests(produceEstimate, divisions, "Khulna", "Chuadanga", "Jiban Nagar", "Simanta", 0, "Red");
