@@ -58,7 +58,7 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni, depth, colour)
 
   const accuracy = discernAccuracy(locationArsenicValue, message);
 
-  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},${locationArsenicValue},"${message}",${accuracy}`);
+  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},${locationArsenicValue},"${message}","${accuracy}"`);
 }
 
 function main(options) {
