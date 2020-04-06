@@ -15,8 +15,6 @@ const CSV_PARSE_OPTIONS = {
   skip_empty_lines: true,
 };
 
-const VGQD_DATA = parse(fs.readFileSync(DATA_PATH), CSV_PARSE_OPTIONS);
-
 function discernAccuracy(arsenic, message) {
   const safeMessage = 'likely to be arsenic-safe';
   const accuracy = {};
@@ -65,7 +63,20 @@ function main(options) {
   console.log('div,dis,upa,uni,depth,stain,arsenic,message,accuracy_safety,accuracy_range');
 
   // loop through VGQD_DATA
-  runTests(produceEstimate, divisions, "Khulna", "Chuadanga", "Jiban Nagar", "Simanta", 0, "Red", locationArsenicValue);
+
+  const vgqData = parse(fs.readFileSync(DATA_PATH), CSV_PARSE_OPTIONS);
+  for (const well of vgqData) {
+    runTests(
+      produceEstimate,
+      divisions,
+      well.div,
+      well.dis,
+      well.upa,
+      well.uni,
+      Number(well.depth),
+      well.colour,
+      Number(well.as));
+  }
 
   // if we wish to see memory stats:
   // console.log(process.memoryUsage());
