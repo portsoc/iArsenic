@@ -5,7 +5,7 @@ scriptDir=`dirname $0`
 cd "$scriptDir"
 
 dataPaths=( "" "../../data/disabled/29k-original.csv" )
-models=("model1" "model3" "model4")
+models=( "" "model1" "model3" "model4")
 producer="../cli/produce-aggregate-data-files.js"
 tester="../cli/test-verygoodquality.js"
 testerOutputFile="test-verygoodquality-output.csv"
@@ -18,7 +18,6 @@ generateDataDirectory () {
 
   dataFilename="${dataPath##*/}"
   dataFilename="${dataFilename%.*}"
-  # dataFilename="$(echo $dataFilename | sed 's/*/all-files/g')"
   if [ "$dataFilename" = "*" ]; then
     dataFilename="all-files"
   fi
@@ -34,6 +33,12 @@ main () {
 
   for model in "${models[@]}"
   do
+    modelID="default-model"
+    invokeModel=""
+    if [ "$model" != "" ]; then
+      modelID="$model"
+      invokeModel="-m"
+    fi
 
     for dataPath in "${dataPaths[@]}"
     do
@@ -44,12 +49,12 @@ main () {
         invokeDataPath="-p"
       fi
       echo "  model ${model:-'default'} with data ${dataPath:-'default'}"
-      outputPath="$testDirectory/$model/$dataOutputDirectory"
+      outputPath="$testDirectory/$modelID/$dataOutputDirectory"
       mkdir -p $outputPath
-      echo "$dataPath"
       node $tester $invokeModel $model $invokeDataPath $dataPath > $outputPath/$testerOutputFile
     done
   done
+
 }
 
 main
