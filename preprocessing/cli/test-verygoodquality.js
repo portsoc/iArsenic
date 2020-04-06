@@ -33,20 +33,29 @@ function getVGQDArsenicValue(div, dis, upa, uni) {
 
 function discernAccuracy(arsenic, message) {
   const safeMessage = 'likely to be arsenic-safe';
-  let accuracy;
+  const accuracy = {};
 
   if (arsenic < 50) {
     if (message.includes(safeMessage)) {
-      accuracy = 'accurate';
+      accuracy.safety = 'accurate';
     } else {
-      accuracy = "we say polluted, it isn't";
+      accuracy.safety = "we say polluted, it isn't";
     }
   } else {
     if (message.includes(safeMessage)) {
-      accuracy = "we say safe, it isn't";
+      accuracy.safety = "we say safe, it isn't";
     } else {
-      accuracy = 'accurate';
+      accuracy.safety = 'accurate';
     }
+  }
+
+  if (message.includes('\u00b5g/L')) {
+    const range = message.match(/(\d+)/g);
+    accuracy.range = (arsenic < range[0]) ? 'overestimate'
+      : (arsenic > range[1]) ? 'underestimate'
+        : 'accurate';
+  } else {
+    accuracy.range = 'N/A';
   }
 
   return accuracy;
@@ -58,7 +67,7 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni, depth, colour)
 
   const accuracy = discernAccuracy(locationArsenicValue, message);
 
-  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},${locationArsenicValue},"${message}","${accuracy}"`);
+  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},${locationArsenicValue},"${message}","${accuracy.safety}","${accuracy.range}"`);
 }
 
 function main(options) {
@@ -68,7 +77,7 @@ function main(options) {
   const data = csvLoader(options.paths);
   const divisions = preprocessor(data);
 
-  console.log('div,dis,upa,uni,depth,stain,arsenic,message,accuracy');
+  console.log('div,dis,upa,uni,depth,stain,arsenic,message,accuracy_safety,accuracy_range');
 
   /* eslint-disable */
   runTests(produceEstimate, divisions, "Khulna", "Chuadanga", "Jiban Nagar", "Simanta", 0, "Red");
