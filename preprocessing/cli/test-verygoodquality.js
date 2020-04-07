@@ -15,42 +15,39 @@ const CSV_PARSE_OPTIONS = {
   skip_empty_lines: true,
 };
 
-function discernAccuracy(arsenic, message) {
-  const safeMessage = 'likely to be arsenic-safe';
+function discernAccuracy(arsenic, severity, upperQ, lowerQ) {
   const accuracy = {};
 
   if (arsenic < 50) {
-    if (message.includes(safeMessage)) {
+    if (severity === 'safe') {
       accuracy.safety = 'accurate';
     } else {
       accuracy.safety = "we say polluted, it isn't";
     }
   } else {
-    if (message.includes(safeMessage)) {
+    if (severity === 'safe') {
       accuracy.safety = "we say safe, it isn't";
     } else {
       accuracy.safety = 'accurate';
     }
   }
 
-  if (message.includes('\u00b5g/L')) {
-    const range = message.match(/(\d+)/g);
-    accuracy.range = (arsenic < range[0]) ? 'overestimate'
-      : (arsenic > range[1]) ? 'underestimate'
-        : 'accurate';
-  } else {
-    accuracy.range = 'N/A';
-  }
+  accuracy.range = (lowerQ > arsenic) ? 'overestimate'
+    : (upperQ < arsenic) ? 'underestimate'
+      : 'accurate';
 
   return accuracy;
 }
 
-function runTests(produceEstimate, divisions, div, dis, upa, uni, depth, colour, locationArsenicValue) {
-  const message = produceEstimate(divisions, div, dis, upa, uni, depth, colour, null).message;
+function runTests(produceEstimate, divisions, div, dis, upa, uni, depth, colour, arsenic) {
+  const result = produceEstimate(divisions, div, dis, upa, uni, depth, colour, null);
 
-  const accuracy = discernAccuracy(locationArsenicValue, message);
+  const accuracy = discernAccuracy(arsenic, result.severity, result.upperQ, result.lowerQ);
 
-  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},${locationArsenicValue},"${message}","${accuracy.safety}","${accuracy.range}"`);
+  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},` +
+    `${arsenic},"${result.message}","${accuracy.safety}",` +
+    `"${accuracy.range}",${(result.lowerQ) ? result.lowerQ : ''},` +
+    `${(result.upperQ) ? result.upperQ : ''}`);
 }
 
 function main(options) {
@@ -60,9 +57,8 @@ function main(options) {
   const data = csvLoader(options.paths);
   const divisions = preprocessor(data);
 
-  console.log('div,dis,upa,uni,depth,stain,arsenic,message,accuracy_safety,accuracy_range');
-
-  // loop through VGQD_DATA
+  console.log('div,dis,upa,uni,depth,stain,arsenic,message,' +
+    'accuracy_safety,accuracy_range,lower_quantile,upper_quantile');
 
   const vgqData = parse(fs.readFileSync(DATA_PATH), CSV_PARSE_OPTIONS);
   for (const well of vgqData) {
