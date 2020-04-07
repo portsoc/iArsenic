@@ -25,7 +25,7 @@ function runDistanceTests() {
   for (const selectedRegion of topo.features) {
     closestRegion.distance = Infinity;
 
-    let selectedRegionName = selectedRegion.properties[prop];
+    const selectedRegionName = selectedRegion.properties[prop];
 
     retReg[selectedRegionName] = {
       within10km: [],
@@ -39,7 +39,7 @@ function runDistanceTests() {
     };
 
     for (const feature of topo.features) {
-      let regionProperties = {
+      const regionProperties = {
         div: feature.properties.div,
         dis: feature.properties.dis,
         upa: feature.properties.upa,
@@ -47,7 +47,7 @@ function runDistanceTests() {
       };
 
       if (feature !== selectedRegion) {
-        let currentDistance = d3.geoDistance(feature.centroid, selectedRegion.centroid) * RADIUS;
+        const currentDistance = d3.geoDistance(feature.centroid, selectedRegion.centroid) * RADIUS;
 
         if (currentDistance < 10) {
           retReg[selectedRegionName].within10km.push(regionProperties);

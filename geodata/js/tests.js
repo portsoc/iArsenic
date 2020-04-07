@@ -4,8 +4,6 @@ document.querySelector('#runGeoLocTests').addEventListener('click', runGeoLocTes
 document.querySelector('#runDistanceTests').addEventListener('click', runDistanceTests);
 
 function runGeoLocTests() {
-  function c(latitude, longitude) { return { coords: { latitude, longitude } }; }
-
   function expectTrue(msg, value) {
     if (!value) {
       console.error(`fail: ${msg} not true`);
@@ -88,10 +86,10 @@ function runDistanceTests() {
   };
 
   for (const feature of topo.features) {
-    let shapeId = feature.properties.id;
-    let shapeCentroid = d3.geoCentroid(feature);
+    const shapeId = feature.properties.id;
+    const shapeCentroid = d3.geoCentroid(feature);
 
-    let currentDistance = d3.geoDistance(middleCentroid, shapeCentroid);
+    const currentDistance = d3.geoDistance(middleCentroid, shapeCentroid);
 
     console.log(`Shape #${shapeId}'s centroid is ${shapeCentroid}`);
     console.log(`Distance between Middle and Shape ${shapeId} is ${currentDistance}`);

@@ -50,10 +50,10 @@ function init() {
   submit.addEventListener('click', showAssessment);
   chevron.addEventListener('click', chevronClick);
 
-  redLabel.addEventListener('mouseover', () => {swapStainingImage('red')});
-  redStain.addEventListener('click', () => {swapStainingImage('red')});
-  blackLabel.addEventListener('mouseover', () => {swapStainingImage('black')});
-  blackLabel.addEventListener('click', () => {swapStainingImage('black')});
+  redLabel.addEventListener('mouseover', () => { swapStainingImage('red'); });
+  redStain.addEventListener('click', () => { swapStainingImage('red'); });
+  blackLabel.addEventListener('mouseover', () => { swapStainingImage('black'); });
+  blackLabel.addEventListener('click', () => { swapStainingImage('black'); });
 
   redStain.addEventListener('change', () => { displayUtensil(false); });
   blackStain.addEventListener('change', () => { displayUtensil(false); });
@@ -211,7 +211,7 @@ function validateInputs() {
     dropdowns: [divDD, disDD, upaDD, uniDD],
     valid: true,
   };
-  for (let dropdown of dropdownInputs.dropdowns) {
+  for (const dropdown of dropdownInputs.dropdowns) {
     if (!dropdown.value) {
       dropdownInputs.valid = false;
       break;

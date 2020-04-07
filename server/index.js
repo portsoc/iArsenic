@@ -33,7 +33,7 @@ function cors(req, res) {
 }
 
 function checkMethods(req, res, methods = 'GET') {
-  if (!Array.isArray(methods)) methods = [ methods ];
+  if (!Array.isArray(methods)) methods = [methods];
   if (methods.indexOf(req.method) === -1) {
     res.sendStatus(405);
     return false;
@@ -103,7 +103,7 @@ async function logRequest(req, res) {
   }
 }
 
-exports.requests = async (req, res) => {
+exports.requests = (req, res) => {
   if (!cors(req, res)) return;
   if (!checkMethods(req, res, ['GET', 'POST'])) return;
 

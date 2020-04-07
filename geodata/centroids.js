@@ -10,7 +10,7 @@ function computeCentroids() {
   const geoList = [];
 
   for (const selectedRegion of topo.features) {
-    let geoObj = {
+    const geoObj = {
       div: selectedRegion.properties.div,
       dis: selectedRegion.properties.dis,
       upa: selectedRegion.properties.upa,
