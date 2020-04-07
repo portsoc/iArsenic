@@ -4,4 +4,4 @@
 node_modules/
 rscripts/output*
 preprocessing/tests/*-outputs
-geodata/maps/src
+preprocessing/geodata/maps/src
