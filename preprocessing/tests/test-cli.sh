@@ -29,7 +29,7 @@ generateDataDirectory () {
 
 compareOutput () {
   if [ -d "$benchmarkDirectory" ]; then
-    diffOutput="$(diff -q -r $testDirectory $benchmarkDirectory)"
+    diffOutput="$(diff -q -r -w $testDirectory $benchmarkDirectory)"
     if [ "$diffOutput" = "" ]; then
       echo
       echo "Test successful: $scriptDir/$testDirectory/ is identical to benchmark"
