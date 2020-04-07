@@ -1,4 +1,4 @@
-const { computeCentroids } = require('../../geodata/centroids');
+const { computeCentroids } = require('../geodata/centroids');
 const d3 = require('d3');
 const RADIUS = 6378.137;
 
