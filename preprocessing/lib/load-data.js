@@ -14,8 +14,8 @@ function readTheCSVFiles(filePathList) {
 
   // parse each csv file and merge into records[]
   for (const filePath of filePathList) {
-    let file = fs.readFileSync(filePath);
-    let data = parse(file, CSV_PARSE_OPTIONS);
+    const file = fs.readFileSync(filePath);
+    const data = parse(file, CSV_PARSE_OPTIONS);
     records.push(...data);
   }
 
@@ -30,7 +30,7 @@ function listDefaultFiles() {
   const files = fs.readdirSync(dirPath);
   for (const file of files) {
     if (file.endsWith('.csv')) {
-      let filePath = path.join(dirPath, file);
+      const filePath = path.join(dirPath, file);
       filePathList.push(filePath);
     }
   }

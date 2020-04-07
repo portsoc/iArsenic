@@ -31,7 +31,7 @@ let topo;
 
 const pollutionDataBtn = d3.select('#pollutionDataBtn');
 pollutionDataBtn.on('click', () => {
-  showPollutionData()
+  // showPollutionData();
 });
 
 function displayError(e) {
@@ -128,14 +128,13 @@ async function loadMapData(mapUrl) {
 } */
 
 async function main() {
-  const mapsDir = 'maps/dist/';
   const testDir = 'maps/test/';
 
-  const divMapUrl = mapsDir + 'div/div-c005-s010-vw-pr.json';
-  const disMapUrl = mapsDir + 'dis/dis-c005-s010-vw-pr.json';
-  const upaMapUrl = mapsDir + 'upa/upa-c005-s010-vw-pr.json';
-  const uniMapUrl = mapsDir + 'uni/uni-c005-s010-vw-pr.json';
-  const simpleTestUrl = testDir + 'simple-test.json';
+  // const divMapUrl = mapsDir + 'div/div-c005-s010-vw-pr.json';
+  // const disMapUrl = mapsDir + 'dis/dis-c005-s010-vw-pr.json';
+  // const upaMapUrl = mapsDir + 'upa/upa-c005-s010-vw-pr.json';
+  // const uniMapUrl = mapsDir + 'uni/uni-c005-s010-vw-pr.json';
+  // const simpleTestUrl = testDir + 'simple-test.json';
   const distanceTestUrl = testDir + 'distance-test.json';
 
   await loadMapData(distanceTestUrl);

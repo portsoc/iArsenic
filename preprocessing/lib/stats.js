@@ -17,7 +17,7 @@ function max(sorted) {
 }
 
 function median(sorted) {
-  let half = Math.floor(sorted.length / 2);
+  const half = Math.floor(sorted.length / 2);
 
   if (sorted.length % 2 !== 0) {
     return sorted[half];

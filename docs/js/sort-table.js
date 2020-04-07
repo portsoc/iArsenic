@@ -5,7 +5,7 @@
     table.classList.add('sortable');
     if (table.tHead) {
       const ths = table.tHead.rows[0].children;
-      for (let i=0; i<ths.length; i+=1) {
+      for (let i = 0; i < ths.length; i += 1) {
         ths[i].addEventListener('click', (e) => {
           // prevent selecting text
           e.stopPropagation();
@@ -39,11 +39,11 @@
     // in a try block in case there aren't enough elements around and array lookups fail
     try {
       // going through rows from the back, find last biggest row until the current one, put it after the current one
-      for (let i=tbody.children.length-1; i>0; i-=1) {
+      for (let i = tbody.children.length - 1; i > 0; i -= 1) {
         let max = tbody.children[i];
         let maxText = max.children[n].textContent.trim();
         let maxNum = Number.parseFloat(maxText);
-        for (let j=i-1; j>=0; j-=1) {
+        for (let j = i - 1; j >= 0; j -= 1) {
           const text = tbody.children[j].children[n].textContent.trim();
           const num = Number.parseFloat(text);
 
@@ -60,11 +60,11 @@
           }
         }
         if (max !== tbody.children[i]) {
-          tbody.insertBefore(max, tbody.children[i+1]);
+          tbody.insertBefore(max, tbody.children[i + 1]);
         }
       }
     } catch (e) {
       console.log(e);
     }
   }
-})(typeof exports === 'undefined'? this.SortTable={}: exports); // eslint-disable-line no-undef
+})(typeof exports === 'undefined' ? this.SortTable = {} : exports); // eslint-disable-line no-undef
