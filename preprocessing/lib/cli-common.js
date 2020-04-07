@@ -34,7 +34,7 @@ Options:
 
   -m modelid
   --model=modelid          Use model <modelid> instead of the default.
-                           Too see what models are available, look in models/
+                           To see what models are available, look in models/
 
   [-p] path1 path2 ...
                            Use the given CSV files as input data.

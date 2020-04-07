@@ -1,6 +1,6 @@
 const corrections = {
   'Sylhet#Sunamganj#Dharampasha#Dakshin  Sukhairrajapur': [
-    'Sylhet', 'Sunamganj', 'Dharampasha', 'Dakshin Sukhairrajapur' ],
+    'Sylhet', 'Sunamganj', 'Dharampasha', 'Dakshin Sukhairrajapur'],
 };
 
 function combineName(o) {
@@ -8,7 +8,7 @@ function combineName(o) {
 }
 
 function replaceName(o, arr) {
-  [ o.div, o.dis, o.upa, o.uni ] = arr;
+  [o.div, o.dis, o.upa, o.uni] = arr;
 }
 
 function correctAreaName(area) {
