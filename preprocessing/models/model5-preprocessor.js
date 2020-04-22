@@ -158,10 +158,10 @@ function computeWellStats(locationArr) {
 
     if (isEnoughData(wells)) {
       // compute the statistics
-      location[`${stratum}_med`] = stats.round1(stats.median(location[stratum]));
-      location[`${stratum}_max`] = stats.round1(stats.max(location[stratum]));
-      location[`${stratum}_low`] = stats.quantile(location[stratum], 0.1);
-      location[`${stratum}_upp`] = stats.quantile(location[stratum], 0.9);
+      location[`${stratum}_med`] = stats.round1(stats.median(wells));
+      location[`${stratum}_max`] = stats.round1(stats.max(wells));
+      location[`${stratum}_low`] = stats.quantile(wells, 0.1);
+      location[`${stratum}_upp`] = stats.quantile(wells, 0.9);
     } else {
       // if we don't have enough well data on a given stratum,
       // getEnoughData should have already reported that, but
