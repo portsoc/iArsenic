@@ -95,6 +95,9 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     arsenicValues = union.sD;
   }
 
+  const lowerQ = round(arsenicValues.l, 10, 1);
+  const upperQ = round(arsenicValues.u, 10, 1);
+
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
@@ -111,11 +114,13 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   } else if (colour === 'Red' || utensil === 'Red') {
     retval = createMessage(arsenicValues.m);
     if (arsenicValues.m > 0) {
-      retval.message += ' ' + round(arsenicValues.l, 10, 1) + ' to ' + round(arsenicValues.u, 10, 1) + ' µg/L ';
+      retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
     }
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }
+  retval.lowerQ = lowerQ;
+  retval.upperQ = upperQ;
   return retval;
 }
 
