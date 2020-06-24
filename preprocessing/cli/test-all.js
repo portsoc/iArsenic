@@ -19,11 +19,12 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni) {
   for (const flooding of ['Yes', 'No']) {
     for (const colour of ['Red', 'Black']) {
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - "${flooding}"  ` +
-        produceEstimate(divisions, div, dis, upa, uni, depth, colour, null, flooding).message);
+        produceEstimate(divisions, div, dis, upa, unidepth, colour, null, flooding).message);
     }
     for (const utensil of ['Red', 'No colour change to slightly blackish']) {
       const colour = 'none';
       const utensilshort = utensil.substring(0, 2);
+      // why is produce estimate in the console.log???
       console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} "${utensilshort}" "${flooding}"  ` +
         produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, flooding).message);
     }
@@ -31,6 +32,7 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni) {
 }
 
 function main(options) {
+  // how does this test all models instead of just the one in model?
   const preprocessor = options.model.preprocessor;
   const produceEstimate = options.model.estimator;
 

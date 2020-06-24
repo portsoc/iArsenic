@@ -1,13 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const loadData = require('../lib/load-data');
+const loadData = require('../lib/load-data'); //
 const cli = require('../lib/cli-common');
 
 function extractNames(data, hierarchyPath) {
   const retval = [];
   if (hierarchyPath.length === 1) {
     for (const item of Object.keys(data)) {
+      // what is leaf level??
       // on leaf level, do only a plain array
       retval.push(item);
     }
@@ -31,6 +32,7 @@ function extractNames(data, hierarchyPath) {
 }
 
 function compareByProperty(prop) {
+  // what is property??
   return (a, b) => {
     if (a[prop] < b[prop]) return -1;
     if (a[prop] === b[prop]) return 0;
@@ -39,15 +41,17 @@ function compareByProperty(prop) {
 }
 
 function main(options) {
+  // how do options / the cli object work??? -- see lib/cli-common.js
   checkOutputDirectory(options);
 
+  // how do paths and model.processor get into options?
   const data = loadData(options.paths);
-
   const modelPreprocessor = options.model.preprocessor;
 
   const aggregateData = modelPreprocessor(data);
   const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union']);
 
+  // once again where does options.model come from?
   const estimatorContent = fs.readFileSync(options.model.estimatorPath);
 
   output(options, 'aggregate-data.js', 'const aggregateData = ' + JSON.stringify(aggregateData));
@@ -60,13 +64,13 @@ function fileHeading(options) {
 
   return `// model: ${options.model.id}
 // generated: ${process.env.OVERRIDE_DATE || (new Date()).toString()}
-// input data: ${inputData}
-`;
+// input data: ${inputData}`;
 }
 
 function output(options, filename, content) {
   content = fileHeading(options) + content;
   if (!options.output) {
+    // how to specify which output directory to use
     // if no output directory, output to console
     console.log(filename + ':');
     console.log(content);
@@ -94,4 +98,5 @@ function checkOutputDirectory(options) {
   }
 }
 
+// What does this file actually do and where do other files depend on it's output?
 main(cli.getParameters());

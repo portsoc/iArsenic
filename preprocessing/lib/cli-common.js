@@ -1,3 +1,5 @@
+// should cli common be in lib/ or cli/ ??
+
 const commandLineArgs = require('command-line-args');
 const path = require('path');
 
@@ -52,11 +54,13 @@ if (options.help) {
 }
 
 function getParameters() {
+  // where does options.model originate from?? what if it is undefined -- see optionDefinitions
   options.model = loadModelScripts(options.model);
   return options;
 }
 
 function loadModelScripts(model) {
+  // mixing commas and pluses in string concat!?
   const preprocessorPath = path.join(__dirname, '..', 'models', model + '-preprocessor.js');
   const estimatorPath = path.join(__dirname, '..', 'models', model + '-estimator.js');
 
