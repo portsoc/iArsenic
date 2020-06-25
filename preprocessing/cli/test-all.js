@@ -31,8 +31,8 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni) {
 }
 
 function main(options) {
-  // how does this test all models instead of just the one in model?
-  const preprocessor = options.model.preprocessor;
+  // how does this test all models instead of just the one in model? -- test-all means test all data not test all models
+  const preprocessor = options.model.preprocessor; // this isn't used in this script?
   const produceEstimate = options.model.estimator;
 
   const data = csvLoader(options.paths);
