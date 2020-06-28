@@ -93,7 +93,6 @@ function extractLocations(records) {
       };
     }
   }
-
   return divisions;
 }
 

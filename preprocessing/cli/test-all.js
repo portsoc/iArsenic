@@ -25,7 +25,8 @@ function runTests(produceEstimate, divisions, div, dis, upa, uni) {
       const colour = 'none';
       const utensilshort = utensil.substring(0, 2);
       // why is produce estimate in the console.log???
-      produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, flooding).message;
+      console.log(`"${div}" "${dis}" "${upa}" "${uni}" ${depth} ${colour} - "${flooding}"  ` +
+        produceEstimate(divisions, div, dis, upa, uni, depth, colour, null, flooding).message);
     }
   }
 }

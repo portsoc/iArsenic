@@ -25,6 +25,19 @@ function main(options) {
     }
   }
 
+  for (const division of Object.keys(data)) {
+    console.log(division);
+    for (const district of Object.keys(data[division].districts)) {
+      console.log('-----' + district);
+      for (const upazila of Object.keys(data[division].districts[district].upazilas)) {
+        console.log('----------' + upazila);
+        for (const union of Object.keys(data[division].districts[district].upazilas[upazila].unions)) {
+          console.log('---------------' + union);
+        }
+      }
+    }
+  }
+
   const avgArsenic = totArsenic / wellCount;
   const avgDepth = totDepth / wellCount;
   console.log('average arsenic content: ' + avgArsenic);
