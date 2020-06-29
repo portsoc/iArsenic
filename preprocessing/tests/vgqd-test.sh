@@ -16,14 +16,13 @@ scriptDir=`dirname $0`
 cd "$scriptDir"
 
 dataPaths=( "" "../../data/disabled/29k-original.csv" )
-models=( "" "model1" "model3" "model4")
 producer="../cli/produce-aggregate-data-files.js"
 tester="../cli/test-verygoodquality.js"
 testerOutputFile="test-verygoodquality-output.csv"
 testDirectory="vgqd-tests-outputs/$(date +"%F-%H-%M-%S")"
 invokeOutputPath="-o"
 
-# Generates output directories using the name of the selected model
+# Generates output directories using the name of the selected dataset
 generateDataDirectory () {
   parentDirectory="${dataPath%/*}"
   parentDirectory="${parentDirectory##*/}"
@@ -46,32 +45,24 @@ main () {
   export OVERRIDE_DATE="overridden date for test output comparability"
 
   # Complete tests for each model defined in global variables, including default
-  for model in "${models[@]}"
+
+  # Test each model against the current and previous datasets
+  for dataPath in "${dataPaths[@]}"
   do
-    modelID="default-model"
-    invokeModel=""
-    if [ "$model" != "" ]; then
-      modelID="$model"
-      invokeModel="-m"
+    dataOutputDirectory="default-data"
+    invokeDataPath=""
+    if [ "$dataPath" != "" ]; then
+      generateDataDirectory
+      invokeDataPath="-p"
     fi
 
-    # Test each model against the current and previous datasets
-    for dataPath in "${dataPaths[@]}"
-    do
-      dataOutputDirectory="default-data"
-      invokeDataPath=""
-      if [ "$dataPath" != "" ]; then
-        generateDataDirectory
-        invokeDataPath="-p"
-      fi
-
-      # Output current task for the user
-      echo "  model ${model:-'default'} with data ${dataPath:-'default'}"
-      outputPath="$testDirectory/$modelID/$dataOutputDirectory"
-      mkdir -p $outputPath
-      node $tester $invokeModel $model $invokeDataPath $dataPath > $outputPath/$testerOutputFile
-    done
+    # Output current task for the user
+    echo "  testing vgqd with data ${dataPath:-'default'}"
+    outputPath="$testDirectory/$dataOutputDirectory"
+    mkdir -p $outputPath
+    node $tester $invokeDataPath $dataPath | sed -n '/^div.*/,$p' > $outputPath/$testerOutputFile
   done
+
 
 }
 
