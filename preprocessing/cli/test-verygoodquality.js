@@ -15,56 +15,65 @@ const CSV_PARSE_OPTIONS = {
   skip_empty_lines: true,
 };
 
-function discernAccuracy(arsenic, severity, upperQ, lowerQ) {
-  const accuracy = {};
-
-  if (arsenic < 50) {
-    if (severity === 'safe') {
-      accuracy.safety = 'accurate';
-    } else {
-      accuracy.safety = "we say polluted, it isn't";
-    }
-  } else {
-    if (severity === 'safe') {
-      accuracy.safety = "we say safe, it isn't";
-    } else {
-      accuracy.safety = 'accurate';
-    }
-  }
-
-  accuracy.range = (lowerQ > arsenic) ? 'overestimate'
+function discernAccuracy(arsenic, upperQ, lowerQ) {
+  return (lowerQ > arsenic) ? 'overestimate'
     : (upperQ < arsenic) ? 'underestimate'
       : 'accurate';
-
-  return accuracy;
 }
 
-function runTests(produceEstimate, divisions, div, dis, upa, uni, depth, colour, arsenic) {
-  const result = produceEstimate(divisions, div, dis, upa, uni, depth, colour, null);
+function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
+  const modelOutputs = [];
 
-  const accuracy = discernAccuracy(arsenic, result.severity, result.upperQ, result.lowerQ);
+  for (const m of Object.values(allModels)) {
+    m.res = m.estimator(m.divisions, div, dis, upa, uni, depth, colour, null);
+    m.est = discernAccuracy(arsenic, m.res.severity, m.res.upperQ, m.res.lowerQ);
+    modelOutputs.push(`"${m.res.message}",` +
+      `${m.res.severity},` +
+      `${(m.res.lowerQ) ? m.res.lowerQ : ''},` +
+      `${(m.res.upperQ) ? m.res.upperQ : ''},` +
+      `${m.est}`,
+    );
+  }
 
   console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},` +
-    `${arsenic},"${result.message}","${accuracy.safety}",` +
-    `"${accuracy.range}",${(result.lowerQ) ? result.lowerQ : ''},` +
-    `${(result.upperQ) ? result.upperQ : ''}`);
+    `${arsenic},${modelOutputs.join()}`);
+}
+
+function getModels(data) {
+  const modelDir = path.join(__dirname, '..', 'models');
+  const retval = {};
+  let preprocessor;
+
+  try {
+    for (const model of ['model1', 'model3', 'model4', 'model5']) {
+      preprocessor = require(path.join(modelDir, `${model}-preprocessor.js`));
+      retval[model] = {
+        estimator: require(path.join(modelDir, `${model}-estimator.js`)),
+        divisions: preprocessor(data),
+      };
+    }
+    return retval;
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
 }
 
 function main(options) {
-  const preprocessor = options.model.preprocessor;
-  const produceEstimate = options.model.estimator;
-
   const data = csvLoader(options.paths);
-  const divisions = preprocessor(data);
 
-  console.log('div,dis,upa,uni,depth,stain,arsenic,message,' +
-    'accuracy_safety,accuracy_range,lower_quantile,upper_quantile');
+  const allModels = getModels(data);
+
+  console.log('div,dis,upa,uni,depth,stain,arsenic,' +
+    'm1-msg,m1-severity,m1-lowerQ,m1-upperQ,m1-estimate,' +
+    'm3-msg,m3-severity,m3-lowerQ,m3-upperQ,m3-estimate,' +
+    'm4-msg,m4-severity,m4-lowerQ,m4-upperQ,m4-estimate,' +
+    'm5-msg,m5-severity,m5-lowerQ,m5-upperQ,m5-estimate');
 
   const vgqData = parse(fs.readFileSync(DATA_PATH), CSV_PARSE_OPTIONS);
   for (const well of vgqData) {
     runTests(
-      produceEstimate,
-      divisions,
+      allModels,
       well.div,
       well.dis,
       well.upa,
