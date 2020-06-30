@@ -26,7 +26,7 @@ function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
 
   for (const m of Object.values(allModels)) {
     m.res = m.estimator(m.divisions, div, dis, upa, uni, depth, colour, null);
-    m.est = discernAccuracy(arsenic, m.res.severity, m.res.upperQ, m.res.lowerQ);
+    m.est = discernAccuracy(arsenic, m.res.upperQ, m.res.lowerQ);
     modelOutputs.push(`"${m.res.message}",` +
       `${m.res.severity},` +
       `${(m.res.lowerQ) ? m.res.lowerQ : ''},` +
@@ -42,13 +42,14 @@ function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
 function getModels(data) {
   const modelDir = path.join(__dirname, '..', 'models');
   const retval = {};
-  let preprocessor;
 
   try {
     for (const model of ['model1', 'model3', 'model4', 'model5']) {
-      preprocessor = require(path.join(modelDir, `${model}-preprocessor.js`));
+      const preprocessor = require(path.join(modelDir, `${model}-preprocessor.js`));
+      const estimator = require(path.join(modelDir, `${model}-estimator.js`));
+
       retval[model] = {
-        estimator: require(path.join(modelDir, `${model}-estimator.js`)),
+        estimator,
         divisions: preprocessor(data),
       };
     }
@@ -82,14 +83,6 @@ function main(options) {
       well.colour,
       Number(well.as));
   }
-
-  // if we wish to see memory stats:
-  // console.log(process.memoryUsage());
-  // gc();
-  // setInterval(() => {
-  //   console.log(process.memoryUsage());
-  //   gc();
-  // }, 2000);
 }
 
 main(cli.getParameters());
