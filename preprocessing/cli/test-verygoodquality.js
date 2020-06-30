@@ -61,6 +61,9 @@ function getModels(data) {
 }
 
 function main(options) {
+  // disable debug messages
+  console.debug = () => {};
+
   const data = csvLoader(options.paths);
 
   const allModels = getModels(data);
