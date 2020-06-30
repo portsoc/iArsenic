@@ -288,6 +288,10 @@ function numericalCompare(a, b) {
   return a - b;
 }
 
+// model5-estimator has an array of messages in increasing pollution level
+// 0 is not enough data
+// then odd number is consistent pollution,
+// and the following even number is high outliers so we suggest chemical test
 function produceMessage(med, max) {
   if (med == null) return 0;
   let pollutionStatus = '';

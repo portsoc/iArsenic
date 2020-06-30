@@ -17,6 +17,34 @@
   * Puts a copy of <modelid>-estimator.js in ./docs/estimator.js
   * Puts a copy of the geographical hierarchy in ./docs/dropdown-data.js
 
+## Models
+
+1. original model from R scripts
+  * Black is safe
+  * over 150m deep is safe
+  * wells shallower than 90m decided by median
+  * wells 90-150m deep decided by mean
+  * too few wells => get wells from bigger administrative area
+2. ~~skipped~~
+3. using only median
+  * Black is safe
+  * 0-90m, 90-150m, 150m+ decided by median
+  * too few wells => get wells from bigger administrative area
+4. more stratification
+  * Black is safe
+  * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
+  * too few wells => get wells from bigger administrative area
+5. more sensible widening of location to get enough wells
+  * Black is safe
+  * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
+  * too few wells => get wells from deeper stratum and nearby geographical locations (going by centroids) – details in model5-preprocessor
+
+
+more possible models:
+* all models with 10% or so overlap between strata
+* machine learning
+
+
 ## Output Structures
 
 ### load-data.js Output
