@@ -168,7 +168,7 @@ function computeWellStats(locationArr) {
       // complain here for consistency check
       const stratumName = stratum === 'sD' ? 'deep' : stratum;
       const unionName = locationArr.map(region => region.name).join(' -> ');
-      console.log(`Union ${unionName} does not have enough ${stratumName} wells`);
+      console.debug(`Union ${unionName} does not have enough ${stratumName} wells`);
     }
   }
 }
