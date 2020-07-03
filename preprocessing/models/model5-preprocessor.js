@@ -133,6 +133,8 @@ function stratifyWells(locationArr) {
   }
 }
 
+const STRATA = ['s15', 's45', 's65', 's90', 's150', 'sD'];
+
 function sortWells(locationArr) {
   const region = locationArr[locationArr.length - 1];
 
@@ -142,8 +144,6 @@ function sortWells(locationArr) {
     if (region[stratum + 'Wider']) region[stratum + 'Wider'].sort(numericalCompare);
   }
 }
-
-const STRATA = ['s15', 's45', 's65', 's90', 's150', 'sD'];
 
 function computeWellStats(locationArr) {
   const location = locationArr[locationArr.length - 1];
@@ -263,8 +263,6 @@ function strataSelector(...strata) {
   };
 }
 
-// todo we will want to see stats on how far in the widening did we have to go
-
 /*
  * returns an array of locations (at same administrative depth as locationArr)
  * e.g. if locationArr points to a union, we return an array of unions in order
@@ -294,15 +292,15 @@ function numericalCompare(a, b) {
 // and the following even number is high outliers so we suggest chemical test
 function produceMessage(med, max) {
   if (med == null) return 0;
-  let pollutionStatus = '';
-  if (med > 20 && med <= 50) {
-    pollutionStatus = 3;
-  } else if (med > 50 && med <= 200) {
-    pollutionStatus = 5;
-  } else if (med > 200) {
-    pollutionStatus = 7;
-  } else {
+  let pollutionStatus;
+  if (med <= 20) {
     pollutionStatus = 1;
+  } else if (med <= 50) {
+    pollutionStatus = 3;
+  } else if (med <= 200) {
+    pollutionStatus = 5;
+  } else {
+    pollutionStatus = 7;
   }
 
   const chemTestStatus = (max <= 100) ? 0 : 1;
@@ -327,7 +325,7 @@ function extractStats(data, hierarchyPath) {
     }
 
     if (hierarchyPath.length > 1) {
-      const subData = dataObj[hierarchyPath[1] + 's'];
+      const subData = dataObj[hierarchyPath[1] + 's']; // if hierarchyPath[1] is district, get `districts`
       hierarchyObj[hierarchyPath[1] + 's'] = extractStats(subData, hierarchyPath.slice(1));
     }
     retval[item] = hierarchyObj;
