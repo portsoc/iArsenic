@@ -22,6 +22,25 @@ describe('stats', () => {
     });
   });
 
+  describe('quantile edge cases (single value)', () => {
+    const array = [3];
+    it('works for 0th quantile', () => {
+      expect(stats.quantile(array, 0)).toBe(3);
+    });
+
+    it('works for 50%', () => {
+      expect(stats.quantile(array, 0.5)).toBe(3);
+    });
+
+    it('works for 100%', () => {
+      expect(stats.quantile(array, 1)).toBe(3);
+    });
+
+    it('works for 15%', () => {
+      expect(stats.quantile(array, 0.15)).toBe(3);
+    });
+  });
+
   describe('median', () => {
     it('gives the middle for odd-long array', () => {
       expect(stats.median([1.5, 1.8, 2, 3, 4, 4, 5])).toBe(3);
