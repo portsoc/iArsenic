@@ -9,6 +9,7 @@
         "anonymous": "always",
         "named": "never",
         "asyncArrow": "always"
-      }]
+      }],
+      "no-var": "error"
     }
 }

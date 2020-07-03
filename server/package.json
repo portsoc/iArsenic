@@ -4,8 +4,9 @@
   "description": "cloud functions for backend processing in iArsenic",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gcloud functions deploy requests --runtime nodejs8 --trigger-http --entry-point requests"
+    "test": "npm run lint",
+    "lint": "eslint *.js",
+    "deploy": "gcloud functions deploy requests --runtime nodejs10 --trigger-http --entry-point requests"
   },
   "author": "",
   "license": "ISC",
