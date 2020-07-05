@@ -8,57 +8,100 @@ function main(options) {
 
   // define array to hold rows of CSV file and push column headers
   const records = [];
-  const headers = ['division',
+  const headers = [
+    'division',
     'district',
     'upazila',
     'union',
-    '0-90',
-    '90+',
-    '90-150',
-    '150+',
-    '0-15.3',
-    '15.3-45',
-    '45-65',
-    '65-90',
+    'depth 0-90',
+    'depth 90+',
+    'depth 90-150',
+    'depth 150+',
+    'depth 0-15.3',
+    'depth 15.3-45',
+    'depth 45-65',
+    'depth 65-90',
   ];
   records.push(headers);
 
   // loop through each well
   for (const division of Object.keys(data)) {
+    const divisionObj = data[division];
+    initStratas(divisionObj);
     for (const district of Object.keys(data[division].districts)) {
+      const districtObj = data[division].districts[district];
+      initStratas(districtObj);
       for (const upazila of Object.keys(data[division].districts[district].upazilas)) {
+        const upazilaObj = data[division].districts[district].upazilas[upazila];
+        initStratas(upazilaObj);
         for (const union of Object.keys(data[division].districts[district].upazilas[upazila].unions)) {
+          const unionObj = data[division].districts[district].upazilas[upazila].unions[union];
+          initStratas(unionObj);
           for (const well of data[division].districts[district].upazilas[upazila].unions[union].wells) {
-            // for each well create record containing which regions it is in
-            // and true or false depending on whether it is in each strata
-            const record = [];
-            record.push(division, district, upazila, union);
-            /* eslint-disable */
-            (well.depth >= 0 && well.depth <= 90)   ? record.push('true') : record.push('false');
-            (well.depth > 90)                       ? record.push('true') : record.push('false');
-            (well.depth >= 90 && well.depth <= 150) ? record.push('true') : record.push('false');
-            (well.depth > 150)                      ? record.push('true') : record.push('false');
-            (well.depth >= 0 && well.depth <= 15.3) ? record.push('true') : record.push('false');
-            (well.depth > 15.3 && well.depth <= 45) ? record.push('true') : record.push('false');
-            (well.depth > 45 && well.depth <= 65)   ? record.push('true') : record.push('false');
-            (well.depth > 65 && well.depth <= 90)   ? record.push('true') : record.push('false');
-            /* eslint-enable */
-            records.push(record);
+            countStratas(divisionObj, districtObj, upazilaObj, unionObj, well);
           }
+          pushRecord(records, division, district, upazila, union, unionObj);
         }
+        pushRecord(records, division, district, upazila, '###', upazilaObj);
       }
+      pushRecord(records, division, district, '###', '###', districtObj);
     }
+    pushRecord(records, division, '###', '###', '###', divisionObj);
   }
 
   // write records to csv file
   let file = '';
   for (const record of records) {
-    for (const item of record) {
-      file += item + ',';
-    }
-    file += '\n';
+    record.join(',');
   }
+  file = records.join('\n');
   fs.writeFileSync('../tests/scratch/data-per-strata-output.csv', file);
+}
+
+function pushRecord(records, division, district, upazila, union, wellCountObj) {
+  records.push([
+    division,
+    district,
+    upazila,
+    union,
+    wellCountObj.zeroToNinety,
+    wellCountObj.ninetyPlus,
+    wellCountObj.ninetyToOneFifty,
+    wellCountObj.oneFiftyPlus,
+    wellCountObj.zeroToFifteenPointThree,
+    wellCountObj.fifteenPointThreeToFourtyFive,
+    wellCountObj.fortyFiveToSixtyFive,
+    wellCountObj.sixtyFiveToNinety,
+  ]);
+}
+
+function initStratas(object) {
+  object.zeroToNinety = 0;
+  object.ninetyPlus = 0;
+  object.ninetyToOneFifty = 0;
+  object.oneFiftyPlus = 0;
+  object.zeroToFifteenPointThree = 0;
+  object.fifteenPointThreeToFourtyFive = 0;
+  object.fortyFiveToSixtyFive = 0;
+  object.sixtyFiveToNinety = 0;
+  return object;
+}
+
+function countStratas(divisionObj, districtObj, upazilaObj, unionObj, well) {
+  const tempObj = [divisionObj, districtObj, upazilaObj, unionObj];
+  for (const obj of tempObj) {
+    if (well.depth >= 0 && well.depth <= 90) obj.zeroToNinety += 1;
+    if (well.depth > 90) obj.ninetyPlus += 1;
+    if (well.depth >= 90 && well.depth <= 150) obj.ninetyToOneFifty += 1;
+    if (well.depth >= 0 && well.depth <= 90) obj.zeroToNinety += 1;
+    if (well.depth > 90) obj.ninetyPlus += 1;
+    if (well.depth >= 90 && well.depth <= 150) obj.ninetyToOneFifty += 1;
+    if (well.depth > 150) obj.oneFiftyPlus += 1;
+    if (well.depth >= 0 && well.depth <= 15.3) obj.zeroToFifteenPointThree += 1;
+    if (well.depth > 15.3 && well.depth <= 45) obj.fifteenPointThreeToFourtyFive += 1;
+    if (well.depth > 45 && well.depth <= 65) obj.fortyFiveToSixtyFive += 1;
+    if (well.depth > 65 && well.depth <= 90) obj.sixtyFiveToNinety += 1;
+  }
 }
 
 main(cli.getParameters());
