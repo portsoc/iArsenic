@@ -13,11 +13,13 @@ function round(x, magnitude, dir = 1) {
   }
 }
 
+const msgStart = 'Your tubewell is ';
+
 const pollutionOutput = {
-  safe: 'likely to be arsenic-safe',
-  polluted: 'likely to be polluted',
-  highly: 'likely to be HIGHLY polluted',
-  severely: 'likely to be SEVERELY polluted',
+  safe: msgStart + 'likely to be arsenic-safe',
+  polluted: msgStart + 'likely to be polluted',
+  highly: msgStart + 'likely to be HIGHLY polluted',
+  severely: msgStart + 'likely to be SEVERELY polluted',
 };
 
 const chemTestOutput = {
@@ -28,35 +30,35 @@ const chemTestOutput = {
 const aggregateOutput = {
   0: { message: 'We do not have enough data to make an estimate for your well' },
   1: {
-    message: 'Your tubewell is ' + pollutionOutput.safe + chemTestOutput.noTest,
+    message: pollutionOutput.safe + chemTestOutput.noTest,
     severity: 'safe',
   },
   2: {
-    message: 'Your tubewell is ' + pollutionOutput.safe + chemTestOutput.test,
+    message: pollutionOutput.safe + chemTestOutput.test,
     severity: 'safe',
   },
   3: {
-    message: 'Your tubewell is ' + pollutionOutput.polluted + chemTestOutput.noTest,
+    message: pollutionOutput.polluted + chemTestOutput.noTest,
     severity: 'polluted',
   },
   4: {
-    message: 'Your tubewell is ' + pollutionOutput.polluted + chemTestOutput.test,
+    message: pollutionOutput.polluted + chemTestOutput.test,
     severity: 'polluted',
   },
   5: {
-    message: 'Your tubewell is ' + pollutionOutput.highly + chemTestOutput.noTest,
+    message: pollutionOutput.highly + chemTestOutput.noTest,
     severity: 'highlyPolluted',
   },
   6: {
-    message: 'Your tubewell is ' + pollutionOutput.highly + chemTestOutput.test,
+    message: pollutionOutput.highly + chemTestOutput.test,
     severity: 'highlyPolluted',
   },
   7: {
-    message: 'Your tubewell is ' + pollutionOutput.severely + chemTestOutput.noTest,
+    message: pollutionOutput.severely + chemTestOutput.noTest,
     severity: 'highlyPolluted',
   },
   8: {
-    message: 'Your tubewell is ' + pollutionOutput.severely + chemTestOutput.test,
+    message: pollutionOutput.severely + chemTestOutput.test,
     severity: 'highlyPolluted',
   },
 };
@@ -74,13 +76,13 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   const union = upazila ? upazila.unions[uni] : undefined;
 
   let retval = {};
-  let arsenicValues = {};
 
   if (!union) {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
     return retval;
   }
 
+  let arsenicValues = {};
   if (depth < 15.3) {
     arsenicValues = union.s15;
   } else if (depth < 45) {
@@ -95,6 +97,9 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     arsenicValues = union.sD;
   }
 
+  const lowerQ = round(arsenicValues.l, 10, 1);
+  const upperQ = round(arsenicValues.u, 10, 1);
+
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
@@ -106,16 +111,19 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     //     : '';
     const floodWarning = '';
 
-    retval.message = 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
+    retval.message = msgStart + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
     retval.severity = 'safe';
   } else if (colour === 'Red' || utensil === 'Red') {
     retval = createMessage(arsenicValues.m);
     if (arsenicValues.m > 0) {
-      retval.message += ' ' + round(arsenicValues.l, 10, 1) + ' to ' + round(arsenicValues.u, 10, 1) + ' µg/L ';
+      retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
     }
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }
+
+  retval.lowerQ = lowerQ;
+  retval.upperQ = upperQ;
   return retval;
 }
 
