@@ -16,7 +16,7 @@ Live at https://portsoc.github.io/iArsenic
 * `preprocessing/geodata/` – scripts that use Bangladesh geo-boundary data
   * includes experiments with visualization of the various data we have
 
-* `rscripts/` — original scripts in R
+* `rscripts/` — original scripts in R can now be found at https://github.com/portsoc/iArsenic/releases/tag/rscripts
 
 * `server/` — server for request log database
   * in a Google Cloud Function
