@@ -1,6 +1,5 @@
 const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
-const fs = require('fs');
 
 function main(options) {
   // get data from CSV files
@@ -50,12 +49,11 @@ function main(options) {
   }
 
   // write records to csv file
-  let file = '';
   for (const record of records) {
     record.join(',');
   }
-  file = records.join('\n');
-  fs.writeFileSync('../tests/scratch/data-per-strata-output.csv', file);
+  const contents = records.join('\n');
+  console.log(contents);
 }
 
 function pushRecord(records, division, district, upazila, union, wellCountObj) {
@@ -90,18 +88,28 @@ function initStratas(object) {
 function countStratas(divisionObj, districtObj, upazilaObj, unionObj, well) {
   const tempObj = [divisionObj, districtObj, upazilaObj, unionObj];
   for (const obj of tempObj) {
-    if (well.depth >= 0 && well.depth <= 90) obj.zeroToNinety += 1;
-    if (well.depth > 90) obj.ninetyPlus += 1;
-    if (well.depth >= 90 && well.depth <= 150) obj.ninetyToOneFifty += 1;
-    if (well.depth >= 0 && well.depth <= 90) obj.zeroToNinety += 1;
-    if (well.depth > 90) obj.ninetyPlus += 1;
-    if (well.depth >= 90 && well.depth <= 150) obj.ninetyToOneFifty += 1;
-    if (well.depth > 150) obj.oneFiftyPlus += 1;
-    if (well.depth >= 0 && well.depth <= 15.3) obj.zeroToFifteenPointThree += 1;
     if (well.depth > 15.3 && well.depth <= 45) obj.fifteenPointThreeToFourtyFive += 1;
+    if (well.depth > 150) obj.oneFiftyPlus += 1;
     if (well.depth > 45 && well.depth <= 65) obj.fortyFiveToSixtyFive += 1;
     if (well.depth > 65 && well.depth <= 90) obj.sixtyFiveToNinety += 1;
+    if (well.depth > 90) obj.ninetyPlus += 1;
+    if (well.depth >= 0 && well.depth <= 15.3) obj.zeroToFifteenPointThree += 1;
+    if (well.depth >= 0 && well.depth <= 90) obj.zeroToNinety += 1;
+    if (well.depth >= 90 && well.depth <= 150) obj.ninetyToOneFifty += 1;
   }
 }
 
+function countStratasNew(divisionObj, districtObj, upazilaObj, unionObj, well) {
+  const objects = [divisionObj, districtObj, upazilaObj, unionObj];
+  for (const stratum of STRATA) {
+    if (well.depth >= stratum.min && well.depth < stratum.max) {
+      const prop = propName(stratum);
+      for (const obj of objects) {
+        obj[prop] += 1;
+      }
+    }
+  }
+}
+
+console.debug = console.error; // redirect debug to stderr
 main(cli.getParameters());
