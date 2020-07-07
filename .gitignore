@@ -5,4 +5,3 @@ node_modules/
 rscripts/output*
 preprocessing/tests/*-outputs
 preprocessing/geodata/maps/src
-preprocessing/tests/scratch
