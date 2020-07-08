@@ -5,7 +5,7 @@ const STRATA = [
   { min: 0, max: Infinity, header: 'depth 0+' },
   { min: 0, max: 90, header: 'depth 0-90' },
   { min: 90, max: Infinity, header: 'depth 90+' },
-  { min: 90, max: 150, header: 'depth 90-150'},
+  { min: 90, max: 150, header: 'depth 90-150' },
   { min: 150, max: Infinity, header: 'depth 150+' },
   { min: 0, max: 15.3, header: 'depth 0-15.3' },
   { min: 15.3, max: 45, header: 'depth 15.3-45' },
@@ -24,7 +24,7 @@ function main(options) {
     'division',
     'district',
     'upazila',
-    'union'
+    'union',
   ];
 
   // Adds all the stratum headers to the headers array
@@ -67,7 +67,7 @@ function main(options) {
 }
 
 function pushRecord(records, div, dis, upa, uni, wellCountObj) {
-  let record = [div, dis, upa, uni];
+  const record = [div, dis, upa, uni];
   for (const stratum of STRATA) {
     record.push(wellCountObj[stratum.header]);
   }
@@ -80,11 +80,11 @@ function initStratas(obj) {
   }
 }
 
-function countStratas(objects, well) {
+function countStratas(sectors, well) {
   for (const stratum of STRATA) {
-    if (well.depth >= stratum.min && well.depth <= stratum.max) {
-      for (const obj of objects) {
-        obj[stratum.header] += 1;
+    if (well.depth >= stratum.min && well.depth < stratum.max) {
+      for (const sector of sectors) {
+        sector[stratum.header] += 1;
       }
     }
   }
