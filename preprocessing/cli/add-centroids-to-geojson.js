@@ -25,7 +25,7 @@ function getOutputFilePath(options, inputFilepath) {
   if (options.output === undefined) {
     // remove .geojson, add -centroids to file name, put .geojson back
     let outputFilepath = inputFilepath.slice(0, inputFilepath.lastIndexOf('.'));
-    outputFilepath += '-centrois';
+    outputFilepath += '-centroids';
     outputFilepath += inputFilepath.slice(inputFilepath.lastIndexOf('.'), inputFilepath.length);
 
     console.debug('using default -o: ' + outputFilepath);
