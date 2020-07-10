@@ -9,12 +9,12 @@ const CSV_PARSE_OPTIONS = {
 function main() {
   const inputCsvRaw = fs.readFileSync('../../data/processed-data/wells-per-strata.csv');
   const inputCsv = parse(inputCsvRaw, CSV_PARSE_OPTIONS);
-  const inputGeoDataRaw = fs.readFileSync('../../data/processed-data/upazila-geodata-centroids.geojson');
+  const inputGeoDataRaw = fs.readFileSync('../../data/processed-data/upazila-geodata-arsenic.geojson');
   const geoData = JSON.parse(inputGeoDataRaw);
   const upazilaWellData = getUpazilaWellData(inputCsv);
   const geoDataWithWellCount = addWellsToGeoData(geoData, upazilaWellData);
   const geoDataWithPercentiles = calculatePercentiles(geoDataWithWellCount);
-  fs.writeFileSync('../../data/processed-data/upazila-geodata-centroids-well-count.geojson',
+  fs.writeFileSync('../../data/processed-data/upazila-geodata-arsenic-well-count.geojson',
     JSON.stringify(geoDataWithPercentiles));
 }
 
