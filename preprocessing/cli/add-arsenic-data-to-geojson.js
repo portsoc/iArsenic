@@ -6,21 +6,28 @@ function main(options) {
   const data = csvLoader(options.paths);
   const geoJson = loadGeoJsonFiles();
   addArsenicAttribute(geoJson);
-
   // loop through each well
   for (const div of Object.keys(data)) {
     for (const dis of Object.keys(data[div].districts)) {
       for (const upa of Object.keys(data[div].districts[dis].upazilas)) {
         for (const uni of Object.keys(data[div].districts[dis].upazilas[upa].unions)) {
           const sectors = {
-            div: div,
-            dis: dis,
-            upa: upa,
-            uni: uni,
+            div: { name: div, wellCount: data[div].wells.length },
+            dis: { name: dis, wellCount: data[div].districts[dis].wells.length },
+            upa: { name: upa, wellCount: data[div].districts[dis].upazilas[upa].wells.length },
+            uni: { name: uni, wellCount: data[div].districts[dis].upazilas[upa].unions[uni].wells.length },
           };
           const wells = data[div].districts[dis].upazilas[upa].unions[uni].wells;
           for (const well of wells) {
             countArsenic(sectors, well, geoJson);
+          }
+
+          for (const sector in sectors) {
+            for (const feature of geoJson[sector].features) {
+              if (feature.properties[sector] === sectors[sector].name) {
+                feature.properties['well-count'] = sectors[sector].wellCount;
+              }
+            }
           }
         }
       }
@@ -33,12 +40,15 @@ function main(options) {
 function countArsenic(sectors, well, geoJson) {
   for (const sector in sectors) {
     for (const feature of geoJson[sector].features) {
-      if (feature.properties[sector] === sectors[sector]) {
+      if (feature.properties[sector] === sectors[sector].name) {
         feature.properties.arsenic += well.arsenic;
         break;
       }
     }
   }
+  // for (const sector in sectors) {
+  //   console.log(geoJson[sector].features);
+  // }
 }
 
 function addArsenicAttribute(geoJson) {
