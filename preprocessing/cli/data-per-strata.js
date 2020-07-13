@@ -38,16 +38,20 @@ function main(options) {
   for (const div of Object.keys(data)) {
     const divObj = data[div];
     initStratas(divObj);
-    for (const dis of Object.keys(data[div].districts)) {
-      const disObj = data[div].districts[dis];
+
+    for (const dis of Object.keys(divObj.districts)) {
+      const disObj = divObj.districts[dis];
       initStratas(disObj);
-      for (const upa of Object.keys(data[div].districts[dis].upazilas)) {
-        const upaObj = data[div].districts[dis].upazilas[upa];
+
+      for (const upa of Object.keys(disObj.upazilas)) {
+        const upaObj = disObj.upazilas[upa];
         initStratas(upaObj);
-        for (const uni of Object.keys(data[div].districts[dis].upazilas[upa].unions)) {
-          const uniObj = data[div].districts[dis].upazilas[upa].unions[uni];
+
+        for (const uni of Object.keys(upaObj.unions)) {
+          const uniObj = upaObj.unions[uni];
           initStratas(uniObj);
-          for (const well of data[div].districts[dis].upazilas[upa].unions[uni].wells) {
+
+          for (const well of uniObj.wells) {
             countStratas([divObj, disObj, upaObj, uniObj], well);
           }
           pushRecord(records, div, dis, upa, uni, uniObj);
@@ -58,6 +62,7 @@ function main(options) {
     }
     pushRecord(records, div, '###', '###', '###', divObj);
   }
+
   // write records to csv file
   for (const record of records) {
     record.join(',');
@@ -80,11 +85,11 @@ function initStratas(obj) {
   }
 }
 
-function countStratas(sectors, well) {
+function countStratas(regions, well) {
   for (const stratum of STRATA) {
     if (well.depth >= stratum.min && well.depth < stratum.max) {
-      for (const sector of sectors) {
-        sector[stratum.header] += 1;
+      for (const region of regions) {
+        region[stratum.header] += 1;
       }
     }
   }
