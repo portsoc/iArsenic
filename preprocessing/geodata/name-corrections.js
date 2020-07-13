@@ -11,13 +11,13 @@ function replaceName(o, arr) {
   [o.div, o.dis, o.upa, o.uni] = arr;
 }
 
-function correctAreaName(area) {
-  const correction = corrections[combineName(area)];
+function correctRegionName(region) {
+  const correction = corrections[combineName(region)];
   if (correction) {
-    replaceName(area, correction);
+    replaceName(region, correction);
   }
 }
 
 module.exports = {
-  correct: correctAreaName,
+  correct: correctRegionName,
 };
