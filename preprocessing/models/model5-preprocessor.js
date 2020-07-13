@@ -1,6 +1,6 @@
 /*
 Model 5 is like model 4 but with different approach to dealing
-with areas that don't have enough wells.
+with regions that don't have enough wells.
 
 In model 4 and 5, we use the following depth boundaries:
 
@@ -17,7 +17,7 @@ MODEL 5
 
 In model 5:
  * if we don't have enough wells somewhere, we can combine strata and
-   look for geographically nearby areas within some radius
+   look for geographically nearby regions within some radius
  * at <15m, first look at <45m, then widen geographically still
    at <45m up to 10km, meaning we take <15m together with 15-45
  * at 15-45, first try 15-65, then widen 15-45 geographically
@@ -97,7 +97,7 @@ including pre-processed arsenic concentration data which looks like this:
 */
 
 const stats = require('../lib/stats');
-const { computeNearbyAreas } = require('../lib/geo-data');
+const { computeNearbyRegions } = require('../lib/geo-data');
 
 const MIN_DATA_COUNT = 7;
 
@@ -184,7 +184,7 @@ function getEnoughData(locationArr) {
 
   const location = locationArr[locationArr.length - 1];
   // if we don't have enough wells somewhere, we can combine strata and
-  // look for geographically nearby areas within some radius
+  // look for geographically nearby region within some radius
   // the rules are also at the top of the file
 
   // * at <15m, first look at <45m, then widen geographically still
@@ -270,16 +270,16 @@ function strataSelector(...strata) {
  */
 function nearbyLocations(locationArr, kmDistance) {
   const location = locationArr[locationArr.length - 1];
-  const nearbyAreas = location.nearbyAreas;
-  const firstOutsideDistance = nearbyAreas.findIndex(a => a.distance > kmDistance);
+  const nearbyRegions = location.nearbyRegions;
+  const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
 
-  const areasWithinDistance =
+  const regionsWithinDistance =
     firstOutsideDistance === -1
-      ? nearbyAreas
-      : nearbyAreas.slice(0, firstOutsideDistance);
+      ? nearbyRegions
+      : nearbyRegions.slice(0, firstOutsideDistance);
 
-  // extract areas, ignore distances
-  return areasWithinDistance.map(a => a.area);
+  // extract regions, ignore distances
+  return regionsWithinDistance.map(a => a.region);
 }
 
 function numericalCompare(a, b) {
@@ -349,7 +349,7 @@ function main(divisions) {
   // split wells into strata
   forEachUnion(divisions, stratifyWells);
 
-  computeNearbyAreas(divisions);
+  computeNearbyRegions(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
   forEachUnion(divisions, getEnoughData);

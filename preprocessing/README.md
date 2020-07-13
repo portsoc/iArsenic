@@ -24,16 +24,16 @@
   * over 150m deep is safe
   * wells shallower than 90m decided by median
   * wells 90-150m deep decided by mean
-  * too few wells => get wells from bigger administrative area
+  * too few wells => get wells from bigger administrative region
 2. ~~skipped~~
 3. using only median
   * Black is safe
   * 0-90m, 90-150m, 150m+ decided by median
-  * too few wells => get wells from bigger administrative area
+  * too few wells => get wells from bigger administrative region
 4. more stratification
   * Black is safe
   * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
-  * too few wells => get wells from bigger administrative area
+  * too few wells => get wells from bigger administrative region
 5. more sensible widening of location to get enough wells
   * Black is safe
   * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
