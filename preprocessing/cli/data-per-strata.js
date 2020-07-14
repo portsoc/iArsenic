@@ -1,5 +1,6 @@
 const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
+const fs = require('fs');
 
 const STRATA = [
   { min: 0, max: Infinity, header: 'depth 0+' },
@@ -38,16 +39,16 @@ function main(options) {
   for (const div of Object.keys(data)) {
     const divObj = data[div];
     initStratas(divObj);
-    for (const dis of Object.keys(data[div].districts)) {
-      const disObj = data[div].districts[dis];
+    for (const dis of Object.keys(divObj.districts)) {
+      const disObj = divObj.districts[dis];
       initStratas(disObj);
-      for (const upa of Object.keys(data[div].districts[dis].upazilas)) {
-        const upaObj = data[div].districts[dis].upazilas[upa];
+      for (const upa of Object.keys(disObj.upazilas)) {
+        const upaObj = disObj.upazilas[upa];
         initStratas(upaObj);
-        for (const uni of Object.keys(data[div].districts[dis].upazilas[upa].unions)) {
-          const uniObj = data[div].districts[dis].upazilas[upa].unions[uni];
+        for (const uni of Object.keys(upaObj.unions)) {
+          const uniObj = upaObj.unions[uni];
           initStratas(uniObj);
-          for (const well of data[div].districts[dis].upazilas[upa].unions[uni].wells) {
+          for (const well of uniObj.wells) {
             countStratas([divObj, disObj, upaObj, uniObj], well);
           }
           pushRecord(records, div, dis, upa, uni, uniObj);
@@ -63,7 +64,7 @@ function main(options) {
     record.join(',');
   }
   const contents = records.join('\n');
-  console.log(contents);
+  fs.writeFileSync('../../data/processed-data/csv/wells-per-strata.csv', contents);
 }
 
 function pushRecord(records, div, dis, upa, uni, wellCountObj) {
