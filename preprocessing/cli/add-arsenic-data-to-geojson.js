@@ -5,56 +5,75 @@ const csvLoader = require('../lib/load-data');
 function main(options) {
   const data = csvLoader(options.paths);
   const geoJson = loadGeoJsonFiles();
-  addArsenicAttribute(geoJson);
+  addArsenicAttributes(geoJson);
+
   // loop through each well
   for (const div of Object.keys(data)) {
     for (const dis of Object.keys(data[div].districts)) {
       for (const upa of Object.keys(data[div].districts[dis].upazilas)) {
         for (const uni of Object.keys(data[div].districts[dis].upazilas[upa].unions)) {
-          const sectors = {
-            div: { name: div, wellCount: data[div].wells.length },
-            dis: { name: dis, wellCount: data[div].districts[dis].wells.length },
-            upa: { name: upa, wellCount: data[div].districts[dis].upazilas[upa].wells.length },
-            uni: { name: uni, wellCount: data[div].districts[dis].upazilas[upa].unions[uni].wells.length },
-          };
+          const regions = { div: div, dis: dis, upa: upa, uni: uni };
           const wells = data[div].districts[dis].upazilas[upa].unions[uni].wells;
+          countWells(regions, wells, geoJson);
           for (const well of wells) {
-            countArsenic(sectors, well, geoJson);
+            countArsenic(regions, well, geoJson);
           }
-
-          for (const sector in sectors) {
-            for (const feature of geoJson[sector].features) {
-              if (feature.properties[sector] === sectors[sector].name) {
-                feature.properties['well-count'] = sectors[sector].wellCount;
-              }
-            }
-          }
+          arsenicPerWell(regions, geoJson);
         }
       }
     }
   }
-  fs.writeFileSync('../../data/processed-data/upazila-geodata-arsenic.geojson',
-    JSON.stringify(geoJson.upa));
+  writeGeoData(geoJson);
 }
 
-function countArsenic(sectors, well, geoJson) {
-  for (const sector in sectors) {
-    for (const feature of geoJson[sector].features) {
-      if (feature.properties[sector] === sectors[sector].name) {
+function writeGeoData(geoData) {
+  for (const region in geoData) {
+    const filepath = `../../data/processed-data/arsenic-geodata/${region}-arsenic.geojson`;
+    fs.writeFileSync(filepath, JSON.stringify(geoData[region]));
+  }
+}
+
+function arsenicPerWell(regions, geoJson) {
+  for (const region in regions) {
+    for (const feature of geoJson[region].features) {
+      if (feature.properties[region] === regions[region]) {
+        const totalArsenicInRegion = feature.properties.arsenic;
+        const wellsInRegion = feature.properties.wellCount;
+        feature.properties.arsenicPerWell = totalArsenicInRegion / wellsInRegion;
+        break;
+      }
+    }
+  }
+}
+
+function countWells(regions, wells, geoJson) {
+  for (const region in regions) {
+    for (const feature of geoJson[region].features) {
+      if (feature.properties[region] === regions[region]) {
+        feature.properties.wellCount += wells.length;
+        break;
+      }
+    }
+  }
+}
+
+function countArsenic(regions, well, geoJson) {
+  for (const region in regions) {
+    for (const feature of geoJson[region].features) {
+      if (feature.properties[region] === regions[region]) {
         feature.properties.arsenic += well.arsenic;
         break;
       }
     }
   }
-  // for (const sector in sectors) {
-  //   console.log(geoJson[sector].features);
-  // }
 }
 
-function addArsenicAttribute(geoJson) {
+function addArsenicAttributes(geoJson) {
   for (const sector in geoJson) {
     for (const feature of geoJson[sector].features) {
       feature.properties.arsenic = 0;
+      feature.properties.wellCount = 0;
+      feature.properties.arsenicPerWell = 0;
     }
   }
 }
