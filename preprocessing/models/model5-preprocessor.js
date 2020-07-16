@@ -364,4 +364,76 @@ function main(divisions) {
   return aggregateData;
 }
 
-module.exports = main;
+function getWidenData(divisions) {
+  forEachUnion(divisions, stratifyWells);
+  computeNearbyRegions(divisions);
+  forEachUnion(divisions, getEnoughData);
+  forEachUnion(divisions, countWidening);
+}
+
+function countWidening(locationsArr) {
+  const union = locationsArr[3]; // get current union
+  for (const stratum of STRATA) {
+    // define object keys
+    const stratumWider = stratum + 'Wider';
+
+    // object key for how far you have to look to find enough wells for this strata:
+    const stratumWideningKm = stratum + 'WideningKm';
+
+    // object key for how many extra unions you have to look into to find enough wells
+    // for this strata:
+    const stratumWideningUnions = stratum + 'WideningUnis';
+
+    // if there are enough wells for this strata in this union, distance widened is 0
+    // and extra unions is 0
+    union[stratumWideningKm] = 0;
+    union[stratumWideningUnions] = 0;
+
+    // if stratumWider is null there are not enough wells even after widening
+    // so don't count widening stats for this strata and set them to null
+    if (union[stratumWider] == null) {
+      union[stratumWideningKm] = null;
+      union[stratumWideningUnions] = null;
+    // else calculate how far and how many unions you have to widen to
+    } else {
+      calculateWideningStats(stratum, union, stratumWideningKm, stratumWideningUnions);
+    }
+  }
+  console.log(union);
+  console.log('//////');
+}
+
+function calculateWideningStats(stratum, union, stratumWideningKm, stratumWideningUnions) {
+  let stratumWellCount = 0; // well count in this union
+  let index = 0; // used to move through nearbyRegions
+
+  // if there aren't enough wells in this strata in this union, look in the next deeper
+  // stratum (nextStratum), if this stratum is the deepest stratum (sD) only look in stratum sD
+  const nextStratum = stratum === 'sD' ? null : STRATA[STRATA.indexOf(stratum) + 1];
+
+  // count wells in strata of current union, if this is less than MIN_DATA_COUNT, look
+  // in nearby regions
+  stratumWellCount += union[stratum].length;
+  if (nextStratum) {
+    stratumWellCount += union[nextStratum].length;
+  }
+
+  while (stratumWellCount < MIN_DATA_COUNT) {
+    stratumWellCount += union.nearbyRegions[index].region[stratum].length;
+    if (nextStratum) {
+      stratumWellCount += union.nearbyRegions[index].region[nextStratum].length;
+    }
+    union[stratumWideningKm] = union.nearbyRegions[index].distance;
+    union[stratumWideningUnions] += 1;
+    index += 1;
+
+    // fail safe in case of inifinite while looping
+    if (index > 99999) {
+      console.debug('possible infinite loop in countWidening');
+      console.debug(union);
+      return;
+    }
+  }
+}
+
+module.exports = { main, getWidenData };
