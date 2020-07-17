@@ -405,11 +405,10 @@ function countWidening(locationsArr) {
 
 function calculateWideningStats(stratum, union, stratumWideningKm, stratumWideningUnions) {
   let stratumWellCount = 0; // well count in this union
-  let index = 0; // used to move through nearbyRegions
 
   // if there aren't enough wells in this strata in this union, look in the next deeper
   // stratum (nextStratum), if this stratum is the deepest stratum (sD) only look in stratum sD
-  const nextStratum = stratum === 'sD' ? null : STRATA[STRATA.indexOf(stratum) + 1];
+  const nextStratum = (stratum === 'sD') ? null : STRATA[STRATA.indexOf(stratum) + 1];
 
   // count wells in strata of current union, if this is less than MIN_DATA_COUNT, look
   // in nearby regions
@@ -418,12 +417,14 @@ function calculateWideningStats(stratum, union, stratumWideningKm, stratumWideni
     stratumWellCount += union[nextStratum].length;
   }
 
+  let index = 0; // used to move through nearbyRegions
   while (stratumWellCount < MIN_DATA_COUNT) {
-    stratumWellCount += union.nearbyRegions[index].region[stratum].length;
+    const nearbyUnion = union.nearbyRegions[index];
+    stratumWellCount += nearbyUnion.region[stratum].length;
     if (nextStratum) {
-      stratumWellCount += union.nearbyRegions[index].region[nextStratum].length;
+      stratumWellCount += nearbyUnion.region[nextStratum].length;
     }
-    union[stratumWideningKm] = union.nearbyRegions[index].distance;
+    union[stratumWideningKm] = nearbyUnion.distance;
     union[stratumWideningUnions] += 1;
     index += 1;
 
@@ -436,4 +437,6 @@ function calculateWideningStats(stratum, union, stratumWideningKm, stratumWideni
   }
 }
 
+
+// FIX: This breaks test-cli.sh
 module.exports = { main, getWidenData };
