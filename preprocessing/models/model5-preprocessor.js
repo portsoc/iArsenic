@@ -438,5 +438,8 @@ function calculateWideningStats(stratum, union, stratumWideningKm, stratumWideni
 }
 
 
-// FIX: This breaks test-cli.sh
-module.exports = { main, getWidenData };
+// export main() as default (code that uses preprocessors expects that)
+module.exports = main;
+
+// also export getWidenData()
+module.exports.getWidenData = getWidenData;
