@@ -278,7 +278,6 @@ function nearbyLocations(locationArr, kmDistance) {
       ? nearbyRegions
       : nearbyRegions.slice(0, firstOutsideDistance);
 
-  // extract regions, ignore distances
   return regionsWithinDistance.map(a => a.region);
 }
 
@@ -334,15 +333,20 @@ function extractStats(data, hierarchyPath) {
 }
 
 function forEachUnion(divisions, f) {
+  let count = 0;
+  const numUnis = 5160;
   for (const div of Object.values(divisions)) {
     for (const dis of Object.values(div.districts)) {
       for (const upa of Object.values(dis.upazilas)) {
         for (const uni of Object.values(upa.unions)) {
           f([div, dis, upa, uni]);
+          count += 1;
+          if (count % 250 === 0) console.log(Math.floor(count / numUnis * 100) + '%');
         }
       }
     }
   }
+  console.log('100%');
 }
 
 function main(divisions) {
@@ -364,79 +368,95 @@ function main(divisions) {
   return aggregateData;
 }
 
+/* /////////////////////////////// */
+/* get widen data module functions */
+/* /////////////////////////////// */
+
 function getWidenData(divisions) {
+  console.log('stratifying wells');
   forEachUnion(divisions, stratifyWells);
+
+  console.log('computing nearby divisions');
   computeNearbyRegions(divisions);
-  forEachUnion(divisions, getEnoughData);
-  forEachUnion(divisions, countWidening);
+
+  // if a stratum doesn't have enough wells, widen the search
+  console.log('getting enough data');
+  forEachUnion(divisions, getRequiredWidening);
+
+  forEachUnion(divisions, (arr) => console.log(arr[arr.length - 1]));
 }
 
-function countWidening(locationsArr) {
-  const union = locationsArr[3]; // get current union
-  for (const stratum of STRATA) {
-    // define object keys
-    const stratumWider = stratum + 'Wider';
+function getRequiredWidening(locationArr) {
+  function nearbyWells(km, ...strata) {
+    const retVal = [];
+    const locationsWithinKm = nearbyLocations(locationArr, km);
+    const nearbyRegions = locationArr[locationArr.length - 1].nearbyRegions;
+    for (const location of locationsWithinKm) {
+      // get distance between currentUnion and location
+      let distToWell;
+      for (const region of nearbyRegions) {
+        if (region.region.name === location.name) {
+          distToWell = region.distance;
+          break;
+          // FIXME without break this breaks because multiple regions with the same name come up
+          // should there be duplicates in nearbyRegions??
+        }
+      }
 
-    // object key for how far you have to look to find enough wells for this strata:
-    const stratumWideningKm = stratum + 'WideningKm';
-
-    // object key for how many extra unions you have to look into to find enough wells
-    // for this strata:
-    const stratumWideningUnions = stratum + 'WideningUnis';
-
-    // if there are enough wells for this strata in this union, distance widened is 0
-    // and extra unions is 0
-    union[stratumWideningKm] = 0;
-    union[stratumWideningUnions] = 0;
-
-    // if stratumWider is null there are not enough wells even after widening
-    // so don't count widening stats for this strata and set them to null
-    if (union[stratumWider] == null) {
-      union[stratumWideningKm] = null;
-      union[stratumWideningUnions] = null;
-    // else calculate how far and how many unions you have to widen to
-    } else {
-      calculateWideningStats(stratum, union, stratumWideningKm, stratumWideningUnions);
+      // make an array of wells from this location from given stratas
+      const locationWells = [];
+      for (const stratum of strata) {
+        const wells = location[stratum];
+        wells.forEach(() => locationWells.push({ distance: distToWell, union: location.name }));
+      }
+      retVal.push(locationWells);
     }
+    return retVal;
   }
-  console.log(union);
-  console.log('//////');
+
+  const location = locationArr[locationArr.length - 1];
+  location.s15WideningRequired =
+    wideCount(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
+
+  location.s45WideningRequired =
+    wideCount(location.s45, location.s65) ||
+    wideCount(location.s45, ...nearbyWells(10, 's45')) ||
+    wideCount(location.s45.concat(location.s65), ...nearbyWells(20, 's45', 's65'));
+
+  location.s65WideningRequired =
+    wideCount(location.s65, location.s90) ||
+    wideCount(location.s65, ...nearbyWells(10, 's65')) ||
+    wideCount(location.s65.concat(location.s90), ...nearbyWells(20, 's65', 's90'));
+
+  location.s90WideningRequired =
+    wideCount(location.s90, location.s150) ||
+    wideCount(location.s90, ...nearbyWells(20, 's90')) ||
+    wideCount(location.s90.concat(location.s150), ...nearbyWells(20, 's90', 's150'));
+
+  location.s150WideningRequired =
+    wideCount(location.s150, location.sD) ||
+    wideCount(location.s150, ...nearbyWells(100, 's150')) ||
+    wideCount(location.s150.concat(location.sD), ...nearbyWells(100, 's150', 'sD'));
+
+  location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
 }
 
-function calculateWideningStats(stratum, union, stratumWideningKm, stratumWideningUnions) {
-  let stratumWellCount = 0; // well count in this union
+function wideCount(startingArray, ...arraysToAdd) {
+  const retVal = { distance: 0, unions: 0 };
+  if (isEnoughData(startingArray)) return retVal;
 
-  // if there aren't enough wells in this strata in this union, look in the next deeper
-  // stratum (nextStratum), if this stratum is the deepest stratum (sD) only look in stratum sD
-  const nextStratum = (stratum === 'sD') ? null : STRATA[STRATA.indexOf(stratum) + 1];
+  let wider = startingArray;
 
-  // count wells in strata of current union, if this is less than MIN_DATA_COUNT, look
-  // in nearby regions
-  stratumWellCount += union[stratum].length;
-  if (nextStratum) {
-    stratumWellCount += union[nextStratum].length;
-  }
-
-  let index = 0; // used to move through nearbyRegions
-  while (stratumWellCount < MIN_DATA_COUNT) {
-    const nearbyUnion = union.nearbyRegions[index];
-    stratumWellCount += nearbyUnion.region[stratum].length;
-    if (nextStratum) {
-      stratumWellCount += nearbyUnion.region[nextStratum].length;
+  for (const wells of arraysToAdd) {
+    if (wells.length > 0) {
+      retVal.unions += 1;
+      retVal.distance = wells[0].distance > retVal.distance ? wells[0].distance : retVal.distance;
     }
-    union[stratumWideningKm] = nearbyUnion.distance;
-    union[stratumWideningUnions] += 1;
-    index += 1;
-
-    // fail safe in case of inifinite while looping
-    if (index > 99999) {
-      console.debug('possible infinite loop in countWidening');
-      console.debug(union);
-      return;
-    }
+    wider = wider.concat(wells);
+    if (isEnoughData(wider)) break;
   }
+  return isEnoughData(wider) ? retVal : null;
 }
-
 
 // export main() as default (code that uses preprocessors expects that)
 module.exports = main;
