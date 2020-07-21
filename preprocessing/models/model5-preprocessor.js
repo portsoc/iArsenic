@@ -370,18 +370,12 @@ function main(divisions) {
 /* /////////////////////////////// */
 
 function computeWidening(divisions) {
-  console.time('stratifying wells');
   forEachUnion(divisions, stratifyWells);
-  console.timeEnd('stratifying wells');
 
-  console.time('computing nearby divisions');
   computeNearbyRegions(divisions);
-  console.timeEnd('computing nearby divisions');
 
   // if a stratum doesn't have enough wells, widen the search
-  console.time('getting enough data');
   forEachUnion(divisions, computeRegionWidening);
-  console.timeEnd('getting enough data');
 
   return divisions;
 }
