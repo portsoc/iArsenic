@@ -1,21 +1,23 @@
 const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
+const model5 = require('../models/model5-preprocessor.js');
 
 const STRATA = [
   { min: 0, max: Infinity, header: 'depth 0+' },
-  { min: 0, max: 90, header: 'depth 0-90' },
+  { min: 0, max: 15.3, header: 'depth 0-15.3', strataKey: 's15' },
+  { min: 15.3, max: 45, header: 'depth 15.3-45', strataKey: 's45' },
+  { min: 45, max: 65, header: 'depth 45-65', strataKey: 's65' },
+  { min: 0, max: 90, header: 'depth 0-90', strataKey: 's90' },
+  { min: 90, max: 150, header: 'depth 90-150', strataKey: 's150' },
+  { min: 150, max: Infinity, header: 'depth 150+', strataKey: 'sD' },
   { min: 90, max: Infinity, header: 'depth 90+' },
-  { min: 90, max: 150, header: 'depth 90-150' },
-  { min: 150, max: Infinity, header: 'depth 150+' },
-  { min: 0, max: 15.3, header: 'depth 0-15.3' },
-  { min: 15.3, max: 45, header: 'depth 15.3-45' },
-  { min: 45, max: 65, header: 'depth 45-65' },
   { min: 65, max: 90, header: 'depth 65-90' },
 ];
 
 function main(options) {
   // get data from CSV files
   const data = csvLoader(options.paths);
+  model5.computeWidening(data);
 
   // define array to hold rows of CSV file and push column headers
 
@@ -30,6 +32,8 @@ function main(options) {
   // Adds all the stratum headers to the headers array
   for (const stratum of STRATA) {
     headers.push(stratum.header);
+    headers.push('distKm');
+    headers.push('count');
   }
 
   records.push(headers);
@@ -52,7 +56,8 @@ function main(options) {
           initStratas(uniObj);
 
           for (const well of uniObj.wells) {
-            countStratas([divObj, disObj, upaObj, uniObj], well);
+            const regionArr = [divObj, disObj, upaObj, uniObj];
+            countStratas(regionArr, well);
           }
           pushRecord(records, div, dis, upa, uni, uniObj);
         }
@@ -73,9 +78,19 @@ function main(options) {
 
 function pushRecord(records, div, dis, upa, uni, wellCountObj) {
   const record = [div, dis, upa, uni];
+
   for (const stratum of STRATA) {
     record.push(wellCountObj[stratum.header]);
+    const wideningKey = stratum.strataKey + 'WideningRequired';
+    if (stratum.strataKey === undefined || uni === '###' || wellCountObj[wideningKey] == null) {
+      record.push('n/a'); // widening distance
+      record.push('n/a'); // widening count
+    } else {
+      record.push(wellCountObj[wideningKey].distance); // widening distance
+      record.push(wellCountObj[wideningKey].count); // widening coun
+    }
   }
+
   records.push(record);
 }
 
