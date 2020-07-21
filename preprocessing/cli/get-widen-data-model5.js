@@ -4,12 +4,13 @@ const model5 = require('../models/model5-preprocessor.js');
 
 
 function main(options) {
-  const startTime = new Date().getTime();
+  console.time('loading');
   const data = loadData(options.paths);
+  console.timeEnd('loading');
+
+  console.time('time taken');
   model5.getWidenData(data);
-  const endTime = new Date().getTime();
-  const timeTaken = (endTime - startTime) / 1000;
-  console.log('time taken: ' + timeTaken + ' seconds');
+  console.timeEnd('time taken');
 }
 
 main(cli.getParameters());
