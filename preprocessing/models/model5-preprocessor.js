@@ -102,7 +102,9 @@ const { computeNearbyRegions } = require('../lib/geo-data');
 const MIN_DATA_COUNT = 7;
 
 function isEnoughData(wellsList) {
-  return wellsList && wellsList.length >= MIN_DATA_COUNT;
+  if (!wellsList) return false;
+  const length = (typeof wellsList === 'number') ? wellsList : wellsList.length;
+  return length >= MIN_DATA_COUNT;
 }
 
 // splits wells in the given region by depth
@@ -333,20 +335,15 @@ function extractStats(data, hierarchyPath) {
 }
 
 function forEachUnion(divisions, f) {
-  let count = 0;
-  const numUnis = 5160;
   for (const div of Object.values(divisions)) {
     for (const dis of Object.values(div.districts)) {
       for (const upa of Object.values(dis.upazilas)) {
         for (const uni of Object.values(upa.unions)) {
           f([div, dis, upa, uni]);
-          count += 1;
-          if (count % 250 === 0) console.log(Math.floor(count / numUnis * 100) + '%');
         }
       }
     }
   }
-  console.log('100%');
 }
 
 function main(divisions) {
@@ -372,46 +369,39 @@ function main(divisions) {
 /* get widen data module functions */
 /* /////////////////////////////// */
 
-function getWidenData(divisions) {
-  console.log('stratifying wells');
+function computeWidening(divisions) {
+  console.time('stratifying wells');
   forEachUnion(divisions, stratifyWells);
+  console.timeEnd('stratifying wells');
 
-  console.log('computing nearby divisions');
+  console.time('computing nearby divisions');
   computeNearbyRegions(divisions);
+  console.timeEnd('computing nearby divisions');
 
   // if a stratum doesn't have enough wells, widen the search
-  console.log('getting enough data');
-  forEachUnion(divisions, getRequiredWidening);
+  console.time('getting enough data');
+  forEachUnion(divisions, computeRegionWidening);
+  console.timeEnd('getting enough data');
 
-  forEachUnion(divisions, (arr) => console.log(arr[arr.length - 1]));
+  // forEachUnion(divisions, (arr) => console.log(arr[arr.length - 1]));
 }
 
-function getRequiredWidening(locationArr) {
+function computeRegionWidening(locationArr) {
   function nearbyWells(km, ...strata) {
-    const retVal = [];
-    const locationsWithinKm = nearbyLocations(locationArr, km);
-    const nearbyRegions = locationArr[locationArr.length - 1].nearbyRegions;
-    for (const location of locationsWithinKm) {
-      // get distance between currentUnion and location
-      let distToWell;
-      for (const region of nearbyRegions) {
-        if (region.region.name === location.name) {
-          distToWell = region.distance;
-          break;
-          // FIXME without break this breaks because multiple regions with the same name come up
-          // should there be duplicates in nearbyRegions??
-        }
-      }
+    const retval = [];
+    const region = locationArr[locationArr.length - 1];
+    const nearbyRegions = region.nearbyRegions;
+    const wellSelector = strataSelector(...strata);
 
-      // make an array of wells from this location from given stratas
-      const locationWells = [];
-      for (const stratum of strata) {
-        const wells = location[stratum];
-        wells.forEach(() => locationWells.push({ distance: distToWell, union: location.name }));
-      }
-      retVal.push(locationWells);
+    for (const nearby of nearbyRegions) {
+      if (nearby.distance > km) break;
+
+      const wells = wellSelector(nearby.region);
+      wells.distance = nearby.distance;
+      retval.push(wells);
     }
-    return retVal;
+
+    return retval;
   }
 
   const location = locationArr[locationArr.length - 1];
@@ -442,24 +432,23 @@ function getRequiredWidening(locationArr) {
 }
 
 function wideCount(startingArray, ...arraysToAdd) {
-  const retVal = { distance: 0, unions: 0 };
-  if (isEnoughData(startingArray)) return retVal;
+  const retval = { distance: 0, count: 0 };
+  if (isEnoughData(startingArray)) return retval;
 
-  let wider = startingArray;
+  let wellsCount = startingArray.length;
 
   for (const wells of arraysToAdd) {
-    if (wells.length > 0) {
-      retVal.unions += 1;
-      retVal.distance = wells[0].distance > retVal.distance ? wells[0].distance : retVal.distance;
-    }
-    wider = wider.concat(wells);
-    if (isEnoughData(wider)) break;
+    retval.count += 1;
+    retval.distance = wells.distance || 0;
+    wellsCount += wells.length;
+    if (isEnoughData(wellsCount)) break;
   }
-  return isEnoughData(wider) ? retVal : null;
+
+  return isEnoughData(wellsCount) ? retval : null;
 }
 
 // export main() as default (code that uses preprocessors expects that)
 module.exports = main;
 
-// also export getWidenData()
-module.exports.getWidenData = getWidenData;
+// also export computeWidening()
+module.exports.computeWidening = computeWidening;

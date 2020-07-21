@@ -9,7 +9,7 @@ function main(options) {
   console.timeEnd('loading');
 
   console.time('time taken');
-  model5.getWidenData(data);
+  model5.computeWidening(data);
   console.timeEnd('time taken');
 }
 
