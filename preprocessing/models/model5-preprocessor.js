@@ -383,7 +383,7 @@ function computeWidening(divisions) {
   forEachUnion(divisions, computeRegionWidening);
   console.timeEnd('getting enough data');
 
-  // forEachUnion(divisions, (arr) => console.log(arr[arr.length - 1]));
+  return divisions;
 }
 
 function computeRegionWidening(locationArr) {
