@@ -1,0 +1,29 @@
+html,
+body,
+section,
+svg {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#map-area {
+    width: 70%;
+    border: thick solid red;
+    background: #eee;
+    margin: 2rem auto 0;
+}
+
+#map-area svg rect {
+    fill: skyblue;
+}
+
+#map-area path {
+    stroke: black;
+    stroke-width: .01rem;
+}
+
+#map-area svg path:hover {
+    fill: red;
+}

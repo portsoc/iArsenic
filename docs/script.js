@@ -225,7 +225,7 @@ function validateInputs() {
     dropdowns: [divDD, disDD, upaDD, uniDD],
     valid: true,
   };
-  for (let dropdown of dropdownInputs.dropdowns) {
+  for (const dropdown of dropdownInputs.dropdowns) {
     if (!dropdown.value) {
       dropdownInputs.valid = false;
       break;

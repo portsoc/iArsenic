@@ -79,6 +79,10 @@ function putLogInPage(data) {
       f: (x) => x.inputs.drinking,
     },
     {
+      name: 'flooding',
+      f: (x) => x.inputs.flooding,
+    },
+    {
       name: 'est. severity',
       f: (x) => x.estimate.severity,
     },
@@ -149,7 +153,7 @@ function makeTable(arr, columns) {
     }
   }
 
-  if (window.SortTable) window.SortTable.instrumentSortableTable(t, 0);
+  if (window.SortTable) window.SortTable.instrumentSortableTable(t, 0, 'desc');
 
   return t;
 }

@@ -5,7 +5,7 @@ scriptDir=`dirname $0`
 cd "$scriptDir"
 
 dataPaths=( "" "../../data/disabled/29k-original.csv" )
-models=( "" "model1" "model3" "model4")
+models=( "" "model1" "model3" "model4" "model5" )
 producer="../cli/produce-aggregate-data-files.js"
 tester="../cli/test-all.js"
 testerOutputFile="test-all-output.txt"
@@ -29,7 +29,7 @@ generateDataDirectory () {
 
 compareOutput () {
   if [ -d "$benchmarkDirectory" ]; then
-    diffOutput="$(diff -q -r $testDirectory $benchmarkDirectory)"
+    diffOutput="$(diff -q -r -w $testDirectory $benchmarkDirectory)"
     if [ "$diffOutput" = "" ]; then
       echo
       echo "Test successful: $scriptDir/$testDirectory/ is identical to benchmark"

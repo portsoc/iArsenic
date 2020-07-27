@@ -1,4 +1,7 @@
 *.swp
 *.bak
 .DS_Store
-*/node_modules
+node_modules/
+rscripts/output*
+preprocessing/tests/*-outputs
+preprocessing/geodata/maps/src
