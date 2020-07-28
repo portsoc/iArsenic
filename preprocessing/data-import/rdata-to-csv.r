@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 # Run script in the console:
-# Rscripts [script name] [rdata file/rdata file directory] [output directory]
+# Rscript [script name] [rdata file/rdata file directory] [output directory]
 # [output directory] is not necessary if the output is in the same directory
 
 # Pass directories/files as arguments when running script
