@@ -5,4 +5,7 @@ node_modules/
 rscripts/output*
 preprocessing/tests/*-outputs
 preprocessing/geodata/maps/src
+preprocessing/data-import/r-data-rdata/*
+preprocessing/data-import/r-data-csv/*
+preprocessing/data-import/consolidatedCsv.csv
 data/data++
