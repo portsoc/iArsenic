@@ -9,6 +9,7 @@
     "command-line-args": "^5.1.1",
     "csv-parse": "^4.3.3",
     "d3": "^5.15.0",
+    "json2csv": "^5.0.1",
     "simple-google-openid": "^0.3.0",
     "topojson": "^3.0.2"
   },

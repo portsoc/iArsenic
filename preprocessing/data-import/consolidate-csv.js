@@ -2,61 +2,85 @@
 // node [script name/path] [data directory] [output directory]
 // output-directory is not essential but will output to script directory
 
-
+const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
+const path = require('path');
+const json2csv = require('json2csv');
 
-function formatCsv(csvArr) {
-  const retArr = [];
-  for (const record of csvArr) {
-    const recordArr = record.split(',');
-    const retRecord = [];
+const CSV_PARSE_OPTIONS = { columns: true, skip_empty_lines: true };
 
-    retRecord.push(recordArr[11]);
-    retRecord.push(recordArr[12]);
-    retRecord.push(recordArr[13]);
-    retRecord.push(recordArr[14]);
-    retRecord.push(recordArr[15]);
-
-    retRecord.push(feetToMeters(recordArr[7]));
-    retRecord.push(recordArr[10]);
-
-    retArr.push(retRecord);
-    // retArr.push(recordArr); // uncomment to consilate csv without formatting
-  }
-  return retArr.join('\n');
-}
+const HEADERS = [
+  { input: 'DCODE_name', output: 'Division' },
+  { input: 'ZCODE_name', output: 'District' },
+  { input: 'TCODE_name', output: 'Upazila' },
+  { input: 'UCODE_name', output: 'Union' },
+  { input: 'MCODE_name', output: 'Mouza' },
+  { input: 'Depth', output: 'Depth' },
+  { input: 'Concentration', output: 'Arsenic' },
+];
 
 function feetToMeters(feet) {
   return (feet * 0.3048).toFixed(2);
 }
 
-function main() {
-  const args = process.argv; // Passed arguments
-  args.splice(0, 2); // Removes default arguments
-  console.log(args);
+function getDirectory() {
+  // TODO get directory from cli common
+  return 'r-data-csv/';
+}
 
-  if (args.length < 1) {
-    console.log('No data directory specified');
-    return;
-  }
-  const directory = args[0]+'/';
+function getCsvFilepaths(directory) {
+  // gather file paths for each csv file in /data/
+  const filePathList = [];
   const files = fs.readdirSync(directory);
-  let consolidatedCsvArr = [];
-  const headers = ['Division', 'District', 'Upazila', 'Union', 'Mouza', 'Depth', 'Arsenic'];
-
-  // original headers, uncomment to consolidate csv without formatting
-  // const headers = ["","DCODE","ZCODE","TCODE","UCODE","MCODE","VCODE","Depth","ArconValue","ArconCode","Concentration","DCODE_name","ZCODE_name","TCODE_name","UCODE_name","MCODE_name","VCODE_name"];
-  for (const file of files) {
-    const csvData = fs.readFileSync(directory + file, 'utf8');
-    const csvArr = csvData.split('\n');
-    csvArr.shift(); // remove headers
-    const formattedCsvArr = formatCsv(csvArr);
-    consolidatedCsvArr = consolidatedCsvArr.concat(formattedCsvArr);
+  const csvFiles = files.filter(file => file.endsWith('.csv'));
+  for (const file of csvFiles) {
+    const filePath = path.join(directory, file);
+    filePathList.push(filePath);
   }
-  consolidatedCsvArr.unshift(headers); // add single set of headers
-  const outputFilePath = (args.length > 1) ? args[1]+'/consolidatedCsv.csv' : 'consolidatedCsv.csv';
-  fs.writeFileSync(outputFilePath, consolidatedCsvArr.join('\n'));
-  console.log('File written to', outputFilePath);
+  return filePathList;
+}
+
+function getFiles(filepaths) {
+  const inputCsvFiles = [];
+  for (const filepath of filepaths) {
+    const rawFile = fs.readFileSync(filepath);
+    const csvFile = parse(rawFile, CSV_PARSE_OPTIONS);
+    inputCsvFiles.push(csvFile);
+  }
+  return inputCsvFiles;
+}
+
+function consolidateCsv(inputCsvFiles) {
+  let retArr = [];
+  inputCsvFiles.forEach(file => { retArr = retArr.concat(file); });
+  return retArr;
+}
+
+function formatCsv(inputCsv) {
+  const outputCsv = [];
+  for (const inputRecord of inputCsv) {
+    const outputRecord = {};
+    HEADERS.forEach(header => { outputRecord[header.output] = inputRecord[header.input]; });
+    outputRecord.Depth = feetToMeters(outputRecord.Depth);
+    outputCsv.push(outputRecord);
+  }
+  return outputCsv;
+}
+
+function formatJson(outputJson) {
+  const outputHeaders = HEADERS.map(header => header.output);
+  const outputCsv = json2csv.parse(outputJson, { outputHeaders });
+  return outputCsv;
+}
+
+function main() {
+  const directory = getDirectory(); // get directory from arguments
+  const csvFilepaths = getCsvFilepaths(directory); // get filepaths from directory (csv only)
+  const inputCsvFiles = getFiles(csvFilepaths); // get csv files from filepaths
+  const allInputCsvFiles = consolidateCsv(inputCsvFiles); // join all csv files into one array
+  const outputJson = formatCsv(allInputCsvFiles); // format csv files
+  const outputCsv = formatJson(outputJson); // convert from json format to csv
+  console.log(outputCsv);
 }
 
 main();
