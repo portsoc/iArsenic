@@ -5,7 +5,7 @@
 const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
-const json2csv = require('json2csv');
+const stringify = require('csv-stringify/lib/sync');
 
 const CSV_PARSE_OPTIONS = { columns: true, skip_empty_lines: true };
 
@@ -67,10 +67,10 @@ function formatCsv(inputCsv) {
   return outputCsv;
 }
 
-function formatJson(outputJson) {
+function convertToCsv(outputJson) {
   const outputHeaders = HEADERS.map(header => header.output);
-  const outputCsv = json2csv.parse(outputJson, { outputHeaders });
-  return outputCsv;
+  const outputHeadersRecord = outputHeaders.join(',') + '\n';
+  return outputHeadersRecord + stringify(outputJson);
 }
 
 function main() {
@@ -79,7 +79,7 @@ function main() {
   const inputCsvFiles = getFiles(csvFilepaths); // get csv files from filepaths
   const allInputCsvFiles = consolidateCsv(inputCsvFiles); // join all csv files into one array
   const outputJson = formatCsv(allInputCsvFiles); // format csv files
-  const outputCsv = formatJson(outputJson); // convert from json format to csv
+  const outputCsv = convertToCsv(outputJson); // convert from json format to csv
   console.log(outputCsv);
 }
 
