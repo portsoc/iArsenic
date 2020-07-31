@@ -6,6 +6,7 @@ const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
 const stringify = require('csv-stringify/lib/sync');
+const cli = require('../lib/cli-common');
 
 const CSV_PARSE_OPTIONS = { columns: true, skip_empty_lines: true };
 
@@ -23,21 +24,24 @@ function feetToMeters(feet) {
   return (feet * 0.3048).toFixed(2);
 }
 
-function getDirectory() {
-  // TODO get directory from cli common
-  return 'r-data-csv/';
-}
-
-function getCsvFilepaths(directory) {
-  // gather file paths for each csv file in /data/
-  const filePathList = [];
-  const files = fs.readdirSync(directory);
-  const csvFiles = files.filter(file => file.endsWith('.csv'));
-  for (const file of csvFiles) {
-    const filePath = path.join(directory, file);
-    filePathList.push(filePath);
+function getCsvFilepaths(cliArgs) {
+  // if filepaths are not defined, use default
+  if (cliArgs.paths == null) {
+    const filePathList = [];
+    const defaultDir = 'r-data-csv';
+    const files = fs.readdirSync(defaultDir);
+    const csvFiles = files.filter(file => file.endsWith('.csv'));
+    for (const file of csvFiles) {
+      const filePath = path.join(defaultDir, file);
+      filePathList.push(filePath);
+    }
+    return filePathList;
+  } else {
+    if (!cliArgs.paths.every(filepath => filepath.endsWith('.csv'))) {
+      console.error('User defined files include files which are not CSV format');
+    }
+    return cliArgs.paths;
   }
-  return filePathList;
 }
 
 function getFiles(filepaths) {
@@ -73,9 +77,8 @@ function convertToCsv(outputJson) {
   return outputHeadersRecord + stringify(outputJson);
 }
 
-function main() {
-  const directory = getDirectory(); // get directory from arguments
-  const csvFilepaths = getCsvFilepaths(directory); // get filepaths from directory (csv only)
+function main(cliArgs) {
+  const csvFilepaths = getCsvFilepaths(cliArgs); // get filepaths from directory (csv only)
   const inputCsvFiles = getFiles(csvFilepaths); // get csv files from filepaths
   const allInputCsvFiles = consolidateCsv(inputCsvFiles); // join all csv files into one array
   const outputJson = formatCsv(allInputCsvFiles); // format csv files
@@ -83,4 +86,5 @@ function main() {
   console.log(outputCsv);
 }
 
-main();
+console.debug = console.error; // redirect debug to stderr
+main(cli.getParameters());
