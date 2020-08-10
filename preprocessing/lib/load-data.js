@@ -16,7 +16,10 @@ function readTheCSVFiles(filePathList) {
   for (const filePath of filePathList) {
     const file = fs.readFileSync(filePath);
     const data = parse(file, CSV_PARSE_OPTIONS);
-    records.push(...data);
+
+    for (const record of data) {
+      records.push(record);
+    }
   }
 
   return records;
