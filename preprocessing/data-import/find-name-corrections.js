@@ -6,7 +6,7 @@ function getUserCorrections(correctNames, uncheckedNames, correctNameData, unche
   const corrections = [];
   for (const uncheckedName of uncheckedNames) {
     // add spelling mistakes and remove ! from ! to test
-    if (!correctNames.includes(uncheckedName)) continue;
+    if (correctNames.includes(uncheckedName)) continue;
 
     console.log('\n///////////////');
     console.log('no match found for: ' + uncheckedName);
@@ -42,7 +42,7 @@ function getDivs(nameData) {
 function main(cliArgs) {
   const correctNameData = csvLoader(cliArgs.paths);
   const correctNameDivs = getDivs(correctNameData);
-  const uncheckedNameData = csvLoader(['consolidateCsv.csv']);
+  const uncheckedNameData = csvLoader(['small-test-dataset.csv']);
   const uncheckedNameDivs = getDivs(uncheckedNameData);
   const corrections = getUserCorrections(
     correctNameDivs,
