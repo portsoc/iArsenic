@@ -8,29 +8,51 @@ function getUserCorrections(correctNameData, uncheckedNameData, regionToCorrect,
   // show this list to the user in alphabetical order
   const subLevelKey = getSubLevelKey(regionLevel);
   const regionLevelArr = getRegions(correctNameData, regionLevel);
-  let regionToCorrectSubregions;
+  let regionToCorrectSubRegions;
 
+  const mostCommonRegion = {};
+  let mostCommonSubRegions = 0;
   for (let i = regionLevelArr.length - 1; i >= 0; i -= 1) {
     if (subLevelKey != null) {
       const regionSubRegions = Object.keys(regionLevelArr[i][subLevelKey]);
-      regionToCorrectSubregions = Object.keys(regionToCorrect[subLevelKey]);
-      const commonSubRegions = countCommonSubRegions(regionSubRegions, regionToCorrectSubregions);
+      regionToCorrectSubRegions = Object.keys(regionToCorrect[subLevelKey]);
+      const commonSubRegions = countCommonSubRegions(regionSubRegions, regionToCorrectSubRegions);
+      if (commonSubRegions > mostCommonSubRegions) {
+        mostCommonSubRegions = commonSubRegions;
+        mostCommonRegion.region = regionLevelArr[i];
+        mostCommonRegion.subRegions = regionSubRegions;
+        mostCommonRegion.commonCount = commonSubRegions;
+        mostCommonRegion.index = i + 1;
+      }
       console.log(i + 1, regionLevelArr[i].name, ':', regionSubRegions.join(', '));
-      console.log('common sub regions:', commonSubRegions)
+      console.log('common sub regions:', commonSubRegions);
     } else {
       console.log(i + 1, regionLevelArr[i].name);
     }
-
     console.log('-------------');
   }
 
+  if (mostCommonRegion.index) {
+    console.log('######################');
+    console.log('Region with most common sub regions:');
+    console.log(
+      mostCommonRegion.index,
+      mostCommonRegion.region.name,
+      ':',
+      mostCommonRegion.subRegions.join(', '),
+    );
+    console.log('Number of common sub regions:', mostCommonRegion.commonCount);
+    console.log('######################');
+  }
+
   if (subLevelKey != null) {
-    console.log('unknown',
+    console.log(
+      'unknown',
       regionLevel,
       ':',
       regionToCorrect.name,
       ':',
-      regionToCorrectSubregions.join(', '),
+      regionToCorrectSubRegions.join(', '),
     );
   } else {
     console.log('unknown', regionLevel, ':', regionToCorrect.name);
