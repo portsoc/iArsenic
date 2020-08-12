@@ -3,16 +3,20 @@ const cli = require('../lib/cli-common');
 const prompt = require('prompt-sync')(); // TODO remove ()
 
 function getUserCorrections(correctNameData, uncheckedNameData, regionToCorrect, regionLevel) {
-  // console.clear();
+  console.clear();
   // create a list of all $regionLevels in correctNameData including their sub level
   // show this list to the user in alphabetical order
   const subLevelKey = getSubLevelKey(regionLevel);
   const regionLevelArr = getRegions(correctNameData, regionLevel);
+  let regionToCorrectSubregions;
 
   for (let i = regionLevelArr.length - 1; i >= 0; i -= 1) {
-    if (subLevelKey == null) {
+    if (subLevelKey != null) {
       const regionSubRegions = Object.keys(regionLevelArr[i][subLevelKey]);
+      regionToCorrectSubregions = Object.keys(regionToCorrect[subLevelKey]);
+      const commonSubRegions = countCommonSubRegions(regionSubRegions, regionToCorrectSubregions);
       console.log(i + 1, regionLevelArr[i].name, ':', regionSubRegions.join(', '));
+      console.log('common sub regions:', commonSubRegions)
     } else {
       console.log(i + 1, regionLevelArr[i].name);
     }
@@ -20,11 +24,16 @@ function getUserCorrections(correctNameData, uncheckedNameData, regionToCorrect,
     console.log('-------------');
   }
 
-  if (subLevelKey == null) {
-    const regionToCorrectSubregions = Object.keys(regionToCorrect[subLevelKey]);
-    console.log('unknown name:', regionToCorrect.name, ':', regionToCorrectSubregions.join(', '));
+  if (subLevelKey != null) {
+    console.log('unknown',
+      regionLevel,
+      ':',
+      regionToCorrect.name,
+      ':',
+      regionToCorrectSubregions.join(', '),
+    );
   } else {
-    console.log('unknown name:', regionToCorrect.name);
+    console.log('unknown', regionLevel, ':', regionToCorrect.name);
   }
 
   // returns 0 on CTRL+C
@@ -40,6 +49,14 @@ function getUserCorrections(correctNameData, uncheckedNameData, regionToCorrect,
   };
 }
 
+function countCommonSubRegions(regionList1, regionList2) {
+  let commonRegions = 0;
+  for (const region of regionList1) {
+    if (regionList2.includes(region)) commonRegions += 1;
+  }
+  return commonRegions;
+}
+
 function getSubLevelKey(regionLevel) {
   if (regionLevel === 'div') return 'districts';
   if (regionLevel === 'dis') return 'upazilas';
@@ -48,7 +65,7 @@ function getSubLevelKey(regionLevel) {
 }
 
 function getRegions(correctNameData, regionLevel) {
-  const regionArr = [];
+  let regionArr = [];
   for (const div of Object.values(correctNameData)) {
     if (regionLevel === 'div') regionArr.push(div);
     for (const dis of Object.values(div.districts)) {
@@ -62,6 +79,7 @@ function getRegions(correctNameData, regionLevel) {
     }
   }
   // TODO sort array alphabetically on regionArry[x].name
+  regionArr = regionArr.sort((a, b) => a.name.localeCompare(b.name));
   return regionArr;
 }
 
@@ -84,7 +102,7 @@ function correctDataContains(correctNameData, search, regionLevel) {
 
 function main(cliArgs) {
   const correctNameData = csvLoader(cliArgs.paths); // use -p flag
-  const uncheckedNameData = csvLoader(['small-test-dataset.csv']); // use -i flag
+  const uncheckedNameData = csvLoader(['consolidateCsv.csv']); // use -i flag
   const corrections = [];
 
   for (const div of Object.values(uncheckedNameData)) {
