@@ -131,33 +131,36 @@ function getRegions(correctNameData, regionArr) {
   return regionDepthArr;
 }
 
-function correctDataContains(correctNameData, search, regionLevel) {
-  for (const div of Object.values(correctNameData)) {
-    if (search === div.name && regionLevel === 'div') return true;
-    for (const dis of Object.values(div.districts)) {
-      if (search === dis.name && regionLevel === 'dis') return true;
-      for (const upa of Object.values(dis.upazilas)) {
-        if (search === upa.name && regionLevel === 'upa') return true;
-        for (const uni of Object.values(upa.unions)) {
-          if (search === uni.name && regionLevel === 'uni') return true;
-        }
-      }
-    }
-  }
-  return false;
+function correctDataContains(correctNameData, ...regionNames) {
+  const [topLevelName, ...restOfNames] = regionNames;
+
+  const topRegion = correctNameData[topLevelName];
+
+  // check the first name in search matches the top level of correctNameData
+  if (topRegion == null) return false;
+
+  // if we're not searching any deeper, we're done
+  if (restOfNames.length === 0) return true;
+
+  // check for the deeper names in the subregions
+  return correctDataContains(topRegion.subRegions, restOfNames);
 }
 
-function addBackLinks(...datasets) {
-  for (const dataset of datasets) {
-    for (const div of Object.values(dataset)) {
-      div.parentRegion = dataset;
-      for (const dis of Object.values(div.districts)) {
-        dis.parentRegion = div;
-        for (const upa of Object.values(dis.upazilas)) {
-          upa.parentRegion = dis;
-          for (const uni of Object.values(upa.unions)) {
-            uni.parentRegion = upa;
-          }
+function addRelativeRegionLinks(dataset) {
+  for (const div of Object.values(dataset)) {
+    div.siblingRegions = dataset;
+    div.subRegions = div.districts;
+    for (const dis of Object.values(div.districts)) {
+      dis.parentRegion = div;
+      dis.siblingRegions = div.districts;
+      dis.subRegions = dis.upazilas;
+      for (const upa of Object.values(dis.upazilas)) {
+        upa.parentRegion = dis;
+        upa.siblingRegions = dis.upazilas;
+        upa.subRegions = upa.unions;
+        for (const uni of Object.values(upa.unions)) {
+          uni.parentRegion = upa;
+          uni.siblingRegions = upa.unions;
         }
       }
     }
@@ -168,23 +171,26 @@ function addBackLinks(...datasets) {
 function main(cliArgs) {
   const correctNameData = csvLoader(cliArgs.paths); // use -p flag
   const uncheckedNameData = csvLoader(['consolidateCsv.csv']); // use -i flag
-  addBackLinks(correctNameData, uncheckedNameData);
+
+  addRelativeRegionLinks(correctNameData);
+  addRelativeRegionLinks(uncheckedNameData);
+
   const corrections = [];
 
   for (const div of Object.values(uncheckedNameData)) {
-    if (!correctDataContains(correctNameData, div.name, 'div')) {
+    if (!correctDataContains(correctNameData, div.name)) {
       getCorrections(corrections, correctNameData, uncheckedNameData, div);
     }
     for (const dis of Object.values(div.districts)) {
-      if (!correctDataContains(correctNameData, dis.name, 'dis')) {
+      if (!correctDataContains(correctNameData, div.name, dis.name)) {
         getCorrections(corrections, correctNameData, uncheckedNameData, div, dis);
       }
       for (const upa of Object.values(dis.upazilas)) {
-        if (!correctDataContains(correctNameData, upa.name, 'upa')) {
+        if (!correctDataContains(correctNameData, div.name, dis.name, upa.name)) {
           getCorrections(corrections, correctNameData, uncheckedNameData, div, dis, upa);
         }
         for (const uni of Object.values(upa.unions)) {
-          if (!correctDataContains(correctNameData, uni.name, 'uni')) {
+          if (!correctDataContains(correctNameData, div.name, dis.name, upa.name, uni.name)) {
             getCorrections(corrections, correctNameData, uncheckedNameData, div, dis, upa, uni);
           }
         }
