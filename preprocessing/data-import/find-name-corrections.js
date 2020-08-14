@@ -12,7 +12,11 @@ function getCorrections(corrections, correctNameData, uncheckedNameData, region)
   if (chosenSibling == null) return false; // if the user doesn't select a sibling, move on
 
   const correctSpelling = chosenSibling.name;
-  const correction = { correct: correctSpelling, incorrect: region.name }; // TODO fill in the path to the region
+  const correction = {
+    path: findAncestorRegionNames(region),
+    correct: correctSpelling,
+    incorrect: region.name,
+  };
   corrections.push(correction); // TODO write corrections to file (and possible apply to csv??)
 
   region.name = correctSpelling;
@@ -25,6 +29,7 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion) {
     for (let i = 0; i < correctSiblings.length; i += 1) {
       const sibling = correctSiblings[i];
       console.log(i + 1, sibling.name, getSubregionNames(sibling));
+      console.log('---------------');
     }
 
     console.log('Incorrect region: ', misspeltRegion.name, getSubregionNames(misspeltRegion));
@@ -55,13 +60,17 @@ function getSubregionNames(region) {
 }
 
 function validInput(input, regionArrLength) {
-  if (input >= regionArrLength || input < 0) return false; // if answer out of bounds of array
+  if (input > regionArrLength || input <= 0) return false; // if answer out of bounds of array
   if (isNaN(input)) return false; // if answer is not a number return false
   return true;
 }
 
 function getCorrectlySpelledSiblingRegions(correctNameData, region) {
   const parentNameArr = findAncestorRegionNames(region);
+  if (parentNameArr.length === 0) {
+    // if region is division sibling names are dataset values
+    return Object.values(correctNameData);
+  }
   const correctlyNamedParent = findRegionByNameArr(correctNameData, parentNameArr);
   return correctlyNamedParent.subRegionsArr;
 }
@@ -74,13 +83,12 @@ function findAncestorRegionNames(region) {
     names.unshift(currentRegion.name);
     currentRegion = currentRegion.parentRegion;
   }
-
   return names;
 }
 
 function findRegionByNameArr(dataset, arr) {
   const div = dataset[arr[0]];
-  if (arr.length === 1) return div;
+  if (arr.length === 1) return div; // FIXME array length can be 0 when region is division
 
   const dis = div.districts[arr[1]];
   if (arr.length === 2) return dis;
@@ -134,7 +142,7 @@ function addRelativeRegionLinks(dataset) {
 
 function main(cliArgs) {
   const correctNameData = csvLoader(cliArgs.paths); // use -p flag
-  const uncheckedNameData = csvLoader(['consolidateCsv.csv']); // use -i flag
+  const uncheckedNameData = csvLoader(['small-test-dataset.csv']); // use -i flag
 
   addRelativeRegionLinks(correctNameData);
   addRelativeRegionLinks(uncheckedNameData);
@@ -142,19 +150,20 @@ function main(cliArgs) {
   const corrections = [];
 
   for (const div of Object.values(uncheckedNameData)) {
+    let correctionState = false;
     if (!correctDataContains(correctNameData, div.name)) {
-      // TODO continue if getCorrections returns false
-      getCorrections(corrections, correctNameData, uncheckedNameData, div);
+      correctionState = getCorrections(corrections, correctNameData, uncheckedNameData, div);
+      if (!correctionState) continue;
     }
     for (const dis of Object.values(div.districts)) {
       if (!correctDataContains(correctNameData, div.name, dis.name)) {
-        // TODO continue if getCorrections returns false
-        getCorrections(corrections, correctNameData, uncheckedNameData, dis);
+        correctionState = getCorrections(corrections, correctNameData, uncheckedNameData, dis);
+        if (!correctionState) continue;
       }
       for (const upa of Object.values(dis.upazilas)) {
         if (!correctDataContains(correctNameData, div.name, dis.name, upa.name)) {
-          // TODO continue if getCorrections returns false
-          getCorrections(corrections, correctNameData, uncheckedNameData, upa);
+          correctionState = getCorrections(corrections, correctNameData, uncheckedNameData, upa);
+          if (!correctionState) continue;
         }
         for (const uni of Object.values(upa.unions)) {
           if (!correctDataContains(correctNameData, div.name, dis.name, upa.name, uni.name)) {
@@ -164,8 +173,6 @@ function main(cliArgs) {
       }
     }
   }
-
-  console.log(corrections); // TODO write to corrections file as corrections are made
 }
 
 console.debug = console.error; // redirect debug to stderr
