@@ -1,8 +1,15 @@
 const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 const prompt = require('prompt-sync')();
+const fs = require('fs');
+const parse = require('csv-parse/lib/sync');
 
-function getCorrections(corrections, correctNameData, uncheckedNameData, region) {
+const CSV_PARSE_OPTIONS = {
+  columns: true,
+  skip_empty_lines: true,
+};
+
+function getCorrections(correctNameData, uncheckedNameData, region) {
   // only shows regions inside misspelt region's parent region
   // corrections to parent region names are made on the fly
   const correctlySpelledSiblings = getCorrectlySpelledSiblingRegions(correctNameData, region);
@@ -17,10 +24,19 @@ function getCorrections(corrections, correctNameData, uncheckedNameData, region)
     correct: correctSpelling,
     incorrect: region.name,
   };
-  corrections.push(correction); // TODO write corrections to file (and possible apply to csv??)
+
+  appendCorrectionToFile(correction);
 
   region.name = correctSpelling;
   return true;
+}
+
+function appendCorrectionToFile(correction) {
+  const correctionRecord =
+    correction.path.join('#') + ',' +
+    correction.correct + ',' +
+    correction.incorrect + '\n';
+  fs.appendFileSync('corrections.csv', correctionRecord); // TODO log error & get path from -o
 }
 
 function chooseCorrectSibling(correctSiblings, misspeltRegion) {
@@ -115,6 +131,33 @@ function correctDataContains(correctNameData, ...regionNames) {
   return correctDataContains(topRegion.subRegions, ...restOfNames);
 }
 
+function applyCorrections(dataset, corrections) {
+  if (corrections.length === 0) return;
+
+  let regionToCorrect;
+  for (const correction of corrections) {
+    const pathArr = correction.path.split('#');
+    if (pathArr[0] !== '') {
+      regionToCorrect = dataset[pathArr[0]];
+      regionToCorrect = regionToCorrect.subRegions;
+      pathArr.shift();
+      for (const objectPath of pathArr) {
+        regionToCorrect = regionToCorrect[objectPath];
+        regionToCorrect = regionToCorrect.subRegions;
+      }
+      regionToCorrect = regionToCorrect[correction.incorrect];
+      regionToCorrect.parentRegion[correction.correct] = regionToCorrect;
+      regionToCorrect.parentRegion[correction.correct].name = correction.correct;
+      delete regionToCorrect.parentRegion[correction.incorrect];
+    } else {
+      regionToCorrect = dataset[correction.incorrect];
+      regionToCorrect.name = correction.correct;
+      dataset[correction.correct] = regionToCorrect;
+      delete dataset[correction.incorrect];
+    }
+  }
+}
+
 function addRelativeRegionLinks(dataset) {
   for (const div of Object.values(dataset)) {
     div.siblingRegions = dataset;
@@ -139,35 +182,37 @@ function addRelativeRegionLinks(dataset) {
   }
 }
 
-
 function main(cliArgs) {
   const correctNameData = csvLoader(cliArgs.paths); // use -p flag
   const uncheckedNameData = csvLoader(['small-test-dataset.csv']); // use -i flag
 
+  // TODO get corrections filepath, probably from -o
+  const corrections = parse(fs.readFileSync('corrections.csv'), CSV_PARSE_OPTIONS);
+
   addRelativeRegionLinks(correctNameData);
   addRelativeRegionLinks(uncheckedNameData);
 
-  const corrections = [];
+  applyCorrections(uncheckedNameData, corrections);
 
   for (const div of Object.values(uncheckedNameData)) {
     let correctionState = false;
     if (!correctDataContains(correctNameData, div.name)) {
-      correctionState = getCorrections(corrections, correctNameData, uncheckedNameData, div);
+      correctionState = getCorrections(correctNameData, uncheckedNameData, div);
       if (!correctionState) continue;
     }
     for (const dis of Object.values(div.districts)) {
       if (!correctDataContains(correctNameData, div.name, dis.name)) {
-        correctionState = getCorrections(corrections, correctNameData, uncheckedNameData, dis);
+        correctionState = getCorrections(correctNameData, uncheckedNameData, dis);
         if (!correctionState) continue;
       }
       for (const upa of Object.values(dis.upazilas)) {
         if (!correctDataContains(correctNameData, div.name, dis.name, upa.name)) {
-          correctionState = getCorrections(corrections, correctNameData, uncheckedNameData, upa);
+          correctionState = getCorrections(correctNameData, uncheckedNameData, upa);
           if (!correctionState) continue;
         }
         for (const uni of Object.values(upa.unions)) {
           if (!correctDataContains(correctNameData, div.name, dis.name, upa.name, uni.name)) {
-            getCorrections(corrections, correctNameData, uncheckedNameData, uni);
+            getCorrections(correctNameData, uncheckedNameData, uni);
           }
         }
       }
