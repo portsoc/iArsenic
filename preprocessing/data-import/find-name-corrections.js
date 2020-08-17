@@ -59,7 +59,7 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion) {
     }
 
     const misspeltRegionName = colors.bold(misspeltRegion.name);
-    subRegionNames = colors.italic(getSubregionNames(misspeltRegion))
+    subRegionNames = colors.italic(getSubregionNames(misspeltRegion));
     console.log('Incorrect region: ', misspeltRegionName, subRegionNames);
 
     const userInput = prompt('Input ID of correct spelling: ');
