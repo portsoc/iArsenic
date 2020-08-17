@@ -3,6 +3,7 @@ const cli = require('../lib/cli-common');
 const prompt = require('prompt-sync')();
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
+const path = require('path');
 
 const CSV_PARSE_OPTIONS = {
   columns: true,
@@ -31,12 +32,17 @@ function getCorrections(correctNameData, uncheckedNameData, region) {
   return true;
 }
 
-function appendCorrectionToFile(correction) {
-  const correctionRecord =
+async function appendCorrectionToFile(correction) {
+  let correctionRecord =
     correction.path.join('#') + ',' +
     correction.correct + ',' +
     correction.incorrect + '\n';
-  fs.appendFileSync('corrections.csv', correctionRecord); // TODO log error & get path from -o
+  const correctionFile = path.join(__dirname, '/corrections.csv');
+  if (!fs.existsSync(correctionFile)) {
+    const headers = 'path,correct,incorrect' + '\n';
+    correctionRecord = headers + correctionRecord;
+  }
+  await fs.appendFileSync(correctionFile, correctionRecord); // TODO log error & get path from -o
 }
 
 function chooseCorrectSibling(correctSiblings, misspeltRegion) {
@@ -132,18 +138,18 @@ function correctDataContains(correctNameData, ...regionNames) {
 }
 
 function applyCorrections(dataset, corrections) {
-  if (corrections.length === 0) return;
+  // if corrections is null or undefined; return
+  // then if defined but length is not > 0; return
+  if (!corrections?.length) return;
 
   let regionToCorrect;
   for (const correction of corrections) {
     const pathArr = correction.path.split('#');
     if (pathArr[0] !== '') {
-      regionToCorrect = dataset[pathArr[0]];
-      regionToCorrect = regionToCorrect.subRegions;
+      regionToCorrect = dataset[pathArr[0]].subRegions;
       pathArr.shift();
       for (const objectPath of pathArr) {
-        regionToCorrect = regionToCorrect[objectPath];
-        regionToCorrect = regionToCorrect.subRegions;
+        regionToCorrect = regionToCorrect[objectPath].subRegions;
       }
       regionToCorrect = regionToCorrect[correction.incorrect];
       regionToCorrect.parentRegion[correction.correct] = regionToCorrect;
@@ -184,13 +190,22 @@ function addRelativeRegionLinks(dataset) {
 
 function main(cliArgs) {
   const correctNameData = csvLoader(cliArgs.paths); // use -p flag
-  const uncheckedNameData = csvLoader(['small-test-dataset.csv']); // use -i flag
 
-  // TODO get corrections filepath, probably from -o
-  const corrections = parse(fs.readFileSync('corrections.csv'), CSV_PARSE_OPTIONS);
+  // temporary use of path so the script can be run outside from the data-import directory
+  const testFile = path.join(__dirname, '/small-test-dataset.csv');
+  const uncheckedNameData = csvLoader([testFile]); // use -i flag
 
   addRelativeRegionLinks(correctNameData);
   addRelativeRegionLinks(uncheckedNameData);
+
+
+  // TODO get corrections filepath, probably from -o
+  // temporary use of path so the script can be run outside from the data-import directory
+  const correctionFile = path.join(__dirname, '/corrections.csv');
+  let corrections;
+  if (fs.existsSync(correctionFile)) {
+    corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
+  }
 
   applyCorrections(uncheckedNameData, corrections);
 
