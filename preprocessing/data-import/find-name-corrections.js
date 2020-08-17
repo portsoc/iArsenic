@@ -4,6 +4,7 @@ const prompt = require('prompt-sync')();
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
 const path = require('path');
+const colors = require('colors');
 
 const CSV_PARSE_OPTIONS = {
   columns: true,
@@ -48,13 +49,18 @@ async function appendCorrectionToFile(correction) {
 function chooseCorrectSibling(correctSiblings, misspeltRegion) {
   while (true) {
     console.log('');
+    let subRegionNames;
     for (let i = 0; i < correctSiblings.length; i += 1) {
       const sibling = correctSiblings[i];
-      console.log(i + 1, sibling.name, getSubregionNames(sibling));
+      const siblingName = colors.underline(sibling.name);
+      subRegionNames = colors.italic(getSubregionNames(sibling));
+      console.log(i + 1, siblingName, subRegionNames);
       console.log('---------------');
     }
 
-    console.log('Incorrect region: ', misspeltRegion.name, getSubregionNames(misspeltRegion));
+    const misspeltRegionName = colors.bold(misspeltRegion.name);
+    subRegionNames = colors.italic(getSubregionNames(misspeltRegion))
+    console.log('Incorrect region: ', misspeltRegionName, subRegionNames);
 
     const userInput = prompt('Input ID of correct spelling: ');
 
@@ -70,7 +76,7 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion) {
     }
 
     // input wasn't valid
-    console.log(`INVALID INPUT, please enter a number up to ${correctSiblings.length}`);
+    console.log(colors.red.bold(`\nINVALID INPUT, please enter a number up to ${correctSiblings.length}`));
   }
 }
 
