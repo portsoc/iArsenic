@@ -1,5 +1,6 @@
 const csvLoader = require('../lib/load-data');
 const cli = require('../lib/cli-common');
+const nameCorrections = require('../lib/name-corrections');
 const prompt = require('prompt-sync')();
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
@@ -12,7 +13,7 @@ const CSV_PARSE_OPTIONS = {
 };
 
 function correct(correctNameData, uncheckedNameData, region) {
-  if (correctDataContains(correctNameData, ...findAncestorRegionNames(region), region.name)) {
+  if (correctDataContains(correctNameData, ...findRegionNamePath(region))) {
     // it's already correct
     return true;
   }
@@ -25,15 +26,14 @@ function correct(correctNameData, uncheckedNameData, region) {
 
   if (chosenSibling == null) return false; // if the user doesn't select a sibling, move on
 
-  const correctSpelling = chosenSibling.name;
-  const correction = {
-    path: findAncestorRegionNames(region),
-    correct: correctSpelling,
-    incorrect: region.name,
-  };
-
   // correct the name in the data
+  const correctSpelling = chosenSibling.name;
   region.name = correctSpelling;
+
+  const correction = {
+    path: findRegionNamePath(region, 'oldName'),
+    correct: findRegionNamePath(region),
+  };
 
   // save the correction
   appendCorrectionToFile(correction);
@@ -42,11 +42,17 @@ function correct(correctNameData, uncheckedNameData, region) {
 }
 
 function appendCorrectionToFile(correction) {
+  const correctionFile = path.join(__dirname, 'corrections.csv');
+
+  // create an empty output file if it doesn't exist yet
+  if (!fs.existsSync(correctionFile)) {
+    const headers = 'path,correct' + '\n';
+    fs.appendFileSync(correctionFile, headers);
+  }
+
   const correctionRecord =
     correction.path.join('#') + ',' +
-    correction.correct + ',' +
-    correction.incorrect + '\n';
-  const correctionFile = path.join(__dirname, 'corrections.csv');
+    correction.correct.join('#') + '\n';
   fs.appendFileSync(correctionFile, correctionRecord); // TODO log error & get path from -o
 }
 
@@ -96,21 +102,22 @@ function validInput(input, regionArrLength) {
 }
 
 function getCorrectlySpelledSiblingRegions(correctNameData, region) {
-  const parentNameArr = findAncestorRegionNames(region);
-  if (parentNameArr.length === 0) {
+  if (!region.parentRegion) {
     // if region is division sibling names are dataset values
     return Object.values(correctNameData);
+  } else {
+    const parentNameArr = findRegionNamePath(region.parentRegion);
+    const correctlyNamedParent = findRegionByNameArr(correctNameData, parentNameArr);
+    return correctlyNamedParent.subRegionsArr;
   }
-  const correctlyNamedParent = findRegionByNameArr(correctNameData, parentNameArr);
-  return correctlyNamedParent.subRegionsArr;
 }
 
-function findAncestorRegionNames(region) {
-  let currentRegion = region.parentRegion;
+function findRegionNamePath(region, nameProp = 'name') {
+  let currentRegion = region;
   const names = [];
 
   while (currentRegion != null) {
-    names.unshift(currentRegion.name);
+    names.unshift(currentRegion[nameProp]);
     currentRegion = currentRegion.parentRegion;
   }
   return names;
@@ -145,22 +152,27 @@ function correctDataContains(correctNameData, ...regionNames) {
   return correctDataContains(topRegion.subRegions, ...restOfNames);
 }
 
-function applyCorrections(dataset, corrections) {
-  for (const correction of corrections) {
-    const pathArr = correction.path.split('#');
-    if (pathArr[0] !== '') {
-      let regionToCorrect = dataset[pathArr[0]].subRegions;
-      pathArr.shift();
-      for (const objectPath of pathArr) {
-        regionToCorrect = regionToCorrect[objectPath].subRegions;
+function applyCorrections(dataset) {
+  for (const div of Object.values(dataset)) {
+    applyCorrection(div);
+    for (const dis of Object.values(div.districts)) {
+      applyCorrection(dis);
+      for (const upa of Object.values(dis.upazilas)) {
+        applyCorrection(upa);
+        for (const uni of Object.values(upa.unions)) {
+          applyCorrection(uni);
+        }
       }
-      regionToCorrect = regionToCorrect[correction.incorrect];
-      regionToCorrect.parentRegion[correction.correct].name = correction.correct;
-    } else {
-      const regionToCorrect = dataset[correction.incorrect];
-      regionToCorrect.name = correction.correct;
     }
   }
+}
+
+function applyCorrection(region) {
+  const path = findRegionNamePath(region, 'oldName');
+  const corrected = nameCorrections.correct(path);
+
+  // apply the inner-most correction
+  region.name = corrected[corrected.length - 1];
 }
 
 function addRelativeRegionLinks(dataset) {
@@ -183,6 +195,21 @@ function addRelativeRegionLinks(dataset) {
   }
 }
 
+function addOldNames(dataset) {
+  for (const div of Object.values(dataset)) {
+    div.oldName = div.name;
+    for (const dis of Object.values(div.districts)) {
+      dis.oldName = dis.name;
+      for (const upa of Object.values(dis.upazilas)) {
+        upa.oldName = upa.name;
+        for (const uni of Object.values(upa.unions)) {
+          uni.oldName = uni.name;
+        }
+      }
+    }
+  }
+}
+
 function main(cliArgs) {
   const correctNameData = csvLoader(cliArgs.paths); // use -p flag
 
@@ -192,19 +219,16 @@ function main(cliArgs) {
 
   addRelativeRegionLinks(correctNameData);
   addRelativeRegionLinks(uncheckedNameData);
+  addOldNames(uncheckedNameData);
 
+  // load existing corrections
   // TODO temporary default output file before we support -o
-  const correctionFile = path.join(__dirname, '/corrections.csv');
-  let corrections;
-  if (!fs.existsSync(correctionFile)) {
-    const headers = 'path,correct,incorrect' + '\n';
-    fs.appendFileSync(correctionFile, headers);
-    corrections = [];
-  } else {
-    corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
+  const correctionFile = path.join(__dirname, 'corrections.csv');
+  if (fs.existsSync(correctionFile)) {
+    const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
+    nameCorrections.loadCorrections(corrections);
+    applyCorrections(uncheckedNameData);
   }
-
-  applyCorrections(uncheckedNameData, corrections);
 
   for (const div of Object.values(uncheckedNameData)) {
     const corrected = correct(correctNameData, uncheckedNameData, div);

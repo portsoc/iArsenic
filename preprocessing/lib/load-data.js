@@ -119,10 +119,23 @@ function fillArsenicData(divisions, records) {
   }
 }
 
-function loadData(paths) {
+function correctNames(records, corrections) {
+  for (const r of records) {
+    const corrected = corrections.correct([
+      r.Division,
+      r.District,
+      r.Upazila,
+      r.Union,
+    ]);
+    [r.Division, r.District, r.Upazila, r.Union] = corrected;
+  }
+}
+
+function loadData(paths, options = {}) {
   if (!paths) paths = listDefaultFiles();
 
   const records = readTheCSVFiles(paths);
+  if (options.nameCorrections) correctNames(records, options.nameCorrections);
   const divisions = extractLocations(records);
 
   fillArsenicData(divisions, records);
