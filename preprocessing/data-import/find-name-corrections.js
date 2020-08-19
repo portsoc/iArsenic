@@ -56,19 +56,37 @@ function appendCorrectionToFile(correction) {
   fs.appendFileSync(correctionFile, correctionRecord); // TODO log error & get path from -o
 }
 
+function highlightCommonSubregions(regionNames, siblingRegionNames) {
+  const retarr = [];
+  for (let name of siblingRegionNames) {
+    if (regionNames.includes(name)) {
+      name = colors.brightBlue(name);
+    }
+    retarr.push(name);
+  }
+  const regionString = retarr.join(', ');
+  return `(${colors.italic(regionString)})`;
+}
+
 function chooseCorrectSibling(correctSiblings, misspeltRegion) {
+  const misspeltSubregions = getSubregionNames(misspeltRegion);
+  const misspeltRegionPath = findRegionNamePath(misspeltRegion);
+  const misspeltRegionNameBold = colors.bold(misspeltRegion.name);
+  const subregionString = highlightCommonSubregions(misspeltSubregions, misspeltSubregions);
+
   while (true) {
-    console.log('');
+    console.log();
     for (let i = 0; i < correctSiblings.length; i += 1) {
       const sibling = correctSiblings[i];
-      const siblingName = colors.underline(sibling.name);
-      const subRegionNames = colors.italic(getSubregionNames(sibling));
-      console.log(i + 1, siblingName, subRegionNames);
+      const siblingName = sibling.name;
+      const siblingSubregions = getSubregionNames(sibling);
+      const subregionString = highlightCommonSubregions(misspeltSubregions, siblingSubregions);
+      console.log(i + 1, siblingName, subregionString);
     }
 
-    const misspeltRegionName = colors.bold(misspeltRegion.name);
-    const subRegionNames = colors.italic(getSubregionNames(misspeltRegion));
-    console.log('Incorrect region: ', misspeltRegionName, subRegionNames);
+    console.log();
+    console.log('Path: ', misspeltRegionPath.join(', '));
+    console.log('Incorrect region:', misspeltRegionNameBold, subregionString);
 
     const userInput = prompt('Input ID of correct spelling: ');
 
@@ -92,7 +110,7 @@ function getSubregionNames(region) {
   if (region.subRegionsArr == null) return '';
 
   const namesArr = region.subRegionsArr.map(r => r.name);
-  return `(${namesArr.sort().join(', ')})`;
+  return namesArr.sort();
 }
 
 function validInput(input, regionArrLength) {
