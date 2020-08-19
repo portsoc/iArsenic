@@ -104,11 +104,11 @@ function validInput(input, regionArrLength) {
 function getCorrectlySpelledSiblingRegions(correctNameData, region) {
   if (!region.parentRegion) {
     // if region is division sibling names are dataset values
-    return Object.values(correctNameData);
+    return Object.values(correctNameData).sort((a, b) => a.name.localeCompare(b.name));
   } else {
     const parentNameArr = findRegionNamePath(region.parentRegion);
     const correctlyNamedParent = findRegionByNameArr(correctNameData, parentNameArr);
-    return correctlyNamedParent.subRegionsArr;
+    return correctlyNamedParent.subRegionsArr.sort((a, b) => a.name.localeCompare(b.name));
   }
 }
 
