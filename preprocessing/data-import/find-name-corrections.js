@@ -1,5 +1,5 @@
 const csvLoader = require('../lib/load-data');
-const cli = require('../lib/cli-common');
+const cli = require('../lib/cli-common-copy');
 const nameCorrections = require('../lib/name-corrections');
 const prompt = require('prompt-sync')();
 const fs = require('fs');
@@ -12,7 +12,7 @@ const CSV_PARSE_OPTIONS = {
   skip_empty_lines: true,
 };
 
-function correct(correctNameData, uncheckedNameData, region) {
+function correct(correctNameData, uncheckedNameData, region, correctionFile) {
   if (correctDataContains(correctNameData, ...findRegionNamePath(region))) {
     // it's already correct
     return true;
@@ -36,14 +36,12 @@ function correct(correctNameData, uncheckedNameData, region) {
   };
 
   // save the correction
-  appendCorrectionToFile(correction);
+  appendCorrectionToFile(correction, correctionFile);
 
   return true;
 }
 
-function appendCorrectionToFile(correction) {
-  const correctionFile = path.join(__dirname, 'corrections.csv');
-
+function appendCorrectionToFile(correction, correctionFile) {
   // create an empty output file if it doesn't exist yet
   if (!fs.existsSync(correctionFile)) {
     const headers = 'path,correct' + '\n';
@@ -228,20 +226,25 @@ function addOldNames(dataset) {
   }
 }
 
-function main(cliArgs) {
-  const correctNameData = csvLoader(cliArgs.paths); // use -p flag
+function checkForMissingFlags(cliArgs) {
+  if (cliArgs.inputFile == null || cliArgs.output == null) {
+    console.warn(colors.red.bold('Please specify input file (-i flag) and output file (-o flag)'));
+  }
+}
 
-  // TODO temporary default input file before we support -i
-  const testFile = path.join(__dirname, 'small-test-dataset.csv');
-  const uncheckedNameData = csvLoader([testFile]);
+function main(cliArgs) {
+  checkForMissingFlags(cliArgs);
+  const correctNameData = csvLoader(cliArgs.paths);
+
+  const dataToCorrect = path.join(__dirname, cliArgs.inputFile);
+  const uncheckedNameData = csvLoader([dataToCorrect]);
 
   addRelativeRegionLinks(correctNameData);
   addRelativeRegionLinks(uncheckedNameData);
   addOldNames(uncheckedNameData);
 
   // load existing corrections
-  // TODO temporary default output file before we support -o
-  const correctionFile = path.join(__dirname, 'corrections.csv');
+  const correctionFile = path.join(__dirname, cliArgs.output);
   if (fs.existsSync(correctionFile)) {
     const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
     nameCorrections.loadCorrections(corrections);
@@ -249,19 +252,19 @@ function main(cliArgs) {
   }
 
   for (const div of Object.values(uncheckedNameData)) {
-    const corrected = correct(correctNameData, uncheckedNameData, div);
+    const corrected = correct(correctNameData, uncheckedNameData, div, correctionFile);
     if (!corrected) continue; // don't try to correct sub-region names
 
     for (const dis of Object.values(div.districts)) {
-      const corrected = correct(correctNameData, uncheckedNameData, dis);
+      const corrected = correct(correctNameData, uncheckedNameData, dis, correctionFile);
       if (!corrected) continue; // don't try to correct sub-region names
 
       for (const upa of Object.values(dis.upazilas)) {
-        const corrected = correct(correctNameData, uncheckedNameData, upa);
+        const corrected = correct(correctNameData, uncheckedNameData, upa, correctionFile);
         if (!corrected) continue; // don't try to correct sub-region names
 
         for (const uni of Object.values(upa.unions)) {
-          correct(correctNameData, uncheckedNameData, uni);
+          correct(correctNameData, uncheckedNameData, uni, correctionFile);
         }
       }
     }
