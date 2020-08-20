@@ -3,15 +3,15 @@ const cli = require('../lib/cli-common');
 const model5 = require('../models/model5-preprocessor.js');
 
 const STRATA = [
-  { min: 0, max: Infinity, header: 'depth 0+' },
-  { min: 0, max: 15.3, header: 'depth 0-15.3', strataKey: 's15' },
-  { min: 15.3, max: 45, header: 'depth 15.3-45', strataKey: 's45' },
+  { min: 0, max: Infinity, header: 'all wells' },
+  { min: 0, max: 15.3, header: 'depth 0-15', strataKey: 's15' },
+  { min: 15.3, max: 45, header: 'depth 15-45', strataKey: 's45' },
   { min: 45, max: 65, header: 'depth 45-65', strataKey: 's65' },
+  { min: 65, max: 90, header: 'depth 65-90', strataKey: 's90' },
   { min: 0, max: 90, header: 'depth 0-90' },
+  { min: 90, max: Infinity, header: 'depth 90+' },
   { min: 90, max: 150, header: 'depth 90-150', strataKey: 's150' },
   { min: 150, max: Infinity, header: 'depth 150+', strataKey: 'sD' },
-  { min: 90, max: Infinity, header: 'depth 90+' },
-  { min: 65, max: 90, header: 'depth 65-90', strataKey: 's90' },
 ];
 
 function main(options) {
