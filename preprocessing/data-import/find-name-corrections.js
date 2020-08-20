@@ -4,7 +4,6 @@ const nameCorrections = require('../lib/name-corrections');
 const prompt = require('prompt-sync')();
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
-const path = require('path');
 const colors = require('colors');
 
 const CSV_PARSE_OPTIONS = {
@@ -236,7 +235,7 @@ function main(cliArgs) {
   checkForMissingFlags(cliArgs);
   const correctNameData = csvLoader(cliArgs.paths);
 
-  const dataToCorrect = path.join(__dirname, cliArgs.inputFile);
+  const dataToCorrect = cliArgs.inputFile;
   const uncheckedNameData = csvLoader([dataToCorrect]);
 
   addRelativeRegionLinks(correctNameData);
@@ -244,7 +243,7 @@ function main(cliArgs) {
   addOldNames(uncheckedNameData);
 
   // load existing corrections
-  const correctionFile = path.join(__dirname, cliArgs.output);
+  const correctionFile = cliArgs.output;
   if (fs.existsSync(correctionFile)) {
     const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
     nameCorrections.loadCorrections(corrections);
