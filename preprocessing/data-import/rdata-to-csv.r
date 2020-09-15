@@ -55,5 +55,5 @@ if (!is.na(args[1])) {
     rDirToCsv(args[1], args[2]) # If it's a directory of files
   }
 } else {
-  print("No arguments passed, stopping script...")
+  print("No arguments passed, stopping script. View readme at the top of this script for more information.")
 }

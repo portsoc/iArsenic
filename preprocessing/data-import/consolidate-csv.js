@@ -1,7 +1,8 @@
 // converts the output of rdata-to-csv.r
 
 // Run script in terminal:
-// node [script name/path] [data directory] [output directory]
+// node [script name/path] [input csv files (use *.csv)] TODO switch to -p flag??
+// specify output with > outputFile.csv
 // output-directory is not essential but will output to script directory
 
 const fs = require('fs');
@@ -36,7 +37,7 @@ function readFiles(filepaths) {
   return inputCsvFiles.flat();
 }
 
-// convers from the input format from rdata into our desired output:
+// converts from the input format from rdata into our desired output:
 // 1. extracts only the columns we care about (see HEADERS)
 // 2. converts depth from feet to meters
 function convert(inputCsv) {
