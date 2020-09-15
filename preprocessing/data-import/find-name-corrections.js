@@ -4,7 +4,6 @@ const nameCorrections = require('../lib/name-corrections');
 const prompt = require('prompt-sync')();
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
-const path = require('path');
 const colors = require('colors');
 
 const CSV_PARSE_OPTIONS = {
@@ -54,10 +53,11 @@ function appendCorrectionToFile(correction, correctionFile) {
   fs.appendFileSync(correctionFile, correctionRecord); // TODO log error & get path from -o
 }
 
-function highlightCommonSubregions(regionNames, siblingRegionNames) {
+function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubregions) {
   const retarr = [];
-  for (let name of siblingRegionNames) {
-    if (regionNames.includes(name)) {
+  for (let name of regionsToList) {
+    if (regionsToHighlight.includes(name)) {
+      if (commonSubregions) commonSubregions.push(name);
       name = colors.brightBlue(name);
     }
     retarr.push(name);
@@ -66,37 +66,51 @@ function highlightCommonSubregions(regionNames, siblingRegionNames) {
   return `(${colors.italic(regionString)})`;
 }
 
+const regionLabels = ['division', 'district', 'upazila', 'union'];
+
 function chooseCorrectSibling(correctSiblings, misspeltRegion) {
+  const commonSubregions = [];
+
   const misspeltSubregions = getSubregionNames(misspeltRegion);
-  const misspeltRegionPath = findRegionNamePath(misspeltRegion);
+  const misspeltRegionPath = findRegionNamePath(misspeltRegion.parentRegion);
   const misspeltRegionNameBold = colors.bold(misspeltRegion.name);
-  const subregionString = highlightCommonSubregions(misspeltSubregions, misspeltSubregions);
+
+  let siblingsString = '';
+  for (let i = 0; i < correctSiblings.length; i += 1) {
+    const sibling = correctSiblings[i];
+    const siblingName = sibling.name;
+    const siblingSubregions = getSubregionNames(sibling);
+    const subregionString = highlightCommonSubregions(siblingSubregions, misspeltSubregions, commonSubregions);
+    siblingsString += `\n${colors.yellow(i + 1)} ${siblingName} ${subregionString}`;
+  }
+
+  const misspeltSubregionString = highlightCommonSubregions(misspeltSubregions, commonSubregions);
+  const regionLabel = regionLabels[misspeltRegionPath.length];
+
+  let promptText = siblingsString + '\n\n';
+  if (misspeltRegionPath.length > 0) {
+    promptText += 'In ' + misspeltRegionPath.join(' -> ') + '\n';
+  }
+  promptText += 'Incorrect ' + regionLabel + ': ' + misspeltRegionNameBold + ' ' + misspeltSubregionString;
 
   while (true) {
-    console.log();
-    for (let i = 0; i < correctSiblings.length; i += 1) {
-      const sibling = correctSiblings[i];
-      const siblingName = sibling.name;
-      const siblingSubregions = getSubregionNames(sibling);
-      const subregionString = highlightCommonSubregions(misspeltSubregions, siblingSubregions);
-      console.log(i + 1, siblingName, subregionString);
-    }
-
-    console.log();
-    console.log('Path: ', misspeltRegionPath.join(', '));
-    console.log('Incorrect region:', misspeltRegionNameBold, subregionString);
-
+    console.log(promptText);
     const userInput = prompt('Input ID of correct spelling: ');
 
     // quit on ctrl-c
     if (userInput == null) process.exit(0);
 
     // if user presses enter skip this correction
-    if (userInput === '') return null;
+    if (userInput === '') {
+      console.log(colors.brightGreen.bold(`SKIPPING ${regionLabel} ${misspeltRegionNameBold}`));
+      return null;
+    }
 
     const inputIsValid = validInput(userInput, correctSiblings.length);
     if (inputIsValid) {
-      return correctSiblings[userInput - 1];
+      const selected = correctSiblings[userInput - 1];
+      console.log(colors.brightGreen.bold(`Selected: ${selected.name}`));
+      return selected;
     }
 
     // input wasn't valid
@@ -236,7 +250,7 @@ function main(cliArgs) {
   checkForMissingFlags(cliArgs);
   const correctNameData = csvLoader(cliArgs.paths);
 
-  const dataToCorrect = path.join(__dirname, cliArgs.inputFile);
+  const dataToCorrect = cliArgs.inputFile;
   const uncheckedNameData = csvLoader([dataToCorrect]);
 
   addRelativeRegionLinks(correctNameData);
@@ -244,7 +258,7 @@ function main(cliArgs) {
   addOldNames(uncheckedNameData);
 
   // load existing corrections
-  const correctionFile = path.join(__dirname, cliArgs.output);
+  const correctionFile = cliArgs.output;
   if (fs.existsSync(correctionFile)) {
     const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
     nameCorrections.loadCorrections(corrections);
