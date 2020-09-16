@@ -63,7 +63,7 @@ function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubr
     retarr.push(name);
   }
   const regionString = retarr.join(', ');
-  return `(${colors.italic(regionString)})`;
+  return retarr.length === 0 ? '' : `(${colors.italic(regionString)})`;
 }
 
 const regionLabels = ['division', 'district', 'upazila', 'union'];
