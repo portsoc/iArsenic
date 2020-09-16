@@ -201,8 +201,20 @@ function applyCorrection(region) {
   const path = findRegionNamePath(region, 'oldName');
   const corrected = nameCorrections.correct(path);
 
-  // apply the inner-most correction
+  // apply the inner-most correction // why only apply the inner most correction instead of the whole correction path??
+  // while corrected.length > 0 apply correction to currentRegion's parent
+  console.log(corrected);
+  console.log('//////////////////////');
   region.name = corrected[corrected.length - 1];
+  corrected.pop();
+  let currentRegion = region.parentRegion;
+  while (corrected.length > 0) {
+    currentRegion.name = corrected[corrected.length - 1];
+    if (currentRegion.parentRegion) {
+      currentRegion = currentRegion.parentRegion;
+    }
+    corrected.pop();
+  }
 }
 
 function addRelativeRegionLinks(dataset) {
