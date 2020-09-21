@@ -21,7 +21,7 @@ function correct(correctNameData, uncheckedNameData, region, correctionFile) {
   // corrections to parent region names are made on the fly
   const correctlySpelledSiblings = getCorrectlySpelledSiblingRegions(correctNameData, region);
 
-  const chosenSibling = chooseCorrectSibling(correctlySpelledSiblings, region);
+  const chosenSibling = chooseCorrectSibling(correctlySpelledSiblings, region, correctNameData);
 
   if (chosenSibling == null) return false; // if the user doesn't select a sibling, move on
 
@@ -68,12 +68,14 @@ function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubr
 
 const regionLabels = ['division', 'district', 'upazila', 'union'];
 
-function chooseCorrectSibling(correctSiblings, misspeltRegion) {
+function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) {
   const commonSubregions = [];
 
   const misspeltSubregions = getSubregionNames(misspeltRegion);
   const misspeltRegionPath = findRegionNamePath(misspeltRegion.parentRegion);
   const misspeltRegionNameBold = colors.bold(misspeltRegion.name);
+
+  let noCommonSubregions = true;
 
   let siblingsString = '';
   for (let i = 0; i < correctSiblings.length; i += 1) {
@@ -81,11 +83,29 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion) {
     const siblingName = sibling.name;
     const siblingSubregions = getSubregionNames(sibling);
     const subregionString = highlightCommonSubregions(siblingSubregions, misspeltSubregions, commonSubregions);
+
+    if (noCommonSubregions === true && commonSubregions.length > 0) {
+      noCommonSubregions = false;
+    }
+
     siblingsString += `\n${colors.yellow(i + 1)} ${siblingName} ${subregionString}`;
   }
 
   const misspeltSubregionString = highlightCommonSubregions(misspeltSubregions, commonSubregions);
   const regionLabel = regionLabels[misspeltRegionPath.length];
+
+  if (noCommonSubregions) {
+    const cousinRegions = getCousinRegions(correctNameData, misspeltRegion, regionLabel);
+    console.log(cousinRegions);
+    for (let i = 0; i < cousinRegions.length; i += 1) {
+      const cousin = cousinRegions[i];
+      const cousinName = cousin.name;
+      const cousinSubregions = getSubregionNames(cousin);
+      const subregionString = highlightCommonSubregions(cousinSubregions, misspeltSubregions, commonSubregions);
+
+      siblingsString += `\n${colors.yellow(correctSiblings.length + i + 1)} ${cousinName} ${subregionString}`;
+    }
+  }
 
   let promptText = siblingsString + '\n\n';
   if (misspeltRegionPath.length > 0) {
@@ -116,6 +136,21 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion) {
     // input wasn't valid
     console.log(colors.red.bold(`\nINVALID INPUT, please enter a number 1-${correctSiblings.length}`));
   }
+}
+
+function getCousinRegions(correctNameData, region, regionLabel) {
+  const cousinRegions = [];
+  if (regionLabel === 'union') return cousinRegions;
+  for (const div of Object.values(correctNameData)) {
+    if (regionLabel === 'division') cousinRegions.push(div);
+    for (const dis of Object.values(div.districts)) {
+      if (regionLabel === 'district') cousinRegions.push(dis);
+      for (const upa of Object.values(dis.upazilas)) {
+        if (regionLabel === 'upazilla') cousinRegions.push(upa);
+      }
+    }
+  }
+  return cousinRegions;
 }
 
 function getSubregionNames(region) {
@@ -201,20 +236,7 @@ function applyCorrection(region) {
   const path = findRegionNamePath(region, 'oldName');
   const corrected = nameCorrections.correct(path);
 
-  // apply the inner-most correction // why only apply the inner most correction instead of the whole correction path??
-  // while corrected.length > 0 apply correction to currentRegion's parent
-  console.log(corrected);
-  console.log('//////////////////////');
   region.name = corrected[corrected.length - 1];
-  corrected.pop();
-  let currentRegion = region.parentRegion;
-  while (corrected.length > 0) {
-    currentRegion.name = corrected[corrected.length - 1];
-    if (currentRegion.parentRegion) {
-      currentRegion = currentRegion.parentRegion;
-    }
-    corrected.pop();
-  }
 }
 
 function addRelativeRegionLinks(dataset) {
