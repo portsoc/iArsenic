@@ -28,6 +28,10 @@ function correctRegionName(arr) {
     if (correction) return correction.concat(arrEnd);
   }
 
+  // todo try to find partial corrections by taking prefixes of arr
+  // probably apply only the first correction we find
+  // the return on line 28 is already in that direction
+
   // no corrections available, assume arr is correct already
   return arr;
 }

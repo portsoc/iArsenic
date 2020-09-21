@@ -201,20 +201,19 @@ function applyCorrection(region) {
   const path = findRegionNamePath(region, 'oldName');
   const corrected = nameCorrections.correct(path);
 
-  // apply the inner-most correction // why only apply the inner most correction instead of the whole correction path??
-  // while corrected.length > 0 apply correction to currentRegion's parent
-  console.log(corrected);
-  console.log('//////////////////////');
+  // apply the inner-most correction
   region.name = corrected[corrected.length - 1];
-  corrected.pop();
-  let currentRegion = region.parentRegion;
-  while (corrected.length > 0) {
-    currentRegion.name = corrected[corrected.length - 1];
-    if (currentRegion.parentRegion) {
-      currentRegion = currentRegion.parentRegion;
-    }
-    corrected.pop();
-  }
+
+  // in order to take into account parent corrections:
+  // todo if any of the parents have changed, we need to move things to the right parent
+  // delete link to region from region.parentRegion
+  // change region.parentRegion to the right parent region
+  // add region to region.parentRegion's values but do not overwrite the key:
+  //   set postfix to 1;
+  //   while region.parentRegion.subRegions has key region.name + postfix
+  //     increase postfix
+  //   put region in region.parentRegion.subRegions[region.name + postfix]
+  //   put region also in region.parentRegion.subRegionsArr
 }
 
 function addRelativeRegionLinks(dataset) {
