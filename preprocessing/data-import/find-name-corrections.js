@@ -40,6 +40,17 @@ function correct(correctNameData, uncheckedNameData, region, correctionFile) {
   return true;
 }
 
+// in order to take into account parent corrections:
+// todo if any of the parents have changed, we need to move things to the right parent
+// delete link to region from region.parentRegion
+// change region.parentRegion to the right parent region
+// add region to region.parentRegion's values but do not overwrite the key:
+//   set postfix to 1;
+//   while region.parentRegion.subRegions has key region.name + postfix
+//     increase postfix
+//   put region in region.parentRegion.subRegions[region.name + postfix]
+//   put region also in region.parentRegion.subRegionsArr
+
 function appendCorrectionToFile(correction, correctionFile) {
   // create an empty output file if it doesn't exist yet
   if (!fs.existsSync(correctionFile)) {
@@ -110,7 +121,7 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) 
       return null;
     }
 
-    const inputIsValid = validInput(userInput, optionsObj.maxNumber);
+    const inputIsValid = validInput(userInput, selectableRegions.length);
     if (inputIsValid) {
       const selected = correctSiblings[userInput - 1];
       console.log(colors.brightGreen.bold(`Selected: ${selected.name}`));
@@ -119,7 +130,7 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) 
 
     // input wasn't valid
     // TODO correctSiblings.length doesn't include region options from different parents
-    console.log(colors.red.bold(`\nINVALID INPUT, please enter a number 1-${optionsObj.maxNumber}`));
+    console.log(colors.red.bold(`\nINVALID INPUT, please enter a number 1-${selectableRegions.length}`));
   }
 }
 
@@ -128,7 +139,7 @@ function getSelectableRegions(correctNameData, correctSiblings, misspeltRegion, 
 
   // put all sibling regions into selectable region array
   for (const sibling of correctSiblings) {
-    selectableRegions.push(sibling);
+    selectableRegions.push({ type: 'sibling', region: sibling });
   }
 
   // check for common subregions between misspelt region and sibling regions
@@ -146,7 +157,9 @@ function getSelectableRegions(correctNameData, correctSiblings, misspeltRegion, 
 
   for (const cousinRegion of cousinRegions) {
     const cousinSubregions = getSubregionNames(cousinRegion);
-    if (areCommonRegions(cousinSubregions, misspeltSubregions)) selectableRegions.push(cousinRegion);
+    if (areCommonRegions(cousinSubregions, misspeltSubregions)) {
+      selectableRegions.push({ type: 'cousin', region: cousinRegion });
+    }
   }
 
   return selectableRegions;
@@ -155,29 +168,31 @@ function getSelectableRegions(correctNameData, correctSiblings, misspeltRegion, 
 function generateOptionsTable(misspeltRegion, misspeltSubregions, selectableRegions, commonSubregions) {
   let optionsString = '';
 
-  for (let i = 0; i < selectableRegions.length; i += 1) {
-    const optionName = selectableRegions[i].name;
-    const optionSubregions =
-      selectableRegions[i].subRegions
-        ? getSubregionNames(selectableRegions[i])
-        : [];
-    const optionSubregionsHighlighted = highlightCommonSubregions(optionSubregions, misspeltSubregions, commonSubregions);
-    optionsString += `\n${colors.yellow(i + 1)} ${optionName} ${optionSubregionsHighlighted}`;
-  }
+  const siblings = selectableRegions.filter(region => region.type === 'sibling');
+  const cousins = selectableRegions.filter(region => region.type === 'cousin');
+
+  optionsString = appendOptionsString(0, optionsString, misspeltSubregions, commonSubregions, siblings);
+
+  if (cousins.length === 0) return optionsString;
+
+  optionsString += `\n\n${colors.yellow('No common subregions in sibling regions. See potential corrections of cousin regions below')}\n`;
+  optionsString = appendOptionsString(siblings.length, optionsString, misspeltSubregions, commonSubregions, cousins);
 
   return optionsString;
 }
 
-// in order to take into account parent corrections:
-// todo if any of the parents have changed, we need to move things to the right parent
-// delete link to region from region.parentRegion
-// change region.parentRegion to the right parent region
-// add region to region.parentRegion's values but do not overwrite the key:
-//   set postfix to 1;
-//   while region.parentRegion.subRegions has key region.name + postfix
-//     increase postfix
-//   put region in region.parentRegion.subRegions[region.name + postfix]
-//   put region also in region.parentRegion.subRegionsArr
+function appendOptionsString(startingIndex, optionsString, misspeltSubregions, commonSubregions, selectableRegions) {
+  for (let i = 0; i < selectableRegions.length; i += 1) {
+    const optionName = selectableRegions[i].region.name;
+    const optionSubregions =
+      selectableRegions[i].region.subRegions
+        ? getSubregionNames(selectableRegions[i].region)
+        : [];
+    const optionSubregionsHighlighted = highlightCommonSubregions(optionSubregions, misspeltSubregions, commonSubregions);
+    optionsString += `\n${colors.yellow(startingIndex + i + 1)} ${optionName} ${optionSubregionsHighlighted}`;
+  }
+  return optionsString;
+}
 
 function getCousinRegions(correctNameData, region, regionLabel) {
   const cousinRegions = [];
