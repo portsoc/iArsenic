@@ -78,7 +78,7 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) 
   // generating the options string is a bit clunky when including siblings and cousins.
   // would it make more sense to create an array for siblingsToDisplay and cousinsToDisplay
   // and generating the options table from those arrays?
-  const optionsString = generateOptionsTable(
+  const selectableRegions = getSelectableRegions(
     correctNameData,
     correctSiblings,
     misspeltRegion,
@@ -87,9 +87,11 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) 
     regionLabel,
   );
 
+  const optionsList = generateOptionsTable(misspeltRegion, misspeltSubregions, selectableRegions, commonSubregions);
+
   const misspeltSubregionString = highlightCommonSubregions(misspeltSubregions, commonSubregions);
 
-  let promptText = optionsString + '\n\n';
+  let promptText = optionsList + '\n\n';
   if (misspeltRegionPath.length > 0) {
     promptText += 'In ' + misspeltRegionPath.join(' -> ') + '\n';
   }
@@ -108,7 +110,7 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) 
       return null;
     }
 
-    const inputIsValid = validInput(userInput, correctSiblings.length);
+    const inputIsValid = validInput(userInput, optionsObj.maxNumber);
     if (inputIsValid) {
       const selected = correctSiblings[userInput - 1];
       console.log(colors.brightGreen.bold(`Selected: ${selected.name}`));
@@ -117,49 +119,65 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) 
 
     // input wasn't valid
     // TODO correctSiblings.length doesn't include region options from different parents
-    console.log(colors.red.bold(`\nINVALID INPUT, please enter a number 1-${correctSiblings.length}`));
+    console.log(colors.red.bold(`\nINVALID INPUT, please enter a number 1-${optionsObj.maxNumber}`));
   }
 }
 
-function generateOptionsTable(correctNameData, correctSiblings, misspeltRegion, misspeltSubregions, commonSubregions, regionLabel) {
-  let optionsString = '';
+function getSelectableRegions(correctNameData, correctSiblings, misspeltRegion, misspeltSubregions, commonSubregions, regionLabel) {
+  const selectableRegions = [];
 
-  for (let i = 0; i < correctSiblings.length; i += 1) {
-    const sibling = correctSiblings[i];
-    const siblingName = sibling.name;
+  // put all sibling regions into selectable region array
+  for (const sibling of correctSiblings) {
+    selectableRegions.push(sibling);
+  }
+
+  // check for common subregions between misspelt region and sibling regions
+  if (regionLabel === regionLabels[regionLabels.length - 1]) return selectableRegions; // return if lowest level region
+
+  for (const sibling of selectableRegions) {
     const siblingSubregions = getSubregionNames(sibling);
-    const subregionString = highlightCommonSubregions(siblingSubregions, misspeltSubregions, commonSubregions);
-
-    optionsString += `\n${colors.yellow(i + 1)} ${siblingName} ${subregionString}`;
+    if (areCommonRegions(siblingSubregions, misspeltSubregions)) return selectableRegions;
   }
 
   // IF there are no common subregions between the misspelt region and its sibling regions
   // AND the region is not the lowest level region (which don't have sub regions)
   // THEN search the cousin regions for common sub regions
-  if (commonSubregions.length === 0 && regionLabel !== regionLabels[regionLabels.length - 1]) {
-    optionsString += `\n\n${colors.yellow('No common sub regions in sibling regions. See options from cousin regions:')}\n`;
-    const cousinRegions = getCousinRegions(correctNameData, misspeltRegion, regionLabel);
-    let commonSubregionsCount = 0;
-    let optionNumber = correctSiblings.length;
+  const cousinRegions = getCousinRegions(correctNameData, misspeltRegion, regionLabel);
 
-    for (let i = 0; i < cousinRegions.length; i += 1) {
-      const cousin = cousinRegions[i];
-      const cousinSubregions = getSubregionNames(cousin);
-      const subregionString = highlightCommonSubregions(cousinSubregions, misspeltSubregions, commonSubregions);
-      const cousinRegionPath = findRegionNamePath(cousin);
+  for (const cousinRegion of cousinRegions) {
+    const cousinSubregions = getSubregionNames(cousinRegion);
+    if (areCommonRegions(cousinSubregions, misspeltSubregions)) selectableRegions.push(cousinRegion);
+  }
 
-      // if the number of common sub regions has increased, the current cousin region has common sub regions
-      // so should be displayed as an option
-      if (commonSubregionsCount !== commonSubregions.length) {
-        optionNumber += 1;
-        optionsString += `\n${colors.yellow(optionNumber)} ${cousinRegionPath.join(' -> ')} ${subregionString}`;
-        commonSubregionsCount = commonSubregions.length;
-      }
-    }
+  return selectableRegions;
+}
+
+function generateOptionsTable(misspeltRegion, misspeltSubregions, selectableRegions, commonSubregions) {
+  let optionsString = '';
+
+  for (let i = 0; i < selectableRegions.length; i += 1) {
+    const optionName = selectableRegions[i].name;
+    const optionSubregions =
+      selectableRegions[i].subRegions
+        ? getSubregionNames(selectableRegions[i])
+        : [];
+    const optionSubregionsHighlighted = highlightCommonSubregions(optionSubregions, misspeltSubregions, commonSubregions);
+    optionsString += `\n${colors.yellow(i + 1)} ${optionName} ${optionSubregionsHighlighted}`;
   }
 
   return optionsString;
 }
+
+// in order to take into account parent corrections:
+// todo if any of the parents have changed, we need to move things to the right parent
+// delete link to region from region.parentRegion
+// change region.parentRegion to the right parent region
+// add region to region.parentRegion's values but do not overwrite the key:
+//   set postfix to 1;
+//   while region.parentRegion.subRegions has key region.name + postfix
+//     increase postfix
+//   put region in region.parentRegion.subRegions[region.name + postfix]
+//   put region also in region.parentRegion.subRegionsArr
 
 function getCousinRegions(correctNameData, region, regionLabel) {
   const cousinRegions = [];
@@ -177,10 +195,21 @@ function getCousinRegions(correctNameData, region, regionLabel) {
 }
 
 function getSubregionNames(region) {
+  // Region is lowest level region
   if (region.subRegionsArr == null) return '';
 
   const namesArr = region.subRegionsArr.map(r => r.name);
   return namesArr.sort();
+}
+
+function areCommonRegions(regionList1, regionList2) {
+  // TODO tidy up with array.includes
+  for (const siblingSubregion of regionList1) {
+    for (const misspeltSubregion of regionList2) {
+      if (siblingSubregion === misspeltSubregion) return true;
+    }
+  }
+  return false;
 }
 
 function validInput(input, regionArrLength) {
