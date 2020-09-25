@@ -11,49 +11,69 @@ const CSV_PARSE_OPTIONS = {
   skip_empty_lines: true,
 };
 
-function correct(correctNameData, uncheckedNameData, region, correctionFile) {
+function correct(correctNameData, uncheckedNameData, region, correctionFile, postfix) {
   if (correctDataContains(correctNameData, ...findRegionNamePath(region))) {
     // it's already correct
     return true;
   }
 
-  // only shows regions inside misspelt region's parent region
-  // corrections to parent region names are made on the fly
-  const correctlySpelledSiblings = getCorrectlySpelledSiblingRegions(correctNameData, region);
+  const correction = chooseCorrection(region, correctNameData);
 
-  const chosenSibling = chooseCorrectSibling(correctlySpelledSiblings, region, correctNameData);
+  if (correction == null) return false; // if the user doesn't select a sibling, move on
 
-  if (chosenSibling == null) return false; // if the user doesn't select a sibling, move on
+  if (correction.type === 'sibling') {
+    // correct the name in the data
+    const correctSpelling = correction.name;
+    region.name = correctSpelling;
 
-  // correct the name in the data
-  const correctSpelling = chosenSibling.name;
-  region.name = correctSpelling;
+    const csvCorrection = {
+      type: 'sibling',
+      path: findRegionNamePath(region, 'oldName'),
+      correct: findRegionNamePath(region),
+    };
 
-  const correction = {
-    path: findRegionNamePath(region, 'oldName'),
-    correct: findRegionNamePath(region),
-  };
+    // save the correction
+    appendCorrectionToFile(csvCorrection, correctionFile);
+    return true;
+  }
 
-  // save the correction
-  appendCorrectionToFile(correction, correctionFile);
+  if (correction.type === 'cousin') {
+    // in order to take into account parent corrections:
+    // todo if any of the parents have changed, we need to move things to the right parent
+    const correctParentRegion = correction.region.parentRegion;
+    const incorrectParentRegion = region.parentRegion;
 
-  return true;
+    // delete link to region from region.parentRegion
+    delete region.parentRegion;
+    delete incorrectParentRegion.subRegions[region.name];
+    const incorrectParentSubregionsArr = incorrectParentRegion.subRegionsArr;
+    incorrectParentSubregionsArr.splice(incorrectParentSubregionsArr.indexOf(region), 1);
+
+    // change region.parentRegion to the right parent region
+    region.parentRegion = correctParentRegion;
+
+    // add region to region.parentRegion's values but do not overwrite the key:
+    correctParentRegion.subRegions[region.name + postfix] = region;
+
+    //   set postfix to 1; // increment by 1 to keep unique??
+    postfix += 1;
+
+    //   put region also in region.parentRegion.subRegionsArr
+    correctParentRegion.subRegionsArr.push(region);
+
+    //   while region.parentRegion.subRegions has key region.name + postfix
+    //     increase postfix
+    //   put region in region.parentRegion.subRegions[region.name + postfix]
+  }
 }
 
-// in order to take into account parent corrections:
-// todo if any of the parents have changed, we need to move things to the right parent
-// delete link to region from region.parentRegion
-// change region.parentRegion to the right parent region
-// add region to region.parentRegion's values but do not overwrite the key:
-//   set postfix to 1;
-//   while region.parentRegion.subRegions has key region.name + postfix
-//     increase postfix
-//   put region in region.parentRegion.subRegions[region.name + postfix]
-//   put region also in region.parentRegion.subRegionsArr
 
 function appendCorrectionToFile(correction, correctionFile) {
   // create an empty output file if it doesn't exist yet
   if (!fs.existsSync(correctionFile)) {
+    // TODO: type,path,correct
+    // sibling,path#path#path,correct#correct#correct
+    // cousin,path#path#path,correct#correct#correct
     const headers = 'path,correct' + '\n';
     fs.appendFileSync(correctionFile, headers);
   }
@@ -79,7 +99,10 @@ function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubr
 
 const regionLabels = ['division', 'district', 'upazila', 'union'];
 
-function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) {
+function chooseCorrection(misspeltRegion, correctNameData) {
+  // only shows regions inside misspelt region's parent region
+  // corrections to parent region names are made on the fly
+  const correctSiblings = getCorrectlySpelledSiblingRegions(correctNameData, misspeltRegion);
   const misspeltSubregions = getSubregionNames(misspeltRegion);
   const misspeltRegionPath = findRegionNamePath(misspeltRegion.parentRegion);
   const misspeltRegionNameBold = colors.bold(misspeltRegion.name);
@@ -123,8 +146,8 @@ function chooseCorrectSibling(correctSiblings, misspeltRegion, correctNameData) 
 
     const inputIsValid = validInput(userInput, selectableRegions.length);
     if (inputIsValid) {
-      const selected = correctSiblings[userInput - 1];
-      console.log(colors.brightGreen.bold(`Selected: ${selected.name}`));
+      const selected = selectableRegions[userInput - 1];
+      console.log(colors.brightGreen.bold(`Selected: ${selected.region.name}`));
       return selected;
     }
 
@@ -366,20 +389,21 @@ function main(cliArgs) {
     applyCorrections(uncheckedNameData);
   }
 
+  let postfix = 0; // key for keeping keys unique when correcting regions in wrong parent
   for (const div of Object.values(uncheckedNameData)) {
-    const corrected = correct(correctNameData, uncheckedNameData, div, correctionFile);
+    const corrected = correct(correctNameData, uncheckedNameData, div, correctionFile, postfix);
     if (!corrected) continue; // don't try to correct sub-region names
 
     for (const dis of Object.values(div.districts)) {
-      const corrected = correct(correctNameData, uncheckedNameData, dis, correctionFile);
+      const corrected = correct(correctNameData, uncheckedNameData, dis, correctionFile, postfix);
       if (!corrected) continue; // don't try to correct sub-region names
 
       for (const upa of Object.values(dis.upazilas)) {
-        const corrected = correct(correctNameData, uncheckedNameData, upa, correctionFile);
+        const corrected = correct(correctNameData, uncheckedNameData, upa, correctionFile, postfix);
         if (!corrected) continue; // don't try to correct sub-region names
 
         for (const uni of Object.values(upa.unions)) {
-          correct(correctNameData, uncheckedNameData, uni, correctionFile);
+          correct(correctNameData, uncheckedNameData, uni, correctionFile, postfix);
         }
       }
     }
