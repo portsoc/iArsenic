@@ -11,69 +11,39 @@ const CSV_PARSE_OPTIONS = {
   skip_empty_lines: true,
 };
 
-function correct(correctNameData, uncheckedNameData, region, correctionFile, postfix) {
-  if (correctDataContains(correctNameData, ...findRegionNamePath(region))) {
+function correct(correctNameData, region, correctionFile) {
+  if (correctDataContains(correctNameData, ...region.correctParentPath, region.oldName)) {
     // it's already correct
+    region.correctName = region.oldName;
     return true;
   }
 
   const correction = chooseCorrection(region, correctNameData);
 
-  if (correction == null) return false; // if the user doesn't select a sibling, move on
+  if (correction == null) return false; // if the user doesn't select a correction, move on
 
-  if (correction.type === 'sibling') {
-    // correct the name in the data
-    const correctSpelling = correction.name;
-    region.name = correctSpelling;
-
-    const csvCorrection = {
-      type: 'sibling',
-      path: findRegionNamePath(region, 'oldName'),
-      correct: findRegionNamePath(region),
-    };
-
-    // save the correction
-    appendCorrectionToFile(csvCorrection, correctionFile);
-    return true;
-  }
+  // correct the region name in the data
+  region.correctName = correction.region.name;
 
   if (correction.type === 'cousin') {
-    // in order to take into account parent corrections:
-    // todo if any of the parents have changed, we need to move things to the right parent
     const correctParentRegion = correction.region.parentRegion;
-    const incorrectParentRegion = region.parentRegion;
-
-    // delete link to region from region.parentRegion
-    delete region.parentRegion;
-    delete incorrectParentRegion.subRegions[region.name];
-    const incorrectParentSubregionsArr = incorrectParentRegion.subRegionsArr;
-    incorrectParentSubregionsArr.splice(incorrectParentSubregionsArr.indexOf(region), 1);
-
-    // change region.parentRegion to the right parent region
-    region.parentRegion = correctParentRegion;
-
-    // add region to region.parentRegion's values but do not overwrite the key:
-    correctParentRegion.subRegions[region.name + postfix] = region;
-
-    //   set postfix to 1; // increment by 1 to keep unique??
-    postfix += 1;
-
-    //   put region also in region.parentRegion.subRegionsArr
-    correctParentRegion.subRegionsArr.push(region);
-
-    //   while region.parentRegion.subRegions has key region.name + postfix
-    //     increase postfix
-    //   put region in region.parentRegion.subRegions[region.name + postfix]
+    region.correctParentPath = findRegionNamePath(correctParentRegion);
   }
+
+  // save the correction
+  const csvCorrection = {
+    path: [...region.oldParentPath, region.oldName],
+    correct: [...region.correctParentPath, region.correctName],
+  };
+  appendCorrectionToFile(csvCorrection, correctionFile);
+
+  return true;
 }
 
 
 function appendCorrectionToFile(correction, correctionFile) {
   // create an empty output file if it doesn't exist yet
   if (!fs.existsSync(correctionFile)) {
-    // TODO: type,path,correct
-    // sibling,path#path#path,correct#correct#correct
-    // cousin,path#path#path,correct#correct#correct
     const headers = 'path,correct' + '\n';
     fs.appendFileSync(correctionFile, headers);
   }
@@ -81,7 +51,7 @@ function appendCorrectionToFile(correction, correctionFile) {
   const correctionRecord =
     correction.path.join('#') + ',' +
     correction.correct.join('#') + '\n';
-  fs.appendFileSync(correctionFile, correctionRecord); // TODO log error & get path from -o
+  fs.appendFileSync(correctionFile, correctionRecord);
 }
 
 function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubregions) {
@@ -102,11 +72,12 @@ const regionLabels = ['division', 'district', 'upazila', 'union'];
 function chooseCorrection(misspeltRegion, correctNameData) {
   // only shows regions inside misspelt region's parent region
   // corrections to parent region names are made on the fly
-  const correctSiblings = getCorrectlySpelledSiblingRegions(correctNameData, misspeltRegion);
-  const misspeltSubregions = getSubregionNames(misspeltRegion);
-  const misspeltRegionPath = findRegionNamePath(misspeltRegion.parentRegion);
-  const misspeltRegionNameBold = colors.bold(misspeltRegion.name);
-  const regionLabel = regionLabels[misspeltRegionPath.length];
+  const misspeltSubregionNames = misspeltRegion.subRegionsArr.map(r => r.oldName).sort();
+
+  const correctedRegionPath = misspeltRegion.correctParentPath;
+
+  const misspeltRegionNameBold = colors.bold(misspeltRegion.oldName);
+  const regionLabel = regionLabels[correctedRegionPath.length];
   const commonSubregions = [];
 
   // generating the options string is a bit clunky when including siblings and cousins.
@@ -114,20 +85,17 @@ function chooseCorrection(misspeltRegion, correctNameData) {
   // and generating the options table from those arrays?
   const selectableRegions = getSelectableRegions(
     correctNameData,
-    correctSiblings,
     misspeltRegion,
-    misspeltSubregions,
-    commonSubregions,
-    regionLabel,
+    misspeltSubregionNames,
   );
 
-  const optionsList = generateOptionsTable(misspeltRegion, misspeltSubregions, selectableRegions, commonSubregions);
+  const optionsList = generateOptionsTable(selectableRegions, misspeltSubregionNames, commonSubregions);
 
-  const misspeltSubregionString = highlightCommonSubregions(misspeltSubregions, commonSubregions);
+  const misspeltSubregionString = highlightCommonSubregions(misspeltSubregionNames, commonSubregions);
 
   let promptText = optionsList + '\n\n';
-  if (misspeltRegionPath.length > 0) {
-    promptText += 'In ' + misspeltRegionPath.join(' -> ') + '\n';
+  if (correctedRegionPath.length > 0) {
+    promptText += 'In ' + correctedRegionPath.join(' -> ') + '\n';
   }
   promptText += 'Incorrect ' + regionLabel + ': ' + misspeltRegionNameBold + ' ' + misspeltSubregionString;
 
@@ -152,35 +120,34 @@ function chooseCorrection(misspeltRegion, correctNameData) {
     }
 
     // input wasn't valid
-    // TODO correctSiblings.length doesn't include region options from different parents
     console.log(colors.red.bold(`\nINVALID INPUT, please enter a number 1-${selectableRegions.length}`));
   }
 }
 
-function getSelectableRegions(correctNameData, correctSiblings, misspeltRegion, misspeltSubregions, commonSubregions, regionLabel) {
+// MUST return "sibling" regions before "cousin" regions
+function getSelectableRegions(correctNameData, misspeltRegion, misspeltSubregionNames) {
   const selectableRegions = [];
+
+  const correctSiblings = getCorrectlySpelledSiblingRegions(correctNameData, misspeltRegion);
 
   // put all sibling regions into selectable region array
   for (const sibling of correctSiblings) {
     selectableRegions.push({ type: 'sibling', region: sibling });
   }
 
-  // check for common subregions between misspelt region and sibling regions
-  if (regionLabel === regionLabels[regionLabels.length - 1]) return selectableRegions; // return if lowest level region
-
+  // if any sibling has common subregions with the misspelt region, we need not look at cousins
   for (const sibling of selectableRegions) {
     const siblingSubregions = getSubregionNames(sibling);
-    if (areCommonRegions(siblingSubregions, misspeltSubregions)) return selectableRegions;
+    if (areCommonRegions(siblingSubregions, misspeltSubregionNames)) return selectableRegions;
   }
 
   // IF there are no common subregions between the misspelt region and its sibling regions
-  // AND the region is not the lowest level region (which don't have sub regions)
   // THEN search the cousin regions for common sub regions
-  const cousinRegions = getCousinRegions(correctNameData, misspeltRegion, regionLabel);
+  const cousinRegions = getCousinRegions(correctNameData, misspeltRegion);
 
   for (const cousinRegion of cousinRegions) {
     const cousinSubregions = getSubregionNames(cousinRegion);
-    if (areCommonRegions(cousinSubregions, misspeltSubregions)) {
+    if (areCommonRegions(cousinSubregions, misspeltSubregionNames)) {
       selectableRegions.push({ type: 'cousin', region: cousinRegion });
     }
   }
@@ -188,48 +155,58 @@ function getSelectableRegions(correctNameData, correctSiblings, misspeltRegion, 
   return selectableRegions;
 }
 
-function generateOptionsTable(misspeltRegion, misspeltSubregions, selectableRegions, commonSubregions) {
+function generateOptionsTable(selectableRegions, misspeltSubregionNames, commonSubregions) {
   let optionsString = '';
 
+  // this assumes getSelectableRegions returned sibling regions before cousin regions
   const siblings = selectableRegions.filter(region => region.type === 'sibling');
   const cousins = selectableRegions.filter(region => region.type === 'cousin');
 
-  optionsString = appendOptionsString(0, optionsString, misspeltSubregions, commonSubregions, siblings);
+  optionsString = appendOptionsString(0, optionsString, misspeltSubregionNames, commonSubregions, siblings);
 
   if (cousins.length === 0) return optionsString;
 
   optionsString += `\n\n${colors.yellow('No common subregions in sibling regions. See potential corrections of cousin regions below')}\n`;
-  optionsString = appendOptionsString(siblings.length, optionsString, misspeltSubregions, commonSubregions, cousins);
+  optionsString = appendOptionsString(siblings.length, optionsString, misspeltSubregionNames, commonSubregions, cousins);
 
   return optionsString;
 }
 
-function appendOptionsString(startingIndex, optionsString, misspeltSubregions, commonSubregions, selectableRegions) {
+function appendOptionsString(startingIndex, optionsString, misspeltSubregionNames, commonSubregions, selectableRegions) {
   for (let i = 0; i < selectableRegions.length; i += 1) {
     const optionName = selectableRegions[i].region.name;
     const optionSubregions =
       selectableRegions[i].region.subRegions
         ? getSubregionNames(selectableRegions[i].region)
         : [];
-    const optionSubregionsHighlighted = highlightCommonSubregions(optionSubregions, misspeltSubregions, commonSubregions);
-    optionsString += `\n${colors.yellow(startingIndex + i + 1)} ${optionName} ${optionSubregionsHighlighted}`;
+    const optionSubregionsHighlighted = highlightCommonSubregions(optionSubregions, misspeltSubregionNames, commonSubregions);
+    const parentName = startingIndex === 0
+      ? ''
+      : selectableRegions[i].region.parentRegion.name + ' -> ';
+    optionsString += `\n${colors.yellow(startingIndex + i + 1)} ${parentName}${optionName} ${optionSubregionsHighlighted}`;
   }
   return optionsString;
 }
 
-function getCousinRegions(correctNameData, region, regionLabel) {
-  const cousinRegions = [];
-  if (regionLabel === 'union') return cousinRegions; // TODO make this mouza compatible!
-  for (const div of Object.values(correctNameData)) {
-    if (regionLabel === 'division') cousinRegions.push(div);
-    for (const dis of Object.values(div.districts)) {
-      if (regionLabel === 'district') cousinRegions.push(dis);
-      for (const upa of Object.values(dis.upazilas)) {
-        if (regionLabel === 'upazilla') cousinRegions.push(upa);
-      }
-    }
-  }
-  return cousinRegions;
+// return subregions of all subregions (except for region's parent) of region's parent's parent
+function getCousinRegions(correctNameData, region) {
+  // a division doesn't have any cousins
+  if (region.correctParentPath.length < 1) return [];
+
+  const parent = findRegionByNameArr(correctNameData, region.correctParentPath);
+
+  const grandParent = parent.parentRegion;
+
+  // we may not have grandParent if region is a district
+  const parentLevelRegions = grandParent != null
+    ? grandParent.subRegionsArr
+    : Object.values(correctNameData);
+
+  // get all the subregions of grandParent except for parent
+  const uncleRegions = parentLevelRegions.filter(r => r !== parent);
+
+  // return subregions of all the uncle regions
+  return uncleRegions.flatMap(r => r.subRegionsArr);
 }
 
 function getSubregionNames(region) {
@@ -241,11 +218,8 @@ function getSubregionNames(region) {
 }
 
 function areCommonRegions(regionList1, regionList2) {
-  // TODO tidy up with array.includes
   for (const siblingSubregion of regionList1) {
-    for (const misspeltSubregion of regionList2) {
-      if (siblingSubregion === misspeltSubregion) return true;
-    }
+    if (regionList2.includes(siblingSubregion)) return true;
   }
   return false;
 }
@@ -257,22 +231,22 @@ function validInput(input, regionArrLength) {
 }
 
 function getCorrectlySpelledSiblingRegions(correctNameData, region) {
-  if (!region.parentRegion) {
-    // if region is division sibling names are dataset values
+  if (region.oldParentPath.length === 0) {
+    // if region is a division, sibling names are values in correctNameData
     return Object.values(correctNameData).sort((a, b) => a.name.localeCompare(b.name));
   } else {
-    const parentNameArr = findRegionNamePath(region.parentRegion);
+    const parentNameArr = region.correctParentPath;
     const correctlyNamedParent = findRegionByNameArr(correctNameData, parentNameArr);
     return correctlyNamedParent.subRegionsArr.sort((a, b) => a.name.localeCompare(b.name));
   }
 }
 
-function findRegionNamePath(region, nameProp = 'name') {
+function findRegionNamePath(region) {
   let currentRegion = region;
   const names = [];
 
   while (currentRegion != null) {
-    names.unshift(currentRegion[nameProp]);
+    names.unshift(currentRegion.name);
     currentRegion = currentRegion.parentRegion;
   }
   return names;
@@ -307,28 +281,6 @@ function correctDataContains(correctNameData, ...regionNames) {
   return correctDataContains(topRegion.subRegions, ...restOfNames);
 }
 
-function applyCorrections(dataset) {
-  for (const div of Object.values(dataset)) {
-    applyCorrection(div);
-    for (const dis of Object.values(div.districts)) {
-      applyCorrection(dis);
-      for (const upa of Object.values(dis.upazilas)) {
-        applyCorrection(upa);
-        for (const uni of Object.values(upa.unions)) {
-          applyCorrection(uni);
-        }
-      }
-    }
-  }
-}
-
-function applyCorrection(region) {
-  const path = findRegionNamePath(region, 'oldName');
-  const corrected = nameCorrections.correct(path);
-
-  region.name = corrected[corrected.length - 1];
-}
-
 function addRelativeRegionLinks(dataset) {
   for (const div of Object.values(dataset)) {
     div.subRegions = div.districts;
@@ -349,19 +301,54 @@ function addRelativeRegionLinks(dataset) {
   }
 }
 
-function addOldNames(dataset) {
+// turn the hierarchy of possibly misspelt data into a tree like this:
+// [
+//   {
+//     oldName,
+//     oldParentPath,
+//     subRegionsArr: [...],
+//   }
+// ]
+
+function extractHierarchyTree(dataset) {
+  const retval = [];
   for (const div of Object.values(dataset)) {
-    div.oldName = div.name;
+    const divObj = {
+      oldName: div.name,
+      oldParentPath: [],
+      correctParentPath: [],
+      subRegionsArr: [],
+    };
+    retval.push(divObj);
+
     for (const dis of Object.values(div.districts)) {
-      dis.oldName = dis.name;
+      const disObj = {
+        oldName: dis.name,
+        oldParentPath: [div.name],
+        subRegionsArr: [],
+      };
+      divObj.subRegionsArr.push(disObj);
+
       for (const upa of Object.values(dis.upazilas)) {
-        upa.oldName = upa.name;
+        const upaObj = {
+          oldName: upa.name,
+          oldParentPath: [div.name, dis.name],
+          subRegionsArr: [],
+        };
+        disObj.subRegionsArr.push(upaObj);
+
         for (const uni of Object.values(upa.unions)) {
-          uni.oldName = uni.name;
+          const uniObj = {
+            oldName: uni.name,
+            oldParentPath: [div.name, dis.name, upa.name],
+            subRegionsArr: [],
+          };
+          upaObj.subRegionsArr.push(uniObj);
         }
       }
     }
   }
+  return retval;
 }
 
 function checkForMissingFlags(cliArgs) {
@@ -374,37 +361,29 @@ function main(cliArgs) {
   checkForMissingFlags(cliArgs);
   const correctNameData = csvLoader(cliArgs.paths);
 
-  const dataToCorrect = cliArgs.inputFile;
-  const uncheckedNameData = csvLoader([dataToCorrect]);
-
-  addRelativeRegionLinks(correctNameData);
-  addRelativeRegionLinks(uncheckedNameData);
-  addOldNames(uncheckedNameData);
-
   // load existing corrections
   const correctionFile = cliArgs.output;
   if (fs.existsSync(correctionFile)) {
     const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
     nameCorrections.loadCorrections(corrections);
-    applyCorrections(uncheckedNameData);
   }
 
-  let postfix = 0; // key for keeping keys unique when correcting regions in wrong parent
-  for (const div of Object.values(uncheckedNameData)) {
-    const corrected = correct(correctNameData, uncheckedNameData, div, correctionFile, postfix);
-    if (!corrected) continue; // don't try to correct sub-region names
+  const dataToCorrect = cliArgs.inputFile;
+  const uncheckedNameData = extractHierarchyTree(csvLoader([dataToCorrect], { nameCorrections }));
 
-    for (const dis of Object.values(div.districts)) {
-      const corrected = correct(correctNameData, uncheckedNameData, dis, correctionFile, postfix);
-      if (!corrected) continue; // don't try to correct sub-region names
+  addRelativeRegionLinks(correctNameData);
 
-      for (const upa of Object.values(dis.upazilas)) {
-        const corrected = correct(correctNameData, uncheckedNameData, upa, correctionFile, postfix);
-        if (!corrected) continue; // don't try to correct sub-region names
+  const correctionQueue = Array.from(Object.values(uncheckedNameData));
+  while (correctionQueue.length > 0) {
+    const region = correctionQueue.shift();
 
-        for (const uni of Object.values(upa.unions)) {
-          correct(correctNameData, uncheckedNameData, uni, correctionFile, postfix);
-        }
+    const corrected = correct(correctNameData, region, correctionFile);
+    if (corrected) {
+      // add the subregions to the queue
+      for (const subRegion of region.subRegionsArr) {
+        // give each subRegion a (currently known) correctParentPath
+        subRegion.correctParentPath = [...region.correctParentPath, region.correctName];
+        correctionQueue.push(subRegion);
       }
     }
   }
