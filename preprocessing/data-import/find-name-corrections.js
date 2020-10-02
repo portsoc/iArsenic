@@ -138,7 +138,9 @@ function getSelectableRegions(correctNameData, misspeltRegion, misspeltSubregion
   // if any sibling has common subregions with the misspelt region, we need not look at cousins
   for (const sibling of selectableRegions) {
     const siblingSubregions = getSubregionNames(sibling);
-    if (areCommonRegions(siblingSubregions, misspeltSubregionNames)) return selectableRegions;
+    if (areCommonRegions(siblingSubregions, misspeltSubregionNames)) {
+      return selectableRegions;
+    }
   }
 
   // IF there are no common subregions between the misspelt region and its sibling regions
@@ -166,7 +168,7 @@ function generateOptionsTable(selectableRegions, misspeltSubregionNames, commonS
 
   if (cousins.length === 0) return optionsString;
 
-  optionsString += `\n\n${colors.yellow('No common subregions in sibling regions. See potential corrections of cousin regions below')}\n`;
+  optionsString += `\n\n${colors.yellow('We also found potential corrections to cousin regions below')}\n`;
   optionsString = appendOptionsString(siblings.length, optionsString, misspeltSubregionNames, commonSubregions, cousins);
 
   return optionsString;
