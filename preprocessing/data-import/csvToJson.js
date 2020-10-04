@@ -4,8 +4,8 @@ const colors = require('colors');
 const fs = require('fs');
 
 function checkForMissingFlags(cliArgs) {
-  if (cliArgs.inputFile == null) {
-    console.warn(colors.red.bold('Please specify input file (-i flag)'));
+  if (cliArgs.paths == null) {
+    console.warn(colors.red.bold('Please specify input files (-p flag)'));
     return false;
   }
 
@@ -17,8 +17,9 @@ function checkForMissingFlags(cliArgs) {
 }
 
 function main(cliArgs) {
+  console.log(cliArgs.paths);
   if (!checkForMissingFlags(cliArgs)) return;
-  const inputJson = csvLoader(cliArgs.inputFile);
+  const inputJson = csvLoader(cliArgs.paths);
   const outputJson = JSON.stringify(inputJson);
   fs.writeFileSync(cliArgs.output, outputJson);
 }
