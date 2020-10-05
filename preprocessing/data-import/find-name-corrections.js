@@ -80,9 +80,8 @@ function chooseCorrection(misspeltRegion, correctNameData) {
   const regionLabel = regionLabels[correctedRegionPath.length];
   const commonSubregions = [];
 
-  // generating the options string is a bit clunky when including siblings and cousins.
-  // would it make more sense to create an array for siblingsToDisplay and cousinsToDisplay
-  // and generating the options table from those arrays?
+  // returns array of all sibling regions and cousin regions with common sub regions to the misspeltRegion
+  // [{ type: 'sibling' OR 'cousin', region: regionObject}]
   const selectableRegions = getSelectableRegions(
     correctNameData,
     misspeltRegion,
@@ -135,21 +134,12 @@ function getSelectableRegions(correctNameData, misspeltRegion, misspeltSubregion
     selectableRegions.push({ type: 'sibling', region: sibling });
   }
 
-  // if any sibling has common subregions with the misspelt region, we need not look at cousins
-  for (const sibling of selectableRegions) {
-    const siblingSubregions = getSubregionNames(sibling.region);
-    if (areCommonRegions(siblingSubregions, misspeltSubregionNames)) {
-      return selectableRegions;
-    }
-  }
-
-  // IF there are no common subregions between the misspelt region and its sibling regions
-  // THEN search the cousin regions for common sub regions
   const cousinRegions = getCousinRegions(correctNameData, misspeltRegion);
 
+  // only put cousin regions with common subregions to the misspelt region in the selectable regions array
   for (const cousinRegion of cousinRegions) {
-    const cousinSubregions = getSubregionNames(cousinRegion);
-    if (areCommonRegions(cousinSubregions, misspeltSubregionNames)) {
+    const cousinSubregionNames = getSubregionNames(cousinRegion);
+    if (misspeltSubregionNames.some(name => cousinSubregionNames.includes(name))) {
       selectableRegions.push({ type: 'cousin', region: cousinRegion });
     }
   }
@@ -217,13 +207,6 @@ function getSubregionNames(region) {
 
   const namesArr = region.subRegionsArr.map(r => r.name);
   return namesArr.sort();
-}
-
-function areCommonRegions(regionList1, regionList2) {
-  for (const siblingSubregion of regionList1) {
-    if (regionList2.includes(siblingSubregion)) return true;
-  }
-  return false;
 }
 
 function validInput(input, regionArrLength) {
