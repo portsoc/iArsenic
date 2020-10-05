@@ -137,7 +137,7 @@ function getSelectableRegions(correctNameData, misspeltRegion, misspeltSubregion
 
   // if any sibling has common subregions with the misspelt region, we need not look at cousins
   for (const sibling of selectableRegions) {
-    const siblingSubregions = getSubregionNames(sibling);
+    const siblingSubregions = getSubregionNames(sibling.region);
     if (areCommonRegions(siblingSubregions, misspeltSubregionNames)) {
       return selectableRegions;
     }
