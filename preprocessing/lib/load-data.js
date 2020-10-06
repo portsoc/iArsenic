@@ -120,22 +120,31 @@ function fillArsenicData(divisions, records) {
 }
 
 function correctNames(records, corrections) {
-  for (const r of records) {
+  for (let r of records) {
     const corrected = corrections.correct([
       r.Division,
       r.District,
       r.Upazila,
       r.Union,
     ]);
-    [r.Division, r.District, r.Upazila, r.Union] = corrected;
+
+    if (corrected[0] === 'none') {
+      r = 'remove';
+    } else {
+      [r.Division, r.District, r.Upazila, r.Union] = corrected;
+    }
   }
+
+  records = records.filter(r => r === 'remove');
 }
 
 function loadData(paths, options = {}) {
   if (!paths) paths = listDefaultFiles();
 
   const records = readTheCSVFiles(paths);
-  if (options.nameCorrections) correctNames(records, options.nameCorrections);
+  if (options.nameCorrections) {
+    correctNames(records, options.nameCorrections);
+  }
   const divisions = extractLocations(records);
 
   fillArsenicData(divisions, records);
