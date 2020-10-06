@@ -77,7 +77,6 @@ function loadCorrections(correctionsCsvArr) {
       // skip the existing correction
       continue;
     }
-
     corrections.set(correction.path, correction.correct.split('#'));
   }
 }

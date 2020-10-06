@@ -20,14 +20,14 @@ function correct(correctNameData, region, correctionFile) {
 
   const correction = chooseCorrection(region, correctNameData);
 
-  if (correction == null) return false; // if the user doesn't select a correction, move on
-
   // correct the region name in the data
   region.correctName = correction.region.name;
 
   if (correction.type === 'cousin') {
     const correctParentRegion = correction.region.parentRegion;
     region.correctParentPath = findRegionNamePath(correctParentRegion);
+  } else if (correction.type === 'none') {
+    region.correctParentPath = [];
   }
 
   // save the correction
@@ -39,7 +39,6 @@ function correct(correctNameData, region, correctionFile) {
 
   return true;
 }
-
 
 function appendCorrectionToFile(correction, correctionFile) {
   // create an empty output file if it doesn't exist yet
@@ -108,7 +107,7 @@ function chooseCorrection(misspeltRegion, correctNameData) {
     // if user presses enter skip this correction
     if (userInput === '') {
       console.log(colors.brightGreen.bold(`SKIPPING ${regionLabel} ${misspeltRegionNameBold}`));
-      return null;
+      return { type: 'none', region: { name: 'none' } };
     }
 
     const inputIsValid = validInput(userInput, selectableRegions.length);
