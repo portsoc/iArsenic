@@ -37,7 +37,8 @@ function correct(correctNameData, region, correctionFile) {
   };
   appendCorrectionToFile(csvCorrection, correctionFile);
 
-  return true;
+  if (correction.type === 'none') return false;
+  else return true;
 }
 
 function appendCorrectionToFile(correction, correctionFile) {
