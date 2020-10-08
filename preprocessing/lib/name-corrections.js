@@ -15,17 +15,18 @@ function combineName(arr) {
   return arr.join('#');
 }
 
-function correctRegionName(arr) {
-  const correction = corrections.get(combineName(arr));
-  if (correction) return correction;
+const SKIPPED_CORRECTION = '~none~';
 
-  // find partial corrections, e.g. just division name
+function correctRegionName(arr) {
+  // start from the complete array, then if we don't find a correction,
+  // try to find partial corrections, e.g. just division name
   const arrCopy = arr.slice();
   const arrEnd = [];
   while (arrCopy.length > 0) {
-    arrEnd.unshift(arrCopy.pop());
     const correction = corrections.get(combineName(arrCopy));
+    if (correction && correction[0] === SKIPPED_CORRECTION) return null;
     if (correction) return correction.concat(arrEnd);
+    arrEnd.unshift(arrCopy.pop());
   }
 
   // no corrections available, assume arr is correct already
@@ -55,6 +56,8 @@ function testCorrectRegionName(expect) {
     .toEqual(['Rangpur', 'Dinajpur', 'a']);
   expect(correctRegionName(['Rajshahi', 'Dinajpur', 'a', 'b']))
     .toEqual(['Rangpur', 'Dinajpur', 'a', 'b']);
+
+  // todo add test cases for none
 }
 
 /*
@@ -85,4 +88,5 @@ module.exports = {
   correct: correctRegionName,
   loadCorrections,
   testCorrectRegionName,
+  SKIPPED_CORRECTION,
 };
