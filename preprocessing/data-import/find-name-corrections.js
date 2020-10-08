@@ -37,8 +37,7 @@ function correct(correctNameData, region, correctionFile) {
   };
   appendCorrectionToFile(csvCorrection, correctionFile);
 
-  if (correction.type === 'none') return false;
-  else return true;
+  return correction.type !== 'none';
 }
 
 function appendCorrectionToFile(correction, correctionFile) {
@@ -108,7 +107,7 @@ function chooseCorrection(misspeltRegion, correctNameData) {
     // if user presses enter skip this correction
     if (userInput === '') {
       console.log(colors.brightGreen.bold(`SKIPPING ${regionLabel} ${misspeltRegionNameBold}`));
-      return { type: 'none', region: { name: 'none' } };
+      return { type: 'none', region: { name: nameCorrections.SKIPPED_CORRECTION } };
     }
 
     const inputIsValid = validInput(userInput, selectableRegions.length);
