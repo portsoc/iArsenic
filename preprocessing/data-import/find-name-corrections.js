@@ -138,12 +138,19 @@ function getSelectableRegions(correctNameData, misspeltRegion, misspeltSubregion
   // only put cousin regions with common subregions to the misspelt region in the selectable regions array
   for (const cousinRegion of cousinRegions) {
     const cousinSubregionNames = getSubregionNames(cousinRegion);
-    if (misspeltSubregionNames.some(name => cousinSubregionNames.includes(name))) {
+    if (doArraysIntersect(misspeltSubregionNames, cousinSubregionNames)) {
       selectableRegions.push({ type: 'cousin', region: cousinRegion });
     }
   }
 
   return selectableRegions;
+}
+
+function doArraysIntersect(arr1, arr2) {
+  for (const item of arr1) {
+    if (arr2.includes(item)) return true;
+  }
+  return false;
 }
 
 function generateOptionsTable(selectableRegions, misspeltSubregionNames, commonSubregions) {
