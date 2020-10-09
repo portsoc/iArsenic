@@ -44,8 +44,18 @@ Options:
   [-p] path1 path2 ...
                            Use the given CSV files as input data.
 
-  -o directory             If any files are produced, they will be in <directory>.
+  -i file                  (only in find-name-corrections.js, see data-import/README.md)
+                           An input CSV file that may contain incorrect regions.
+
+  -o directory             (everywhere except in find-name-corrections.js)
+                           If any files are produced, they will be in <directory>.
                            Without -o, the content of those files will go in the console.
+
+  -o file                  (in find-name-corrections.js)
+                           The file where to store name corrections.
+                           The contents of the file will be loaded on start and the
+                           name corrections already there will be used when loading
+                           the -i file.
 `.trim());
 }
 
