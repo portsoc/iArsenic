@@ -1,5 +1,5 @@
 const csvLoader = require('../lib/load-data');
-const cli = require('../lib/cli-common-copy');
+const cli = require('../lib/cli-common');
 const nameCorrections = require('../lib/name-corrections');
 const prompt = require('prompt-sync')();
 const fs = require('fs');
