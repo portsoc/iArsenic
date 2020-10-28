@@ -49,12 +49,12 @@ to identify and incorrectly spelt regions and record correct alternatives.
 
 ```
 iArsenic/preprocessing/data-import
+├── README.md
 ├── consolidate-csv.js            // Combines multiple csv files into one
 ├── find-name-corrections.js      // Input a csv and output name corrections
-├── r-data-csv/                   // Stores .csv files being imported
-├── r-data-rdata/                 // Stores .RData files being imported
 ├── rdata-to-csv.r                // Converts .RData files to .csv files
-└── README.md
+├── r-data-csv/                   // Stores .csv files being imported
+└── r-data-rdata/                 // Stores .RData files being imported
 
 2 directories, 4 files
 ```
