@@ -66,7 +66,7 @@ function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubr
   return retarr.length === 0 ? '' : `(${colors.italic(regionString)})`;
 }
 
-const regionLabels = ['division', 'district', 'upazila', 'union'];
+const regionLabels = ['division', 'district', 'upazila', 'union', 'mouza'];
 
 function chooseCorrection(misspeltRegion, correctNameData) {
   // only shows regions inside misspelt region's parent region
@@ -254,7 +254,10 @@ function findRegionByNameArr(dataset, arr) {
   if (arr.length === 3) return upa;
 
   const uni = upa.unions[arr[3]];
-  return uni;
+  if (arr.length === 4) return uni;
+
+  const mou = uni.mouzas[arr[4]];
+  return mou;
 }
 
 function correctDataContains(correctNameData, ...regionNames) {
@@ -286,6 +289,11 @@ function addRelativeRegionLinks(dataset) {
         upa.subRegionsArr = Object.values(upa.subRegions);
         for (const uni of Object.values(upa.unions)) {
           uni.parentRegion = upa;
+          uni.subRegions = uni.mouzas;
+          uni.subRegionsArr = Object.values(uni.subRegions);
+          for (const mou of Object.values(uni.mouzas)) {
+            mou.parentRegion = uni;
+          }
         }
       }
     }
