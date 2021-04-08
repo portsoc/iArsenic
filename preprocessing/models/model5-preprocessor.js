@@ -30,10 +30,10 @@ In model 5:
    widen 90+ up to 100km
  * at >150m, we can take about 100km radius
 
-For example, if a union doesn't have enough wells at <15m, we will take
+For example, if a mouza doesn't have enough wells at <15m, we will take
 all wells at <45m instead. If that's still not enough, we find the nearest
-union and add its wells at <45m, and we continue to farther and farther
-unions until we reach the distance of 10km, then we give up.
+mouza and add its wells at <45m, and we continue to farther and farther
+mouzas until we reach the distance of 10km, then we give up.
 
 OUTPUT
 
@@ -52,36 +52,40 @@ including pre-processed arsenic concentration data which looks like this:
             unions: [
               {
                 union: '..',
-                s15: {
-                  m: ...,   // short for message ID
-                  l: ...,   // short for lower quantile
-                  u: ...,   // short for upper quantile
-                },
-                s45: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                s65: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                s90: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                s150: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                sD: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
+                mouzas: [
+                  mouza: '..',
+                  s15: {
+                    m: ...,   // short for message ID
+                    l: ...,   // short for lower quantile
+                    u: ...,   // short for upper quantile
+                  },
+                  s45: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  s65: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  s90: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  s150: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  sD: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  ... further mouzas
+                ]
               },
               ... further unions
             ]
@@ -169,8 +173,10 @@ function computeWellStats(locationArr) {
       // getEnoughData should have already reported that, but
       // complain here for consistency check
       const stratumName = stratum === 'sD' ? 'deep' : stratum;
-      const unionName = locationArr.map(region => region.name).join(' -> ');
-      console.debug(`Union ${unionName} does not have enough ${stratumName} wells`);
+
+      // name of the lowest region type
+      const regionName = locationArr.map(region => region.name).join(' -> ');
+      console.debug(`Mouza ${regionName} does not have enough ${stratumName} wells`);
     }
   }
 }
@@ -267,7 +273,7 @@ function strataSelector(...strata) {
 
 /*
  * returns an array of locations (at same administrative depth as locationArr)
- * e.g. if locationArr points to a union, we return an array of unions in order
+ * e.g. if locationArr points to a mouza, we return an array of mouzas in order
  * of increasing distance, up to kmDistance.
  */
 function nearbyLocations(locationArr, kmDistance) {
@@ -334,12 +340,14 @@ function extractStats(data, hierarchyPath) {
   return retval;
 }
 
-function forEachUnion(divisions, f) {
+function forEachMouza(divisions, f) {
   for (const div of Object.values(divisions)) {
     for (const dis of Object.values(div.districts)) {
       for (const upa of Object.values(dis.upazilas)) {
         for (const uni of Object.values(upa.unions)) {
-          f([div, dis, upa, uni]);
+          for (const mou of Object.values(uni.mouzas)) {
+            f([div, dis, upa, uni, mou]);
+          }
         }
       }
     }
@@ -348,20 +356,20 @@ function forEachUnion(divisions, f) {
 
 function main(divisions) {
   // split wells into strata
-  forEachUnion(divisions, stratifyWells);
+  forEachMouza(divisions, stratifyWells);
 
   computeNearbyRegions(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
-  forEachUnion(divisions, getEnoughData);
+  forEachMouza(divisions, getEnoughData);
 
   // sort the wells so the stats functions work well
-  forEachUnion(divisions, sortWells);
+  forEachMouza(divisions, sortWells);
 
   // get the actual stats
-  forEachUnion(divisions, computeWellStats);
+  forEachMouza(divisions, computeWellStats);
 
-  const aggregateData = extractStats(divisions, ['division', 'district', 'upazila', 'union']);
+  const aggregateData = extractStats(divisions, ['division', 'district', 'upazila', 'union', 'mouza']);
   return aggregateData;
 }
 
@@ -370,12 +378,12 @@ function main(divisions) {
 /* /////////////////////////////// */
 
 function computeWidening(divisions) {
-  forEachUnion(divisions, stratifyWells);
+  forEachMouza(divisions, stratifyWells);
 
   computeNearbyRegions(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
-  forEachUnion(divisions, computeRegionWidening);
+  forEachMouza(divisions, computeRegionWidening);
 
   return divisions;
 }
