@@ -18,7 +18,7 @@ const CSV_PARSE_OPTIONS = {
 function discernAccuracy(arsenic, upperQ, lowerQ) {
   return (lowerQ > arsenic) ? 'overestimate'
     : (upperQ < arsenic) ? 'underestimate'
-      : 'accurate';
+        : 'accurate';
 }
 
 function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
