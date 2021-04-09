@@ -44,6 +44,20 @@ more possible models:
 * all models with 10% or so overlap between strata
 * machine learning
 
+## File Structure
+
+```
+iArsenic/preprocessing
+├── README.md
+├── cli/                // Tools for sorting data and testing the models
+├── data-import/        // Tools to import data from the .Rdata format
+├── geodata/            // Geographic data visualisation (under development)
+├── lib/                // Various tools for converting and fixing data
+├── models/             // Stores the models used to find the arsenic levels
+└── tests/              // Tests for functions in ./lib/stats.js
+
+6 directories, 1 file
+```
 
 ## Output Structures
 
