@@ -5,7 +5,7 @@ const ADMINISTRATIVE_LEVEL = 'uni';
 
 function computeCentroids() {
   const map = require(`./maps/dist/${ADMINISTRATIVE_LEVEL}/${ADMINISTRATIVE_LEVEL}-c005-s010-vw-pr.json`);
-  const topo = topojson.feature(map, map['objects']['map']);
+  const topo = topojson.feature(map, map.objects.map);
 
   const geoList = [];
 
