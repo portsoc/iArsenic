@@ -1,3 +1,8 @@
+/**
+ * Initialises listeners, gathers inputs from the user,
+ * validates data, displays the assessment
+ */
+
 /* global produceEstimate, dropdownData, aggregateData */
 
 const divDD = document.querySelector('#divisionDD');
