@@ -1,4 +1,8 @@
 /*
+ * server for request log database
+ * accepts only GET and POST requests for listing and adding logs
+ * accessing logs requires authentication
+ * data is not validated when logging
  * adapted from google's cloud functions examples, in particular the datastore one
  */
 

@@ -1,3 +1,6 @@
+// computes the center of a region
+// used in preprocessing/lib/geo-data.js to compute the nearby regions.
+
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import { FeatureCollection, GeometryObject, GeoJsonProperties } from 'geojson';
