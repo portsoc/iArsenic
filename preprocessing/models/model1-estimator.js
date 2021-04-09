@@ -49,10 +49,10 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
         (union.as_median_under_90 > 20 && union.as_median_under_90 <= 50)
           ? 'likely to be Polluted'
           : (union.as_median_under_90 > 50 && union.as_median_under_90 <= 200)
-            ? 'likely to be HIGHLY Polluted'
-            : (union.as_median_under_90 > 200)
-              ? 'likely to be SEVERELY Polluted'
-              : 'likely to be arsenic-safe';
+              ? 'likely to be HIGHLY Polluted'
+              : (union.as_median_under_90 > 200)
+                  ? 'likely to be SEVERELY Polluted'
+                  : 'likely to be arsenic-safe';
 
       const chemTestStatus =
         (union.as_max_under_90 <= 100)
