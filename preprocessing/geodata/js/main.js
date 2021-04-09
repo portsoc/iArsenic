@@ -101,7 +101,7 @@ function drawMapFeatures(path, topo) {
 async function loadMapData(mapUrl) {
   const map = await d3.json(mapUrl);
 
-  topo = topojson.feature(map, map['objects']['map']);
+  topo = topojson.feature(map, map.objects.map);
 
   const proj = d3.geoMercator()
     .translate([w / 2, h / 2]);
