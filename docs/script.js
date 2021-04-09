@@ -4,6 +4,7 @@ const divDD = document.querySelector('#divisionDD');
 const disDD = document.querySelector('#districtDD');
 const upaDD = document.querySelector('#upazilaDD');
 const uniDD = document.querySelector('#unionDD');
+const mouDD = document.querySelector('#mouzaDD');
 const locationSection = document.querySelector('#locationSection');
 const assess = document.querySelector('#assessment');
 const submit = document.querySelector('#submit');
@@ -39,9 +40,14 @@ function init() {
   upaDD.dataset.subProp = 'unions';
   upaDD.nextDropdown = uniDD;
 
+  uniDD.dataset.nameProp = 'union';
+  uniDD.dataset.subProp = 'mouzas';
+  uniDD.nextDropdown = mouDD;
+
   divDD.addEventListener('change', handleDropDownSelection);
   disDD.addEventListener('change', handleDropDownSelection);
   upaDD.addEventListener('change', handleDropDownSelection);
+  uniDD.addEventListener('change', handleDropDownSelection);
 
   populateDropdown(divDD, divDD.dataset.nameProp, divDD.dataset.subProp, dropdownData); // complete data
 
@@ -73,6 +79,7 @@ function gatherInputs() {
   retval.district = disDD.value;
   retval.upazila = upaDD.value;
   retval.union = uniDD.value;
+  retval.mouza = mouDD.value;
 
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
   if (selectedStaining && selectedStaining.value !== 'Mixed') {
