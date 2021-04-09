@@ -1,3 +1,6 @@
+// computes the center of a region
+// used in preprocessing/lib/geo-data.js to compute the nearby regions.
+
 const d3 = require('d3');
 const topojson = require('topojson');
 const nameCorrections = require('../lib/name-corrections');
