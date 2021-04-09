@@ -16,8 +16,10 @@ const CSV_PARSE_OPTIONS = {
 };
 
 function discernAccuracy(arsenic, upperQ, lowerQ) {
-  return (lowerQ > arsenic) ? 'overestimate'
-    : (upperQ < arsenic) ? 'underestimate'
+  return (lowerQ > arsenic)
+    ? 'overestimate'
+    : (upperQ < arsenic)
+        ? 'underestimate'
         : 'accurate';
 }
 
