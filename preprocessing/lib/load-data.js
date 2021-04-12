@@ -47,7 +47,7 @@ function extractLocations(records) {
   const divisions = {};
 
   for (const r of records) {
-    if (!r.Division || !r.District || !r.Upazila || !r.Union) {
+    if (!r.Division || !r.District || !r.Upazila || !r.Union || !r.Mouza) {
       // skip because we don't have location
       continue;
     }
@@ -85,8 +85,19 @@ function extractLocations(records) {
     if (!(r.Union in upazila.unions)) {
       upazila.unions[r.Union] = {
         wells: [],
+        mouzas: {},
         name: r.Union,
       };
+    }
+
+    const union = upazila.unions[r.Mouza];
+    if (union !== undefined) {
+      if (!(r.Mouza in union.mouzas)) {
+        union.mouzas[r.Mouza] = {
+          wells: [],
+          name: r.Mouza,
+        };
+      }
     }
   }
 
@@ -96,7 +107,7 @@ function extractLocations(records) {
 // put each well's arsenic level and depth data into the location hierarchy
 function fillArsenicData(divisions, records) {
   for (const r of records) {
-    if (!r.Division || !r.District || !r.Upazila || !r.Union ||
+    if (!r.Division || !r.District || !r.Upazila || !r.Union || !r.Mouza ||
         !r.Depth || isNaN(r.Depth) || r.Arsenic === '' || isNaN(r.Arsenic)) {
       // skip because we don't have location or depth or arsenic level
       continue;
@@ -106,6 +117,7 @@ function fillArsenicData(divisions, records) {
     const district = division.districts[r.District];
     const upazila = district.upazilas[r.Upazila];
     const union = upazila.unions[r.Union];
+    const mouza = union.mouzas[r.Mouza];
 
     const well = {
       arsenic: Number(r.Arsenic),
@@ -116,6 +128,7 @@ function fillArsenicData(divisions, records) {
     district.wells.push(well);
     upazila.wells.push(well);
     union.wells.push(well);
+    mouza?.wells.push(well);
   }
 }
 
@@ -129,10 +142,11 @@ function correctNames(records, corrections) {
       r.District,
       r.Upazila,
       r.Union,
+      r.Mouza,
     ]);
 
     if (corrected != null) {
-      [r.Division, r.District, r.Upazila, r.Union] = corrected;
+      [r.Division, r.District, r.Upazila, r.Union, r.Mouza] = corrected;
       correctRecords.push(r);
     }
   }

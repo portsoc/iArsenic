@@ -1,5 +1,5 @@
 // model: model4
-// generated: Fri Jul 26 2019 13:10:44 GMT+0100 (British Summer Time)
+// generated: Mon Apr 12 2021 11:16:35 GMT+0100 (British Summer Time)
 // input data: default
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
@@ -66,41 +66,37 @@ function createMessage(id) {
   return Object.assign({}, aggregateOutput[id]);
 }
 
-// Returns the arsenic values
-function getArsenicValues(region, depth) {
-  let retval = {};
-  if (depth < 15.3) {
-    retval = region.s15;
-  } else if (depth < 45) {
-    retval = region.s45;
-  } else if (depth < 65) {
-    retval = region.s65;
-  } else if (depth < 90) {
-    retval = region.s90;
-  } else if (depth < 150) {
-    retval = region.s150;
-  } else {
-    retval = region.sD;
-  }
-  return retval;
-}
-
 // Flood removed from here for time being
-function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, utensil) {
+function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {
   const division = divisions[div];
   const district = division ? division.districts[dis] : undefined;
   const upazila = district ? district.upazilas[upa] : undefined;
   const union = upazila ? upazila.unions[uni] : undefined;
-  const mouza = union ? union.mouzas[mou] : undefined;
 
   let retval = {};
+  let arsenicValues = {};
 
-  if (!mouza) {
+  if (!union) {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
     return retval;
   }
 
-  const arsenicValues = getArsenicValues(mouza, depth);
+  if (depth < 15.3) {
+    arsenicValues = union.s15;
+  } else if (depth < 45) {
+    arsenicValues = union.s45;
+  } else if (depth < 65) {
+    arsenicValues = union.s65;
+  } else if (depth < 90) {
+    arsenicValues = union.s90;
+  } else if (depth < 150) {
+    arsenicValues = union.s150;
+  } else {
+    arsenicValues = union.sD;
+  }
+
+  const lowerQ = round(arsenicValues.l, 10, 1);
+  const upperQ = round(arsenicValues.u, 10, 1);
 
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
@@ -118,12 +114,15 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
   } else if (colour === 'Red' || utensil === 'Red') {
     retval = createMessage(arsenicValues.m);
     if (arsenicValues.m > 0) {
-      retval.message += ' ' + round(arsenicValues.l, 10, 1) + ' to ' + round(arsenicValues.u, 10, 1) + ' µg/L ';
+      retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
     }
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }
+  retval.lowerQ = lowerQ;
+  retval.upperQ = upperQ;
   return retval;
 }
 
 if (typeof module === 'object') module.exports = produceEstimate;
+
