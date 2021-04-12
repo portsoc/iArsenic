@@ -1,3 +1,11 @@
+/*
+ * Converting CSV files to JSON
+ *
+ * This script checks if the path and output flags of the object returned in
+ * ./cli-common.js are missing, then writes the input CSV as JSON in the
+ * specified file.
+ */
+
 const csvLoader = require('./load-data');
 const cli = require('./cli-common');
 const colors = require('colors');
