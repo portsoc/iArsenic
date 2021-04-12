@@ -1,3 +1,9 @@
+/*
+ * This script reads a model id, an input CSV file, and an output file
+ * or directory. It then loads the corresponding model and returns it
+ * along with the parameters.
+ */
+
 const commandLineArgs = require('command-line-args');
 const path = require('path');
 

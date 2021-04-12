@@ -1,3 +1,8 @@
+/*
+ * Loads regions from CSV files, corrects their names, and returns them
+ * as JSON.
+ */
+
 const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
