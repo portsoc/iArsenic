@@ -1,5 +1,5 @@
-const csvLoader = require('../lib/load-data');
-const cli = require('../lib/cli-common-copy');
+const csvLoader = require('./load-data');
+const cli = require('./cli-common');
 const colors = require('colors');
 const fs = require('fs');
 

@@ -1,4 +1,4 @@
-// converts the output of rdata-to-csv.r
+// converts the output of rdata-to-csv.r to a single csv file
 
 // Run script in terminal:
 // node [script name/path] [input csv files (use *.csv)] TODO switch to -p flag??
