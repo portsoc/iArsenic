@@ -1,3 +1,8 @@
+/*
+ * This script computes the nearby regions for each region.
+ * It adds them as an array in the object representing a region.
+ */
+
 import { BasicDataSet, GeoRegion, Region } from './types';
 
 import { computeCentroids } from '../geodata/centroids';

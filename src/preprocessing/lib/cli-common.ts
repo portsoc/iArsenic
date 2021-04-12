@@ -1,3 +1,9 @@
+/*
+ * This script reads a model id, an input CSV file, and an output file
+ * or directory. It then loads the corresponding model and returns it
+ * along with the parameters.
+ */
+
 import commandLineArgs from 'command-line-args';
 import path from 'path';
 import { BasicDataSet, EstimatorFunction, GeoRegion, StatsHierarchyObj, Region, RegionStatistics, RegionWithStrata } from './types';

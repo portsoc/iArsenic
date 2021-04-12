@@ -1,3 +1,11 @@
+/*
+ * Converting CSV files to JSON
+ *
+ * This script checks if the path and output flags of the object returned in
+ * ./cli-common.js are missing, then writes the input CSV as JSON in the
+ * specified file.
+ */
+
 import { loadData as csvLoader } from './load-data';
 import { getParameters, CliParameters } from './cli-common';
 import colors from 'colors';

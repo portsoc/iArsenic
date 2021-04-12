@@ -1,3 +1,8 @@
+/*
+ * Loads regions from CSV files, corrects their names, and returns them
+ * as JSON.
+ */
+
 import parse from 'csv-parse/lib/sync';
 import fs from 'fs';
 import path from 'path';
