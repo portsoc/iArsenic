@@ -46,7 +46,7 @@ function main(options) {
   const modelPreprocessor = options.model.preprocessor;
 
   const aggregateData = modelPreprocessor(data);
-  const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union']);
+  const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union', 'mouza']);
 
   const estimatorContent = fs.readFileSync(options.model.estimatorPath);
 
