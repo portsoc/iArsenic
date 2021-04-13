@@ -97,28 +97,31 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
   const lowerQ = round(arsenicValues.l, 10, 1);
   const upperQ = round(arsenicValues.u, 10, 1);
 
-  if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
-    const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
-
-    // Flood is not yet a provided input so we have commented it out ready for future implementation
-
-    // const floodWarning =
-    //   (depth <= 15.3 && flood === 'No')
-    //     ? ' but may be vulnerable to nitrate and pathogens'
-    //     : '';
-    const floodWarning = '';
-
-    retval.message = msgStart + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
-    retval.severity = 'safe';
-  } else if (colour === 'Red' || utensil === 'Red') {
-    retval = createMessage(arsenicValues.m);
-    if (arsenicValues.m > 0) {
-      retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
+  if (depth < 15.3 && 'm_p25' in arsenicValues) {
+    // flooding model
+    if (colour === 'Black') {
+      retval = createMessage(arsenicValues.m_p25);
+    } else if (flood === 'yes') {
+      retval = createMessage(arsenicValues.m_p95);
+    } else {
+      retval = createMessage(arsenicValues.m_p75);
     }
   } else {
-    retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
-  }
+    // regular model
+    if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
+      const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
+      retval.message = msgStart + warningSeverity + 'likely to be arsenic-safe';
+      retval.severity = 'safe';
+    } else if (colour === 'Red' || utensil === 'Red') {
+      retval = createMessage(arsenicValues.m);
+      if (arsenicValues.m > 0) {
+        retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
+      }
+    } else {
+      retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    }
+  }
   retval.lowerQ = lowerQ;
   retval.upperQ = upperQ;
   return retval;
