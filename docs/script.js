@@ -97,6 +97,11 @@ function gatherInputs() {
     retval.drinking = selectedDrinking.value;
   }
 
+  const selectedFlooding = document.querySelector('input[name="flooding"]:checked');
+  if (selectedFlooding) {
+    retval.flooding = selectedFlooding.value;
+  }
+
   validateInputs();
   if (!retval.division || !retval.district || !retval.upazila || !retval.union) {
     scrollToSection(locationSection);
@@ -287,7 +292,7 @@ async function showAssessment() {
 
   if (inputs) {
     const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
-      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
 
     // log the inputs
     logToServer({ inputs, estimate });

@@ -66,7 +66,7 @@ function createMessage(id) {
 }
 
 // Flood removed from here for time being
-function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {
+function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, flood) {
   const division = divisions[div];
   const district = division ? division.districts[dis] : undefined;
   const upazila = district ? district.upazilas[upa] : undefined;
