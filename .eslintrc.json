@@ -5,6 +5,16 @@
       "es6": true,
       "node": true
   },
-  "extends": "portsoc",
-  "ignorePatterns": ["aggregate-data.js", "dropdown-data.js", "node_modules/"]
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": ["portsoc-ts"],
+  "root": true,
+  "ignorePatterns": ["aggregate-data.js", "dropdown-data.js", "node_modules/", "dist/"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
 }

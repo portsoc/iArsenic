@@ -11,17 +11,31 @@
     "csv-parse": "^4.3.3",
     "csv-stringify": "^5.5.0",
     "d3": "^5.15.0",
+    "geojson": "^0.5.0",
     "prompt-sync": "^4.2.0",
     "simple-google-openid": "^0.3.0",
     "topojson": "^3.0.2"
   },
   "devDependencies": {
-    "eslint": "^7.23.0",
+    "@types/command-line-args": "^5.0.0",
+    "@types/d3": "^6.3.0",
+    "@types/geojson": "^7946.0.7",
+    "@types/prompt-sync": "^4.1.0",
+    "@types/topojson": "^3.2.3",
+    "@types/topojson-specification": "^1.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "copyfiles": "^2.4.1",
+    "eslint": "^7.25.0",
     "eslint-config-portsoc": "^0.8.1",
+    "eslint-config-portsoc-ts": "^0.8.2",
     "jest": "^24.4.0"
   },
   "scripts": {
-    "test": "jest preprocessing/tests/",
-    "lint": "eslint ."
+    "test": "jest dist/preprocessing/tests/",
+    "lint": "eslint .",
+    "full-build": "npm run copy-files && npm run build",
+    "build": "tsc",
+    "copy-files": "copyfiles -u 1 ./src/**/* dist -e ./src/**/*.{js,ts}"
   }
 }
