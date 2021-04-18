@@ -82,6 +82,7 @@ function main(options) {
       well.dis,
       well.upa,
       well.uni,
+      well.mou,
       Number(well.depth),
       well.colour,
       Number(well.as));
