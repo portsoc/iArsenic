@@ -27,6 +27,7 @@ function main(options) {
     'district',
     'upazila',
     'union',
+    'mouza',
   ];
 
   // Adds all the stratum headers to the headers array
@@ -57,16 +58,22 @@ function main(options) {
           const uniObj = upaObj.unions[uni];
           initStratas(uniObj);
 
-          for (const well of uniObj.wells) {
-            countStratas([divObj, disObj, upaObj, uniObj], well);
+          for (const mou of Object.keys(uniObj.mouzas)) {
+            const mouObj = uniObj.mouzas[mou];
+            initStratas(mouObj);
+
+            for (const well of mouObj.wells) {
+              countStratas([divObj, disObj, upaObj, uniObj, mouObj], well);
+            }
+            pushRecord(records, div, dis, upa, uni, mou, mouObj);
           }
-          pushRecord(records, div, dis, upa, uni, uniObj);
+          pushRecord(records, div, dis, upa, uni, '###', uniObj);
         }
-        pushRecord(records, div, dis, upa, '###', upaObj);
+        pushRecord(records, div, dis, upa, '###', '###', upaObj);
       }
-      pushRecord(records, div, dis, '###', '###', disObj);
+      pushRecord(records, div, dis, '###', '###', '###', disObj);
     }
-    pushRecord(records, div, '###', '###', '###', divObj);
+    pushRecord(records, div, '###', '###', '###', '###', divObj);
   }
 
   // write records to csv file
@@ -77,8 +84,8 @@ function main(options) {
   console.log(contents);
 }
 
-function pushRecord(records, div, dis, upa, uni, wellCountObj) {
-  const record = [div, dis, upa, uni];
+function pushRecord(records, div, dis, upa, uni, mou, wellCountObj) {
+  const record = [div, dis, upa, uni, mou];
 
   for (const stratum of STRATA) {
     record.push(wellCountObj[stratum.header]);

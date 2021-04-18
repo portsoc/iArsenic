@@ -3,7 +3,7 @@
 ## Requirements
 
 * Ensure the csv headers are as follows (**Case matters!**):
-  * `Division,District,Upazila,Depth,Arsenic,Union`
+  * `Division,District,Upazila,Mouza,Depth,Arsenic,Union`
 
 ## How to Use It
 
@@ -66,6 +66,11 @@ const divisions = {
               'union name': {
                 wells: [],
                 name: 'union name',
+                mouzas: {
+                  'mouza name': {
+                  wells: [],
+                  name: 'mouza name',
+              },
               },
             },
           },

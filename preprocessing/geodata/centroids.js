@@ -11,13 +11,14 @@ function computeCentroids() {
 
   for (const selectedRegion of topo.features) {
     const props = selectedRegion.properties;
-    const correctName = nameCorrections.correct([props.div, props.dis, props.upa, props.uni]);
+    const correctName = nameCorrections.correct([props.div, props.dis, props.upa, props.uni, props.mou]);
 
     const geoObj = {
       div: correctName[0],
       dis: correctName[1],
       upa: correctName[2],
       uni: correctName[3],
+      mou: correctName[4],
       centroid: d3.geoCentroid(selectedRegion),
     };
 
