@@ -61,8 +61,8 @@ function init() {
   mixedStain.addEventListener('change', () => { displayElement(utensilSection, true); });
 
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
-  depth.addEventListener('change', () => { toggleFlooding(); });
-  depthOutput.addEventListener('change', () => { toggleFlooding(); });
+  depth.addEventListener('change', () => { showOrHideFlooding(); });
+  depthOutput.addEventListener('change', () => { showOrHideFlooding(); });
 
   for (let i = 0; i < inputs.length; i += 1) {
     inputs[i].addEventListener('change', hideAssessment);
@@ -220,7 +220,7 @@ function displayElement(element, show) {
   element.classList.toggle('hidden', !show);
 }
 
-function toggleFlooding() {
+function showOrHideFlooding() {
   displayElement(floodingSection, depthOutput.value < 50);
 }
 
