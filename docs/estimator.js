@@ -1,5 +1,5 @@
 // model: model5
-// generated: Tue Apr 20 2021 15:50:44 GMT+0200 (heure d’été d’Europe centrale)
+// generated: Tue Apr 20 2021 15:52:21 GMT+0200 (heure d’été d’Europe centrale)
 // input data: default
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
@@ -100,11 +100,14 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
   const lowerQ = round(arsenicValues.l, 10, 1);
   const upperQ = round(arsenicValues.u, 10, 1);
 
-  if (depth < 15.3 && 'm_p25' in arsenicValues) {
+  // we're checking for m2 in arsenicValues, because it's what tells us the
+  // flooding model should apply
+  if (depth < 15.3 && 'm2' in arsenicValues) {
     // flooding model
     if (colour === 'Black') {
       retval = createMessage(arsenicValues.m_p25);
     } else if (flood === 'yes') {
+      // here, the colour is red
       retval = createMessage(arsenicValues.m_p95);
     } else {
       retval = createMessage(arsenicValues.m_p75);
@@ -115,7 +118,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
       const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
       const floodWarning =
-        (depth <= 15.3 && flood === 'no')
+        (depth < 15.3 && flood === 'no')
           ? ' but may be vulnerable to nitrate and pathogens'
           : '';
 
