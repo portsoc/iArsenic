@@ -57,9 +57,9 @@ including pre-processed arsenic concentration data which looks like this:
                   m: ...,     // short for message ID using median
                   l: ...,     // short for lower quantile
                   u: ...,     // short for upper quantile
-                  m_p25: ..., // message ID using the 25th percentile
-                  m_p75: ..., // message ID using the 75th percentile
-                  m_p95: ..., // message ID using the 95th percentile
+                  m2: ...,    // message ID using the 25th percentile
+                  m7: ...,    // message ID using the 75th percentile
+                  m9: ...,    // message ID using the 95th percentile
                 },
                 s45: {
                   m: ...,
@@ -343,9 +343,9 @@ function extractStats(data, hierarchyPath) {
           u: dataObj[`${stratum}_upp`],
         };
         if (`${stratum}_p25` in dataObj) {
-          hierarchyObj[stratum]['m_p25'] = produceMessage(dataObj[`${stratum}_p25`], dataObj[`${stratum}_max`]);
-          hierarchyObj[stratum]['m_p75'] = produceMessage(dataObj[`${stratum}_p75`], dataObj[`${stratum}_max`]);
-          hierarchyObj[stratum]['m_p95'] = produceMessage(dataObj[`${stratum}_p95`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum]['m2'] = produceMessage(dataObj[`${stratum}_p25`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum]['m7'] = produceMessage(dataObj[`${stratum}_p75`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum]['m9'] = produceMessage(dataObj[`${stratum}_p95`], dataObj[`${stratum}_max`]);
         }
       }
     }

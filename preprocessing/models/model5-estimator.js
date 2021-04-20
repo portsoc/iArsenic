@@ -97,9 +97,9 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
   const lowerQ = round(arsenicValues.l, 10, 1);
   const upperQ = round(arsenicValues.u, 10, 1);
 
-  // we're checking for m_p25 in arsenicValues, because it's what tells us the
+  // we're checking for m2 in arsenicValues, because it's what tells us the
   // flooding model should apply
-  if (depth < 15.3 && 'm_p25' in arsenicValues) {
+  if (depth < 15.3 && 'm2' in arsenicValues) {
     // flooding model
     if (colour === 'Black') {
       retval = createMessage(arsenicValues.m_p25);
