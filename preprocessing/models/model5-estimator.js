@@ -66,31 +66,22 @@ function createMessage(id) {
 }
 
 // Returns the arsenic values
-function getArsenicValues(region, depth) {
-  let retval = {};
-  if (depth < 15.3) {
-    retval = region.s15;
-  } else if (depth < 45) {
-    retval = region.s45;
-  } else if (depth < 65) {
-    retval = region.s65;
-  } else if (depth < 90) {
-    retval = region.s90;
-  } else if (depth < 150) {
-    retval = region.s150;
-  } else {
-    retval = region.sD;
-  }
-  return retval;
+function selectArsenicValues(region, depth) {
+  if (depth < 15.3) return region.s15;
+  else if (depth < 45) return region.s45;
+  else if (depth < 65) return region.s65;
+  else if (depth < 90) return region.s90;
+  else if (depth < 150) return region.s150;
+  else return region.sD;
 }
 
 // Flood removed from here for time being
 function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, utensil) {
   const division = divisions[div];
-  const district = division ? division.districts[dis] : undefined;
-  const upazila = district ? district.upazilas[upa] : undefined;
-  const union = upazila ? upazila.unions[uni] : undefined;
-  const mouza = union ? union.mouzas[mou] : undefined;
+  const district = division?.districts[dis];
+  const upazila = district?.upazilas[upa];
+  const union = upazila?.unions[uni];
+  const mouza = union?.mouzas[mou];
 
   let retval = {};
 
@@ -99,7 +90,7 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
     return retval;
   }
 
-  const arsenicValues = getArsenicValues(mouza, depth);
+  const arsenicValues = selectArsenicValues(mouza, depth);
 
   const lowerQ = round(arsenicValues.l, 10, 1);
   const upperQ = round(arsenicValues.u, 10, 1);
