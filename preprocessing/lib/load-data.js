@@ -90,14 +90,12 @@ function extractLocations(records) {
       };
     }
 
-    const union = upazila.unions[r.Mouza];
-    if (union !== undefined) {
-      if (!(r.Mouza in union.mouzas)) {
-        union.mouzas[r.Mouza] = {
-          wells: [],
-          name: r.Mouza,
-        };
-      }
+    const union = upazila.unions[r.Union];
+    if (!(r.Mouza in union.mouzas)) {
+      union.mouzas[r.Mouza] = {
+        wells: [],
+        name: r.Mouza,
+      };
     }
   }
 
@@ -128,7 +126,7 @@ function fillArsenicData(divisions, records) {
     district.wells.push(well);
     upazila.wells.push(well);
     union.wells.push(well);
-    mouza?.wells.push(well);
+    mouza.wells.push(well);
   }
 }
 
