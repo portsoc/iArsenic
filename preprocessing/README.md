@@ -3,7 +3,7 @@
 ## Requirements
 
 * Ensure the csv headers are as follows (**Case matters!**):
-  * `Division,District,Upazila,Mouza,Depth,Arsenic,Union`
+  * `Division,District,Upazila,Union,Depth,Arsenic,Mouza`
 
 ## How to Use It
 
