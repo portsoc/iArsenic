@@ -299,20 +299,13 @@ function numericalCompare(a, b) {
 // and the following even number is high outliers so we suggest chemical test
 function produceMessage(med, max) {
   if (med == null) return 0;
-  let pollutionStatus;
-  if (med <= 20) {
-    pollutionStatus = 1;
-  } else if (med <= 50) {
-    pollutionStatus = 3;
-  } else if (med <= 200) {
-    pollutionStatus = 5;
-  } else {
-    pollutionStatus = 7;
-  }
-
   const chemTestStatus = (max <= 100) ? 0 : 1;
 
-  return pollutionStatus + chemTestStatus;
+  // the number represent the pollution status
+  if (med <= 20) return (1 + chemTestStatus);
+  else if (med <= 50) return (3 + chemTestStatus);
+  else if (med <= 200) return (5 + chemTestStatus);
+  else return (7 + chemTestStatus);
 }
 
 function extractStats(data, hierarchyPath) {
