@@ -1,6 +1,6 @@
 /**
- * Initialises listeners, gathers inputs from the user,
- * validates data, displays the assessment
+ * This is the main client sude script, it starts listeners, 
+ * gathers inputs from the user, validates data, & displays the assessment
  */
 
 /* global produceEstimate, dropdownData, aggregateData */
