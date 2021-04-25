@@ -1,6 +1,6 @@
 /**
- * Initialises listeners, gathers inputs from the user,
- * validates data, displays the assessment
+ * This is the main client side script, it starts listeners,
+ * gathers inputs from the user, validates data, & displays the assessment
  */
 
 /* global produceEstimate, dropdownData, aggregateData */
