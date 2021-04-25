@@ -19,7 +19,7 @@ function checkForMissingFlags(cliArgs: CliParameters) {
 
   if (cliArgs.output == null) {
     console.warn(colors.yellow.bold('No output file specified (-o flag).'));
-    cliArgs.output = 'csvToJsonOutput.json';
+    cliArgs.output = 'csv-to-json-output.json';
   }
   return true;
 }
