@@ -55,11 +55,11 @@ including pre-processed arsenic concentration data which looks like this:
                 union: '..',
                 s15: {
                   m: ...,     // short for message ID using median
-                  l: ...,     // short for lower quantile
-                  u: ...,     // short for upper quantile
                   m2: ...,    // message ID using the 25th percentile
                   m7: ...,    // message ID using the 75th percentile
                   m9: ...,    // message ID using the 95th percentile
+                  l: ...,     // short for lower quantile
+                  u: ...,     // short for upper quantile
                 },
                 s45: {
                   m: ...,
