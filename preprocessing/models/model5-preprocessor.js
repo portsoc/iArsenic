@@ -343,9 +343,9 @@ function extractStats(data, hierarchyPath) {
           u: dataObj[`${stratum}_upp`],
         };
         if (`${stratum}_p25` in dataObj) {
-          hierarchyObj[stratum]['m2'] = produceMessage(dataObj[`${stratum}_p25`], dataObj[`${stratum}_max`]);
-          hierarchyObj[stratum]['m7'] = produceMessage(dataObj[`${stratum}_p75`], dataObj[`${stratum}_max`]);
-          hierarchyObj[stratum]['m9'] = produceMessage(dataObj[`${stratum}_p95`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum].m2 = produceMessage(dataObj[`${stratum}_p25`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum].m7 = produceMessage(dataObj[`${stratum}_p75`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum].m9 = produceMessage(dataObj[`${stratum}_p95`], dataObj[`${stratum}_max`]);
         }
       }
     }
