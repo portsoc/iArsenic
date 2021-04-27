@@ -1,5 +1,5 @@
 /**
- * This is the main client sde script, it starts listeners,
+ * This is the main client side script, it adds event listeners,
  * gathers inputs from the user, validates data, & displays the assessment
  */
 
