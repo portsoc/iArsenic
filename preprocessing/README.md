@@ -124,3 +124,25 @@ const dropdownData = [
   ...
 ]
 ```
+
+## Tests
+
+`npm test` will run unit tests on the stats code.
+
+`sh preprocessing/tests/test-cli.sh` will run all the models against all datasets configures in `test-cli.sh`, produce output for every geographic region and every well depth we care about, and compare the output against benchmark output in `preprocessing/tests/benchmark-data`. If we aren't changing the statistical models or the underlying data sets, we should not see any differences in the generated data.
+
+### When we add/change a model
+
+A changed model should generate different outputs from the benchmark data. We can look at the differences and see that they correspond to the model changes we meant to implement. When satisfied, we can move `preprocessing/outputs/<model>` generated outputs into `benchmark-data`.
+
+An added model must be added to the list of models run in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data`.
+
+When a model changes, no other models' output should be affected.
+
+### When we add/change a dataset
+
+A changed dataset may generate different outputs in some or all of the models. We should identify and review the output changes, and if satisfied that they correspond to the intended dataset change, adopt the changed outputs from `test-outputs` into `benchmark-data`.
+
+An added dataset needs to be added to the list of datasets in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data`.
+
+When a dataset is added or changed, no test outputs with previous datasets should be affected.
