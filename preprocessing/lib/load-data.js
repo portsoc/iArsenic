@@ -1,38 +1,38 @@
 /*
  * Loads regions from CSV files, corrects their names, and returns them
- * as structure: 
-
-{
-  division: {
-    wells: [...], // array of all wells, and depths of arsenic in the division
-    districts: {
-      district: {
-        wells: [...],
-        upazilas: {
-          upazila: {
-            wells: [...],
-            unions: {
-              union: {
-                wells: [...],
-                mouzas: {
-                  mouza: {
-                    wells: [...]
-                  },
-                  ... further mouzas
-                }
-              },
-              ... further unions
-            }
-          },
-          ... further upazilas
-        }
-      },
-      ... further districts
-    }
-  },
-  ... further divisions
-}
-*/
+ * as the following structure:
+ *
+ * {
+ *   <division name>: {
+ *     wells: [...], // array of all wells, and depths of arsenic in the division
+ *     districts: {
+ *       <district name>: {
+ *         wells: [...],
+ *         upazilas: {
+ *           <upazila name>: {
+ *             wells: [...],
+ *             unions: {
+ *               <union name>: {
+ *                 wells: [...],
+ *                 mouzas: {
+ *                   <mouza name>: {
+ *                     wells: [...]
+ *                   },
+ *                   ... further mouzas
+ *                 }
+ *               },
+ *               ... further unions
+ *             }
+ *           },
+ *           ... further upazilas
+ *         }
+ *       },
+ *       ... further districts
+ *     }
+ *   },
+ *   ... further divisions
+ * }
+ */
 
 const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
