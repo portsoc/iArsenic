@@ -1,6 +1,7 @@
 /*
- * List of name corrections for division/district/upazila/union spelling variations.
- * Loads the name corrections
+ * This file handles name corrections for division/district/upazila/union/mouza
+ * spelling variations. Name corrections are builtin (below) and loaded from
+ * files in /data/name-corrections
  */
 
 export const corrections = new Map<string, string[]>();

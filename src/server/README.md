@@ -1,10 +1,10 @@
-# iArsenic WebServer
+# iArsenic data logging server
 
-## About
-
-Webserver exists to serve the application in production and to log requests to a google firebase database for future analysis 
+This is a Google cloud function for logging requests to a google datastore for
+future analysis.
 
 ## Notes
+
 * Accepts only GET and POST requests for listing and adding logs
 * Accessing logs requires authentication
 * Data is NOT validated when logging
