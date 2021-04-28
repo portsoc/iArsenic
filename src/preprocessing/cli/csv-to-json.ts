@@ -1,13 +1,12 @@
 /*
  * Converting CSV files to JSON
  *
- * This script checks if the path and output flags of the object returned in
- * ./cli-common.js are missing, then writes the input CSV as JSON in the
- * specified file.
+ * This tool loads the well data and writes out the JSON internal format,
+ * probably for inspection and debugging purposes.
  */
 
-import { loadData as csvLoader } from './load-data';
-import { getParameters, CliParameters } from './cli-common';
+import { loadData as csvLoader } from '../lib/load-data';
+import { getParameters, CliParameters } from '../lib/cli-common';
 import colors from 'colors';
 import fs from 'fs';
 
