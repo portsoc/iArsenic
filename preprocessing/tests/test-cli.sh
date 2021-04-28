@@ -66,7 +66,7 @@ main () {
       dataOutputDirectory="default-data"
       invokeDataPath=""
       if [ "$dataPath" != "" ]; then
-        generateDataDirectory
+        generateDataDirectory # overwrites dataOutputDirectory
         invokeDataPath="-p"
       fi
       echo "  model ${model:-'default'} with data ${dataPath:-'default'}"
