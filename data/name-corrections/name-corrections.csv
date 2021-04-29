@@ -54,8 +54,8 @@ Chittagong#Comilla#Chandina#Uttar Barera,Chittagong#Comilla#Chandina#Barera
 Chittagong#Comilla#Chandina#Dakshin Barera,Chittagong#Comilla#Chandina#Barera
 Chittagong#Comilla#Chandina#Uttar Bara kari,Chittagong#Comilla#Chandina#Bara Karai (uttar Bara Karai)
 Chittagong#Comilla#Chandina#Dakshin Barakarai,Chittagong#Comilla#Chandina#Bara Karai (uttar Bara Karai)
-Chittagong#Comilla#Chandina#Purba Chandina,Chittagong#Comilla#Chandina#Chandina Paurashava
-Chittagong#Comilla#Chandina#Paschim Chandina,Chittagong#Comilla#Chandina#Chandina Paurashava
+Chittagong#Comilla#Chandina#Purba Chandina,Chittagong#Comilla#Chandina#Barkait (purba Chandina Uni)
+Chittagong#Comilla#Chandina#Paschim Chandina,Chittagong#Comilla#Chandina#Atbar Pur (Paschim Chandina)
 Chittagong#Comilla#Chandina#Uttar Gallai,Chittagong#Comilla#Chandina#Gallai (uttar Gallai Union)
 Chittagong#Comilla#Chandina#Mahichail,Chittagong#Comilla#Chandina#Mahichal
 Chittagong#Comilla#Chandina#Purba Suhilpur,Chittagong#Comilla#Chandina#Batakashi (purba Silpur)
@@ -84,7 +84,7 @@ Dhaka#Faridpur#Faridpur Sadar#Faridpur Municipality,Dhaka#Faridpur#Faridpur Sada
 Dhaka#Narayanganj#Araihazar#Kalapaharia,Dhaka#Narayanganj#Araihazar#Kala Paharia
 Dhaka#Narayanganj#Araihazar#Uchitpura,Dhaka#Narayanganj#Araihazar#Uchitpur
 Dhaka#Shariatpur#Bhedarganj#Digar Mahishakhali,Dhaka#Shariatpur#Bhedarganj#Digar Mahishkhali
-Dhaka#Shariatpur#Damudya#Paschim Damudya,Dhaka#Shariatpur#Damudya#Purba Damudya
+Dhaka#Shariatpur#Damudya#Paschim Damudya,Dhaka#Shariatpur#Damudya#Damudya Paurashava
 Dhaka#Shariatpur#Damudya#Islampur,Dhaka#Shariatpur#Damudya#Islam Pur
 Dhaka#Manikganj#Daulatpur#Char Katari,Dhaka#Manikganj#Daulatpur#Charkatari
 Dhaka#Madaripur#Kalkini#Char Daulatkhan,Dhaka#Madaripur#Kalkini#Char Daulat Khan
@@ -102,4 +102,23 @@ Rajshahi#Sirajganj#Kazipur#Kazipur Pourasova,Rajshahi#Sirajganj#Kazipur#Kazipur 
 Rajshahi#Bogra#Dhunat#Kalerpara,Rajshahi#Bogra#Dhunat#Kaler Para
 Barisal#Bhola#Bhola,Barisal#Bhola#Bhola Sadar
 Barisal#Bhola#Lalmohan#Lord Hardinge,Barisal#Bhola#Lalmohan#Lord Hardinje
-Barisal#Bhola#Lalmohan#Lalmohan Pourashava,Barisal#Bhola#Lalmohan#Lalmohan
+Barisal#Bhola#Lalmohan#Lalmohan Pourashava,Barisal#Bhola#Lalmohan#Paurashava
+Khulna#Khulna#Dacope#Eanisanta,Khulna#Khulna#Dacope#Banishanta
+Sylhet#Habiganj#Baniachong#Umednagar,~none~
+Sylhet#Sunamganj#Chhatak#Deokapon,~none~
+Sylhet#Sunamganj#Dowarabazar#Uttar Dowarabazar,~none~
+Sylhet#Sunamganj#Dowarabazar#Uttar Purba Dowarabazar,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Budhanti,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Chandura,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Char Islampur,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Dakshin Ichhapur,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Dakshin Singerbil,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Harashpur,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Paharpur,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Pattan,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Uttar Ichhapur,~none~
+Chittagong#Brahamanbaria#Brahmanbaria Sadar#Bishnupur,~none~
+Chittagong#Comilla#Chandina#Dakshin Gallai,~none~
+Rangpur#Gaibandha#Gobindaganj#Gobindaganj,~none~
+Rangpur#Gaibandha#Gobindaganj#Gobindaganj Pourashava,Rangpur#Gaibandha#Gobindaganj#Paurashava
+Barisal#Bhola#Bhola Sadar#Velumia,Barisal#Bhola#Bhola Sadar#Bhelu Miah
