@@ -3,19 +3,19 @@
  * as the following structure:
  *
  * {
- *   <division name>: {
+ *   'division name': {
  *     wells: [...], // array of all wells, and depths of arsenic in the division
  *     districts: {
- *       <district name>: {
+ *       'district name': {
  *         wells: [...],
  *         upazilas: {
- *           <upazila name>: {
+ *           'upazila name': {
  *             wells: [...],
  *             unions: {
- *               <union name>: {
+ *               'union name': {
  *                 wells: [...],
  *                 mouzas: {
- *                   <mouza name>: {
+ *                   'mouza name': {
  *                     wells: [...]
  *                   },
  *                   ... further mouzas
