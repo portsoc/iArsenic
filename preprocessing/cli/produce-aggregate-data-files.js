@@ -41,7 +41,7 @@ function compareByProperty(prop) {
 function main(options) {
   checkOutputDirectory(options);
 
-  const data = loadData(options.paths);
+  const data = loadData(options.paths, options);
 
   const modelPreprocessor = options.model.preprocessor;
 
