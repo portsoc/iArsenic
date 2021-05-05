@@ -34,6 +34,11 @@ const optionDefinitions = [
     alias: 'i',
     type: String,
   },
+  {
+    name: 'corrections',
+    alias: 'c',
+    type: String,
+  },
 ];
 
 function usage() {
