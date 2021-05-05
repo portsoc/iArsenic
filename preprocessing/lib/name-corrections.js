@@ -30,7 +30,9 @@ function correctRegionName(arr) {
     if (correction) return correction.concat(arrEnd);
     arrEnd.unshift(arrCopy.pop());
   }
-
+  if (arr == null) {
+    console.log(arr == null);
+  }
   // no corrections available, assume arr is correct already
   return arr;
 }
