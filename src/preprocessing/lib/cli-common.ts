@@ -35,6 +35,11 @@ const optionDefinitions = [
     alias: 'i',
     type: String,
   },
+  {
+    name: 'corrections',
+    alias: 'c',
+    type: String,
+  },
 ];
 
 function usage() {
@@ -86,6 +91,7 @@ export interface CliParameters {
   },
   output: string,
   inputFile: string,
+  corrections: string,
 }
 
 export async function getParameters(): Promise<CliParameters> {

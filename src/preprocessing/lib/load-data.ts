@@ -38,20 +38,13 @@ import parse from 'csv-parse/lib/sync';
 import fs from 'fs';
 import path from 'path';
 import { BasicDataSet, Region } from './types';
+import * as nameCorrections from '../lib/name-corrections';
+import { CliParameters } from './cli-common';
 
 const CSV_PARSE_OPTIONS = {
   columns: true,
   skip_empty_lines: true,
 };
-
-interface Record {
-  Division: string,
-  District: string,
-  Upazila: string,
-  Depth: number,
-  Arsenic: number,
-  Union: string,
-}
 
 function readTheCSVFiles(filePathList: string[] | string) {
   if (!Array.isArray(filePathList)) filePathList = [filePathList];
@@ -61,7 +54,7 @@ function readTheCSVFiles(filePathList: string[] | string) {
   // parse each csv file and merge into records[]
   for (const filePath of filePathList) {
     const file = fs.readFileSync(filePath);
-    const data = parse(file, CSV_PARSE_OPTIONS) as Record[];
+    const data = parse(file, CSV_PARSE_OPTIONS) as {[index: string]: string}[];
 
     for (const record of data) {
       records.push(record);
@@ -89,7 +82,7 @@ function listDefaultFiles() {
 
 // prepare the location-based data hierarchy if the location is new
 // 3 Strata of wells by depth 'd': shallow(d<90), med(90<=d<150), deep(150<=d)
-function extractLocations(records: Record[]) {
+function extractLocations(records: {[index: string]: string}[]) {
   const divisions: BasicDataSet<Region> = {};
 
   for (const r of records) {
@@ -140,10 +133,10 @@ function extractLocations(records: Record[]) {
 }
 
 // put each well's arsenic level and depth data into the location hierarchy
-function fillArsenicData(divisions: BasicDataSet<Region>, records: Record[]) {
+function fillArsenicData(divisions: BasicDataSet<Region>, records: {[index: string]: string}[]) {
   for (const r of records) {
     if (!r.Division || !r.District || !r.Upazila || !r.Union ||
-        !r.Depth || isNaN(r.Depth) || r.Arsenic === 0 || isNaN(r.Arsenic)) {
+        !r.Depth || isNaN(Number(r.Depth)) || Number(r.Arsenic) === 0 || isNaN(Number(r.Arsenic))) {
       // skip because we don't have location or depth or arsenic level
       continue;
     }
@@ -166,16 +159,15 @@ function fillArsenicData(divisions: BasicDataSet<Region>, records: Record[]) {
 }
 
 function correctNames(
-  records: Record[],
-  corrections?: {
-    correct: (arr: string[])=> string[] | null,
-  },
-) {
-  if (corrections?.correct === undefined) return records;
+  records: {[index: string]: string}[],
+  corrections?: {[index: string]: string}[],
+): [{[index: string]: string}[], number] {
+  if (corrections === undefined) return [records, 0];
 
+  let count = 0;
   const correctRecords = [];
   for (const r of records) {
-    const corrected = corrections.correct([
+    const corrected = nameCorrections.correctRegionName([
       r.Division,
       r.District,
       r.Upazila,
@@ -183,32 +175,31 @@ function correctNames(
     ]);
 
     if (corrected != null) {
+      count++;
       [r.Division, r.District, r.Upazila, r.Union] = corrected;
-      correctRecords.push(r);
     }
+    correctRecords.push(r);
   }
-  return correctRecords;
+  return [correctRecords, count];
 }
 
 export function loadData(
   paths: string | string[],
-  options?: {
-    correct: (arr: string[])=> string[] | null,
-  },
+  options: CliParameters,
 ): BasicDataSet<Region> {
   if (!paths) paths = listDefaultFiles();
 
   const records = readTheCSVFiles(paths);
-  let correctedRecords: Record[];
-  if (options !== undefined) {
-    correctedRecords = correctNames(records, options);
-  } else {
-    correctedRecords = correctNames(records);
-  }
+  const corrections = readTheCSVFiles(options.corrections);
+
+  // load corrections (stateful) to be used in correctNames
+  // this needs this to be loaded in order to use nameCorrections.correct()
+  nameCorrections.loadCorrections(corrections);
+  const [correctedRecords, count] = correctNames(records, corrections);
 
   const divisions = extractLocations(correctedRecords);
   fillArsenicData(divisions, correctedRecords);
-  console.debug(`Parsed ${correctedRecords.length} corrected records of ${records.length} total records.`);
+  console.debug(`Parsed ${count} corrected records of ${records.length} total records.`);
 
   return divisions;
 }

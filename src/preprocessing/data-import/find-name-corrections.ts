@@ -421,17 +421,17 @@ function checkForMissingFlags(cliArgs: cli.CliParameters) {
 async function main(cliArgsPromise: Promise<cli.CliParameters>) {
   const cliArgs = await cliArgsPromise;
   checkForMissingFlags(cliArgs);
-  const correctNameData = csvLoader.loadData(cliArgs.paths);
+  const correctNameData = csvLoader.loadData(cliArgs.paths, cliArgs);
 
   // load existing corrections
   const correctionFile = cliArgs.output;
   if (fs.existsSync(correctionFile)) {
-    const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS) as nameCorrections.Correction[];
+    const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS) as {[index: string]: string}[];
     nameCorrections.loadCorrections(corrections);
   }
 
   const dataToCorrect = cliArgs.inputFile;
-  const uncheckedNameData = extractHierarchyTree(csvLoader.loadData(dataToCorrect, { correct: nameCorrections.correctRegionName }));
+  const uncheckedNameData = extractHierarchyTree(csvLoader.loadData(dataToCorrect, cliArgs));
 
   const relativeCorrectNameData = getRelativeRegionLinks(correctNameData);
 

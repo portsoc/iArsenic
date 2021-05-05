@@ -34,6 +34,10 @@ export function correctRegionName(arr: string[]): string[] | null {
     }
   }
 
+  if (arr == null) {
+    console.log(arr == null);
+  }
+
   // no corrections available, assume arr is correct already
   return arr;
 }
@@ -80,7 +84,7 @@ export interface Correction {
  *   correct: 'correctedDivName#correctedDisName#correctedUpaName#correctedUniName',
  * }
  */
-export function loadCorrections(correctionsCsvArr: Correction[]): void {
+export function loadCorrections(correctionsCsvArr: {[index: string]: string}[]): void {
   for (const correction of correctionsCsvArr) {
     // first check if that correction is already there
     const existingCorrection = corrections.get(correction.path);

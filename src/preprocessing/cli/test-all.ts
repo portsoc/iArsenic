@@ -37,7 +37,7 @@ async function main(optionsPromise: Promise<CliParameters>) {
   const preprocessor = options.model.preprocessor;
   const produceEstimate = options.model.estimator;
 
-  const data = loadData(options.paths);
+  const data = loadData(options.paths, options);
   const divisions = preprocessor(data);
 
   /* eslint-disable */

@@ -28,7 +28,7 @@ async function main(optionsPromise: Promise<CliParameters>) {
 
   console.log(options.paths);
   if (!checkForMissingFlags(options)) return;
-  const inputJson = csvLoader(options.paths);
+  const inputJson = csvLoader(options.paths, options);
   const outputJson = JSON.stringify(inputJson);
   fs.writeFileSync(options.output, outputJson);
 }

@@ -125,7 +125,7 @@ async function main(optionsPromise: Promise<CliParameters>) {
   // disable debug messages
   console.debug = () => { return null; };
 
-  const data = loadData(options.paths);
+  const data = loadData(options.paths, options);
 
   const allModels = await getModels(data);
 

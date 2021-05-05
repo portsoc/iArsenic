@@ -59,7 +59,7 @@ async function main(optionsPromise: Promise<CliParameters>) {
   const options = await optionsPromise;
   checkOutputDirectory(options);
 
-  const data = loadData(options.paths);
+  const data = loadData(options.paths, options);
 
   const modelPreprocessor = options.model.preprocessor;
 

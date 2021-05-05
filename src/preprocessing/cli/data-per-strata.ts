@@ -35,7 +35,7 @@ async function main(optionsPromise: Promise<CliParameters>) {
   const options = await optionsPromise;
 
   // get data from CSV files
-  const data = csvLoader.loadData(options.paths) as BasicDataSet<Region & RegionWellStats>;
+  const data = csvLoader.loadData(options.paths, options) as BasicDataSet<Region & RegionWellStats>;
   await computeWidening(data);
 
   // define array to hold rows of CSV file and push column headers
