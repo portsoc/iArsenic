@@ -96,19 +96,23 @@ including pre-processed arsenic concentration data which looks like this:
 ]
 */
 
-const stats = require('../lib/stats');
-const { computeNearbyRegions } = require('../lib/geo-data');
+import * as stats from '../lib/stats';
+import { computeNearbyRegions } from '../lib/geo-data';
+import { BasicDataSet, District, Division, GeoRegion, StatsHierarchyObj, Region, RegionStatistics, RegionWithStrata, Upazila } from '../lib/types';
 
 const MIN_DATA_COUNT = 7;
 
-function isEnoughData(wellsList) {
-  if (!wellsList) return false;
+type PreprocessorRegion = Region & Partial<RegionWithStrata> & Partial<RegionStatistics> & Partial<GeoRegion>;
+type PreprocessorRegionWithRequiredStats = Region & Partial<RegionWithStrata> & RegionStatistics & Partial<GeoRegion>;
+
+function isEnoughData(wellsList: number[] | number) {
+  if (!Array.isArray(wellsList)) wellsList = [wellsList];
   const length = (typeof wellsList === 'number') ? wellsList : wellsList.length;
   return length >= MIN_DATA_COUNT;
 }
 
 // splits wells in the given region by depth
-function stratifyWells(locationArr) {
+function stratifyWells(locationArr: PreprocessorRegion[]) {
   const region = locationArr[locationArr.length - 1];
 
   region.s15 = [];
@@ -137,33 +141,35 @@ function stratifyWells(locationArr) {
 
 const STRATA = ['s15', 's45', 's65', 's90', 's150', 'sD'];
 
-function sortWells(locationArr) {
+function sortWells(locationArr: PreprocessorRegion[]) {
   const region = locationArr[locationArr.length - 1];
 
   // sort the arsenic concentration data arrays for the stats library
   for (const stratum of STRATA) {
-    region[stratum].sort(numericalCompare);
-    if (region[stratum + 'Wider']) region[stratum + 'Wider'].sort(numericalCompare);
+    (region[stratum as keyof PreprocessorRegion] as number[]).sort(numericalCompare);
+    if ((region[stratum + 'Wider' as keyof PreprocessorRegion])) {
+      (region[stratum + 'Wider' as keyof PreprocessorRegion] as number[]).sort(numericalCompare);
+    }
   }
 }
 
-function computeWellStats(locationArr) {
+function computeWellStats(locationArr: PreprocessorRegion[]) {
   const location = locationArr[locationArr.length - 1];
 
   for (const stratum of STRATA) {
-    let wells = location[stratum];
+    let wells = location[stratum as keyof PreprocessorRegion] as number[];
 
     if (!isEnoughData(wells)) {
       // get wider wells
-      wells = location[stratum + 'Wider'];
+      wells = location[stratum + 'Wider' as keyof PreprocessorRegion] as number[];
     }
 
     if (isEnoughData(wells)) {
       // compute the statistics
-      location[`${stratum}_med`] = stats.round1(stats.median(wells));
-      location[`${stratum}_max`] = stats.round1(stats.max(wells));
-      location[`${stratum}_low`] = stats.quantile(wells, 0.1);
-      location[`${stratum}_upp`] = stats.quantile(wells, 0.9);
+      location[`${stratum}_med` as keyof RegionStatistics] = stats.round1(stats.median(wells));
+      location[`${stratum}_max` as keyof RegionStatistics] = stats.round1(stats.max(wells));
+      location[`${stratum}_low` as keyof RegionStatistics] = stats.quantile(wells, 0.1);
+      location[`${stratum}_upp` as keyof RegionStatistics] = stats.quantile(wells, 0.9);
     } else {
       // if we don't have enough well data on a given stratum,
       // getEnoughData should have already reported that, but
@@ -175,16 +181,18 @@ function computeWellStats(locationArr) {
   }
 }
 
-function getEnoughData(locationArr) {
+function getEnoughData(locationArr: PreprocessorRegion[]) {
+  const locationsAsRegion = locationArr as (Region & RegionWithStrata & Partial<RegionStatistics> & GeoRegion)[];
+
   // a shortcut function for notation
   // it finds regions within `km` of locationArr, and extracts wells from them, combining the provided strata.
   // returns an array of well arrays
-  function nearbyWells(km, ...strata) {
-    const locations = nearbyLocations(locationArr, km);
+  function nearbyWells(km: number, ...strata: ('s15' | 's45' | 's65' | 's90' | 's150' | 'sD')[]) {
+    const locations = nearbyLocations(locationsAsRegion, km);
     return locations.map(strataSelector(...strata));
   }
 
-  const location = locationArr[locationArr.length - 1];
+  const location = locationsAsRegion[locationsAsRegion.length - 1];
   // if we don't have enough wells somewhere, we can combine strata and
   // look for geographically nearby region within some radius
   // the rules are also at the top of the file
@@ -242,7 +250,7 @@ function getEnoughData(locationArr) {
 
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
 // arraysToAdd
-function widen(startingArray, ...arraysToAdd) {
+function widen(startingArray: number[], ...arraysToAdd: number[][]) {
   if (isEnoughData(startingArray)) return startingArray;
 
   let wider = startingArray;
@@ -252,14 +260,15 @@ function widen(startingArray, ...arraysToAdd) {
     if (isEnoughData(wider)) break;
   }
 
-  return isEnoughData(wider) ? wider : null;
+  return isEnoughData(wider) ? wider : undefined;
 }
 
-function strataSelector(...strata) {
-  return function (location) {
-    let wellsInLocation = [];
+function strataSelector(...strata: ('s15' | 's45' | 's65' | 's90' | 's150' | 'sD')[]) {
+  return function (location: PreprocessorRegion) {
+    let wellsInLocation: number[] = [];
     for (const stratum of strata) {
-      wellsInLocation = wellsInLocation.concat(location[stratum]);
+      if (location[stratum] === undefined) return [];
+      wellsInLocation = wellsInLocation.concat(location[stratum] as number[]);
     }
     return wellsInLocation;
   };
@@ -270,7 +279,7 @@ function strataSelector(...strata) {
  * e.g. if locationArr points to a union, we return an array of unions in order
  * of increasing distance, up to kmDistance.
  */
-function nearbyLocations(locationArr, kmDistance) {
+function nearbyLocations(locationArr: GeoRegion[], kmDistance: number) {
   const location = locationArr[locationArr.length - 1];
   const nearbyRegions = location.nearbyRegions;
   const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
@@ -283,7 +292,7 @@ function nearbyLocations(locationArr, kmDistance) {
   return regionsWithinDistance.map(a => a.region);
 }
 
-function numericalCompare(a, b) {
+function numericalCompare(a: number, b: number) {
   return a - b;
 }
 
@@ -291,7 +300,7 @@ function numericalCompare(a, b) {
 // 0 is not enough data
 // then odd number is consistent pollution,
 // and the following even number is high outliers so we suggest chemical test
-function produceMessage(med, max) {
+function produceMessage(med: number, max: number) {
   if (med == null) return 0;
   let pollutionStatus;
   if (med <= 20) {
@@ -309,24 +318,38 @@ function produceMessage(med, max) {
   return pollutionStatus + chemTestStatus;
 }
 
-function extractStats(data, hierarchyPath) {
-  const retval = {};
+function extractStats(
+  data: {[index: string]: PreprocessorRegionWithRequiredStats},
+  hierarchyPath: string[],
+) {
+  const retval: StatsHierarchyObj = {};
   for (const item of Object.keys(data)) {
     const dataObj = data[item];
-    const hierarchyObj = {};
+    const hierarchyObj: StatsHierarchyObj = {};
 
     if (hierarchyPath.length === 1) {
       for (const stratum of STRATA) {
-        hierarchyObj[stratum] = {
-          m: produceMessage(dataObj[`${stratum}_med`], dataObj[`${stratum}_max`]),
-          l: dataObj[`${stratum}_low`],
-          u: dataObj[`${stratum}_upp`],
+        hierarchyObj[stratum as keyof StatsHierarchyObj] = {
+          m: produceMessage(dataObj[`${stratum}_med`as keyof RegionStatistics],
+            dataObj[`${stratum}_max` as keyof RegionStatistics]),
+          l: dataObj[`${stratum}_low` as keyof RegionStatistics],
+          u: dataObj[`${stratum}_upp` as keyof RegionStatistics],
         };
       }
     }
 
     if (hierarchyPath.length > 1) {
-      const subData = dataObj[hierarchyPath[1] + 's']; // if hierarchyPath[1] is district, get `districts`
+      let subData: {[index: string]: PreprocessorRegionWithRequiredStats} = {};
+      if (Object.prototype.hasOwnProperty.call(data, 'districts')) {
+        const dataObjWithSubregions = dataObj as typeof dataObj & Division<typeof dataObj>;
+        subData = dataObjWithSubregions.districts;
+      } else if (Object.prototype.hasOwnProperty.call(data, 'upazilas')) {
+        const dataObjWithSubregions = dataObj as typeof dataObj & District<typeof dataObj>;
+        subData = dataObjWithSubregions.upazilas;
+      } else if (Object.prototype.hasOwnProperty.call(data, 'unions')) {
+        const dataObjWithSubregions = dataObj as typeof dataObj & Upazila<typeof dataObj>;
+        subData = dataObjWithSubregions.unions;
+      }
       hierarchyObj[hierarchyPath[1] + 's'] = extractStats(subData, hierarchyPath.slice(1));
     }
     retval[item] = hierarchyObj;
@@ -334,7 +357,7 @@ function extractStats(data, hierarchyPath) {
   return retval;
 }
 
-function forEachUnion(divisions, f) {
+function forEachUnion(divisions: BasicDataSet<PreprocessorRegion>, f: (regions: PreprocessorRegion[])=> void) {
   for (const div of Object.values(divisions)) {
     for (const dis of Object.values(div.districts)) {
       for (const upa of Object.values(dis.upazilas)) {
@@ -346,22 +369,25 @@ function forEachUnion(divisions, f) {
   }
 }
 
-function main(divisions) {
-  // split wells into strata
-  forEachUnion(divisions, stratifyWells);
+export async function main(divisions: BasicDataSet<Region>): Promise<StatsHierarchyObj> {
+  const extendedRegions = divisions as BasicDataSet<PreprocessorRegion>;
 
-  computeNearbyRegions(divisions);
+  // split wells into strata
+  forEachUnion(extendedRegions, stratifyWells);
+
+  await computeNearbyRegions(extendedRegions);
 
   // if a stratum doesn't have enough wells, widen the search
-  forEachUnion(divisions, getEnoughData);
+  forEachUnion(extendedRegions, getEnoughData);
 
   // sort the wells so the stats functions work well
-  forEachUnion(divisions, sortWells);
+  forEachUnion(extendedRegions, sortWells);
 
   // get the actual stats
-  forEachUnion(divisions, computeWellStats);
+  forEachUnion(extendedRegions, computeWellStats);
 
-  const aggregateData = extractStats(divisions, ['division', 'district', 'upazila', 'union']);
+  const regionsWithStats = extendedRegions as BasicDataSet<PreprocessorRegionWithRequiredStats>;
+  const aggregateData = extractStats(regionsWithStats, ['division', 'district', 'upazila', 'union']);
   return aggregateData;
 }
 
@@ -369,29 +395,39 @@ function main(divisions) {
 /* get widen data module functions */
 /* /////////////////////////////// */
 
-function computeWidening(divisions) {
+export async function computeWidening(divisions: BasicDataSet<Region>): Promise<BasicDataSet<Region & RegionWithStrata>> {
   forEachUnion(divisions, stratifyWells);
 
-  computeNearbyRegions(divisions);
+  await computeNearbyRegions(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
   forEachUnion(divisions, computeRegionWidening);
 
-  return divisions;
+  return divisions as BasicDataSet<Region & RegionWithStrata>;
 }
 
-function computeRegionWidening(locationArr) {
-  function nearbyWells(km, ...strata) {
+interface WellList {
+  wells: number[],
+  distance: number,
+}
+
+export function computeRegionWidening(locationArr: PreprocessorRegion[]): void {
+  function nearbyWells(km: number, ...strata: ('s15' | 's45' | 's65' | 's90' | 's150' | 'sD')[]) {
     const retval = [];
     const region = locationArr[locationArr.length - 1];
     const nearbyRegions = region.nearbyRegions;
+    if (nearbyRegions === undefined) {
+      throw new Error('computeRegionWidening called without computing nearby regions first');
+    }
     const wellSelector = strataSelector(...strata);
 
     for (const nearby of nearbyRegions) {
       if (nearby.distance > km) break;
 
-      const wells = wellSelector(nearby.region);
-      wells.distance = nearby.distance;
+      const wells: WellList = {
+        wells: wellSelector(nearby.region),
+        distance: nearby.distance,
+      };
       retval.push(wells);
     }
 
@@ -399,8 +435,16 @@ function computeRegionWidening(locationArr) {
   }
 
   const location = locationArr[locationArr.length - 1];
+  if (location.s15 === undefined ||
+      location.s45 === undefined ||
+      location.s65 === undefined ||
+      location.s90 === undefined ||
+      location.s150 === undefined ||
+      location.sD === undefined) {
+    throw new Error('computeRegionWidening called before stratifyWells');
+  }
   location.s15WideningRequired =
-    wideCount(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
+    wideCount(location.s15, { wells: location.s45, distance: 0 }, ...nearbyWells(10, 's15', 's45'));
 
   location.s45WideningRequired =
     wideCount(location.s45, location.s65) ||
@@ -425,24 +469,35 @@ function computeRegionWidening(locationArr) {
   location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
 }
 
-function wideCount(startingArray, ...arraysToAdd) {
+function wideCount(startingArray: number[] | undefined, ...arraysToAdd: number[][] | WellList[]) {
   const retval = { distance: 0, count: 0 };
-  if (isEnoughData(startingArray)) return retval;
+  if (startingArray === undefined || isEnoughData(startingArray)) return retval;
 
   let wellsCount = startingArray.length;
 
-  for (const wells of arraysToAdd) {
+  // narrow type of arraysToAdd
+  if ('distance' in arraysToAdd[0]) {
+    arraysToAdd = arraysToAdd as WellList[];
+  } else {
+    arraysToAdd = arraysToAdd as number[][];
+    const tmp: WellList[] = [];
+    for (const list of arraysToAdd) {
+      tmp.push({
+        wells: list,
+        distance: 0,
+      });
+    }
+    arraysToAdd = tmp;
+  }
+
+  for (const wellList of arraysToAdd) {
     retval.count += 1;
-    retval.distance = wells.distance || 0;
-    wellsCount += wells.length;
+    retval.distance = wellList.distance || 0;
+    wellsCount += wellList.wells.length;
     if (isEnoughData(wellsCount)) break;
   }
 
-  return isEnoughData(wellsCount) ? retval : null;
+  return isEnoughData(wellsCount) ? retval : undefined;
 }
 
-// export main() as default (code that uses preprocessors expects that)
-module.exports = main;
-
-// also export computeWidening()
-module.exports.computeWidening = computeWidening;
+export default main;

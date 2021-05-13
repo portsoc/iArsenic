@@ -1,13 +1,23 @@
-const parse = require('csv-parse/lib/sync');
-const fs = require('fs');
-const path = require('path');
+import parse from 'csv-parse/lib/sync';
+import fs from 'fs';
+import path from 'path';
+import { BasicDataSet, Region } from './types';
 
 const CSV_PARSE_OPTIONS = {
   columns: true,
   skip_empty_lines: true,
 };
 
-function readTheCSVFiles(filePathList) {
+interface Record {
+  Division: string,
+  District: string,
+  Upazila: string,
+  Depth: number,
+  Arsenic: number,
+  Union: string,
+}
+
+function readTheCSVFiles(filePathList: string[] | string) {
   if (!Array.isArray(filePathList)) filePathList = [filePathList];
 
   const records = [];
@@ -15,7 +25,7 @@ function readTheCSVFiles(filePathList) {
   // parse each csv file and merge into records[]
   for (const filePath of filePathList) {
     const file = fs.readFileSync(filePath);
-    const data = parse(file, CSV_PARSE_OPTIONS);
+    const data = parse(file, CSV_PARSE_OPTIONS) as Record[];
 
     for (const record of data) {
       records.push(record);
@@ -43,8 +53,8 @@ function listDefaultFiles() {
 
 // prepare the location-based data hierarchy if the location is new
 // 3 Strata of wells by depth 'd': shallow(d<90), med(90<=d<150), deep(150<=d)
-function extractLocations(records) {
-  const divisions = {};
+function extractLocations(records: Record[]) {
+  const divisions: BasicDataSet<Region> = {};
 
   for (const r of records) {
     if (!r.Division || !r.District || !r.Upazila || !r.Union) {
@@ -94,10 +104,10 @@ function extractLocations(records) {
 }
 
 // put each well's arsenic level and depth data into the location hierarchy
-function fillArsenicData(divisions, records) {
+function fillArsenicData(divisions: BasicDataSet<Region>, records: Record[]) {
   for (const r of records) {
     if (!r.Division || !r.District || !r.Upazila || !r.Union ||
-        !r.Depth || isNaN(r.Depth) || r.Arsenic === '' || isNaN(r.Arsenic)) {
+        !r.Depth || isNaN(r.Depth) || r.Arsenic === 0 || isNaN(r.Arsenic)) {
       // skip because we don't have location or depth or arsenic level
       continue;
     }
@@ -119,8 +129,13 @@ function fillArsenicData(divisions, records) {
   }
 }
 
-function correctNames(records, corrections) {
-  if (!corrections) return records;
+function correctNames(
+  records: Record[],
+  corrections?: {
+    correct: (arr: string[])=> string[] | null,
+  },
+) {
+  if (corrections?.correct === undefined) return records;
 
   const correctRecords = [];
   for (const r of records) {
@@ -139,11 +154,21 @@ function correctNames(records, corrections) {
   return correctRecords;
 }
 
-function loadData(paths, options = {}) {
+export function loadData(
+  paths: string | string[],
+  options?: {
+    correct: (arr: string[])=> string[] | null,
+  },
+): BasicDataSet<Region> {
   if (!paths) paths = listDefaultFiles();
 
   const records = readTheCSVFiles(paths);
-  const correctedRecords = correctNames(records, options.nameCorrections);
+  let correctedRecords: Record[];
+  if (options !== undefined) {
+    correctedRecords = correctNames(records, options);
+  } else {
+    correctedRecords = correctNames(records);
+  }
 
   const divisions = extractLocations(correctedRecords);
   fillArsenicData(divisions, correctedRecords);
@@ -151,5 +176,3 @@ function loadData(paths, options = {}) {
 
   return divisions;
 }
-
-module.exports = loadData;

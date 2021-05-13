@@ -1,22 +1,22 @@
 // return quantile of the sorted sample (this is type-1 quantile in R)
 // the parameter `sorted` must be a sorted array of numbers
 // and p must be between 0 and 1 inclusive
-function quantile(sorted, p) {
+export function quantile(sorted: number[], p: number): number {
   const n = sorted.length;
   const which = Math.ceil(n * p) || 1; // p=0 uses the first element
   return sorted[which - 1];
 }
 
-function mean(sorted) {
+export function mean(sorted: number[]): number {
   const average = sorted.reduce((a, b) => a + b, 0) / sorted.length;
   return average;
 }
 
-function max(sorted) {
+export function max(sorted: number[]): number {
   return sorted[sorted.length - 1];
 }
 
-function median(sorted) {
+export function median(sorted: number[]): number {
   const half = Math.floor(sorted.length / 2);
 
   if (sorted.length % 2 !== 0) {
@@ -26,14 +26,6 @@ function median(sorted) {
   }
 }
 
-function round1(n) {
+export function round1(n: number): number {
   return Math.round(n * 10) / 10;
 }
-
-module.exports = {
-  quantile,
-  mean,
-  max,
-  median,
-  round1,
-};

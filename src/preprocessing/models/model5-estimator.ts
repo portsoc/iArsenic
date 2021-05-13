@@ -1,4 +1,6 @@
-function round(x, magnitude, dir = 1) {
+import { ArsenicValues, StatsHierarchyObj } from '../lib/types';
+
+function round(x: number, magnitude: number, dir = 1) {
   if (x % magnitude === 0) {
     return x;
   } else if (dir === 1) {
@@ -24,8 +26,18 @@ const chemTestOutput = {
   test: ', a chemical test is needed as concentration can be high, ranging around',
 };
 
-const aggregateOutput = {
-  0: { message: 'We do not have enough data to make an estimate for your well' },
+interface AggregateOutput {
+  [index: number]: {
+    message: string,
+    severity: string,
+  },
+}
+
+const aggregateOutput: AggregateOutput = {
+  0: {
+    message: 'We do not have enough data to make an estimate for your well',
+    severity: '',
+  },
   1: {
     message: pollutionOutput.safe + chemTestOutput.noTest,
     severity: 'safe',
@@ -60,38 +72,51 @@ const aggregateOutput = {
   },
 };
 
-function createMessage(id) {
+function createMessage(id: number) {
   // clone the message because it's changed in produceEstimate
   return Object.assign({}, aggregateOutput[id]);
 }
 
-// Flood removed from here for time being
-function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {
-  const division = divisions[div];
-  const district = division ? division.districts[dis] : undefined;
-  const upazila = district ? district.upazilas[upa] : undefined;
-  const union = upazila ? upazila.unions[uni] : undefined;
+export interface EstimatorOutput {
+  message: string,
+  severity: string,
+  lowerQ: number,
+  upperQ: number,
+}
 
-  let retval = {};
+// Flood removed from here for time being
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function produceEstimate(divisions: StatsHierarchyObj, div: string, dis: string, upa: string, uni: string, depth: number, colour: string, utensil: string, flooding?: string): EstimatorOutput {
+  const division = divisions[div];
+  const district = division ? (division as StatsHierarchyObj)[dis] : undefined;
+  const upazila = district ? (district as StatsHierarchyObj)[upa] : undefined;
+  const union = upazila ? (upazila as StatsHierarchyObj)[uni] as StatsHierarchyObj : undefined;
+
+  const retval: EstimatorOutput = {
+    message: '',
+    severity: '',
+    lowerQ: 0,
+    upperQ: 0,
+  };
 
   if (!union) {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
     return retval;
   }
 
-  let arsenicValues = {};
+  let arsenicValues: ArsenicValues = { m: 0, l: 0, u: 0 };
   if (depth < 15.3) {
-    arsenicValues = union.s15;
+    arsenicValues = union.s15 as ArsenicValues;
   } else if (depth < 45) {
-    arsenicValues = union.s45;
+    arsenicValues = union.s45 as ArsenicValues;
   } else if (depth < 65) {
-    arsenicValues = union.s65;
+    arsenicValues = union.s65 as ArsenicValues;
   } else if (depth < 90) {
-    arsenicValues = union.s90;
+    arsenicValues = union.s90 as ArsenicValues;
   } else if (depth < 150) {
-    arsenicValues = union.s150;
+    arsenicValues = union.s150 as ArsenicValues;
   } else {
-    arsenicValues = union.sD;
+    arsenicValues = union.sD as ArsenicValues;
   }
 
   const lowerQ = round(arsenicValues.l, 10, 1);
@@ -111,9 +136,11 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     retval.message = msgStart + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
     retval.severity = 'safe';
   } else if (colour === 'Red' || utensil === 'Red') {
-    retval = createMessage(arsenicValues.m);
+    const newMessage = createMessage(arsenicValues.m);
+    retval.message = newMessage.message;
+    retval.severity = newMessage.severity;
     if (arsenicValues.m > 0) {
-      retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
+      retval.message += `' ${lowerQ} to ${upperQ} µg/L `;
     }
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
@@ -124,4 +151,4 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
   return retval;
 }
 
-if (typeof module === 'object') module.exports = produceEstimate;
+export default produceEstimate;

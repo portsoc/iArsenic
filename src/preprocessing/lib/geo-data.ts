@@ -1,9 +1,11 @@
-const { computeCentroids } = require('../geodata/centroids');
-const d3 = require('d3');
+import { BasicDataSet, GeoRegion, Region } from './types';
+
+import { computeCentroids } from '../geodata/centroids';
+import * as d3 from 'd3';
 const RADIUS = 6378.137;
 
-function computeNearbyRegions(divisions) {
-  const centroids = computeCentroids();
+export async function computeNearbyRegions(divisions: BasicDataSet<Region>): Promise<BasicDataSet<Region>> {
+  const centroids = await computeCentroids() as GeoRegion[];
 
   for (const region of centroids) {
     region.nearbyRegions = [];
@@ -36,7 +38,3 @@ function computeNearbyRegions(divisions) {
 
 // test
 // computeNearbyRegions(require('./load-data')());
-
-module.exports = {
-  computeNearbyRegions,
-};

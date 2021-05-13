@@ -1,5 +1,6 @@
-const commandLineArgs = require('command-line-args');
-const path = require('path');
+import commandLineArgs from 'command-line-args';
+import path from 'path';
+import { BasicDataSet, EstimatorFunction, GeoRegion, StatsHierarchyObj, Region, RegionStatistics, RegionWithStrata } from './types';
 
 const DEFAULT_MODEL = 'model4';
 
@@ -66,12 +67,28 @@ if (options.help) {
   process.exit(0);
 }
 
-function getParameters() {
-  options.model = loadModelScripts(options.model);
-  return options;
+export interface CliParameters {
+  help: boolean,
+  paths: string[],
+  model: {
+    id: string,
+    preprocessorPath: string,
+    preprocessor: (divisions: BasicDataSet<Region>)=> StatsHierarchyObj,
+    computeWidening: (dataset: BasicDataSet<Region>)=> BasicDataSet<Region>,
+    estimatorPath: string,
+    estimator: EstimatorFunction,
+  },
+  output: string,
+  inputFile: string,
 }
 
-function loadModelScripts(model) {
+export async function getParameters(): Promise<CliParameters> {
+  options.model = await loadModelScripts(options.model);
+  return options as CliParameters;
+}
+
+
+async function loadModelScripts(model: string) {
   const preprocessorPath = path.join(__dirname, '..', 'models', model + '-preprocessor.js');
   const estimatorPath = path.join(__dirname, '..', 'models', model + '-estimator.js');
 
@@ -79,9 +96,25 @@ function loadModelScripts(model) {
     return {
       id: model,
       preprocessorPath,
-      preprocessor: require(preprocessorPath),
+      preprocessor: (
+        await import(preprocessorPath) as {
+          default: (divisions: BasicDataSet<Region>)=> StatsHierarchyObj,
+        }
+      ).default,
+      computeWidening: (
+        await import(preprocessorPath) as {
+          computeRegionWidening: (
+            locationArr: (Region
+            & Partial<RegionWithStrata>
+            & Partial<RegionStatistics>
+            & Partial<GeoRegion>)[]
+          )=> void,
+        }
+      ).computeRegionWidening,
       estimatorPath,
-      estimator: require(estimatorPath),
+      estimator: (
+        await import(estimatorPath) as {default: EstimatorFunction}
+      ).default,
     };
   } catch (e) {
     console.error(`error: cannot find model '${model}-preprocessor' or '${model}-estimator'`);
@@ -89,7 +122,3 @@ function loadModelScripts(model) {
     process.exit(1);
   }
 }
-
-module.exports = {
-  getParameters,
-};

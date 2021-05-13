@@ -2,7 +2,7 @@
  * A global list of name corrections for division/district/upazila/union spelling variations.
  */
 
-const corrections = new Map();
+export const corrections = new Map<string, string[]>();
 
 // built-in corrections for geo-data
 // todo this should live in a file of known name corrections
@@ -11,28 +11,33 @@ corrections.set(
   ['Sylhet', 'Sunamganj', 'Dharampasha', 'Dakshin Sukhairrajapur'],
 );
 
-function combineName(arr) {
+function combineName(arr: string[]) {
   return arr.join('#');
 }
 
-const SKIPPED_CORRECTION = '~none~';
+export const SKIPPED_CORRECTION = '~none~';
 
-function correctRegionName(arr) {
+export function correctRegionName(arr: string[]): string[] | null {
   // start from the complete array, then if we don't find a correction,
   // try to find partial corrections, e.g. just division name
   const arrCopy = arr.slice();
-  const arrEnd = [];
+  const arrEnd: string[] = [];
   while (arrCopy.length > 0) {
     const correction = corrections.get(combineName(arrCopy));
     if (correction && correction[0] === SKIPPED_CORRECTION) return null;
     if (correction) return correction.concat(arrEnd);
-    arrEnd.unshift(arrCopy.pop());
+    const pop = arrCopy.pop();
+    if (pop !== undefined) {
+      arrEnd.unshift(pop);
+    }
   }
 
   // no corrections available, assume arr is correct already
   return arr;
 }
 
+// Commented: needs to be moved to another file
+/*
 function testCorrectRegionName(expect) {
   // let's say corrections is like this:
   // 'Sylhet#Sunamganj#Dharampasha#Dakshin  Sukhairrajapur':
@@ -59,6 +64,12 @@ function testCorrectRegionName(expect) {
 
   // todo add test cases for none
 }
+*/
+
+export interface Correction {
+  path: string,
+  correct: string,
+}
 
 /*
  * Corrections loaded from CSV look like this:
@@ -67,7 +78,7 @@ function testCorrectRegionName(expect) {
  *   correct: 'correctedDivName#correctedDisName#correctedUpaName#correctedUniName',
  * }
  */
-function loadCorrections(correctionsCsvArr) {
+export function loadCorrections(correctionsCsvArr: Correction[]): void {
   for (const correction of correctionsCsvArr) {
     // first check if that correction is already there
     const existingCorrection = corrections.get(correction.path);
@@ -83,10 +94,3 @@ function loadCorrections(correctionsCsvArr) {
     corrections.set(correction.path, correction.correct.split('#'));
   }
 }
-
-module.exports = {
-  correct: correctRegionName,
-  loadCorrections,
-  testCorrectRegionName,
-  SKIPPED_CORRECTION,
-};
