@@ -11,7 +11,12 @@ const CSV_PARSE_OPTIONS = {
   skip_empty_lines: true,
 };
 
-function correct(correctNameData, region, correctionFile) {
+function correct(correctNameData, region, correctionFile, knownCorrections) {
+  if (correctKnownCorrection(region, knownCorrections)) {
+    // treat as corrected
+    return true;
+  }
+
   if (correctDataContains(correctNameData, ...region.correctParentPath, region.oldName)) {
     // it's already correct
     region.correctName = region.oldName;
@@ -40,6 +45,22 @@ function correct(correctNameData, region, correctionFile) {
   return correction.type !== 'none';
 }
 
+function correctKnownCorrection(region, knownCorrections) {
+  const path = nameCorrections.combinePath([...region.oldParentPath, region.oldName]);
+  const correction = knownCorrections.get(path);
+
+  if (!correction) return false;
+
+  // the path is the full path at first; below we pop() the name out of it
+  const parentPath = nameCorrections.parsePath(correction);
+  const name = parentPath.pop();
+
+  region.correctParentPath = parentPath;
+  region.correctName = name;
+
+  return true;
+}
+
 function appendCorrectionToFile(correction, correctionFile) {
   // create an empty output file if it doesn't exist yet
   if (!fs.existsSync(correctionFile)) {
@@ -48,8 +69,8 @@ function appendCorrectionToFile(correction, correctionFile) {
   }
 
   const correctionRecord =
-    correction.path.join('#') + ',' +
-    correction.correct.join('#') + '\n';
+    nameCorrections.combinePath(correction.path) + ',' +
+    nameCorrections.combinePath(correction.correct) + '\n';
   fs.appendFileSync(correctionFile, correctionRecord);
 }
 
@@ -68,6 +89,22 @@ function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubr
 
 const regionLabels = ['division', 'district', 'upazila', 'union', 'mouza'];
 
+// this function lets the user choose a correction, returning a structure like this:
+// in case of a normal correction to a region in the same parent:
+// {
+//   type: 'sibling'
+//   region: an existing region
+// }
+// in case of a correction to a region in the same grandparent
+// {
+//   type: 'cousin'
+//   region: an existing region
+// }
+// in case we want to skip this whole misspelled region
+// {
+//   type: 'none',
+//   region: a region with the special name nameCorrections.SKIPPED_CORRECTION
+// }
 function chooseCorrection(misspeltRegion, correctNameData) {
   // only shows regions inside misspelt region's parent region
   // corrections to parent region names are made on the fly
@@ -356,19 +393,29 @@ function checkForMissingFlags(cliArgs) {
   }
 }
 
+function loadExistingCorrections(file) {
+  if (!fs.existsSync(file)) {
+    return new Map();
+  }
+
+  const correctionsMap = new Map();
+  const correctionsArr = parse(fs.readFileSync(file), CSV_PARSE_OPTIONS);
+  for (const correction of correctionsArr) {
+    correctionsMap.set(correction.path, correction.correct);
+  }
+  return correctionsMap;
+}
+
 function main(cliArgs) {
   checkForMissingFlags(cliArgs);
   const correctNameData = csvLoader(cliArgs.paths);
 
   // load existing corrections
   const correctionFile = cliArgs.output;
-  if (fs.existsSync(correctionFile)) {
-    const corrections = parse(fs.readFileSync(correctionFile), CSV_PARSE_OPTIONS);
-    nameCorrections.loadCorrections(corrections);
-  }
+  const corrections = loadExistingCorrections(correctionFile);
 
   const dataToCorrect = cliArgs.inputFile;
-  const uncheckedNameData = extractHierarchyTree(csvLoader([dataToCorrect], { nameCorrections }));
+  const uncheckedNameData = extractHierarchyTree(csvLoader([dataToCorrect]));
 
   addRelativeRegionLinks(correctNameData);
 
@@ -376,7 +423,7 @@ function main(cliArgs) {
   while (correctionQueue.length > 0) {
     const region = correctionQueue.shift();
 
-    const corrected = correct(correctNameData, region, correctionFile);
+    const corrected = correct(correctNameData, region, correctionFile, corrections);
     if (corrected) {
       // add the subregions to the queue
       for (const subRegion of region.subRegionsArr) {
@@ -386,6 +433,8 @@ function main(cliArgs) {
       }
     }
   }
+
+  console.log(colors.brightGreen.bold('All done.'));
 }
 
 console.debug = console.error; // redirect debug to stderr
