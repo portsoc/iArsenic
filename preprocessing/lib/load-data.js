@@ -35,7 +35,6 @@
  */
 
 const parse = require('csv-parse/lib/sync');
-const nameCorrections = require('../lib/name-corrections');
 const fs = require('fs');
 const path = require('path');
 
@@ -170,10 +169,9 @@ function fillArsenicData(divisions, records) {
 function correctNames(records, corrections) {
   if (!corrections) return records;
 
-  let count = 0;
   const correctRecords = [];
   for (const r of records) {
-    const corrected = nameCorrections.correct([
+    const corrected = corrections.correct([
       r.Division,
       r.District,
       r.Upazila,
@@ -185,25 +183,19 @@ function correctNames(records, corrections) {
       [r.Division, r.District, r.Upazila, r.Union, r.Mouza] = corrected;
       correctRecords.push(r);
     }
-    correctRecords.push(r);
   }
-  return [correctRecords, count];
+  return correctRecords;
 }
 
 function loadData(paths, options = {}) {
   if (!paths) paths = listDefaultFiles();
 
   const records = readTheCSVFiles(paths);
-  const corrections = readTheCSVFiles(options.corrections);
-
-  // load corrections (stateful) to be used in correctNames
-  // this needs this to be loaded in order to use nameCorrections.correct()
-  nameCorrections.loadCorrections(corrections);
-  const [correctedRecords, count] = correctNames(records, corrections);
+  const correctedRecords = correctNames(records, options.nameCorrections);
 
   const divisions = extractLocations(correctedRecords);
   fillArsenicData(divisions, correctedRecords);
-  console.debug(`Parsed ${count} corrected records of ${records.length} total records.`);
+  console.debug(`Parsed ${correctedRecords.length} corrected records of ${records.length} total records.`);
 
   return divisions;
 }
