@@ -1,3 +1,8 @@
+/*
+ * This script computes the nearby regions for each region.
+ * It adds them as an array in the object representing a region.
+ */
+
 const { getLookupCentroids, getCentroidsIterator } = require('../geodata/centroids');
 const d3 = require('d3');
 const RADIUS = 6378.137;
@@ -12,6 +17,9 @@ function computeNearbyRegions(locationArr) {
     locationArr[4].nearbyRegions = [];
     return;
   }
+  region.nearbyRegions = [];
+  // region.divisionsObj = locationArr[4];
+  region.divisionsObj.nearbyRegions = region.nearbyRegions;
 
   if (region === undefined) {
     locationArr[4].nearbyRegions = [];
