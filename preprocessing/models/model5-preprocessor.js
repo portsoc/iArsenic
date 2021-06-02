@@ -102,6 +102,7 @@ including pre-processed arsenic concentration data which looks like this:
 
 const stats = require('../lib/stats');
 const { computeNearbyRegions } = require('../lib/geo-data');
+const { annotateCentroids } = require('../geodata/centroids');
 
 const MIN_DATA_COUNT = 7;
 
@@ -244,6 +245,8 @@ function getEnoughData(locationArr) {
   // * at >150m, we can take about 100km radius
   //         - generate sD until 100km
   location.sDWider = widen(location.sD, ...nearbyWells(100, 'sD'));
+
+  delete location.nearbyRegions;
 }
 
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
@@ -278,6 +281,13 @@ function strataSelector(...strata) {
  */
 function nearbyLocations(locationArr, kmDistance) {
   const location = locationArr[locationArr.length - 1];
+
+  // if there is no nearbyRegions, we should compute it for this particular
+  // region
+  if (location.nearbyRegions === undefined) {
+    computeNearbyRegions(locationArr);
+  }
+
   const nearbyRegions = location.nearbyRegions;
   const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
 
@@ -351,7 +361,8 @@ function main(divisions) {
   // split wells into strata
   forEachMouza(divisions, stratifyWells);
 
-  computeNearbyRegions(divisions);
+  // add the region object to each centroid
+  annotateCentroids(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
   forEachMouza(divisions, getEnoughData);
@@ -373,7 +384,9 @@ function main(divisions) {
 function computeWidening(divisions) {
   forEachMouza(divisions, stratifyWells);
 
-  computeNearbyRegions(divisions);
+  for (const region of divisions) {
+    computeNearbyRegions(region);
+  }
 
   // if a stratum doesn't have enough wells, widen the search
   forEachMouza(divisions, computeRegionWidening);
