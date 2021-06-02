@@ -1,37 +1,41 @@
-const { computeCentroids } = require('../geodata/centroids');
+const { getLookupCentroids, getCentroidsIterator } = require('../geodata/centroids');
 const d3 = require('d3');
 const RADIUS = 6378.137;
 
-function computeNearbyRegions(divisions) {
-  const centroids = computeCentroids();
+function computeNearbyRegions(locationArr) {
+  const centroids = getLookupCentroids();
 
-  for (const region of centroids) {
-    region.nearbyRegions = [];
-    region.divisionsObj = divisions[region.div].districts[region.dis].upazilas[region.upa].unions[region.uni];
-    region.divisionsObj.nearbyRegions = region.nearbyRegions;
+  let region;
+  try {
+    region = centroids[locationArr[0].name].subRegions[locationArr[1].name].subRegions[locationArr[2].name].subRegions[locationArr[3].name].subRegions[locationArr[4].name];
+  } catch (e) {
+    locationArr[4].nearbyRegions = [];
+    return;
   }
 
-  for (let i = 0; i < centroids.length; i++) {
-    for (let j = i + 1; j < centroids.length; j++) {
-      const distance = d3.geoDistance(centroids[i].centroid, centroids[j].centroid) * RADIUS;
+  if (region === undefined) {
+    locationArr[4].nearbyRegions = [];
+    return;
+  }
+  region.nearbyRegions = [];
+  // region.divisionsObj = locationArr[4];
+  region.divisionsObj.nearbyRegions = region.nearbyRegions;
 
-      centroids[i].nearbyRegions.push({
-        distance: distance,
-        region: centroids[j].divisionsObj,
-      });
+  const centroidsArray = getCentroidsIterator();
+  for (let i = 0; i < centroidsArray.length; i++) {
+    if (centroids.divisionsObj === undefined) continue;
 
-      centroids[j].nearbyRegions.push({
-        distance: distance,
-        region: centroids[i].divisionsObj,
-      });
-    }
+    const distance = d3.geoDistance(region.centroid, centroidsArray[i].centroid) * RADIUS;
+
+    if (distance > 100) continue;
+
+    region.nearbyRegions.push({
+      distance: distance,
+      region: centroidsArray[i].divisionsObj,
+    });
   }
 
-  for (const region of centroids) {
-    region.nearbyRegions.sort((a, b) => a.distance - b.distance);
-  }
-
-  return divisions;
+  region.nearbyRegions.sort((a, b) => a.distance - b.distance);
 }
 
 // test
