@@ -1,7 +1,7 @@
 const d3 = require('d3');
 const topojson = require('topojson');
 const nameCorrections = require('../lib/name-corrections');
-const ADMINISTRATIVE_LEVEL = 'uni';
+const ADMINISTRATIVE_LEVEL = 'mou';
 
 function computeCentroids() {
   const map = require(`./maps/dist/${ADMINISTRATIVE_LEVEL}/${ADMINISTRATIVE_LEVEL}-c005-s010-vw-pr.json`);

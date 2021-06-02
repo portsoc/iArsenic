@@ -7,13 +7,24 @@ function computeNearbyRegions(divisions) {
 
   for (const region of centroids) {
     region.nearbyRegions = [];
-    region.divisionsObj = divisions[region.div].districts[region.dis].upazilas[region.upa].unions[region.uni];
-    region.divisionsObj.nearbyRegions = region.nearbyRegions;
+
+    try {
+      region.divisionsObj = divisions[region.div].districts[region.dis].upazilas[region.upa].unions[region.uni].mouzas[region.mou];
+    } catch (e) {
+      console.log(`Region "${region.div},${region.dis},${region.upa},${region.uni},${region.mou}" not found.`);
+      region.divisionsObj = { nearbyRegions: [] };
+    }
+
+    if (region.divisionsObj !== undefined) {
+      region.divisionsObj.nearbyRegions = region.nearbyRegions;
+    }
   }
 
   for (let i = 0; i < centroids.length; i++) {
     for (let j = i + 1; j < centroids.length; j++) {
       const distance = d3.geoDistance(centroids[i].centroid, centroids[j].centroid) * RADIUS;
+
+      if (distance > 10) continue;
 
       centroids[i].nearbyRegions.push({
         distance: distance,
