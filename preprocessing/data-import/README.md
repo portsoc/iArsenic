@@ -29,7 +29,7 @@ region as wells in different regions.
 
 3. Run consolidate-csv.js with the following command:
 
-  node consolidate-csv.js r-data-csv/\*.csv > consolidatedCsv.csv
+  node consolidate-csv.js r-data-csv/\*.csv > consolidated-csv.csv
 
   _node consolidate-csv.js [directory containing rdata-to-csv.r output]\*.csv > [output directory/filename.csv]_
 
@@ -41,7 +41,7 @@ to identify and incorrectly spelt regions and record correct alternatives.
 
   To run find-name-corrections.js:
 
-  node find-name-corrections.js -i [outputOfConsolidateCsv.js] -o [nameCorrectionsFile.csv]
+  node find-name-corrections.js -i [output-of-consolidate-csv.js] -o [name-corrections-file.csv]
 
   **The output of find-name-corrections should have a .csv extension.**
 
