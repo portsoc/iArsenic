@@ -38,6 +38,8 @@ const parse = require('csv-parse/lib/sync');
 const fs = require('fs');
 const path = require('path');
 
+const nameCorrections = require('../lib/name-corrections');
+
 const CSV_PARSE_OPTIONS = {
   columns: true,
   skip_empty_lines: true,
@@ -61,9 +63,7 @@ function readTheCSVFiles(filePathList) {
   return records;
 }
 
-function listDefaultFiles() {
-  const dirPath = path.join(__dirname, '..', '..', 'data');
-
+function listDefaultFiles(dirPath) {
   // gather file paths for each csv file in /data/
   const filePathList = [];
   const files = fs.readdirSync(dirPath);
@@ -156,12 +156,13 @@ function fillArsenicData(divisions, records) {
   }
 }
 
-function correctNames(records, corrections) {
-  if (!corrections) return records;
+function correctNames(records, correctionsLength) {
+  if (!correctionsLength) return records;
 
-  const correctRecords = [];
+  const correctedRecords = [];
+  let count = 0;
   for (const r of records) {
-    const corrected = corrections.correct([
+    const corrected = nameCorrections.correct([
       r.Division,
       r.District,
       r.Upazila,
@@ -169,24 +170,32 @@ function correctNames(records, corrections) {
     ]);
 
     if (corrected != null) {
-      [r.Division, r.District, r.Upazila, r.Union, r.Mouza] = corrected;
-      correctRecords.push(r);
+      [r.Division, r.District, r.Upazila, r.Union] = corrected;
+      count++;
     }
+    correctedRecords.push(r);
   }
-  return correctRecords;
+  return [correctedRecords, count];
 }
 
 function loadData(paths, options = {}) {
-  if (!paths) paths = listDefaultFiles();
+  const dataPath = path.join(__dirname, '..', '..', 'data');
+
+  if (!paths) paths = listDefaultFiles(dataPath);
+  if (!options.corrections) options.corrections = listDefaultFiles(path.join(dataPath, 'name-corrections'));
 
   const records = readTheCSVFiles(paths);
-  const correctedRecords = correctNames(records, options.nameCorrections);
+  const corrections = readTheCSVFiles(options.corrections);
 
+  nameCorrections.loadCorrections(corrections);
+  const [correctedRecords, correctedRecordCount] = correctNames(records, corrections?.length);
+
+
+  
   const divisions = extractLocations(correctedRecords);
   fillArsenicData(divisions, correctedRecords);
-  console.debug(`Parsed ${correctedRecords.length} corrected records of ${records.length} total records.`);
+  console.debug(`Parsed ${records.length} records with ${correctedRecordCount} of them being corrected.`);
 
-  // return [divisions, correctedRecords];
   return divisions;
 }
 
