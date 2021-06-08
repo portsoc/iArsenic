@@ -121,6 +121,7 @@ function extractLocations(records) {
     if (!(r.Union in upazila.unions)) {
       upazila.unions[r.Union] = {
         wells: [],
+        nearbyRegions: [],
         name: r.Union,
       };
     }
@@ -168,7 +169,7 @@ function correctNames(records, corrections) {
     ]);
 
     if (corrected != null) {
-      [r.Division, r.District, r.Upazila, r.Union] = corrected;
+      [r.Division, r.District, r.Upazila, r.Union, r.Mouza] = corrected;
       correctRecords.push(r);
     }
   }
@@ -185,6 +186,7 @@ function loadData(paths, options = {}) {
   fillArsenicData(divisions, correctedRecords);
   console.debug(`Parsed ${correctedRecords.length} corrected records of ${records.length} total records.`);
 
+  // return [divisions, correctedRecords];
   return divisions;
 }
 
