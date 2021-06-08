@@ -106,6 +106,8 @@ const { annotateCentroids } = require('../geodata/centroids');
 
 const MIN_DATA_COUNT = 7;
 
+const getLowestRegionsName = (locationArr) => locationArr.map(region => region.name).join(' -> ');
+
 function isEnoughData(wellsList) {
   if (!wellsList) return false;
   const length = (typeof wellsList === 'number') ? wellsList : wellsList.length;
@@ -174,10 +176,7 @@ function computeWellStats(locationArr) {
       // getEnoughData should have already reported that, but
       // complain here for consistency check
       const stratumName = stratum === 'sD' ? 'deep' : stratum;
-
-      // name of the lowest region type
-      const regionName = locationArr.map(region => region.name).join(' -> ');
-      console.debug(`Mouza ${regionName} does not have enough ${stratumName} wells`);
+      console.debug(`Lowest region ${getLowestRegionsName(locationArr)} does not have enough ${stratumName} wells`);
     }
   }
 }
@@ -280,6 +279,7 @@ function strataSelector(...strata) {
  * of increasing distance, up to kmDistance.
  */
 function nearbyLocations(locationArr, kmDistance) {
+  let retarr = [];
   const location = locationArr[locationArr.length - 1];
 
   // if there is no nearbyRegions, we should compute it for this particular
@@ -289,14 +289,20 @@ function nearbyLocations(locationArr, kmDistance) {
   }
 
   const nearbyRegions = location.nearbyRegions;
-  const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
 
-  const regionsWithinDistance =
-    firstOutsideDistance === -1
-      ? nearbyRegions
-      : nearbyRegions.slice(0, firstOutsideDistance);
+  if (!nearbyRegions.length) console.debug(`Lowest region ${getLowestRegionsName(locationArr)} is missing its nearbyRegions`);
+  else {
+    const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
 
-  return regionsWithinDistance.map(a => a.region);
+    const regionsWithinDistance =
+      firstOutsideDistance === -1
+        ? nearbyRegions
+        : nearbyRegions.slice(0, firstOutsideDistance);
+
+    retarr = regionsWithinDistance.map(a => a.region);
+  }
+
+  return retarr;
 }
 
 function numericalCompare(a, b) {
