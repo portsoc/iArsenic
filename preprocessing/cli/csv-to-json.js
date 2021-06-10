@@ -5,8 +5,8 @@
  * probably for inspection and debugging purposes.
  */
 
-const csvLoader = require('./load-data');
-const cli = require('./cli-common');
+const csvLoader = require('./../lib/load-data');
+const cli = require('./../lib/cli-common');
 const colors = require('colors');
 const fs = require('fs');
 
