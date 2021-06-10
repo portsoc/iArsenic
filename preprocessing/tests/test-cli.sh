@@ -4,7 +4,7 @@
 scriptDir=`dirname $0`
 cd "$scriptDir"
 
-dataPaths=( "" "../../data/disabled/29k-original.csv" )
+dataPaths=( "" "../../data/29k-original.csv" )
 models=( "" "model1" "model3" "model4" "model5" )
 producer="../cli/produce-aggregate-data-files.js"
 tester="../cli/test-all.js"
