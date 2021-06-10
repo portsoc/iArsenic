@@ -170,7 +170,6 @@ function correctNames(records, correctionsLength) {
   if (!correctionsLength) return records;
 
   const correctedRecords = [];
-  let count = 0;
   for (const r of records) {
     const corrected = nameCorrections.correct([
       r.Division,
@@ -182,11 +181,10 @@ function correctNames(records, correctionsLength) {
 
     if (corrected != null) {
       [r.Division, r.District, r.Upazila, r.Union] = corrected;
-      count++;
+      correctedRecords.push(r);
     }
-    correctedRecords.push(r);
   }
-  return [correctedRecords, count];
+  return correctedRecords;
 }
 
 function loadData(paths, options = {}) {
@@ -199,13 +197,12 @@ function loadData(paths, options = {}) {
   const corrections = readTheCSVFiles(options.corrections);
 
   nameCorrections.loadCorrections(corrections);
-  const [correctedRecords, correctedRecordCount] = correctNames(records, corrections?.length);
+  const correctedRecords = correctNames(records, corrections?.length);
 
 
-  
   const divisions = extractLocations(correctedRecords);
   fillArsenicData(divisions, correctedRecords);
-  console.debug(`Parsed ${records.length} records with ${correctedRecordCount} of them being corrected.`);
+  console.debug(`Parsed ${correctedRecords.length} corrected records of ${records.length} total records.`);
 
   return divisions;
 }
