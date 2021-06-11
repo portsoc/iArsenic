@@ -57,7 +57,9 @@ NOTE: If you use the QGIS project file (`all-maps.qgz`), you can skip straight t
 
 ### Simplification
 
-The map files contain detailed borders, which makes the files large and slow to render. Simplification reduces the resolution of the borders, which improves the usability at negligible loss of detail.
+The map files contain detailed borders, which makes the files large and slow to render.
+Simplification reduces the resolution of the borders, which improves the usability at negligible loss of detail.
+For the mouza maps, simlification is needed because the resulting files would be too big for GitHub without it.
 
 All simplification thus far has been completed by using mapshaper to apply the methods and options, and using QGIS to specify the co-ordinate precision (when exporting to GeoJSON).
 
@@ -97,14 +99,17 @@ The options available on mapshaper are:
 
 #### Simplification Process
 
+It is recommended to use mapshaper, as it has more options and is easier to use.
+
 ##### Using mapshaper
 
 * Import a map file (source or converted file format)\*
   * Select the 'detect line intersections' option (optional, but recommended)
-* Open the *Simplification* menu found inside the top bar
+* Open the *Simplify* menu found inside the top bar
 * Apply simplification method and options as required
 * Apply the amount of simplification by moving the slider in the top bar
   * Alternatively enter a percentage value in the input field to the side
+* Fix the line intersections that happen using the *Repair* button on the top left, if there are any
 * Export using the Export menu found inside the top bar
 
 
