@@ -41,3 +41,7 @@ where '`#`' is the model number.
   * `node preprocessing/cli/produce-aggregate-data-files.js -o docs`
 
   * This will replace the preprocessed data and the estimator script in the web files. **If done on the `master` branch, this will affect the running app.**
+
+## CI/CD
+
+There is a GitHub action for linting and testing. It runs eslint and the unit tests. The unit tests only test functions in /lib/stats.
