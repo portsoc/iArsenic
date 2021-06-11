@@ -38,7 +38,11 @@
   * Black is safe
   * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
   * too few wells => get wells from deeper stratum and nearby geographical locations (going by centroids) – details in model5-preprocessor
-
+  * if depth is <=15.3m, there may be flooding :
+    * if there is flooding AND the well is red, we use the arsenic 95 percentile of available data of the stratum
+    * if there is no flooding AND the well is red, we use the arsenic 75 percentile of available data of the stratum
+    * if the well is black, we use the arsenic 25 percentile of available data of the stratum no matter if there is flooding or not
+                        
 
 more possible models:
 * all models with 10% or so overlap between strata
