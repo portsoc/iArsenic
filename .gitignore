@@ -9,3 +9,4 @@ preprocessing/data-import/r-data-rdata/*.RData
 preprocessing/data-import/r-data-csv/*.csv
 preprocessing/data-import/consolidatedCsv.csv
 data/data++
+tmp
