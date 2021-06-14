@@ -126,15 +126,14 @@ function extractLocations(records) {
       };
     }
 
-    const union = upazila.unions[r.Mouza];
-    if (union !== undefined) {
-      if (!(r.Mouza in union.mouzas)) {
-        union.mouzas[r.Mouza] = {
-          wells: [],
-          nearbyRegions: [],
-          name: r.Mouza,
-        };
-      }
+    const union = upazila.unions[r.Union];
+
+    if (!(r.Mouza in union.mouzas)) {
+      union.mouzas[r.Mouza] = {
+        wells: [],
+        nearbyRegions: [],
+        name: r.Mouza,
+      };
     }
   }
 
