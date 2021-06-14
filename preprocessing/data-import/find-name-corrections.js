@@ -408,14 +408,14 @@ function loadExistingCorrections(file) {
 
 function main(cliArgs) {
   checkForMissingFlags(cliArgs);
-  const correctNameData = csvLoader(cliArgs.paths);
+  const correctNameData = csvLoader(cliArgs.paths, {}, false);
 
   // load existing corrections
   const correctionFile = cliArgs.output;
   const corrections = loadExistingCorrections(correctionFile);
 
   const dataToCorrect = cliArgs.inputFile;
-  const uncheckedNameData = extractHierarchyTree(csvLoader([dataToCorrect]));
+  const uncheckedNameData = extractHierarchyTree(csvLoader([dataToCorrect], {}, false));
 
   addRelativeRegionLinks(correctNameData);
 
