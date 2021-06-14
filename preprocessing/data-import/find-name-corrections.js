@@ -218,7 +218,7 @@ function appendOptionsString(startingIndex, optionsString, misspeltSubregionName
     const parentName = startingIndex === 0
       ? ''
       : selectableRegions[i].region.parentRegion.name + ' -> ';
-    optionsString += `\n${colors.yellow(startingIndex + i + 1)} ${parentName}${optionName} ${optionSubregionsHighlighted}`;
+    optionsString += `\n${colors.yellow(startingIndex + i + 1)} ${parentName}${colors.underline(optionName)} ${optionSubregionsHighlighted}\n`;
   }
   return optionsString;
 }
