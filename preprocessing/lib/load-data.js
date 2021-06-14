@@ -189,22 +189,30 @@ function correctNames(records, correctionsLength) {
   return correctedRecords;
 }
 
-function loadData(paths, options = {}) {
-  const dataPath = path.join(__dirname, '..', '..', 'data');
-
-  if (!paths) paths = listDefaultFiles(dataPath);
+function loadCorrections(dataPath, options, records) {
   if (!options.corrections) options.corrections = listDefaultFiles(path.join(dataPath, 'name-corrections'));
 
-  const records = readTheCSVFiles(paths);
   const corrections = readTheCSVFiles(options.corrections);
 
   nameCorrections.loadCorrections(corrections);
-  const correctedRecords = correctNames(records, corrections?.length);
+  return correctNames(records, corrections?.length);
+}
 
+function loadData(paths, options = {}, corrections = true) {
+  const dataPath = path.join(__dirname, '..', '..', 'data');
 
-  const divisions = extractLocations(correctedRecords);
-  fillArsenicData(divisions, correctedRecords);
-  console.debug(`Parsed ${correctedRecords.length} corrected records of ${records.length} total records.`);
+  if (!paths) paths = listDefaultFiles(dataPath);
+
+  const parsedRecords = readTheCSVFiles(paths);
+  const correctedRecords = (corrections) ? loadCorrections(dataPath, options, parsedRecords) : undefined;
+
+  const records = (corrections) ? correctedRecords : parsedRecords;
+
+  const divisions = extractLocations(records);
+  fillArsenicData(divisions, records);
+
+  const correctionOutput = ((corrections) ? ` with ${correctedRecords.length} corrected records.` : '.');
+  console.debug(`Parsed ${parsedRecords.length} total records` + correctionOutput);
 
   return divisions;
 }
