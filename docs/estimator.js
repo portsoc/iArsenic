@@ -125,4 +125,3 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 }
 
 if (typeof module === 'object') module.exports = produceEstimate;
-
