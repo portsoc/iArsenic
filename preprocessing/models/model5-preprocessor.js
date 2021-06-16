@@ -289,15 +289,14 @@ function nearbyLocations(locationArr, kmDistance) {
   }
 
   const nearbyRegions = location.nearbyRegions;
+  const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
 
-    const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
+  const regionsWithinDistance =
+    firstOutsideDistance === -1
+      ? nearbyRegions
+      : nearbyRegions.slice(0, firstOutsideDistance);
 
-    const regionsWithinDistance =
-      firstOutsideDistance === -1
-        ? nearbyRegions
-        : nearbyRegions.slice(0, firstOutsideDistance);
-
-    retarr = regionsWithinDistance.map(a => a.region);
+  retarr = regionsWithinDistance.map(a => a.region);
 
   return retarr;
 }
