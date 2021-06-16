@@ -290,8 +290,6 @@ function nearbyLocations(locationArr, kmDistance) {
 
   const nearbyRegions = location.nearbyRegions;
 
-  if (!nearbyRegions.length) console.debug(`Lowest region ${getLowestRegionsName(locationArr)} is missing its nearbyRegions`);
-  else {
     const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
 
     const regionsWithinDistance =
@@ -300,7 +298,6 @@ function nearbyLocations(locationArr, kmDistance) {
         : nearbyRegions.slice(0, firstOutsideDistance);
 
     retarr = regionsWithinDistance.map(a => a.region);
-  }
 
   return retarr;
 }
