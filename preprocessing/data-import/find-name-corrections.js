@@ -135,6 +135,7 @@ function chooseCorrection(misspeltRegion, correctNameData) {
   promptText += 'Incorrect ' + regionLabel + ': ' + misspeltRegionNameBold + ' ' + misspeltSubregionString;
 
   while (true) {
+    console.log('\n\n\n\n\n');
     console.log(promptText);
     const userInput = prompt('Input ID of correct spelling: ');
 
@@ -201,7 +202,7 @@ function generateOptionsTable(selectableRegions, misspeltSubregionNames, commonS
 
   if (cousins.length === 0) return optionsString;
 
-  optionsString += `\n\n${colors.yellow('We also found potential corrections to cousin regions below')}\n`;
+  optionsString += `\n\n${colors.magenta('We also found potential corrections to cousin regions below')}\n`;
   optionsString = appendOptionsString(siblings.length, optionsString, misspeltSubregionNames, commonSubregions, cousins);
 
   return optionsString;
@@ -218,7 +219,7 @@ function appendOptionsString(startingIndex, optionsString, misspeltSubregionName
     const parentName = startingIndex === 0
       ? ''
       : selectableRegions[i].region.parentRegion.name + ' -> ';
-    optionsString += `\n${colors.yellow(startingIndex + i + 1)} ${parentName}${colors.underline(optionName)} ${optionSubregionsHighlighted}\n`;
+    optionsString += `\n${colors.yellow(startingIndex + i + 1)} ${colors.underline(parentName)}${colors.underline(optionName)} ${optionSubregionsHighlighted}\n`;
   }
   return optionsString;
 }
@@ -380,6 +381,15 @@ function extractHierarchyTree(dataset) {
             subRegionsArr: [],
           };
           upaObj.subRegionsArr.push(uniObj);
+
+          for (const mou of Object.values(uni.mouzas)) {
+            const mouObj = {
+              oldName: mou.name,
+              oldParentPath: [div.name, dis.name, upa.name, uni.name],
+              subRegionsArr: [],
+            };
+            uniObj.subRegionsArr.push(mouObj);
+          }
         }
       }
     }
