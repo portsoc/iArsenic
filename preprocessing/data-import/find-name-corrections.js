@@ -4,6 +4,7 @@ const nameCorrections = require('../lib/name-corrections');
 const prompt = require('prompt-sync')();
 const fs = require('fs');
 const parse = require('csv-parse/lib/sync');
+const csvStringify = require('csv-stringify/lib/sync');
 const colors = require('colors');
 
 const CSV_PARSE_OPTIONS = {
@@ -12,8 +13,6 @@ const CSV_PARSE_OPTIONS = {
 };
 
 function correct(correctNameData, region, correctionFile, knownCorrections) {
-  region.oldName = region.oldName.replace(/\s+/g, ' ');
-
   if (correctKnownCorrection(region, knownCorrections)) {
     // treat as corrected
     return true;
@@ -70,13 +69,15 @@ function correctKnownCorrection(region, knownCorrections) {
 function appendCorrectionToFile(correction, correctionFile) {
   // create an empty output file if it doesn't exist yet
   if (!fs.existsSync(correctionFile)) {
-    const headers = 'path,correct' + '\n';
+    const headers = 'path,correct\n';
     fs.appendFileSync(correctionFile, headers);
   }
 
-  const correctionRecord =
-  nameCorrections.combinePath(correction.path) + ',' +
-  nameCorrections.combinePath(correction.correct) + '\n';
+  // CSV write just the one record
+  const correctionRecord = csvStringify([[
+    nameCorrections.combinePath(correction.path),
+    nameCorrections.combinePath(correction.correct),
+  ]]);
   fs.appendFileSync(correctionFile, correctionRecord);
 }
 
@@ -85,7 +86,7 @@ function highlightCommonSubregions(regionsToList, regionsToHighlight, commonSubr
   for (let name of regionsToList) {
     if (regionsToHighlight.includes(name)) {
       if (commonSubregions) commonSubregions.push(name);
-      name = colors.brightBlue(name);
+      name = colors.brightBlue(fixNL(name));
     }
     retarr.push(name);
   }
@@ -118,7 +119,7 @@ function chooseCorrection(misspeltRegion, correctNameData) {
 
   const correctedRegionPath = misspeltRegion.correctParentPath;
 
-  const misspeltRegionNameBold = colors.bold(misspeltRegion.oldName);
+  const misspeltRegionNameBold = colors.bold(fixNL(misspeltRegion.oldName));
   const regionLabel = regionLabels[correctedRegionPath.length];
   const commonSubregions = [];
 
@@ -165,6 +166,11 @@ function chooseCorrection(misspeltRegion, correctNameData) {
     // input wasn't valid
     console.log(colors.red.bold(`\nINVALID INPUT, please enter a number 1-${selectableRegions.length}`));
   }
+}
+
+// fix newlines for display – turn them into spaces
+function fixNL(str) {
+  return str.replace(/\s+/g, ' ');
 }
 
 // MUST return "sibling" regions before "cousin" regions
