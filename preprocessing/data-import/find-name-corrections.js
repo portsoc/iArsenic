@@ -12,6 +12,8 @@ const CSV_PARSE_OPTIONS = {
 };
 
 function correct(correctNameData, region, correctionFile, knownCorrections) {
+  region.oldName = region.oldName.replace(/\s+/g, ' ');
+
   if (correctKnownCorrection(region, knownCorrections)) {
     // treat as corrected
     return true;
@@ -73,8 +75,8 @@ function appendCorrectionToFile(correction, correctionFile) {
   }
 
   const correctionRecord =
-    nameCorrections.combinePath(correction.path) + ',' +
-    nameCorrections.combinePath(correction.correct) + '\n';
+  nameCorrections.combinePath(correction.path) + ',' +
+  nameCorrections.combinePath(correction.correct) + '\n';
   fs.appendFileSync(correctionFile, correctionRecord);
 }
 
