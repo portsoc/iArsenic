@@ -176,7 +176,7 @@ function computeWellStats(locationArr) {
       // getEnoughData should have already reported that, but
       // complain here for consistency check
       const stratumName = stratum === 'sD' ? 'deep' : stratum;
-      console.debug(`Lowest region ${getLowestRegionsName(locationArr)} does not have enough ${stratumName} wells`);
+      console.debug(`Mouza ${getLowestRegionsName(locationArr)} does not have enough ${stratumName} wells`);
     }
   }
 }
