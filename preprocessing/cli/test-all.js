@@ -38,28 +38,20 @@ function main(options) {
   const divisions = preprocessor(data);
 
   for (const div of Object.keys(divisions)) {
-    for (const dis of Object.keys(divisions[div].districts)) {
-      for (const upa of Object.keys(divisions[div].districts[dis].upazilas)) {
-        for (const uni of Object.keys(divisions[div].districts[dis].upazilas[upa].unions)) {
-          for (const mou of Object.keys(divisions[div].districts[dis].upazilas[upa].unions[uni].mouzas)) {
+    const divObj = divisions[div];
+    for (const dis of Object.keys(divObj.districts)) {
+      const disObj = divObj.districts[dis];
+      for (const upa of Object.keys(disObj.upazilas)) {
+        const upaObj = disObj.upazilas[upa];
+        for (const uni of Object.keys(upaObj.unions)) {
+          const uniObj = upaObj.unions[uni];
+          for (const mou of Object.keys(uniObj.mouzas)) {
             runTests(produceEstimate, divisions, div, dis, upa, uni, mou);
           }
         }
       }
     }
   }
-
-  /* eslint-disable */
-  // runTests(produceEstimate, divisions, "Barisal", "Barguna", "Amtali", "Amtali");
-  /* eslint-enable */
-
-  // if we wish to see memory stats:
-  // console.log(process.memoryUsage());
-  // gc();
-  // setInterval(() => {
-  //   console.log(process.memoryUsage());
-  //   gc();
-  // }, 2000);
 }
 
 main(cli.getParameters());
