@@ -24,14 +24,18 @@ function correct(correctNameData, region, correctionFile, knownCorrections) {
   }
 
   const correction = chooseCorrection(region, correctNameData);
+  if (correction) {
+    // correct the region name in the data
+    region.correctName = correction.region.name;
 
-  // correct the region name in the data
-  region.correctName = correction.region.name;
-
-  if (correction.type === 'cousin') {
-    const correctParentRegion = correction.region.parentRegion;
-    region.correctParentPath = findRegionNamePath(correctParentRegion);
-  } else if (correction.type === 'none') {
+    if (correction.type === 'cousin') {
+      const correctParentRegion = correction.region.parentRegion;
+      region.correctParentPath = findRegionNamePath(correctParentRegion);
+    } else if (correction.type === 'none') {
+      region.correctParentPath = [];
+    }
+  } else {
+    region.correctName = nameCorrections.SKIPPED_CORRECTION;
     region.correctParentPath = [];
   }
 
@@ -42,7 +46,7 @@ function correct(correctNameData, region, correctionFile, knownCorrections) {
   };
   appendCorrectionToFile(csvCorrection, correctionFile);
 
-  return correction.type !== 'none';
+  return (!correction || correction.type !== 'none');
 }
 
 function correctKnownCorrection(region, knownCorrections) {
@@ -123,6 +127,7 @@ function chooseCorrection(misspeltRegion, correctNameData) {
     misspeltRegion,
     misspeltSubregionNames,
   );
+  if (!selectableRegions) return undefined;
 
   const optionsList = generateOptionsTable(selectableRegions, misspeltSubregionNames, commonSubregions);
 
@@ -165,6 +170,7 @@ function getSelectableRegions(correctNameData, misspeltRegion, misspeltSubregion
   const selectableRegions = [];
 
   const correctSiblings = getCorrectlySpelledSiblingRegions(correctNameData, misspeltRegion);
+  if (!correctSiblings) return undefined;
 
   // put all sibling regions into selectable region array
   for (const sibling of correctSiblings) {
@@ -263,11 +269,11 @@ function getCorrectlySpelledSiblingRegions(correctNameData, region) {
   if (region.oldParentPath.length === 0) {
     // if region is a division, sibling names are values in correctNameData
     return Object.values(correctNameData).sort((a, b) => a.name.localeCompare(b.name));
-  } else {
+  } else if (region.correctParentPath[0] !== nameCorrections.SKIPPED_CORRECTION) {
     const parentNameArr = region.correctParentPath;
     const correctlyNamedParent = findRegionByNameArr(correctNameData, parentNameArr);
     return correctlyNamedParent.subRegionsArr.sort((a, b) => a.name.localeCompare(b.name));
-  }
+  } else return undefined;
 }
 
 function findRegionNamePath(region) {
