@@ -27,7 +27,6 @@ function correct(correctNameData, region, correctionFile, knownCorrections) {
   if (region.correctParentPath[0] === nameCorrections.SKIPPED_CORRECTION) {
     region.correctName = nameCorrections.SKIPPED_CORRECTION;
     region.correctParentPath = [];
-    saveCorrection(region, correctionFile);
     return false;
   }
 
