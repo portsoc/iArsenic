@@ -19,6 +19,7 @@ const depth = document.querySelector('#depth');
 const depthOutput = document.querySelector('#depthOutput');
 const depthSection = document.querySelector('#depthSection');
 const stainingSection = document.querySelector('#stainingSection');
+const floodingSection = document.querySelector('#floodingSection');
 const drinkingSection = document.querySelector('#drinkingSection');
 const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
@@ -66,11 +67,13 @@ function init() {
   blackLabel.addEventListener('mouseover', () => { swapStainingImage('black'); });
   blackLabel.addEventListener('click', () => { swapStainingImage('black'); });
 
-  redStain.addEventListener('change', () => { displayUtensil(false); });
-  blackStain.addEventListener('change', () => { displayUtensil(false); });
-  mixedStain.addEventListener('change', () => { displayUtensil(true); });
+  redStain.addEventListener('change', () => { displayElement(utensilSection, false); });
+  blackStain.addEventListener('change', () => { displayElement(utensilSection, false); });
+  mixedStain.addEventListener('change', () => { displayElement(utensilSection, true); });
 
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
+  depth.addEventListener('change', () => { showOrHideFlooding(); });
+  depthOutput.addEventListener('change', () => { showOrHideFlooding(); });
 
   for (let i = 0; i < inputs.length; i += 1) {
     inputs[i].addEventListener('change', hideAssessment);
@@ -106,6 +109,11 @@ function gatherInputs() {
     retval.drinking = selectedDrinking.value;
   }
 
+  const selectedFlooding = document.querySelector('input[name="flooding"]:checked');
+  if (selectedFlooding) {
+    retval.flooding = selectedFlooding.value;
+  }
+
   validateInputs();
   if (!retval.division || !retval.district || !retval.upazila || !retval.union) {
     scrollToSection(locationSection);
@@ -120,6 +128,11 @@ function gatherInputs() {
   if (!retval.depth) {
     // depth 0 is the default and counts as no-value-entered
     scrollToSection(depthSection);
+    return null;
+  }
+
+  if (!retval.flooding && depthOutput.value < 50 && floodingSection.classList.contains('invalid')) {
+    scrollToSection(floodingSection);
     return null;
   }
 
@@ -210,11 +223,17 @@ function updateRangeLabel(position) {
 function updateSlider() {
   if (depthOutput.value > 0) {
     depth.value = (depthOutput.value - minVal) / scale + minPos;
-  } else { depth.value = 0; }
+  } else {
+    depth.value = 0;
+  }
 }
 
-function displayUtensil(show) {
-  utensilSection.classList.toggle('hidden', !show);
+function displayElement(element, show) {
+  element.classList.toggle('hidden', !show);
+}
+
+function showOrHideFlooding() {
+  displayElement(floodingSection, depthOutput.value < 50);
 }
 
 function validateInputs() {
@@ -229,42 +248,35 @@ function validateInputs() {
       break;
     }
   }
-  if (!dropdownInputs.valid) {
-    locationSection.classList.add('invalid');
-  } else { locationSection.classList.remove('invalid'); }
+
+  locationSection.classList.toggle('invalid', !dropdownInputs.valid);
 
   // Handles the staining radio buttons
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
-  if (!selectedStaining) {
-    stainingSection.classList.add('invalid');
-  } else if (selectedStaining.value === 'Mixed') {
-    stainingSection.classList.remove('invalid');
+  stainingSection.classList.toggle('invalid', !selectedStaining);
+
+  // Handles the utensil radio buttons
+  if (selectedStaining && selectedStaining.value === 'Mixed') {
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
-    if (!selectedUtensil) {
-      stainingSection.classList.add('invalid');
-    } else {
-      stainingSection.classList.remove('invalid');
-    }
-  } else {
+
+    stainingSection.classList.toggle('invalid', !selectedUtensil);
+
     stainingSection.classList.remove('invalid');
   }
 
   // Handles the depth
   const depthOutputValue = Number(depthOutput.value);
+  depthSection.classList.toggle('invalid', depthOutputValue === 0 || depthOutputValue > 1000);
 
-  if (depthOutputValue === 0 || depthOutputValue > 1000) {
-    depthSection.classList.add('invalid');
-  } else {
-    depthSection.classList.remove('invalid');
-  }
+
+  // Handles the flooding
+  const selectedFlooding = document.querySelector('input[name="flooding"]:checked');
+  floodingSection.classList.toggle('invalid',
+    !selectedFlooding && !floodingSection.classList.contains('hidden'));
 
   // Handles the drinking from the well radio buttons
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
-  if (!selectedDrinking) {
-    drinkingSection.classList.add('invalid');
-  } else {
-    drinkingSection.classList.remove('invalid');
-  }
+  drinkingSection.classList.toggle('invalid', !selectedDrinking);
 }
 
 let fallbackLogImage; // global to prevent too quick garbage collection before the data is logged
@@ -296,7 +308,7 @@ async function showAssessment() {
 
   if (inputs) {
     const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
-      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
+      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
 
     // log the inputs
     logToServer({ inputs, estimate });
