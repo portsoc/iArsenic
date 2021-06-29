@@ -164,10 +164,11 @@ function computeWellStats(locationArr) {
   for (const stratum of STRATA) {
     let wells = location[stratum];
 
+    // only produce flooding model data if we have enough wells in the mouza or under flooding-specific widening
     let useFloodingModel = false;
     if (stratum === 's15') {
       if (!isEnoughData(wells)) {
-        wells = location.s15Flooded;
+        wells = location.s15FloodWider;
       }
       useFloodingModel = isEnoughData(wells);
     }
@@ -217,6 +218,11 @@ function getEnoughData(locationArr) {
   location.s15Wider =
     widen(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
 
+  // * We also generate wells for the flooding model,
+  //   using wells in a 5km radius up to 15m deep
+  location.s15FloodWider =
+    widen(location.s15, ...nearbyWells(5, 's15'));
+
   // * at 15-45, first try 15-65, then widen 15-45 geographically
   //   up to 10km, then widen 15-65 up to 20km
   //         - generate local s65
@@ -260,10 +266,6 @@ function getEnoughData(locationArr) {
   // * at >150m, we can take about 100km radius
   //         - generate sD until 100km
   location.sDWider = widen(location.sD, ...nearbyWells(100, 'sD'));
-
-  // * We also generate wells for the flooding model,
-  //   using wells in a 5km radius up to 15m deep
-  location.s15Flooded = widen(location.s15, ...nearbyWells(5, 's15'));
 
   delete location.nearbyRegions;
 }
@@ -354,6 +356,7 @@ function extractStats(data, hierarchyPath) {
           u: dataObj[`${stratum}_upp`],
         };
         if (`${stratum}_p25` in dataObj) {
+          // there is data for the flooding model, fill in the correct messages
           hierarchyObj[stratum].m2 = produceMessage(dataObj[`${stratum}_p25`], dataObj[`${stratum}_max`]);
           hierarchyObj[stratum].m7 = produceMessage(dataObj[`${stratum}_p75`], dataObj[`${stratum}_max`]);
           hierarchyObj[stratum].m9 = produceMessage(dataObj[`${stratum}_p95`], dataObj[`${stratum}_max`]);
