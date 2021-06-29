@@ -64,19 +64,29 @@ including pre-processed arsenic concentration data which looks like this:
                     u: ...,     // short for upper quantile
                   },
                   s45: {
-                    ...
+                    m: ...,
+                    l: ...,
+                    u: ...,
                   },
                   s65: {
-                    ...
+                    m: ...,
+                    l: ...,
+                    u: ...,
                   },
                   s90: {
-                    ...
+                    m: ...,
+                    l: ...,
+                    u: ...,
                   },
                   s150: {
-                    ...
+                    m: ...,
+                    l: ...,
+                    u: ...,
                   },
                   sD: {
-                    ...
+                    m: ...,
+                    l: ...,
+                    u: ...,
                   },
                   ... further mouzas
                 ]
