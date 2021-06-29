@@ -20,6 +20,7 @@ In model 5:
    look for geographically nearby regions within some radius
  * at <15m, first look at <45m, then widen geographically still
    at <45m up to 10km, meaning we take <15m together with 15-45
+   if there are enough wells, we also add 25/75/95 percentiles to the output
  * at 15-45, first try 15-65, then widen 15-45 geographically
    up to 10km, then widen 15-65 up to 20km
  * at 45-65, first try 45-90, then widen 45-65 up to 10km, then
@@ -55,9 +56,12 @@ including pre-processed arsenic concentration data which looks like this:
                 mouzas: [
                   mouza: '..',
                   s15: {
-                    m: ...,   // short for message ID
-                    l: ...,   // short for lower quantile
-                    u: ...,   // short for upper quantile
+                    m: ...,     // short for message ID using median
+                    m2: ...,    // message ID using the 25th percentile
+                    m7: ...,    // message ID using the 75th percentile
+                    m9: ...,    // message ID using the 95th percentile
+                    l: ...,     // short for lower quantile
+                    u: ...,     // short for upper quantile
                   },
                   s45: {
                     m: ...,
@@ -160,8 +164,16 @@ function computeWellStats(locationArr) {
   for (const stratum of STRATA) {
     let wells = location[stratum];
 
+    // only produce flooding model data if we have enough wells in the mouza or under flooding-specific widening
+    let useFloodingModel = false;
+    if (stratum === 's15') {
+      if (!isEnoughData(wells)) {
+        wells = location.s15FloodWider;
+      }
+      useFloodingModel = isEnoughData(wells);
+    }
+
     if (!isEnoughData(wells)) {
-      // get wider wells
       wells = location[stratum + 'Wider'];
     }
 
@@ -171,6 +183,11 @@ function computeWellStats(locationArr) {
       location[`${stratum}_max`] = stats.round1(stats.max(wells));
       location[`${stratum}_low`] = stats.quantile(wells, 0.1);
       location[`${stratum}_upp`] = stats.quantile(wells, 0.9);
+      if (useFloodingModel) {
+        location[`${stratum}_p25`] = stats.quantile(wells, 0.25);
+        location[`${stratum}_p75`] = stats.quantile(wells, 0.75);
+        location[`${stratum}_p95`] = stats.quantile(wells, 0.95);
+      }
     } else {
       // if we don't have enough well data on a given stratum,
       // getEnoughData should have already reported that, but
@@ -200,6 +217,11 @@ function getEnoughData(locationArr) {
   //         - generate local s45, then s15+s45 up to 10km
   location.s15Wider =
     widen(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
+
+  // * We also generate wells for the flooding model,
+  //   using wells in a 5km radius up to 15m deep
+  location.s15FloodWider =
+    widen(location.s15, ...nearbyWells(5, 's15'));
 
   // * at 15-45, first try 15-65, then widen 15-45 geographically
   //   up to 10km, then widen 15-65 up to 20km
@@ -333,6 +355,12 @@ function extractStats(data, hierarchyPath) {
           l: dataObj[`${stratum}_low`],
           u: dataObj[`${stratum}_upp`],
         };
+        if (`${stratum}_p25` in dataObj) {
+          // there is data for the flooding model, fill in the correct messages
+          hierarchyObj[stratum].m2 = produceMessage(dataObj[`${stratum}_p25`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum].m7 = produceMessage(dataObj[`${stratum}_p75`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum].m9 = produceMessage(dataObj[`${stratum}_p95`], dataObj[`${stratum}_max`]);
+        }
       }
     }
 
