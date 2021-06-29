@@ -1,5 +1,5 @@
 // model: model5
-// generated: Tue Jun 29 2021 10:10:33 GMT+0100 (British Summer Time)
+// generated: Tue Jun 29 2021 10:35:20 GMT+0100 (British Summer Time)
 // input data: default
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
@@ -78,7 +78,6 @@ function selectArsenicValues(region, depth) {
   else return region.sD;
 }
 
-// Flood removed from here for time being
 function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, utensil, flood) {
   const division = divisions[div];
   const district = division?.districts[dis];

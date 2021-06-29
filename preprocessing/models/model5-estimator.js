@@ -75,7 +75,6 @@ function selectArsenicValues(region, depth) {
   else return region.sD;
 }
 
-// Flood removed from here for time being
 function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, utensil, flood) {
   const division = divisions[div];
   const district = division?.districts[dis];
