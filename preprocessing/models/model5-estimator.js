@@ -122,6 +122,7 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
     } else {
       retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
     }
+  }
 
   retval.lowerQ = lowerQ;
   retval.upperQ = upperQ;
