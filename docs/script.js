@@ -308,7 +308,7 @@ async function showAssessment() {
 
   if (inputs) {
     const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
-      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
+      inputs.upazila, inputs.union, inputs.mouza, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
 
     // log the inputs
     logToServer({ inputs, estimate });
