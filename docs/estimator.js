@@ -1,5 +1,5 @@
 // model: model5
-// generated: Tue Jun 29 2021 10:35:20 GMT+0100 (British Summer Time)
+// generated: Wed Jun 30 2021 20:00:17 GMT+0100 (British Summer Time)
 // input data: default
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
@@ -102,12 +102,12 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
   if (depth < 15.3 && 'm2' in arsenicValues) {
     // flooding model
     if (colour === 'Black') {
-      retval = createMessage(arsenicValues.m_p25);
+      retval = createMessage(arsenicValues.m2);
     } else if (flood === 'yes') {
       // here, the colour is red
-      retval = createMessage(arsenicValues.m_p95);
+      retval = createMessage(arsenicValues.m9);
     } else {
-      retval = createMessage(arsenicValues.m_p75);
+      retval = createMessage(arsenicValues.m7);
     }
   } else {
     // regular model

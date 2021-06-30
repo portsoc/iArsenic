@@ -99,12 +99,12 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
   if (depth < 15.3 && 'm2' in arsenicValues) {
     // flooding model
     if (colour === 'Black') {
-      retval = createMessage(arsenicValues.m_p25);
+      retval = createMessage(arsenicValues.m2);
     } else if (flood === 'yes') {
       // here, the colour is red
-      retval = createMessage(arsenicValues.m_p95);
+      retval = createMessage(arsenicValues.m9);
     } else {
-      retval = createMessage(arsenicValues.m_p75);
+      retval = createMessage(arsenicValues.m7);
     }
   } else {
     // regular model
