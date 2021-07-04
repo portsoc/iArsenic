@@ -30,6 +30,39 @@ function extractNames(data, hierarchyPath) {
   return retval;
 }
 
+// Splits aggeragate data into more managable and easily networked
+// chunks by delimiter (geographical level), ignoring mouzas as that
+// would be too many files
+function splitAggregateData(aggregateData, delimiter) {
+  const retval = [];
+
+  for (const division of Object.values(aggregateData)) {
+    if (delimiter === 'division') {
+      retval.push(division);
+      continue;
+    }
+
+    for (const district of Object.values(division)) {
+      if (delimiter === 'district') {
+        retval.push(district);
+        continue;
+      }
+
+      for (const upazila of Object.values(district)) {
+        if (delimiter === 'upazila') {
+          retval.push(upazila);
+          continue;
+        }
+
+        for (const union of Object.values(upazila)) {
+          retval.push(union);
+        }
+      }
+    }
+  }
+  return retval;
+}
+
 function compareByProperty(prop) {
   return (a, b) => {
     if (a[prop] < b[prop]) return -1;
@@ -44,13 +77,23 @@ function main(options) {
   const data = loadData(options.paths, options);
 
   const modelPreprocessor = options.model.preprocessor;
+  const doSplitAggregateData = options.model.id === 'model5';
 
   const aggregateData = modelPreprocessor(data);
   const dropdownData = extractNames(data, ['division', 'district', 'upazila', 'union', 'mouza']);
 
   const estimatorContent = fs.readFileSync(options.model.estimatorPath);
 
-  output(options, 'aggregate-data.js', 'const aggregateData = ' + JSON.stringify(aggregateData));
+  if (doSplitAggregateData) {
+    const districts = splitAggregateData(aggregateData, 'district');
+    console.log(districts);
+    //   for (const district of districts) {
+    //     output(options, 'aggregate-data/')
+    //   }
+  } else {
+    output(options, 'aggregate-data.json', JSON.stringify(aggregateData, null, 4));
+  }
+
   output(options, 'dropdown-data.js', 'const dropdownData = ' + JSON.stringify(dropdownData));
   output(options, 'estimator.js', estimatorContent);
 }
@@ -73,7 +116,7 @@ function output(options, filename, content) {
   } else {
     // put it in the file
     const filePath = path.join(options.output, filename);
-    console.log('writing', filePath);
+    // console.log('writing', filePath);
     fs.writeFileSync(filePath, content);
   }
 }
