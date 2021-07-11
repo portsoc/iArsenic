@@ -30,36 +30,17 @@ function extractNames(data, hierarchyPath) {
   return retval;
 }
 
-// Splits aggeragate data into more managable and easily networked
-// chunks by delimiter (geographical level), ignoring mouzas as that
-// would be too many files
-function splitAggregateData(aggregateData, delimiter) {
+function splitAggregateDataIntoDistricts(aggregateData) {
   const retval = [];
 
   for (const division of Object.values(aggregateData)) {
-    if (delimiter === 'division') {
-      retval.push(division);
-      continue;
-    }
-
-    for (const district of Object.values(division)) {
-      if (delimiter === 'district') {
-        retval.push(district);
-        continue;
-      }
-
-      for (const upazila of Object.values(district)) {
-        if (delimiter === 'upazila') {
-          retval.push(upazila);
-          continue;
-        }
-
-        for (const union of Object.values(upazila)) {
-          retval.push(union);
-        }
-      }
+    for (const [district, upazilas] of Object.entries(division.districts)) {
+      retval.push({ district: district, upazilas: upazilas });
     }
   }
+
+  // console.log(retval);
+  console.log(retval.length);
   return retval;
 }
 
@@ -77,6 +58,7 @@ function main(options) {
   const data = loadData(options.paths, options);
 
   const modelPreprocessor = options.model.preprocessor;
+  // we only want to split up the aggregate data if model5 is being used
   const doSplitAggregateData = options.model.id === 'model5';
 
   const aggregateData = modelPreprocessor(data);
@@ -85,13 +67,14 @@ function main(options) {
   const estimatorContent = fs.readFileSync(options.model.estimatorPath);
 
   if (doSplitAggregateData) {
-    const districts = splitAggregateData(aggregateData, 'district');
-    console.log(districts);
-    //   for (const district of districts) {
-    //     output(options, 'aggregate-data/')
-    //   }
+    const districts = splitAggregateDataIntoDistricts(aggregateData);
+    for (const district of districts) {
+      output(options, `aggregate-data-${district.district}.json`, JSON.stringify(district.upazilas), 'aggregate-data/');
+    }
+    // write metadata so that we know when it was generated
+    output(options, 'metadata.txt', '', 'aggregate-data/');
   } else {
-    output(options, 'aggregate-data.json', JSON.stringify(aggregateData, null, 4));
+    output(options, 'aggregate-data.json', JSON.stringify(aggregateData));
   }
 
   output(options, 'dropdown-data.js', 'const dropdownData = ' + JSON.stringify(dropdownData));
@@ -107,16 +90,26 @@ function fileHeading(options) {
 `;
 }
 
-function output(options, filename, content) {
-  content = fileHeading(options) + content;
+function output(options, filename, content, subdirectory = '') {
+  // make sure to omit the generation comments if the output is json
+  content = (options.output && filename.endsWith('.json')) ? content : fileHeading(options) + content;
+
   if (!options.output) {
     // if no output directory, output to console
     console.log(filename + ':');
     console.log(content);
   } else {
+    // make sure that, if there's a subdirectory, it exists
+    if (subdirectory !== '') {
+      const subdir = path.join(options.output, subdirectory);
+      if (!fs.existsSync(subdir)) {
+        fs.mkdirSync(subdir);
+      }
+    }
+
     // put it in the file
-    const filePath = path.join(options.output, filename);
-    // console.log('writing', filePath);
+    const filePath = path.join(options.output, subdirectory, filename);
+    console.log('writing', filePath);
     fs.writeFileSync(filePath, content);
   }
 }
