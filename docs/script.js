@@ -3,7 +3,7 @@
  * gathers inputs from the user, validates data, & displays the assessment
  */
 
-/* global produceEstimate, dropdownData, aggregateData */
+/* global produceEstimate, dropdownData */
 
 const divDD = document.querySelector('#divisionDD');
 const disDD = document.querySelector('#districtDD');
@@ -307,6 +307,11 @@ async function showAssessment() {
   const inputs = gatherInputs();
 
   if (inputs) {
+    // load the aggregate data for the district
+    const aggregateDataString = `aggregate-data/aggregate-data-${inputs.district}.json`;
+    let aggregateData = await fetch(aggregateDataString);
+    aggregateData = await aggregateData.json();
+
     const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.mouza, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
 

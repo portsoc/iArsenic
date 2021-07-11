@@ -33,13 +33,23 @@ function extractNames(data, hierarchyPath) {
 function splitAggregateDataIntoDistricts(aggregateData) {
   const retval = [];
 
-  for (const division of Object.values(aggregateData)) {
-    for (const [district, upazilas] of Object.entries(division.districts)) {
-      retval.push({ district: district, upazilas: upazilas });
+  for (const [division, districts] of Object.entries(aggregateData)) {
+    for (const [district, upazilas] of Object.entries(districts.districts)) {
+      // we populate upazilas with division / district so that it is
+      // backwards compatible with estimator.js
+      const upazilasObj = {
+        [division]: {
+          districts: {
+            [district]: {
+              upazilas: upazilas.upazilas,
+            },
+          },
+        },
+      };
+      retval.push({ district: district, upazilas: upazilasObj });
     }
   }
 
-  // console.log(retval);
   console.log(retval.length);
   return retval;
 }
