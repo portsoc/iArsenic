@@ -171,7 +171,7 @@ async function handleDistrictChange(e) {
   const aggregateData = await aggregateDataRes.text();
 
   sessionStorage.setItem('aggregate-data', aggregateData);
-  // sessionStorage.setItem('aggregate-data-loaded', true);
+  sessionStorage.setItem('aggregate-data-loaded', true);
 }
 
 function populateDropdown(dd, nameProp, subDivProp, ddData) {
