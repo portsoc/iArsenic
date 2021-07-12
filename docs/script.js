@@ -332,7 +332,6 @@ async function showAssessment() {
     // in case aggregate-data is loading async in the background
     // stall until it's loaded
     while (sessionStorage.getItem('aggregate-data-loaded') === 'false') { 
-      // sleep in order to not crash the browser
       await submitDelay(1);
     }
 
