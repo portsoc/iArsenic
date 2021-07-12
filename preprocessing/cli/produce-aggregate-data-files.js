@@ -79,7 +79,7 @@ function main(options) {
   if (doSplitAggregateData) {
     const districts = splitAggregateDataIntoDistricts(aggregateData);
     for (const district of districts) {
-      output(options, `aggregate-data-${district.district}.json`, JSON.stringify(district.upazilas), 'aggregate-data/');
+      output(options, `${district.district}.json`, JSON.stringify(district.upazilas), 'aggregate-data/');
     }
     // write metadata so that we know when it was generated
     output(options, 'metadata.txt', '', 'aggregate-data/');

@@ -52,8 +52,12 @@ function init() {
 
   divDD.addEventListener('change', handleDropDownSelection);
   disDD.addEventListener('change', handleDropDownSelection);
+  disDD.addEventListener('change', handleDistrictChange)
   upaDD.addEventListener('change', handleDropDownSelection);
   uniDD.addEventListener('change', handleDropDownSelection);
+
+  sessionStorage.setItem('aggregate-data', null);
+  sessionStorage.setItem('aggregate-data-loaded', false);
 
   populateDropdown(divDD, divDD.dataset.nameProp, divDD.dataset.subProp, dropdownData); // complete data
 
@@ -155,6 +159,19 @@ function handleDropDownSelection(e) {
   const nextDD = dd.nextDropdown;
 
   populateDropdown(nextDD, nextDD.dataset.nameProp, nextDD.dataset.subProp, opt.subdivisionData);
+}
+
+// preload aggregate-data for the selected district
+async function handleDistrictChange(e) {
+  sessionStorage.setItem('aggregate-data-loaded', false);
+
+  // load the aggregate data for the selected district into storage for the session
+  const aggregateDataURL = `aggregate-data/${e.srcElement.value}.json`;
+  const aggregateDataRes = await fetch(aggregateDataURL);
+  const aggregateData = await aggregateDataRes.text();
+
+  sessionStorage.setItem('aggregate-data', aggregateData);
+  // sessionStorage.setItem('aggregate-data-loaded', true);
 }
 
 function populateDropdown(dd, nameProp, subDivProp, ddData) {
@@ -307,20 +324,25 @@ async function showAssessment() {
   const inputs = gatherInputs();
 
   if (inputs) {
-    // load the aggregate data for the district
-    const aggregateDataString = `aggregate-data/aggregate-data-${inputs.district}.json`;
-    let aggregateData = await fetch(aggregateDataString);
-    aggregateData = await aggregateData.json();
+    // start loading animation
+    chevron.classList.add('flip');
+    assess.classList.remove('hidden');
+    chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // in case aggregate-data is loading async in the background
+    // stall until it's loaded
+    while (sessionStorage.getItem('aggregate-data-loaded') === 'false') { 
+      // sleep in order to not crash the browser
+      await submitDelay(1);
+    }
+
+    const aggregateData = JSON.parse(sessionStorage.getItem('aggregate-data'));
 
     const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.mouza, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
 
     // log the inputs
     logToServer({ inputs, estimate });
-
-    chevron.classList.add('flip');
-    assess.classList.remove('hidden');
-    chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     await submitDelay(1500);
 
