@@ -52,7 +52,7 @@ function init() {
 
   divDD.addEventListener('change', handleDropDownSelection);
   disDD.addEventListener('change', handleDropDownSelection);
-  disDD.addEventListener('change', handleDistrictChange)
+  disDD.addEventListener('change', handleDistrictChange);
   upaDD.addEventListener('change', handleDropDownSelection);
   uniDD.addEventListener('change', handleDropDownSelection);
 
@@ -331,7 +331,7 @@ async function showAssessment() {
 
     // in case aggregate-data is loading async in the background
     // stall until it's loaded
-    while (sessionStorage.getItem('aggregate-data-loaded') === 'false') { 
+    while (sessionStorage.getItem('aggregate-data-loaded') === 'false') {
       await submitDelay(1);
     }
 
