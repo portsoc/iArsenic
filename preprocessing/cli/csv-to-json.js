@@ -1,5 +1,5 @@
 /*
- * Converting CSV files to JSON
+ * Converting CSV wells data files to JSON
  *
  * This tool loads the well data and writes out the JSON internal format,
  * probably for inspection and debugging purposes.
