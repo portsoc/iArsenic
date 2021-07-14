@@ -115,7 +115,7 @@ function gatherInputs() {
   }
 
   validateInputs();
-  if (!retval.division || !retval.district || !retval.upazila || !retval.union) {
+  if (!retval.division || !retval.district || !retval.upazila || !retval.union || !retval.mouza) {
     scrollToSection(locationSection);
     return null;
   }
@@ -164,8 +164,8 @@ function populateDropdown(dd, nameProp, subDivProp, ddData) {
     dd.innerHTML = "<option value=''>Please Select&hellip;</option>";
     dd.disabled = false;
     for (let i = 0; i < ddData.length; i += 1) {
-      let name = ddData[i]; // names for unions
-      if (nameProp) name = name[nameProp]; // names for divisions, districts, upazilas
+      let name = ddData[i]; // names for mouzas
+      if (nameProp) name = name[nameProp]; // names for divisions, districts, upazilas, unions
 
       const opt = document.createElement('option');
       opt.value = name;
@@ -239,7 +239,7 @@ function showOrHideFlooding() {
 function validateInputs() {
   // Handles the dropdowns
   const dropdownInputs = {
-    dropdowns: [divDD, disDD, upaDD, uniDD],
+    dropdowns: [divDD, disDD, upaDD, uniDD, mouDD],
     valid: true,
   };
   for (const dropdown of dropdownInputs.dropdowns) {
