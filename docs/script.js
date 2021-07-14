@@ -166,7 +166,7 @@ function loadDistrictData(e) {
 }
 
 async function doLoadDistrictData(e) {
-  const aggregateDataURL = `aggregate-data/${e.srcElement.value}.json`;
+  const aggregateDataURL = `aggregate-data/${divDD.value}-${disDD.value}.json`;
   const response = await fetch(aggregateDataURL);
   return response.json();
 }
