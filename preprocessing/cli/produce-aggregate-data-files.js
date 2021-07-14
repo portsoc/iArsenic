@@ -33,20 +33,27 @@ function extractNames(data, hierarchyPath) {
 function splitAggregateDataIntoDistricts(aggregateData) {
   const retval = [];
 
-  for (const [division, districts] of Object.entries(aggregateData)) {
-    for (const [district, upazilas] of Object.entries(districts.districts)) {
-      // we populate upazilas with division / district so that it is
-      // backwards compatible with estimator.js
-      const upazilasObj = {
-        [division]: {
+  for (const divName of Object.keys(aggregateData)) {
+    const div = aggregateData[divName];
+    for (const disName of Object.keys(div.districts)) {
+      const dis = div.districts[disName];
+
+      // ouput just the given division and district,
+      // basically a subset of the aggregateData but in the same structure
+      const data = {
+        [divName]: {
           districts: {
-            [district]: {
-              upazilas: upazilas.upazilas,
+            [disName]: {
+              upazilas: dis.upazilas,
             },
           },
         },
       };
-      retval.push({ district: district, upazilas: upazilasObj });
+      retval.push({
+        divName,
+        disName,
+        data,
+      });
     }
   }
 
@@ -79,7 +86,7 @@ function main(options) {
   if (doSplitAggregateData) {
     const districts = splitAggregateDataIntoDistricts(aggregateData);
     for (const district of districts) {
-      output(options, `${district.district}.json`, JSON.stringify(district.upazilas), 'aggregate-data/');
+      output(options, `${district.divName}-${district.disName}.json`, JSON.stringify(district.data), 'aggregate-data/');
     }
     // write metadata so that we know when it was generated
     output(options, 'metadata.txt', '', 'aggregate-data/');
