@@ -10,7 +10,7 @@ const cli = require('./../lib/cli-common');
 const colors = require('colors');
 const fs = require('fs');
 
-function checkForMissingFlags(cliArgs) {
+function checkArguments(cliArgs) {
   if (cliArgs.paths == null) {
     console.warn(colors.red.bold('Please specify input files (-p flag)'));
     return false;
@@ -18,15 +18,19 @@ function checkForMissingFlags(cliArgs) {
 
   if (cliArgs.output == null) {
     console.warn(colors.yellow.bold('No output file specified (-o flag).'));
+    console.warn(colors.yellow.bold('Using csv-to-json-output.json'));
     cliArgs.output = 'csv-to-json-output.json';
   }
+
   return true;
 }
 
 function main(cliArgs) {
   console.log(cliArgs.paths);
-  if (!checkForMissingFlags(cliArgs)) return;
+  if (!checkArguments(cliArgs)) return;
+
   const inputJson = csvLoader(cliArgs.paths);
+
   const outputJson = JSON.stringify(inputJson);
   fs.writeFileSync(cliArgs.output, outputJson);
 }
