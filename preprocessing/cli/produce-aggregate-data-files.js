@@ -84,7 +84,7 @@ function main(options) {
     // write metadata so that we know when it was generated
     output(options, 'metadata.txt', '', 'aggregate-data/');
   } else {
-    output(options, 'aggregate-data.json', JSON.stringify(aggregateData));
+    output(options, 'aggregate-data.js', 'const aggregateData = ' + JSON.stringify(aggregateData));
   }
 
   output(options, 'dropdown-data.js', 'const dropdownData = ' + JSON.stringify(dropdownData));
@@ -100,9 +100,9 @@ function fileHeading(options) {
 `;
 }
 
-function output(options, filename, content, subdirectory = '') {
-  // make sure to omit the generation comments if the output is json
-  content = (options.output && filename.endsWith('.json')) ? content : fileHeading(options) + content;
+function output(options, filename, content, subdirectory) {
+  // if the output is not json, add metadata
+  content = filename.endsWith('.json') ? content : fileHeading(options) + content;
 
   if (!options.output) {
     // if no output directory, output to console
@@ -110,7 +110,7 @@ function output(options, filename, content, subdirectory = '') {
     console.log(content);
   } else {
     // make sure that, if there's a subdirectory, it exists
-    if (subdirectory !== '') {
+    if (subdirectory) {
       const subdir = path.join(options.output, subdirectory);
       if (!fs.existsSync(subdir)) {
         fs.mkdirSync(subdir);
@@ -118,7 +118,7 @@ function output(options, filename, content, subdirectory = '') {
     }
 
     // put it in the file
-    const filePath = path.join(options.output, subdirectory, filename);
+    const filePath = path.join(options.output, subdirectory ?? '', filename);
     console.log('writing', filePath);
     fs.writeFileSync(filePath, content);
   }
