@@ -31,6 +31,8 @@ const redLabel = document.querySelector('#redLabel');
 const blackImg = document.querySelector('#blackImg');
 const blackLabel = document.querySelector('#blackLabel');
 
+let aggregateDataPromise;
+
 window.addEventListener('load', init);
 
 function init() {
@@ -52,12 +54,9 @@ function init() {
 
   divDD.addEventListener('change', handleDropDownSelection);
   disDD.addEventListener('change', handleDropDownSelection);
-  disDD.addEventListener('change', handleDistrictChange);
+  disDD.addEventListener('change', loadDistrictData);
   upaDD.addEventListener('change', handleDropDownSelection);
   uniDD.addEventListener('change', handleDropDownSelection);
-
-  sessionStorage.setItem('aggregate-data', null);
-  sessionStorage.setItem('aggregate-data-loaded', false);
 
   populateDropdown(divDD, divDD.dataset.nameProp, divDD.dataset.subProp, dropdownData); // complete data
 
@@ -162,16 +161,14 @@ function handleDropDownSelection(e) {
 }
 
 // preload aggregate-data for the selected district
-async function handleDistrictChange(e) {
-  sessionStorage.setItem('aggregate-data-loaded', false);
+function loadDistrictData(e) {
+  aggregateDataPromise = doLoadDistrictData(e);
+}
 
-  // load the aggregate data for the selected district into storage for the session
+async function doLoadDistrictData(e) {
   const aggregateDataURL = `aggregate-data/${e.srcElement.value}.json`;
-  const aggregateDataRes = await fetch(aggregateDataURL);
-  const aggregateData = await aggregateDataRes.text();
-
-  sessionStorage.setItem('aggregate-data', aggregateData);
-  sessionStorage.setItem('aggregate-data-loaded', true);
+  const response = await fetch(aggregateDataURL);
+  return response.json();
 }
 
 function populateDropdown(dd, nameProp, subDivProp, ddData) {
@@ -329,13 +326,16 @@ async function showAssessment() {
     assess.classList.remove('hidden');
     chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // in case aggregate-data is loading async in the background
-    // stall until it's loaded
-    while (sessionStorage.getItem('aggregate-data-loaded') === 'false') {
-      await submitDelay(1);
+    result.textContent = 'Loading data…';
+
+    const aggregateData = await aggregateDataPromise;
+    if (!aggregateData) {
+      console.error("why haven't we started loading?");
+      result.textContent = 'loading error, please refresh and try again';
+      return;
     }
 
-    const aggregateData = JSON.parse(sessionStorage.getItem('aggregate-data'));
+    result.textContent = 'Processing…';
 
     const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.mouza, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
@@ -343,6 +343,7 @@ async function showAssessment() {
     // log the inputs
     logToServer({ inputs, estimate });
 
+    // wait so it looks like the page is doing heavy science
     await submitDelay(1500);
 
     // show the estimate
