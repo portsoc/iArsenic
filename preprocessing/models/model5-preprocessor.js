@@ -20,7 +20,9 @@ In model 5:
    look for geographically nearby regions within some radius
  * at <15m, first look at <45m, then widen geographically still
    at <45m up to 10km, meaning we take <15m together with 15-45
-   if there are enough wells, we also add 25/75/95 percentiles to the output
+ * at <15m, we also generate wells for the flooding model,
+   using wells in a 5km radius up to 15m deep; if there are enough wells,
+   we use 25/75/95 percentiles to generate the output
  * at 15-45, first try 15-65, then widen 15-45 geographically
    up to 10km, then widen 15-65 up to 20km
  * at 45-65, first try 45-90, then widen 45-65 up to 10km, then
