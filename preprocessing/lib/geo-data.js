@@ -7,26 +7,22 @@ const { getLookupCentroids, getCentroidsIterator } = require('../geodata/centroi
 const d3 = require('d3');
 const RADIUS = 6378.137;
 
-function computeNearbyRegions(locationArr) {
+function computeNearbyRegions(locationArr, maxDistance = 100) {
   const centroids = getLookupCentroids();
 
-  let region;
-  try {
-    region = centroids[locationArr[0].name].subRegions[locationArr[1].name].subRegions[locationArr[2].name].subRegions[locationArr[3].name].subRegions[locationArr[4].name];
-  } catch (e) {
-    locationArr[4].nearbyRegions = [];
-    return;
-  }
-  region.nearbyRegions = [];
-  // region.divisionsObj = locationArr[4];
-  region.divisionsObj.nearbyRegions = region.nearbyRegions;
+  const region = centroids[locationArr[0]?.name]
+    ?.subRegions[locationArr[1]?.name]
+    ?.subRegions[locationArr[2]?.name]
+    ?.subRegions[locationArr[3]?.name]
+    ?.subRegions[locationArr[4]?.name];
 
-  if (region === undefined) {
+  if (!region) {
+    // we don't have a centroid for the region identified by locationArr
     locationArr[4].nearbyRegions = [];
     return;
   }
+
   region.nearbyRegions = [];
-  // region.divisionsObj = locationArr[4];
   region.divisionsObj.nearbyRegions = region.nearbyRegions;
 
   const centroidsArray = getCentroidsIterator();
@@ -35,7 +31,7 @@ function computeNearbyRegions(locationArr) {
 
     const distance = d3.geoDistance(region.centroid, centroidsArray[i].centroid) * RADIUS;
 
-    if (distance > 100) continue;
+    if (distance > maxDistance) continue;
 
     region.nearbyRegions.push({
       distance: distance,
@@ -45,9 +41,6 @@ function computeNearbyRegions(locationArr) {
 
   region.nearbyRegions.sort((a, b) => a.distance - b.distance);
 }
-
-// test
-// computeNearbyRegions(require('./load-data')());
 
 module.exports = {
   computeNearbyRegions,
