@@ -12,7 +12,6 @@ function extractUpa(geodata) {
 }
 
 function main() {
-
   const geodata = JSON.parse(fs.readFileSync('preprocessing/geodata/maps/dist/upa/upa-c005-s020-vw-pr.json'));
 
   extractUpa(geodata);
