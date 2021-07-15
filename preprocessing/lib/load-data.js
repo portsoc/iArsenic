@@ -190,11 +190,13 @@ function correctNames(records, correctionsLength) {
 }
 
 function loadCorrections(dataPath, options, records) {
-  if (!options.corrections) options.corrections = listDefaultFiles(path.join(dataPath, 'name-corrections'));
+  if (!options.corrections) {
+    options.corrections = listDefaultFiles(path.join(dataPath, 'name-corrections'));
+  }
 
   const corrections = readTheCSVFiles(options.corrections);
-
   nameCorrections.loadCorrections(corrections);
+
   return correctNames(records, corrections?.length);
 }
 
