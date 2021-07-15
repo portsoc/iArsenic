@@ -30,13 +30,19 @@ function correctRegionName(arr) {
   const arrEnd = [];
   while (arrCopy.length > 0) {
     const correction = corrections.get(combinePath(arrCopy));
-    if (correction && correction[0] === SKIPPED_CORRECTION) return null;
-    if (correction) return correction.concat(arrEnd);
+
+    if (correction && correction[0] === SKIPPED_CORRECTION) {
+      return null;
+    }
+
+    if (correction) {
+      return correction.concat(arrEnd);
+    }
+
+    // move last part of arr to arrEnd
     arrEnd.unshift(arrCopy.pop());
   }
-  if (arr == null) {
-    console.log(arr == null);
-  }
+
   // no corrections available, assume arr is correct already
   return arr;
 }
