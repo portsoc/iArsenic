@@ -161,11 +161,11 @@ function handleDropDownSelection(e) {
 }
 
 // preload aggregate-data for the selected district
-function loadDistrictData(e) {
-  aggregateDataPromise = doLoadDistrictData(e);
+function loadDistrictData() {
+  aggregateDataPromise = doLoadDistrictData();
 }
 
-async function doLoadDistrictData(e) {
+async function doLoadDistrictData() {
   const aggregateDataURL = `aggregate-data/${divDD.value}-${disDD.value}.json`;
   const response = await fetch(aggregateDataURL);
   return response.json();
