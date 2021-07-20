@@ -139,6 +139,8 @@ const dropdownData = [
 
 A changed model should generate different outputs from the benchmark data. We can look at the differences and see that they correspond to the model changes we meant to implement. When satisfied, we can move `preprocessing/outputs/<model>` generated outputs into `benchmark-data`.
 
+`benchmark-data` is now compressed using targz and stored on github lfs, so we can easily update the benchmark data when we add/change a model. We automatically decompress `benchmark-data` in `test-cli.sh` to run the tests, it must be recompressed with new benchmark data.
+
 An added model must be added to the list of models run in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data`.
 
 When a model changes, no other models' output should be affected.
