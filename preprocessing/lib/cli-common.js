@@ -67,6 +67,10 @@ Options:
                            The contents of the file will be loaded on start and the
                            name corrections already there will be used when loading
                            the -i file.
+                          
+  -c file                  (in load-data.js)
+                           The file where the model can find the name corrections to apply.
+                           
 `.trim());
 }
 
