@@ -70,7 +70,7 @@ function main(options) {
 
   const allModels = getModels(data);
 
-  console.log('div,dis,upa,uni,depth,stain,arsenic,' +
+  console.log('div,dis,upa,uni,mou,depth,stain,arsenic,' +
     'm1-msg,m1-severity,m1-lowerQ,m1-upperQ,m1-estimate,' +
     'm3-msg,m3-severity,m3-lowerQ,m3-upperQ,m3-estimate,' +
     'm4-msg,m4-severity,m4-lowerQ,m4-upperQ,m4-estimate,' +
