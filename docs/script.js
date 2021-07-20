@@ -3,7 +3,7 @@
  * gathers inputs from the user, validates data, & displays the assessment
  */
 
-/* global produceEstimate, dropdownData, aggregateData */
+/* global produceEstimate, dropdownData */
 
 const divDD = document.querySelector('#divisionDD');
 const disDD = document.querySelector('#districtDD');
@@ -31,6 +31,8 @@ const redLabel = document.querySelector('#redLabel');
 const blackImg = document.querySelector('#blackImg');
 const blackLabel = document.querySelector('#blackLabel');
 
+let aggregateDataPromise;
+
 window.addEventListener('load', init);
 
 function init() {
@@ -52,6 +54,7 @@ function init() {
 
   divDD.addEventListener('change', handleDropDownSelection);
   disDD.addEventListener('change', handleDropDownSelection);
+  disDD.addEventListener('change', loadDistrictData);
   upaDD.addEventListener('change', handleDropDownSelection);
   uniDD.addEventListener('change', handleDropDownSelection);
 
@@ -155,6 +158,17 @@ function handleDropDownSelection(e) {
   const nextDD = dd.nextDropdown;
 
   populateDropdown(nextDD, nextDD.dataset.nameProp, nextDD.dataset.subProp, opt.subdivisionData);
+}
+
+// preload aggregate-data for the selected district
+function loadDistrictData() {
+  aggregateDataPromise = doLoadDistrictData();
+}
+
+async function doLoadDistrictData() {
+  const aggregateDataURL = `aggregate-data/${divDD.value}-${disDD.value}.json`;
+  const response = await fetch(aggregateDataURL);
+  return response.json();
 }
 
 function populateDropdown(dd, nameProp, subDivProp, ddData) {
@@ -307,16 +321,29 @@ async function showAssessment() {
   const inputs = gatherInputs();
 
   if (inputs) {
+    // start loading animation
+    chevron.classList.add('flip');
+    assess.classList.remove('hidden');
+    chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    result.textContent = 'Loading data…';
+
+    const aggregateData = await aggregateDataPromise;
+    if (!aggregateData) {
+      console.error("why haven't we started loading?");
+      result.textContent = 'loading error, please refresh and try again';
+      return;
+    }
+
+    result.textContent = 'Processing…';
+
     const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
       inputs.upazila, inputs.union, inputs.mouza, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
 
     // log the inputs
     logToServer({ inputs, estimate });
 
-    chevron.classList.add('flip');
-    assess.classList.remove('hidden');
-    chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+    // wait so it looks like the page is doing heavy science
     await submitDelay(1500);
 
     // show the estimate

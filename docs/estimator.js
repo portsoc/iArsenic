@@ -1,5 +1,5 @@
 // model: model5
-// generated: Wed Jun 30 2021 20:00:17 GMT+0100 (British Summer Time)
+// generated: Wed Jul 14 2021 16:30:49 GMT+0100 (British Summer Time)
 // input data: default
 function round(x, magnitude, dir = 1) {
   if (x % magnitude === 0) {
@@ -63,9 +63,13 @@ const aggregateOutput = {
   },
 };
 
-function createMessage(id) {
-  // clone the message because it's changed in produceEstimate
-  return Object.assign({}, aggregateOutput[id]);
+function createMessage(id, lowerQ, upperQ) {
+  // clone the message because it's changed below
+  const retval = Object.assign({}, aggregateOutput[id]);
+  if (id > 0) {
+    retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
+  }
+  return retval;
 }
 
 // Returns the arsenic values
@@ -102,12 +106,12 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
   if (depth < 15.3 && 'm2' in arsenicValues) {
     // flooding model
     if (colour === 'Black') {
-      retval = createMessage(arsenicValues.m2);
+      retval = createMessage(arsenicValues.m2, lowerQ, upperQ);
     } else if (flood === 'yes') {
       // here, the colour is red
-      retval = createMessage(arsenicValues.m9);
+      retval = createMessage(arsenicValues.m9, lowerQ, upperQ);
     } else {
-      retval = createMessage(arsenicValues.m7);
+      retval = createMessage(arsenicValues.m7, lowerQ, upperQ);
     }
   } else {
     // regular model
@@ -117,10 +121,7 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
       retval.message = msgStart + warningSeverity + 'likely to be arsenic-safe';
       retval.severity = 'safe';
     } else if (colour === 'Red' || utensil === 'Red') {
-      retval = createMessage(arsenicValues.m);
-      if (arsenicValues.m > 0) {
-        retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
-      }
+      retval = createMessage(arsenicValues.m, lowerQ, upperQ);
     } else {
       retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
     }
