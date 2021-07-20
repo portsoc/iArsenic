@@ -23,11 +23,11 @@ function discernAccuracy(arsenic, upperQ, lowerQ) {
         : 'accurate';
 }
 
-function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
+function runTests(allModels, div, dis, upa, uni, mou, depth, colour, arsenic) {
   const modelOutputs = [];
 
   for (const m of Object.values(allModels)) {
-    m.res = m.estimator(m.divisions, div, dis, upa, uni, depth, colour, null);
+    m.res = m.estimator(m.divisions, div, dis, upa, uni, mou, depth, colour, null);
     m.est = discernAccuracy(arsenic, m.res.upperQ, m.res.lowerQ);
     modelOutputs.push(`"${m.res.message}",` +
       `${m.res.severity},` +
@@ -37,7 +37,7 @@ function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
     );
   }
 
-  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},` +
+  console.log(`"${div}","${dis}","${upa}","${uni}","${mou}",${depth},${colour},` +
     `${arsenic},${modelOutputs.join()}`);
 }
 
