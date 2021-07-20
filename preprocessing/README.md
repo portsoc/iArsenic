@@ -135,11 +135,17 @@ const dropdownData = [
 
 `sh preprocessing/tests/test-cli.sh` will run all the models against all datasets configures in `test-cli.sh`, produce output for every geographic region and every well depth we care about, and compare the output against benchmark output in `preprocessing/tests/benchmark-data`. If we aren't changing the statistical models or the underlying data sets, we should not see any differences in the generated data.
 
+`preprocessing/tests/benchmark-data` is decompressed from `preprocessing/tests/benchmark-data.tgz` when running tests with `test-cli.sh`.
+
 ### When we add/change a model
 
 A changed model should generate different outputs from the benchmark data. We can look at the differences and see that they correspond to the model changes we meant to implement. When satisfied, we can move `preprocessing/outputs/<model>` generated outputs into `benchmark-data`.
 
-`benchmark-data` is now compressed using targz and stored on github lfs, so we can easily update the benchmark data when we add/change a model. We automatically decompress `benchmark-data` in `test-cli.sh` to run the tests, it must be recompressed with new benchmark data.
+`benchmark-data.tgz` is compressed using tar and gzip and stored on GitHub LFS.
+When running tests, `test-cli.sh` automatically decompresses
+`benchmark-data.tgz` to use the latest benchmark data - in **overwrites** the
+existing `benchmark-data` folder! When updating benchmark data, the benchmark
+data folder must be recompressed with new benchmark data.
 
 An added model must be added to the list of models run in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data`.
 
@@ -147,8 +153,8 @@ When a model changes, no other models' output should be affected.
 
 ### When we add/change a dataset
 
-A changed dataset may generate different outputs in some or all of the models. We should identify and review the output changes, and if satisfied that they correspond to the intended dataset change, adopt the changed outputs from `test-outputs` into `benchmark-data`.
+A changed dataset may generate different outputs in some or all of the models. We should identify and review the output changes, and if satisfied that they correspond to the intended dataset change, adopt the changed outputs from `test-outputs` into `benchmark-data` and re-compress it (see above).
 
-An added dataset needs to be added to the list of datasets in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data`.
+An added dataset needs to be added to the list of datasets in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data` and re-compressed (see above).
 
 When a dataset is added or changed, no test outputs with previous datasets should be affected.

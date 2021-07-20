@@ -95,7 +95,8 @@ function getCentroidsIterator() {
   return centroidsArray;
 }
 
-// add the region object to every centroid
+// for every mouza in the centroids, add a link to the same mouza inside the divisions data structure
+// this allows later code to go from centroids to the data with wells
 function annotateCentroids(divisions) {
   const arr = getCentroidsIterator();
   const lookup = getLookupCentroids();

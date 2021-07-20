@@ -55,6 +55,9 @@ Options:
   [-p] path1 path2 ...
                            Use the given CSV files as input data.
 
+  -c file                  (in load-data.js, when loading data for processing)
+                           The file with name corrections to apply on the loaded data.
+
   -i file                  (only in find-name-corrections.js, see data-import/README.md)
                            An input CSV file that may contain incorrect regions.
 
@@ -67,10 +70,7 @@ Options:
                            The contents of the file will be loaded on start and the
                            name corrections already there will be used when loading
                            the -i file.
-                          
-  -c file                  (in load-data.js)
-                           The file where the model can find the name corrections to apply.
-                           
+
 `.trim());
 }
 

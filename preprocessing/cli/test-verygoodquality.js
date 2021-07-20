@@ -1,7 +1,11 @@
 /*
-This file tests against a "very good quality" data set from Mo, located in the
-drive as iArsenic_test_Data_verygoodquality.xlsx
-*/
+ * This file tests against a "very good quality" data set from Mo, located in the
+ * drive as iArsenic_test_Data_verygoodquality.xlsx
+ *
+ * IMPORTANT !!!!!!!!!!!!!!!!!!!!!!
+ * As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.
+ * Also, model 5 deals with flooding, which VGQD doesn't seem to cover either.
+ */
 
 const parse = require('csv-parse/lib/sync');
 const path = require('path');
