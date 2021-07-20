@@ -95,6 +95,7 @@ function getCentroidsIterator() {
   return centroidsArray;
 }
 
+// add the region object to every centroid
 function annotateCentroids(divisions) {
   const arr = getCentroidsIterator();
   const lookup = getLookupCentroids();
@@ -103,6 +104,7 @@ function annotateCentroids(divisions) {
       region.divisionsObj = divisions[region.div].districts[region.dis].upazilas[region.upa].unions[region.uni].mouzas[region.mou];
       lookup[region.div].subRegions[region.dis].subRegions[region.upa].subRegions[region.uni].subRegions[region.mou].divisionsObj = region.divisionsObj;
     } catch (e) {
+      // sometimes there is no region data for a "divisionObj" or some is missing
       continue;
     }
   }
