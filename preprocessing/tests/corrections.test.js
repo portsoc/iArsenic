@@ -44,8 +44,6 @@ describe('corrections', () => {
     expect(corrections.correct(['Rajshahi', 'Dinajpur', 'a', 'b']))
       .toEqual(['Rangpur', 'Dinajpur', 'a', 'b']);
   });
-
-  // todo add test cases for more
 });
 
 // helper functions taken from load-data.js
