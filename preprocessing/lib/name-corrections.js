@@ -6,13 +6,6 @@
 
 const corrections = new Map();
 
-// built-in corrections for geo-data
-// todo this should live in a file of known name corrections
-corrections.set(
-  'Sylhet#Sunamganj#Dharampasha#Dakshin  Sukhairrajapur',
-  ['Sylhet', 'Sunamganj', 'Dharampasha', 'Dakshin Sukhairrajapur'],
-);
-
 function combinePath(arr) {
   return arr.join('#');
 }
@@ -74,7 +67,6 @@ function loadCorrections(correctionsCsvArr) {
 module.exports = {
   correct: correctRegionName,
   loadCorrections,
-  testCorrectRegionName,
   combinePath,
   parsePath,
   SKIPPED_CORRECTION,
