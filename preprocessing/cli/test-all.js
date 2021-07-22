@@ -1,4 +1,4 @@
-const csvLoader = require('../lib/load-data');
+const { loadData } = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 
 function runTests(produceEstimate, divisions, div, dis, upa, uni, mou) {
@@ -34,7 +34,7 @@ function main(options) {
   const preprocessor = options.model.preprocessor;
   const produceEstimate = options.model.estimator;
 
-  const data = csvLoader(options.paths);
+  const data = loadData(options.paths);
   const divisions = preprocessor(data);
 
   for (const div of Object.keys(divisions)) {
