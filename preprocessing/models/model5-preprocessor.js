@@ -309,7 +309,7 @@ function nearbyLocations(locationArr, kmDistance) {
 
   // if there is no nearbyRegions, we should compute it for this particular
   // region
-  if (location.nearbyRegions === undefined) {
+  if (location.nearbyRegions == null) {
     computeNearbyRegions(locationArr);
   }
 

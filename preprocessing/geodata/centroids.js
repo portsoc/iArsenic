@@ -20,6 +20,11 @@ function computeCentroids() {
     const props = selectedRegion.properties;
     const correctName = nameCorrections.correct([props.div, props.dis, props.upa, props.uni, props.mou]);
 
+    if (!correctName || correctName.length !== 5 || correctName.some(part => !part)) {
+      // skip regions that aren't a mouza
+      continue;
+    }
+
     const geoObj = {
       div: correctName[0],
       dis: correctName[1],
@@ -101,13 +106,8 @@ function annotateCentroids(divisions) {
   const arr = getCentroidsIterator();
   const lookup = getLookupCentroids();
   for (const region of arr) {
-    try {
-      region.divisionsObj = divisions[region.div].districts[region.dis].upazilas[region.upa].unions[region.uni].mouzas[region.mou];
-      lookup[region.div].subRegions[region.dis].subRegions[region.upa].subRegions[region.uni].subRegions[region.mou].divisionsObj = region.divisionsObj;
-    } catch (e) {
-      // sometimes there is no region data for a "divisionObj" or some is missing
-      continue;
-    }
+    region.divisionsObj = divisions[region.div].districts[region.dis].upazilas[region.upa].unions[region.uni].mouzas[region.mou];
+    lookup[region.div].subRegions[region.dis].subRegions[region.upa].subRegions[region.uni].subRegions[region.mou].divisionsObj = region.divisionsObj;
   }
 }
 
