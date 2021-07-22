@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const loadData = require('../lib/load-data');
+const { loadData } = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 
 function extractNames(data, hierarchyPath) {

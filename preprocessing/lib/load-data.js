@@ -219,4 +219,7 @@ function loadData(paths, options = {}, corrections = true) {
   return divisions;
 }
 
-module.exports = loadData;
+module.exports = {
+  loadData,
+  readTheCSVFiles,
+};
