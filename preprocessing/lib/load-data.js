@@ -131,7 +131,6 @@ function extractLocations(records) {
     if (!(r.Mouza in union.mouzas)) {
       union.mouzas[r.Mouza] = {
         wells: [],
-        nearbyRegions: [],
         name: r.Mouza,
       };
     }

@@ -27,8 +27,6 @@ function computeNearbyRegions(locationArr, maxDistance = 100) {
 
   const centroidsArray = getCentroidsIterator();
   for (let i = 0; i < centroidsArray.length; i++) {
-    if (centroids.divisionsObj === undefined) continue;
-
     const distance = d3.geoDistance(region.centroid, centroidsArray[i].centroid) * RADIUS;
 
     if (distance > maxDistance) continue;
