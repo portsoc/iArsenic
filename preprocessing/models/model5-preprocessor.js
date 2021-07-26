@@ -415,9 +415,8 @@ function main(divisions) {
 function computeWidening(divisions) {
   forEachMouza(divisions, stratifyWells);
 
-  for (const region of divisions) {
-    computeNearbyRegions(region);
-  }
+  // add the region object to each centroid
+  annotateCentroids(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
   forEachMouza(divisions, computeRegionWidening);
@@ -426,9 +425,16 @@ function computeWidening(divisions) {
 }
 
 function computeRegionWidening(locationArr) {
+  const region = locationArr[locationArr.length - 1];
+
   function nearbyWells(km, ...strata) {
     const retval = [];
-    const region = locationArr[locationArr.length - 1];
+
+    if (region.nearbyRegions == null) {
+      console.error(locationArr.map(r => r.name).join(' -> '));
+      computeNearbyRegions(locationArr);
+    }
+
     const nearbyRegions = region.nearbyRegions;
     const wellSelector = strataSelector(...strata);
 
@@ -468,6 +474,8 @@ function computeRegionWidening(locationArr) {
     wideCount(location.s150.concat(location.sD), ...nearbyWells(100, 's150', 'sD'));
 
   location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
+
+  delete region.nearbyRegions;
 }
 
 function wideCount(startingArray, ...arraysToAdd) {

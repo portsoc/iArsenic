@@ -1,4 +1,4 @@
-const csvLoader = require('../lib/load-data');
+const { loadData } = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 const model5 = require('../models/model5-preprocessor.js');
 
@@ -16,7 +16,7 @@ const STRATA = [
 
 function main(options) {
   // get data from CSV files
-  const data = csvLoader(options.paths);
+  const data = loadData(options.paths);
   model5.computeWidening(data);
 
   // define array to hold rows of CSV file and push column headers
