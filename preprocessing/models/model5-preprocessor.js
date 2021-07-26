@@ -107,7 +107,7 @@ including pre-processed arsenic concentration data which looks like this:
 */
 
 const stats = require('../lib/stats');
-const { computeNearbyRegions } = require('../lib/geo-data');
+const { computeNearbyRegions, cleanNearbyRegions } = require('../lib/geo-data');
 const { annotateCentroids } = require('../geodata/centroids');
 
 const MIN_DATA_COUNT = 7;
@@ -271,7 +271,7 @@ function getEnoughData(locationArr) {
   //         - generate sD until 100km
   location.sDWider = widen(location.sD, ...nearbyWells(100, 'sD'));
 
-  delete location.nearbyRegions;
+  cleanNearbyRegions(locationArr);
 }
 
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
@@ -475,7 +475,7 @@ function computeRegionWidening(locationArr) {
 
   location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
 
-  delete region.nearbyRegions;
+  cleanNearbyRegions(locationArr);
 }
 
 function wideCount(startingArray, ...arraysToAdd) {

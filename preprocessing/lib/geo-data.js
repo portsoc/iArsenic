@@ -40,6 +40,20 @@ function computeNearbyRegions(locationArr, maxDistance = 100) {
   region.nearbyRegions.sort((a, b) => a.distance - b.distance);
 }
 
+function cleanNearbyRegions(locationArr) {
+  const centroids = getLookupCentroids();
+
+  const region = centroids[locationArr[0]?.name]
+    ?.subRegions[locationArr[1]?.name]
+    ?.subRegions[locationArr[2]?.name]
+    ?.subRegions[locationArr[3]?.name]
+    ?.subRegions[locationArr[4]?.name];
+
+  delete region.nearbyRegions;
+  delete region.divisionsObj.nearbyRegions;
+}
+
 module.exports = {
   computeNearbyRegions,
+  cleanNearbyRegions,
 };
