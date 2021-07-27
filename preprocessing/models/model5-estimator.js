@@ -60,63 +60,68 @@ const aggregateOutput = {
   },
 };
 
-function createMessage(id) {
-  // clone the message because it's changed in produceEstimate
-  return Object.assign({}, aggregateOutput[id]);
+function createMessage(id, lowerQ, upperQ) {
+  // clone the message because it's changed below
+  const retval = Object.assign({}, aggregateOutput[id]);
+  if (id > 0) {
+    retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
+  }
+  return retval;
 }
 
-// Flood removed from here for time being
-function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) {
+// Returns the arsenic values
+function selectArsenicValues(region, depth) {
+  if (depth < 15.3) return region.s15;
+  else if (depth < 45) return region.s45;
+  else if (depth < 65) return region.s65;
+  else if (depth < 90) return region.s90;
+  else if (depth < 150) return region.s150;
+  else return region.sD;
+}
+
+function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, utensil, flood) {
   const division = divisions[div];
-  const district = division ? division.districts[dis] : undefined;
-  const upazila = district ? district.upazilas[upa] : undefined;
-  const union = upazila ? upazila.unions[uni] : undefined;
+  const district = division?.districts[dis];
+  const upazila = district?.upazilas[upa];
+  const union = upazila?.unions[uni];
+  const mouza = union?.mouzas[mou];
 
   let retval = {};
 
-  if (!union) {
+  if (!mouza) {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
     return retval;
   }
 
-  let arsenicValues = {};
-  if (depth < 15.3) {
-    arsenicValues = union.s15;
-  } else if (depth < 45) {
-    arsenicValues = union.s45;
-  } else if (depth < 65) {
-    arsenicValues = union.s65;
-  } else if (depth < 90) {
-    arsenicValues = union.s90;
-  } else if (depth < 150) {
-    arsenicValues = union.s150;
-  } else {
-    arsenicValues = union.sD;
-  }
+  const arsenicValues = selectArsenicValues(mouza, depth);
 
   const lowerQ = round(arsenicValues.l, 10, 1);
   const upperQ = round(arsenicValues.u, 10, 1);
 
-  if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
-    const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
-
-    // Flood is not yet a provided input so we have commented it out ready for future implementation
-
-    // const floodWarning =
-    //   (depth <= 15.3 && flood === 'No')
-    //     ? ' but may be vulnerable to nitrate and pathogens'
-    //     : '';
-    const floodWarning = '';
-
-    retval.message = msgStart + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
-    retval.severity = 'safe';
-  } else if (colour === 'Red' || utensil === 'Red') {
-    retval = createMessage(arsenicValues.m);
-    if (arsenicValues.m > 0) {
-      retval.message += ' ' + lowerQ + ' to ' + upperQ + ' µg/L ';
+  // we're checking for m2 in arsenicValues, because it's what tells us the
+  // flooding model should apply
+  if (depth < 15.3 && 'm2' in arsenicValues) {
+    // flooding model
+    if (colour === 'Black') {
+      retval = createMessage(arsenicValues.m2, lowerQ, upperQ);
+    } else if (flood === 'yes') {
+      // here, the colour is red
+      retval = createMessage(arsenicValues.m9, lowerQ, upperQ);
+    } else {
+      retval = createMessage(arsenicValues.m7, lowerQ, upperQ);
     }
   } else {
-    retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    // regular model
+    if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
+      const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
+
+      retval.message = msgStart + warningSeverity + 'likely to be arsenic-safe';
+      retval.severity = 'safe';
+    } else if (colour === 'Red' || utensil === 'Red') {
+      retval = createMessage(arsenicValues.m, lowerQ, upperQ);
+    } else {
+      retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    }
   }
 
   retval.lowerQ = lowerQ;

@@ -4,13 +4,14 @@
 scriptDir=`dirname $0`
 cd "$scriptDir"
 
-dataPaths=( "" "../../data/disabled/29k-original.csv" )
-models=( "" "model1" "model3" "model4" "model5" )
+dataPaths=( "" )
+models=( "model5" )
 producer="../cli/produce-aggregate-data-files.js"
 tester="../cli/test-all.js"
 testerOutputFile="test-all-output.txt"
 testDirectory="test-outputs/$(date +"%F-%H-%M-%S")"
 benchmarkDirectory="benchmark-data"
+benchmarkData="benchmark-data.tgz"
 invokeOutputPath="-o"
 
 generateDataDirectory () {
@@ -35,7 +36,7 @@ compareOutput () {
       echo "Test successful: $scriptDir/$testDirectory/ is identical to benchmark"
       echo
       echo "The test output is big, you may want to delete it:"
-      echo "rm -r $scriptDir/$testDirectory/"
+      echo "rm -r $scriptDir/$testDirectory/ $scriptDir/$benchmarkDirectory/"
     else
       echo -e "Test failed in $scriptDir/: \n$diffOutput"
     fi
@@ -48,6 +49,10 @@ compareOutput () {
 
 main () {
   echo "outputing into $scriptDir/$testDirectory"
+  echo "unzipping $scriptDir/$benchmarkData"
+
+  tar zxf "$benchmarkData"
+
   echo "running:"
 
   export OVERRIDE_DATE="overridden date for test output comparability"
@@ -66,7 +71,7 @@ main () {
       dataOutputDirectory="default-data"
       invokeDataPath=""
       if [ "$dataPath" != "" ]; then
-        generateDataDirectory
+        generateDataDirectory # overwrites dataOutputDirectory
         invokeDataPath="-p"
       fi
       echo "  model ${model:-'default'} with data ${dataPath:-'default'}"

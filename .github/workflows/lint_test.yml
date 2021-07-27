@@ -1,0 +1,23 @@
+name: Linting and testing
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run eslint
+        run: npm run lint
+
+      - name: Run jest
+        run: npm test

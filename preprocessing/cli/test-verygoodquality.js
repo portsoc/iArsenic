@@ -1,7 +1,11 @@
 /*
-This file tests against a "very good quality" data set from Mo, located in the
-drive as iArsenic_test_Data_verygoodquality.xlsx
-*/
+ * This file tests against a "very good quality" data set from Mo, located in the
+ * drive as iArsenic_test_Data_verygoodquality.xlsx
+ *
+ * IMPORTANT !!!!!!!!!!!!!!!!!!!!!!
+ * As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.
+ * Also, model 5 deals with flooding, which VGQD doesn't seem to cover either.
+ */
 
 const parse = require('csv-parse/lib/sync');
 const path = require('path');
@@ -16,16 +20,18 @@ const CSV_PARSE_OPTIONS = {
 };
 
 function discernAccuracy(arsenic, upperQ, lowerQ) {
-  return (lowerQ > arsenic) ? 'overestimate'
-    : (upperQ < arsenic) ? 'underestimate'
-      : 'accurate';
+  return (lowerQ > arsenic)
+    ? 'overestimate'
+    : (upperQ < arsenic)
+        ? 'underestimate'
+        : 'accurate';
 }
 
-function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
+function runTests(allModels, div, dis, upa, uni, mou, depth, colour, arsenic) {
   const modelOutputs = [];
 
   for (const m of Object.values(allModels)) {
-    m.res = m.estimator(m.divisions, div, dis, upa, uni, depth, colour, null);
+    m.res = m.estimator(m.divisions, div, dis, upa, uni, mou, depth, colour, null);
     m.est = discernAccuracy(arsenic, m.res.upperQ, m.res.lowerQ);
     modelOutputs.push(`"${m.res.message}",` +
       `${m.res.severity},` +
@@ -35,7 +41,7 @@ function runTests(allModels, div, dis, upa, uni, depth, colour, arsenic) {
     );
   }
 
-  console.log(`"${div}","${dis}","${upa}","${uni}",${depth},${colour},` +
+  console.log(`"${div}","${dis}","${upa}","${uni}","${mou}",${depth},${colour},` +
     `${arsenic},${modelOutputs.join()}`);
 }
 
@@ -68,7 +74,7 @@ function main(options) {
 
   const allModels = getModels(data);
 
-  console.log('div,dis,upa,uni,depth,stain,arsenic,' +
+  console.log('div,dis,upa,uni,mou,depth,stain,arsenic,' +
     'm1-msg,m1-severity,m1-lowerQ,m1-upperQ,m1-estimate,' +
     'm3-msg,m3-severity,m3-lowerQ,m3-upperQ,m3-estimate,' +
     'm4-msg,m4-severity,m4-lowerQ,m4-upperQ,m4-estimate,' +
@@ -82,10 +88,15 @@ function main(options) {
       well.dis,
       well.upa,
       well.uni,
+      well.mou,
       Number(well.depth),
       well.colour,
       Number(well.as));
   }
 }
 
+console.error('As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.');
+process.exit(-1);
+
+/* eslint-disable-next-line no-unreachable */
 main(cli.getParameters());

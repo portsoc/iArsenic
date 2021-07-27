@@ -1,10 +1,11 @@
-const csvLoader = require('../lib/load-data');
+const { loadData } = require('../lib/load-data');
 const cli = require('../lib/cli-common');
 const model5 = require('../models/model5-preprocessor.js');
 
 const STRATA = [
   { min: 0, max: Infinity, header: 'all wells' },
   { min: 0, max: 15.3, header: 'depth 0-15', strataKey: 's15' },
+  { min: 0, max: 15.3, header: null /* same count as above */, strataKey: 's15Flood' },
   { min: 15.3, max: 45, header: 'depth 15-45', strataKey: 's45' },
   { min: 45, max: 65, header: 'depth 45-65', strataKey: 's65' },
   { min: 65, max: 90, header: 'depth 65-90', strataKey: 's90' },
@@ -16,7 +17,7 @@ const STRATA = [
 
 function main(options) {
   // get data from CSV files
-  const data = csvLoader(options.paths);
+  const data = loadData(options.paths);
   model5.computeWidening(data);
 
   // define array to hold rows of CSV file and push column headers
@@ -27,11 +28,12 @@ function main(options) {
     'district',
     'upazila',
     'union',
+    'mouza',
   ];
 
   // Adds all the stratum headers to the headers array
   for (const stratum of STRATA) {
-    headers.push(stratum.header);
+    if (stratum.header) headers.push(stratum.header);
     if (stratum.strataKey != null) {
       headers.push('distKm');
       headers.push('count');
@@ -57,16 +59,22 @@ function main(options) {
           const uniObj = upaObj.unions[uni];
           initStratas(uniObj);
 
-          for (const well of uniObj.wells) {
-            countStratas([divObj, disObj, upaObj, uniObj], well);
+          for (const mou of Object.keys(uniObj.mouzas)) {
+            const mouObj = uniObj.mouzas[mou];
+            initStratas(mouObj);
+
+            for (const well of mouObj.wells) {
+              countStratas([divObj, disObj, upaObj, uniObj, mouObj], well);
+            }
+            pushRecord(records, div, dis, upa, uni, mou, mouObj);
           }
-          pushRecord(records, div, dis, upa, uni, uniObj);
+          pushRecord(records, div, dis, upa, uni, '###', uniObj);
         }
-        pushRecord(records, div, dis, upa, '###', upaObj);
+        pushRecord(records, div, dis, upa, '###', '###', upaObj);
       }
-      pushRecord(records, div, dis, '###', '###', disObj);
+      pushRecord(records, div, dis, '###', '###', '###', disObj);
     }
-    pushRecord(records, div, '###', '###', '###', divObj);
+    pushRecord(records, div, '###', '###', '###', '###', divObj);
   }
 
   // write records to csv file
@@ -77,15 +85,15 @@ function main(options) {
   console.log(contents);
 }
 
-function pushRecord(records, div, dis, upa, uni, wellCountObj) {
-  const record = [div, dis, upa, uni];
+function pushRecord(records, div, dis, upa, uni, mou, wellCountObj) {
+  const record = [div, dis, upa, uni, mou];
 
   for (const stratum of STRATA) {
-    record.push(wellCountObj[stratum.header]);
+    if (stratum.header) record.push(wellCountObj[stratum.header]);
 
     // add information about model 5 widening
-    const wideningKey = stratum.strataKey + 'WideningRequired';
     if (stratum.strataKey != null) {
+      const wideningKey = stratum.strataKey + 'WideningRequired';
       const widening = wellCountObj[wideningKey];
       if (uni === '###') {
         record.push('', ''); // we don't aggregate widening information
@@ -103,13 +111,13 @@ function pushRecord(records, div, dis, upa, uni, wellCountObj) {
 
 function initStratas(obj) {
   for (const stratum of STRATA) {
-    obj[stratum.header] = 0;
+    if (stratum.header) obj[stratum.header] = 0;
   }
 }
 
 function countStratas(regions, well) {
   for (const stratum of STRATA) {
-    if (well.depth >= stratum.min && well.depth < stratum.max) {
+    if (stratum.header && well.depth >= stratum.min && well.depth < stratum.max) {
       for (const region of regions) {
         region[stratum.header] += 1;
       }

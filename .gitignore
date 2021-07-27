@@ -4,4 +4,10 @@
 node_modules/
 rscripts/output*
 preprocessing/tests/*-outputs
+preprocessing/tests/benchmark-data
 preprocessing/geodata/maps/src
+preprocessing/data-import/r-data-rdata/*.RData
+preprocessing/data-import/r-data-csv/*.csv
+preprocessing/data-import/consolidatedCsv.csv
+data/data++
+tmp

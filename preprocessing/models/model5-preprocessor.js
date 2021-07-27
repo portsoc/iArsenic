@@ -20,6 +20,9 @@ In model 5:
    look for geographically nearby regions within some radius
  * at <15m, first look at <45m, then widen geographically still
    at <45m up to 10km, meaning we take <15m together with 15-45
+ * at <15m, we also generate wells for the flooding model,
+   using wells in a 5km radius up to 15m deep; if there are enough wells,
+   we use 25/75/95 percentiles to generate the output
  * at 15-45, first try 15-65, then widen 15-45 geographically
    up to 10km, then widen 15-65 up to 20km
  * at 45-65, first try 45-90, then widen 45-65 up to 10km, then
@@ -30,10 +33,10 @@ In model 5:
    widen 90+ up to 100km
  * at >150m, we can take about 100km radius
 
-For example, if a union doesn't have enough wells at <15m, we will take
+For example, if a mouza doesn't have enough wells at <15m, we will take
 all wells at <45m instead. If that's still not enough, we find the nearest
-union and add its wells at <45m, and we continue to farther and farther
-unions until we reach the distance of 10km, then we give up.
+mouza and add its wells at <45m, and we continue to farther and farther
+mouzas until we reach the distance of 10km, then we give up.
 
 OUTPUT
 
@@ -52,36 +55,43 @@ including pre-processed arsenic concentration data which looks like this:
             unions: [
               {
                 union: '..',
-                s15: {
-                  m: ...,   // short for message ID
-                  l: ...,   // short for lower quantile
-                  u: ...,   // short for upper quantile
-                },
-                s45: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                s65: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                s90: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                s150: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
-                sD: {
-                  m: ...,
-                  l: ...,
-                  u: ...,
-                },
+                mouzas: [
+                  mouza: '..',
+                  s15: {
+                    m: ...,     // short for message ID using median
+                    m2: ...,    // message ID using the 25th percentile
+                    m7: ...,    // message ID using the 75th percentile
+                    m9: ...,    // message ID using the 95th percentile
+                    l: ...,     // short for lower quantile
+                    u: ...,     // short for upper quantile
+                  },
+                  s45: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  s65: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  s90: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  s150: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  sD: {
+                    m: ...,
+                    l: ...,
+                    u: ...,
+                  },
+                  ... further mouzas
+                ]
               },
               ... further unions
             ]
@@ -97,7 +107,8 @@ including pre-processed arsenic concentration data which looks like this:
 */
 
 const stats = require('../lib/stats');
-const { computeNearbyRegions } = require('../lib/geo-data');
+const { computeNearbyRegions, cleanNearbyRegions } = require('../lib/geo-data');
+const { annotateCentroids } = require('../geodata/centroids');
 
 const MIN_DATA_COUNT = 7;
 
@@ -153,8 +164,16 @@ function computeWellStats(locationArr) {
   for (const stratum of STRATA) {
     let wells = location[stratum];
 
+    // only produce flooding model data if we have enough wells in the mouza or under flooding-specific widening
+    let useFloodingModel = false;
+    if (stratum === 's15') {
+      if (!isEnoughData(wells)) {
+        wells = location.s15FloodWider;
+      }
+      useFloodingModel = isEnoughData(wells);
+    }
+
     if (!isEnoughData(wells)) {
-      // get wider wells
       wells = location[stratum + 'Wider'];
     }
 
@@ -164,15 +183,23 @@ function computeWellStats(locationArr) {
       location[`${stratum}_max`] = stats.round1(stats.max(wells));
       location[`${stratum}_low`] = stats.quantile(wells, 0.1);
       location[`${stratum}_upp`] = stats.quantile(wells, 0.9);
+      if (useFloodingModel) {
+        location[`${stratum}_p25`] = stats.quantile(wells, 0.25);
+        location[`${stratum}_p75`] = stats.quantile(wells, 0.75);
+        location[`${stratum}_p95`] = stats.quantile(wells, 0.95);
+      }
     } else {
       // if we don't have enough well data on a given stratum,
       // getEnoughData should have already reported that, but
       // complain here for consistency check
       const stratumName = stratum === 'sD' ? 'deep' : stratum;
-      const unionName = locationArr.map(region => region.name).join(' -> ');
-      console.debug(`Union ${unionName} does not have enough ${stratumName} wells`);
+      console.debug(`Mouza ${getLocationName(locationArr)} does not have enough ${stratumName} wells`);
     }
   }
+}
+
+function getLocationName(locationArr) {
+  return locationArr.map(region => region.name).join(' -> ');
 }
 
 function getEnoughData(locationArr) {
@@ -194,6 +221,11 @@ function getEnoughData(locationArr) {
   //         - generate local s45, then s15+s45 up to 10km
   location.s15Wider =
     widen(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
+
+  // * We also generate wells for the flooding model,
+  //   using wells in a 5km radius up to 15m deep
+  location.s15FloodWider =
+    widen(location.s15, ...nearbyWells(5, 's15'));
 
   // * at 15-45, first try 15-65, then widen 15-45 geographically
   //   up to 10km, then widen 15-65 up to 20km
@@ -238,6 +270,65 @@ function getEnoughData(locationArr) {
   // * at >150m, we can take about 100km radius
   //         - generate sD until 100km
   location.sDWider = widen(location.sD, ...nearbyWells(100, 'sD'));
+
+  cleanNearbyRegions(locationArr);
+}
+
+function computeRegionWidening(locationArr) {
+  const region = locationArr[locationArr.length - 1];
+
+  function nearbyWells(km, ...strata) {
+    const retval = [];
+
+    if (region.nearbyRegions == null) {
+      console.error(locationArr.map(r => r.name).join(' -> '));
+      computeNearbyRegions(locationArr);
+    }
+
+    const nearbyRegions = region.nearbyRegions;
+    const wellSelector = strataSelector(...strata);
+
+    for (const nearby of nearbyRegions) {
+      if (nearby.distance > km) break;
+
+      const wells = wellSelector(nearby.region);
+      wells.distance = nearby.distance;
+      retval.push(wells);
+    }
+
+    return retval;
+  }
+
+  const location = locationArr[locationArr.length - 1];
+  location.s15WideningRequired =
+    wideCount(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
+
+  location.s15FloodWideningRequired =
+    wideCount(location.s15, ...nearbyWells(5, 's15'));
+
+  location.s45WideningRequired =
+    wideCount(location.s45, location.s65) ||
+    wideCount(location.s45, ...nearbyWells(10, 's45')) ||
+    wideCount(location.s45.concat(location.s65), ...nearbyWells(20, 's45', 's65'));
+
+  location.s65WideningRequired =
+    wideCount(location.s65, location.s90) ||
+    wideCount(location.s65, ...nearbyWells(10, 's65')) ||
+    wideCount(location.s65.concat(location.s90), ...nearbyWells(20, 's65', 's90'));
+
+  location.s90WideningRequired =
+    wideCount(location.s90, location.s150) ||
+    wideCount(location.s90, ...nearbyWells(20, 's90')) ||
+    wideCount(location.s90.concat(location.s150), ...nearbyWells(20, 's90', 's150'));
+
+  location.s150WideningRequired =
+    wideCount(location.s150, location.sD) ||
+    wideCount(location.s150, ...nearbyWells(100, 's150')) ||
+    wideCount(location.s150.concat(location.sD), ...nearbyWells(100, 's150', 'sD'));
+
+  location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
+
+  cleanNearbyRegions(locationArr);
 }
 
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
@@ -267,11 +358,18 @@ function strataSelector(...strata) {
 
 /*
  * returns an array of locations (at same administrative depth as locationArr)
- * e.g. if locationArr points to a union, we return an array of unions in order
+ * e.g. if locationArr points to a mouza, we return an array of mouzas in order
  * of increasing distance, up to kmDistance.
  */
 function nearbyLocations(locationArr, kmDistance) {
   const location = locationArr[locationArr.length - 1];
+
+  // if there is no nearbyRegions, we should compute it for this particular
+  // region
+  if (location.nearbyRegions == null) {
+    computeNearbyRegions(locationArr);
+  }
+
   const nearbyRegions = location.nearbyRegions;
   const firstOutsideDistance = nearbyRegions.findIndex(a => a.distance > kmDistance);
 
@@ -293,20 +391,13 @@ function numericalCompare(a, b) {
 // and the following even number is high outliers so we suggest chemical test
 function produceMessage(med, max) {
   if (med == null) return 0;
-  let pollutionStatus;
-  if (med <= 20) {
-    pollutionStatus = 1;
-  } else if (med <= 50) {
-    pollutionStatus = 3;
-  } else if (med <= 200) {
-    pollutionStatus = 5;
-  } else {
-    pollutionStatus = 7;
-  }
-
   const chemTestStatus = (max <= 100) ? 0 : 1;
 
-  return pollutionStatus + chemTestStatus;
+  // the number represent the pollution status
+  if (med <= 20) return (1 + chemTestStatus);
+  else if (med <= 50) return (3 + chemTestStatus);
+  else if (med <= 200) return (5 + chemTestStatus);
+  else return (7 + chemTestStatus);
 }
 
 function extractStats(data, hierarchyPath) {
@@ -322,6 +413,12 @@ function extractStats(data, hierarchyPath) {
           l: dataObj[`${stratum}_low`],
           u: dataObj[`${stratum}_upp`],
         };
+        if (`${stratum}_p25` in dataObj) {
+          // there is data for the flooding model, fill in the correct messages
+          hierarchyObj[stratum].m2 = produceMessage(dataObj[`${stratum}_p25`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum].m7 = produceMessage(dataObj[`${stratum}_p75`], dataObj[`${stratum}_max`]);
+          hierarchyObj[stratum].m9 = produceMessage(dataObj[`${stratum}_p95`], dataObj[`${stratum}_max`]);
+        }
       }
     }
 
@@ -334,12 +431,14 @@ function extractStats(data, hierarchyPath) {
   return retval;
 }
 
-function forEachUnion(divisions, f) {
+function forEachMouza(divisions, f) {
   for (const div of Object.values(divisions)) {
     for (const dis of Object.values(div.districts)) {
       for (const upa of Object.values(dis.upazilas)) {
         for (const uni of Object.values(upa.unions)) {
-          f([div, dis, upa, uni]);
+          for (const mou of Object.values(uni.mouzas)) {
+            f([div, dis, upa, uni, mou]);
+          }
         }
       }
     }
@@ -348,20 +447,21 @@ function forEachUnion(divisions, f) {
 
 function main(divisions) {
   // split wells into strata
-  forEachUnion(divisions, stratifyWells);
+  forEachMouza(divisions, stratifyWells);
 
-  computeNearbyRegions(divisions);
+  // add the region object to each centroid
+  annotateCentroids(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
-  forEachUnion(divisions, getEnoughData);
+  forEachMouza(divisions, getEnoughData);
 
   // sort the wells so the stats functions work well
-  forEachUnion(divisions, sortWells);
+  forEachMouza(divisions, sortWells);
 
   // get the actual stats
-  forEachUnion(divisions, computeWellStats);
+  forEachMouza(divisions, computeWellStats);
 
-  const aggregateData = extractStats(divisions, ['division', 'district', 'upazila', 'union']);
+  const aggregateData = extractStats(divisions, ['division', 'district', 'upazila', 'union', 'mouza']);
   return aggregateData;
 }
 
@@ -370,59 +470,15 @@ function main(divisions) {
 /* /////////////////////////////// */
 
 function computeWidening(divisions) {
-  forEachUnion(divisions, stratifyWells);
+  forEachMouza(divisions, stratifyWells);
 
-  computeNearbyRegions(divisions);
+  // add the region object to each centroid
+  annotateCentroids(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
-  forEachUnion(divisions, computeRegionWidening);
+  forEachMouza(divisions, computeRegionWidening);
 
   return divisions;
-}
-
-function computeRegionWidening(locationArr) {
-  function nearbyWells(km, ...strata) {
-    const retval = [];
-    const region = locationArr[locationArr.length - 1];
-    const nearbyRegions = region.nearbyRegions;
-    const wellSelector = strataSelector(...strata);
-
-    for (const nearby of nearbyRegions) {
-      if (nearby.distance > km) break;
-
-      const wells = wellSelector(nearby.region);
-      wells.distance = nearby.distance;
-      retval.push(wells);
-    }
-
-    return retval;
-  }
-
-  const location = locationArr[locationArr.length - 1];
-  location.s15WideningRequired =
-    wideCount(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
-
-  location.s45WideningRequired =
-    wideCount(location.s45, location.s65) ||
-    wideCount(location.s45, ...nearbyWells(10, 's45')) ||
-    wideCount(location.s45.concat(location.s65), ...nearbyWells(20, 's45', 's65'));
-
-  location.s65WideningRequired =
-    wideCount(location.s65, location.s90) ||
-    wideCount(location.s65, ...nearbyWells(10, 's65')) ||
-    wideCount(location.s65.concat(location.s90), ...nearbyWells(20, 's65', 's90'));
-
-  location.s90WideningRequired =
-    wideCount(location.s90, location.s150) ||
-    wideCount(location.s90, ...nearbyWells(20, 's90')) ||
-    wideCount(location.s90.concat(location.s150), ...nearbyWells(20, 's90', 's150'));
-
-  location.s150WideningRequired =
-    wideCount(location.s150, location.sD) ||
-    wideCount(location.s150, ...nearbyWells(100, 's150')) ||
-    wideCount(location.s150.concat(location.sD), ...nearbyWells(100, 's150', 'sD'));
-
-  location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
 }
 
 function wideCount(startingArray, ...arraysToAdd) {

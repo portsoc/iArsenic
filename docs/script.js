@@ -1,9 +1,15 @@
-/* global produceEstimate, dropdownData, aggregateData */
+/**
+ * This is the main client side script, it adds event listeners,
+ * gathers inputs from the user, validates data, & displays the assessment
+ */
+
+/* global produceEstimate, dropdownData */
 
 const divDD = document.querySelector('#divisionDD');
 const disDD = document.querySelector('#districtDD');
 const upaDD = document.querySelector('#upazilaDD');
 const uniDD = document.querySelector('#unionDD');
+const mouDD = document.querySelector('#mouzaDD');
 const locationSection = document.querySelector('#locationSection');
 const assess = document.querySelector('#assessment');
 const submit = document.querySelector('#submit');
@@ -13,6 +19,7 @@ const depth = document.querySelector('#depth');
 const depthOutput = document.querySelector('#depthOutput');
 const depthSection = document.querySelector('#depthSection');
 const stainingSection = document.querySelector('#stainingSection');
+const floodingSection = document.querySelector('#floodingSection');
 const drinkingSection = document.querySelector('#drinkingSection');
 const redStain = document.querySelector('#red');
 const blackStain = document.querySelector('#black');
@@ -23,6 +30,8 @@ const redImg = document.querySelector('#redImg');
 const redLabel = document.querySelector('#redLabel');
 const blackImg = document.querySelector('#blackImg');
 const blackLabel = document.querySelector('#blackLabel');
+
+let aggregateDataPromise;
 
 window.addEventListener('load', init);
 
@@ -39,9 +48,15 @@ function init() {
   upaDD.dataset.subProp = 'unions';
   upaDD.nextDropdown = uniDD;
 
+  uniDD.dataset.nameProp = 'union';
+  uniDD.dataset.subProp = 'mouzas';
+  uniDD.nextDropdown = mouDD;
+
   divDD.addEventListener('change', handleDropDownSelection);
   disDD.addEventListener('change', handleDropDownSelection);
+  disDD.addEventListener('change', loadDistrictData);
   upaDD.addEventListener('change', handleDropDownSelection);
+  uniDD.addEventListener('change', handleDropDownSelection);
 
   populateDropdown(divDD, divDD.dataset.nameProp, divDD.dataset.subProp, dropdownData); // complete data
 
@@ -55,11 +70,13 @@ function init() {
   blackLabel.addEventListener('mouseover', () => { swapStainingImage('black'); });
   blackLabel.addEventListener('click', () => { swapStainingImage('black'); });
 
-  redStain.addEventListener('change', () => { displayUtensil(false); });
-  blackStain.addEventListener('change', () => { displayUtensil(false); });
-  mixedStain.addEventListener('change', () => { displayUtensil(true); });
+  redStain.addEventListener('change', () => { displayElement(utensilSection, false); });
+  blackStain.addEventListener('change', () => { displayElement(utensilSection, false); });
+  mixedStain.addEventListener('change', () => { displayElement(utensilSection, true); });
 
   depth.addEventListener('input', () => { updateRangeLabel(depth.value); });
+  depth.addEventListener('change', () => { showOrHideFlooding(); });
+  depthOutput.addEventListener('change', () => { showOrHideFlooding(); });
 
   for (let i = 0; i < inputs.length; i += 1) {
     inputs[i].addEventListener('change', hideAssessment);
@@ -73,6 +90,7 @@ function gatherInputs() {
   retval.district = disDD.value;
   retval.upazila = upaDD.value;
   retval.union = uniDD.value;
+  retval.mouza = mouDD.value;
 
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
   if (selectedStaining && selectedStaining.value !== 'Mixed') {
@@ -94,8 +112,13 @@ function gatherInputs() {
     retval.drinking = selectedDrinking.value;
   }
 
+  const selectedFlooding = document.querySelector('input[name="flooding"]:checked');
+  if (selectedFlooding) {
+    retval.flooding = selectedFlooding.value;
+  }
+
   validateInputs();
-  if (!retval.division || !retval.district || !retval.upazila || !retval.union) {
+  if (!retval.division || !retval.district || !retval.upazila || !retval.union || !retval.mouza) {
     scrollToSection(locationSection);
     return null;
   }
@@ -108,6 +131,11 @@ function gatherInputs() {
   if (!retval.depth) {
     // depth 0 is the default and counts as no-value-entered
     scrollToSection(depthSection);
+    return null;
+  }
+
+  if (!retval.flooding && depthOutput.value < 50 && floodingSection.classList.contains('invalid')) {
+    scrollToSection(floodingSection);
     return null;
   }
 
@@ -132,6 +160,17 @@ function handleDropDownSelection(e) {
   populateDropdown(nextDD, nextDD.dataset.nameProp, nextDD.dataset.subProp, opt.subdivisionData);
 }
 
+// preload aggregate-data for the selected district
+function loadDistrictData() {
+  aggregateDataPromise = doLoadDistrictData();
+}
+
+async function doLoadDistrictData() {
+  const aggregateDataURL = `aggregate-data/${divDD.value}-${disDD.value}.json`;
+  const response = await fetch(aggregateDataURL);
+  return response.json();
+}
+
 function populateDropdown(dd, nameProp, subDivProp, ddData) {
   cleanupDropdown(dd);
 
@@ -139,8 +178,8 @@ function populateDropdown(dd, nameProp, subDivProp, ddData) {
     dd.innerHTML = "<option value=''>Please Select&hellip;</option>";
     dd.disabled = false;
     for (let i = 0; i < ddData.length; i += 1) {
-      let name = ddData[i]; // names for unions
-      if (nameProp) name = name[nameProp]; // names for divisions, districts, upazilas
+      let name = ddData[i]; // names for mouzas
+      if (nameProp) name = name[nameProp]; // names for divisions, districts, upazilas, unions
 
       const opt = document.createElement('option');
       opt.value = name;
@@ -198,17 +237,23 @@ function updateRangeLabel(position) {
 function updateSlider() {
   if (depthOutput.value > 0) {
     depth.value = (depthOutput.value - minVal) / scale + minPos;
-  } else { depth.value = 0; }
+  } else {
+    depth.value = 0;
+  }
 }
 
-function displayUtensil(show) {
-  utensilSection.classList.toggle('hidden', !show);
+function displayElement(element, show) {
+  element.classList.toggle('hidden', !show);
+}
+
+function showOrHideFlooding() {
+  displayElement(floodingSection, depthOutput.value < 50);
 }
 
 function validateInputs() {
   // Handles the dropdowns
   const dropdownInputs = {
-    dropdowns: [divDD, disDD, upaDD, uniDD],
+    dropdowns: [divDD, disDD, upaDD, uniDD, mouDD],
     valid: true,
   };
   for (const dropdown of dropdownInputs.dropdowns) {
@@ -217,42 +262,35 @@ function validateInputs() {
       break;
     }
   }
-  if (!dropdownInputs.valid) {
-    locationSection.classList.add('invalid');
-  } else { locationSection.classList.remove('invalid'); }
+
+  locationSection.classList.toggle('invalid', !dropdownInputs.valid);
 
   // Handles the staining radio buttons
   const selectedStaining = document.querySelector('input[name="staining"]:checked');
-  if (!selectedStaining) {
-    stainingSection.classList.add('invalid');
-  } else if (selectedStaining.value === 'Mixed') {
-    stainingSection.classList.remove('invalid');
+  stainingSection.classList.toggle('invalid', !selectedStaining);
+
+  // Handles the utensil radio buttons
+  if (selectedStaining && selectedStaining.value === 'Mixed') {
     const selectedUtensil = document.querySelector('input[name="stainingUtensil"]:checked');
-    if (!selectedUtensil) {
-      stainingSection.classList.add('invalid');
-    } else {
-      stainingSection.classList.remove('invalid');
-    }
-  } else {
+
+    stainingSection.classList.toggle('invalid', !selectedUtensil);
+
     stainingSection.classList.remove('invalid');
   }
 
   // Handles the depth
   const depthOutputValue = Number(depthOutput.value);
+  depthSection.classList.toggle('invalid', depthOutputValue === 0 || depthOutputValue > 1000);
 
-  if (depthOutputValue === 0 || depthOutputValue > 1000) {
-    depthSection.classList.add('invalid');
-  } else {
-    depthSection.classList.remove('invalid');
-  }
+
+  // Handles the flooding
+  const selectedFlooding = document.querySelector('input[name="flooding"]:checked');
+  floodingSection.classList.toggle('invalid',
+    !selectedFlooding && !floodingSection.classList.contains('hidden'));
 
   // Handles the drinking from the well radio buttons
   const selectedDrinking = document.querySelector('input[name="drink"]:checked');
-  if (!selectedDrinking) {
-    drinkingSection.classList.add('invalid');
-  } else {
-    drinkingSection.classList.remove('invalid');
-  }
+  drinkingSection.classList.toggle('invalid', !selectedDrinking);
 }
 
 let fallbackLogImage; // global to prevent too quick garbage collection before the data is logged
@@ -283,16 +321,29 @@ async function showAssessment() {
   const inputs = gatherInputs();
 
   if (inputs) {
-    const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
-      inputs.upazila, inputs.union, inputs.depth, inputs.colour, inputs.utensil);
-
-    // log the inputs
-    logToServer({ inputs, estimate });
-
+    // start loading animation
     chevron.classList.add('flip');
     assess.classList.remove('hidden');
     chevron.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
+    result.textContent = 'Loading data…';
+
+    const aggregateData = await aggregateDataPromise;
+    if (!aggregateData) {
+      console.error("why haven't we started loading?");
+      result.textContent = 'loading error, please refresh and try again';
+      return;
+    }
+
+    result.textContent = 'Processing…';
+
+    const estimate = produceEstimate(aggregateData, inputs.division, inputs.district,
+      inputs.upazila, inputs.union, inputs.mouza, inputs.depth, inputs.colour, inputs.utensil, inputs.flooding);
+
+    // log the inputs
+    logToServer({ inputs, estimate });
+
+    // wait so it looks like the page is doing heavy science
     await submitDelay(1500);
 
     // show the estimate

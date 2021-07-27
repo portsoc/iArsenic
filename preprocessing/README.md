@@ -3,7 +3,7 @@
 ## Requirements
 
 * Ensure the csv headers are as follows (**Case matters!**):
-  * `Division,District,Upazila,Depth,Arsenic,Union`
+  * `Division,District,Upazila,Union,Mouza,Depth,Arsenic`
 
 ## How to Use It
 
@@ -38,12 +38,30 @@
   * Black is safe
   * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
   * too few wells => get wells from deeper stratum and nearby geographical locations (going by centroids) – details in model5-preprocessor
+  * if depth is <=15.3m, there may be flooding :
+    * if there is flooding AND the well is red, we use the arsenic 95 percentile of available data of the stratum
+    * if there is no flooding AND the well is red, we use the arsenic 75 percentile of available data of the stratum
+    * if the well is black, we use the arsenic 25 percentile of available data of the stratum no matter if there is flooding or not
 
 
 more possible models:
 * all models with 10% or so overlap between strata
 * machine learning
 
+## File Structure
+
+```
+iArsenic/preprocessing
+├── README.md
+├── cli/                // Tools for sorting data and testing the models
+├── data-import/        // Tools to import data from the .Rdata format
+├── geodata/            // Geographic data visualisation (under development)
+├── lib/                // Various tools for converting and fixing data
+├── models/             // Stores the models used to find the arsenic levels
+└── tests/              // Tests for functions in ./lib/stats.js
+
+6 directories, 1 file
+```
 
 ## Output Structures
 
@@ -66,6 +84,11 @@ const divisions = {
               'union name': {
                 wells: [],
                 name: 'union name',
+                mouzas: {
+                  'mouza name': {
+                  wells: [],
+                  name: 'mouza name',
+              },
               },
             },
           },
@@ -105,3 +128,33 @@ const dropdownData = [
   ...
 ]
 ```
+
+## Tests
+
+`npm test` will run unit tests on the stats code.
+
+`sh preprocessing/tests/test-cli.sh` will run all the models against all datasets configures in `test-cli.sh`, produce output for every geographic region and every well depth we care about, and compare the output against benchmark output in `preprocessing/tests/benchmark-data`. If we aren't changing the statistical models or the underlying data sets, we should not see any differences in the generated data.
+
+`preprocessing/tests/benchmark-data` is decompressed from `preprocessing/tests/benchmark-data.tgz` when running tests with `test-cli.sh`.
+
+### When we add/change a model
+
+A changed model should generate different outputs from the benchmark data. We can look at the differences and see that they correspond to the model changes we meant to implement. When satisfied, we can move `preprocessing/outputs/<model>` generated outputs into `benchmark-data`.
+
+`benchmark-data.tgz` is compressed using tar and gzip and stored on GitHub LFS.
+When running tests, `test-cli.sh` automatically decompresses
+`benchmark-data.tgz` to use the latest benchmark data - in **overwrites** the
+existing `benchmark-data` folder! When updating benchmark data, the benchmark
+data folder must be recompressed with new benchmark data.
+
+An added model must be added to the list of models run in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data`.
+
+When a model changes, no other models' output should be affected.
+
+### When we add/change a dataset
+
+A changed dataset may generate different outputs in some or all of the models. We should identify and review the output changes, and if satisfied that they correspond to the intended dataset change, adopt the changed outputs from `test-outputs` into `benchmark-data` and re-compress it (see above).
+
+An added dataset needs to be added to the list of datasets in `test-cli.sh`; it will generate new outputs in `test-outputs` that, if reviewed and satisfactory, should be adopted into `benchmark-data` and re-compressed (see above).
+
+When a dataset is added or changed, no test outputs with previous datasets should be affected.
