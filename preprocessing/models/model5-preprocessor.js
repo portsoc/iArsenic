@@ -274,6 +274,63 @@ function getEnoughData(locationArr) {
   cleanNearbyRegions(locationArr);
 }
 
+function computeRegionWidening(locationArr) {
+  const region = locationArr[locationArr.length - 1];
+
+  function nearbyWells(km, ...strata) {
+    const retval = [];
+
+    if (region.nearbyRegions == null) {
+      console.error(locationArr.map(r => r.name).join(' -> '));
+      computeNearbyRegions(locationArr);
+    }
+
+    const nearbyRegions = region.nearbyRegions;
+    const wellSelector = strataSelector(...strata);
+
+    for (const nearby of nearbyRegions) {
+      if (nearby.distance > km) break;
+
+      const wells = wellSelector(nearby.region);
+      wells.distance = nearby.distance;
+      retval.push(wells);
+    }
+
+    return retval;
+  }
+
+  const location = locationArr[locationArr.length - 1];
+  location.s15WideningRequired =
+    wideCount(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
+
+  location.s15FloodWideningRequired =
+    wideCount(location.s15, ...nearbyWells(5, 's15'));
+
+  location.s45WideningRequired =
+    wideCount(location.s45, location.s65) ||
+    wideCount(location.s45, ...nearbyWells(10, 's45')) ||
+    wideCount(location.s45.concat(location.s65), ...nearbyWells(20, 's45', 's65'));
+
+  location.s65WideningRequired =
+    wideCount(location.s65, location.s90) ||
+    wideCount(location.s65, ...nearbyWells(10, 's65')) ||
+    wideCount(location.s65.concat(location.s90), ...nearbyWells(20, 's65', 's90'));
+
+  location.s90WideningRequired =
+    wideCount(location.s90, location.s150) ||
+    wideCount(location.s90, ...nearbyWells(20, 's90')) ||
+    wideCount(location.s90.concat(location.s150), ...nearbyWells(20, 's90', 's150'));
+
+  location.s150WideningRequired =
+    wideCount(location.s150, location.sD) ||
+    wideCount(location.s150, ...nearbyWells(100, 's150')) ||
+    wideCount(location.s150.concat(location.sD), ...nearbyWells(100, 's150', 'sD'));
+
+  location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
+
+  cleanNearbyRegions(locationArr);
+}
+
 // starting with startingArray, until we reach isEnoughData(), keep adding arrays from
 // arraysToAdd
 function widen(startingArray, ...arraysToAdd) {
@@ -422,60 +479,6 @@ function computeWidening(divisions) {
   forEachMouza(divisions, computeRegionWidening);
 
   return divisions;
-}
-
-function computeRegionWidening(locationArr) {
-  const region = locationArr[locationArr.length - 1];
-
-  function nearbyWells(km, ...strata) {
-    const retval = [];
-
-    if (region.nearbyRegions == null) {
-      console.error(locationArr.map(r => r.name).join(' -> '));
-      computeNearbyRegions(locationArr);
-    }
-
-    const nearbyRegions = region.nearbyRegions;
-    const wellSelector = strataSelector(...strata);
-
-    for (const nearby of nearbyRegions) {
-      if (nearby.distance > km) break;
-
-      const wells = wellSelector(nearby.region);
-      wells.distance = nearby.distance;
-      retval.push(wells);
-    }
-
-    return retval;
-  }
-
-  const location = locationArr[locationArr.length - 1];
-  location.s15WideningRequired =
-    wideCount(location.s15, location.s45, ...nearbyWells(10, 's15', 's45'));
-
-  location.s45WideningRequired =
-    wideCount(location.s45, location.s65) ||
-    wideCount(location.s45, ...nearbyWells(10, 's45')) ||
-    wideCount(location.s45.concat(location.s65), ...nearbyWells(20, 's45', 's65'));
-
-  location.s65WideningRequired =
-    wideCount(location.s65, location.s90) ||
-    wideCount(location.s65, ...nearbyWells(10, 's65')) ||
-    wideCount(location.s65.concat(location.s90), ...nearbyWells(20, 's65', 's90'));
-
-  location.s90WideningRequired =
-    wideCount(location.s90, location.s150) ||
-    wideCount(location.s90, ...nearbyWells(20, 's90')) ||
-    wideCount(location.s90.concat(location.s150), ...nearbyWells(20, 's90', 's150'));
-
-  location.s150WideningRequired =
-    wideCount(location.s150, location.sD) ||
-    wideCount(location.s150, ...nearbyWells(100, 's150')) ||
-    wideCount(location.s150.concat(location.sD), ...nearbyWells(100, 's150', 'sD'));
-
-  location.sDWideningRequired = wideCount(location.sD, ...nearbyWells(100, 'sD'));
-
-  cleanNearbyRegions(locationArr);
 }
 
 function wideCount(startingArray, ...arraysToAdd) {
