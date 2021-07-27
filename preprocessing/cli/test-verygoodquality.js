@@ -98,4 +98,5 @@ function main(options) {
 console.error('As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.');
 process.exit(-1);
 
-// main(cli.getParameters());
+/* eslint-disable-next-line no-unreachable */
+main(cli.getParameters());
