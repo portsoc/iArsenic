@@ -2,12 +2,6 @@
 // latitude and logitude of the datapoint in the input file, and the
 // location data in the geodata maps.
 
-// Mouza data is stored in a shp file instead of a gojson file so another
-// library is needed to parse them to a usuable format as shp is a binary
-// format.
-
-// import {polygonContains} from 'd3-polygon';
-
 const cli = require('../lib/cli-common');
 const { readTheCSVFiles } = require('../lib/load-data');
 const fs = require('fs');
