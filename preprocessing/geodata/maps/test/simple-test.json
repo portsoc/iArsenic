@@ -16,7 +16,7 @@
                     "properties": {
                         "id": 0,
                         "area": 1183647036.934808,
-                        "div": "test-shape"
+                        "div": "triangle"
                     }
                 },
                 {
@@ -31,7 +31,7 @@
                     "properties": {
                         "id": 1,
                         "area": 1183647036.934808,
-                        "div": "test-shape"
+                        "div": "complex"
                     }
                 }
             ]
