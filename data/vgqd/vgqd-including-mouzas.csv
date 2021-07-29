@@ -1,174 +1,174 @@
-id,lat,lon,division,district,upazila,union,mouza,depth,colour,as
-WJM 003,23.4132,88.7605,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,32,5
-WJM 004,23.4121,88.7609,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,40,5
-WJM 051,23.4125,88.7622,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,0,8.3
-WJM 052,23.4123,88.7622,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,27,10.7
-WJM 005,23.4116,88.7623,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,44,15
-WJS 057,23.4213,88.7927,Khulna,Chuadanga,Jiban Nagar,Simanta,Sankhari,14,0.3
-WJS 053,23.4249,88.7965,Khulna,Chuadanga,Jiban Nagar,Simanta,Sankhari,23,18.4
-WJS 054,23.4234,88.7976,Khulna,Chuadanga,Jiban Nagar,Simanta,Sankhari,30,24.5
-WTJ 009,23.4157,88.8281,Khulna,Chuadanga,Jiban Nagar,Banka,Pratappur,50,66
-WTJ 007,23.4183,88.8284,Khulna,Chuadanga,Jiban Nagar,Banka,Pratappur,20,282
-WTJ 011,23.4174,88.8308,Khulna,Chuadanga,Jiban Nagar,Banka,Pratappur,24,6
-WJH 013,23.4066,88.859,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,32,16
-WJH 015,23.4057,88.8609,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,37,11
-WJH 017,23.4059,88.8615,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,59,8
-WJH 016,23.4063,88.8628,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,50,10
-WMR 024,23.4027,88.8906,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,14,4
-WMR 019,23.4036,88.8913,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,40,99
-WMR 020,23.4057,88.8918,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,40,140
-WMR 111,23.4036,88.8918,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,37,139
-WMR 110,23.4036,88.8919,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,15,82
-WMR 021,23.4042,88.893,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,17,1
-WMK 027,23.3934,88.9223,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,18,8
-WMK 026,23.3945,88.9229,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,18,67
-WMK 028,23.3954,88.9229,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,40,23.1
-WMK 030,23.3958,88.9241,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,44,27.1
-WMB 031,23.3915,88.9566,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,15,58
-WMB 033,23.3931,88.957,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,21,40.5
-WMB 034,23.3949,88.9577,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,46,39.6
-WMB 036,23.3947,88.958,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,17,33.7
-WMB 105,23.3951,88.958,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,15,2.6
-WKK 038,23.4121,88.982,Khulna,Jhenaidah,Kotchandpur,Baluhar,Ramchandrapur,58,0.6
-WKK 037,23.4116,88.9829,Khulna,Jhenaidah,Kotchandpur,Baluhar,Ramchandrapur,37,31.8
-WKK 040,23.4097,88.9837,Khulna,Jhenaidah,Kotchandpur,Baluhar,Ramchandrapur,58,0.3
-WKP 045,23.4088,89.0323,Khulna,Jhenaidah,Kotchandpur,Paurashava,,72,35.9
-WKP 047,23.4093,89.0323,Khulna,Jhenaidah,Kotchandpur,Paurashava,,76,37.9
-WKP 043,23.4065,89.0334,Khulna,Jhenaidah,Kotchandpur,Paurashava,,46,60.4
-MKE320,23.4043,89.0505,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,30,42
-MKE319,23.4045,89.0506,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,49,2.8
-MKE322,23.4034,89.0512,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,64,5
-MKE325,23.4019,89.0514,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,78,87
-MKE318,23.4033,89.052,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,55,2
-MKE321,23.4047,89.052,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,58,0
-MKE326,23.4041,89.0524,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,44,0
-MKL316,23.3983,89.0811,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,55,59
-MKL317,23.3989,89.0811,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,56,24
-MKL326,23.3992,89.0822,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,50,29
-MKL320,23.399,89.0823,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,43,43
-MKL325,23.3983,89.0856,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,50,0
-MKK060,23.4006,89.1158,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,24,6
-MKK067,23.4028,89.1163,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,27,8
-MKK063,23.4016,89.1171,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,38,11
-MKK069,23.4022,89.1174,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,43,7
-MKG078,23.4107,89.1557,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,56,0.2
-MKG072,23.4116,89.1576,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,30,52.4
-MKG074,23.4115,89.1576,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,52,7.3
-MKG071,23.4121,89.1579,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,49,36.3
-MKG076,23.4118,89.158,Khulna,Jhenaidah,Kaliganj,Niamatpur,Niamatpur,43,36.7
-MKG081,23.4131,89.1611,Khulna,Jhenaidah,Kaliganj,Niamatpur,Niamatpur,52,30.6
-MKKL088,23.4086,89.1973,Khulna,Jhenaidah,Kaliganj,Niamatpur,Raghunathpur,56,70.4
-MKKL082,23.4079,89.2014,Khulna,Jhenaidah,Kaliganj,Kola,Kola,43,0.3
-MKKL086,23.4094,89.2016,Khulna,Jhenaidah,Kaliganj,Kola,Kola,52,0.2
-MKKL084,23.4075,89.2033,Khulna,Jhenaidah,Kaliganj,Kola,Kola,49,0.1
-MKKL093,23.4075,89.2053,Khulna,Jhenaidah,Kaliganj,Kola,Kola,49,0.4
-MKKL092,23.408,89.2123,Khulna,Jhenaidah,Kaliganj,Kola,Kola,18,40.4
-MKM099,23.4103,89.2301,Khulna,Jhenaidah,Kaliganj,Kola,Madhyapur,55,91
-MKM097,23.4067,89.2321,Khulna,Jhenaidah,Kaliganj,Kola,Madhyapur,55,0
-MKM301,23.4038,89.2322,Khulna,Jhenaidah,Kaliganj,Kola,Khalkula,44,0
-MKM094,23.4092,89.233,Khulna,Jhenaidah,Kaliganj,Kola,Madhyapur,41,1
-MKM304,23.4161,89.2368,Khulna,Jhenaidah,Kaliganj,Kola,Pariat,49,0.3
-MKS306,23.4128,89.2501,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,49,248.9
-MKS307,23.4119,89.2547,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,64,0.2
-MKS314,23.4087,89.2578,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,49,0.3
-MKS312,23.4076,89.26,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,46,0.1
-MKS315,23.4092,89.2603,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,55,0.5
-MST337,23.3887,89.2837,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,55,0
-MST327,23.392,89.2844,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,29,0
-MST329,23.3923,89.2861,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,50,0
-MST332,23.3913,89.2865,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,52,0
-MST330,23.3922,89.2866,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,58,1
-MST338,23.3922,89.2867,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,55,10
-MST334,23.3919,89.2903,Khulna,Magura,Shalikha,Dhaneshwargati,Singra,61,9
-MSS339,23.3876,89.3125,Khulna,Magura,Shalikha,Talkhari,Bhulbaria,49,1
-MSS340,23.3887,89.3145,Khulna,Magura,Shalikha,Talkhari,Bhulbaria,49,0
-MSS341,23.3893,89.316,Khulna,Magura,Shalikha,Talkhari,Satanfuria,55,1
-MSS342,23.3892,89.3188,Khulna,Magura,Shalikha,Talkhari,Satanfuria,56,1
-MSS343,23.3887,89.321,Khulna,Magura,Shalikha,Talkhari,Satanfuria,49,25
-MSS345,23.3886,89.3219,Khulna,Magura,Shalikha,Talkhari,Satanfuria,50,1030
-MSS346,23.3885,89.3224,Khulna,Magura,Shalikha,Talkhari,Satanfuria,50,1
-MSS347,23.3892,89.3226,Khulna,Magura,Shalikha,Talkhari,Satanfuria,58,4
-MSS348,23.3884,89.3229,Khulna,Magura,Shalikha,Talkhari,Satanfuria,46,0
-MSU358,23.3877,89.356,Khulna,Magura,Shalikha,Talkhari,Uchgram,58,75
-MSU359,23.3873,89.3584,Khulna,Magura,Shalikha,Talkhari,Uchgram,49,102
-MSU351,23.3882,89.3586,Khulna,Magura,Shalikha,Talkhari,Uchgram,40,85
-MSU354,23.3866,89.3599,Khulna,Magura,Shalikha,Talkhari,Uchgram,52,24
-MSU355,23.3854,89.3604,Khulna,Magura,Shalikha,Arpara,Chukinagar,52,119
-MSA366,23.388,89.3936,Khulna,Magura,Shalikha,Arpara,Alokdia,52,0
-MSA372,23.3891,89.3938,Khulna,Magura,Shalikha,Arpara,Alokdia,49,0
-MSA370,23.3892,89.394,Khulna,Magura,Shalikha,Arpara,Alokdia,56,0
-MSA364,23.3872,89.3947,Khulna,Magura,Shalikha,Arpara,Alokdia,55,3
-MSA363,23.3869,89.3961,Khulna,Magura,Shalikha,Arpara,Dari Salai,53,17
-MSA361,23.3864,89.3964,Khulna,Magura,Shalikha,Arpara,Dari Salai,55,82
-MSmA376,23.3896,89.4385,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,37,0
-MSmA382,23.3922,89.4397,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,49,0
-MSmA383,23.3916,89.4397,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,49,0
-MSmA374,23.3865,89.4399,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,55,0
-MSmA378,23.3925,89.441,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,49,0
-MSmB389,23.3837,89.4614,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,61,0
-MSmB392,23.3822,89.4621,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,49,0
-MSmB395,23.3821,89.463,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,55,0
-MSmB387,23.3803,89.4633,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,49,0
-MSmB386,23.3808,89.4648,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,66,20
-MSmB384,23.3811,89.4683,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,55,0
-MSmS397,23.3867,89.4858,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,55,0
-MSmS399,23.3895,89.4892,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,46,1
-MSmS401,23.391,89.4913,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,46,0
-MSmS402,23.3911,89.4914,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,46,8
-MSmS405,23.3917,89.4962,Khulna,Magura,Magura Sadar,Gopalgram,Gopalgram,61,0
-EMK406,23.3786,89.5278,Khulna,Magura,Mohammadpur,Rajapur,Rajpat,55,0
-EMK408,23.3858,89.5344,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,46,0
-EMK409,23.3899,89.5366,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,46,0
-EMK417,23.391,89.5375,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,50,11
-EMK410,23.3897,89.5382,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,55,284
-EMK416,23.3895,89.5417,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,58,3
-EMK415,23.3903,89.542,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,55,1
-EMK418,23.3862,89.5423,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,55,0
-EMK419,23.3897,89.5426,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,52,4
-EMK412,23.39,89.5429,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,62,2
-EMK414,23.3888,89.5437,Khulna,Magura,Mohammadpur,Balidia,Nikharhata,50,3
-EMK413,23.389,89.5492,Khulna,Magura,Mohammadpur,Balidia,Sreepur,55,15
-EMN422,23.3987,89.5814,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,23,54
-EMN421,23.3989,89.5815,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,107,27
-EMN426,23.3989,89.5825,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,79,0
-EMN424,23.3982,89.5829,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,91,108
-EMN431,23.3997,89.5838,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,91,729
-EMN432,23.398,89.5854,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,50,211
-EBO437,23.3814,89.6371,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,15,50
-EBO433,23.3818,89.6374,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,37,1
-EBO441,23.3774,89.6384,Dhaka,Faridpur,Boalmari,Gunbaha,Kamarhela,15,57
-EBO436,23.384,89.6393,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,20,28
-EBO435,23.3831,89.6394,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,20,384
-EBG447,23.3806,89.6723,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,58,0
-EBG446,23.3818,89.6736,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,69,1
-EBG448,23.3829,89.6737,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,58,109
-EBG445,23.3819,89.6744,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,56,1
-EBG450,23.3825,89.6745,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,20,44
-EBG444,23.3816,89.6749,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,38,39
-EBG452,23.3823,89.6749,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,67,0
-EBG454,23.3829,89.6749,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,64,19
-EBG449,23.3834,89.675,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,59,69
-EBP460,23.3846,89.7264,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,34,199
-EBP462,23.386,89.7286,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,27,167
-EBP459,23.3851,89.7291,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,24,63
-EBP457,23.3843,89.7304,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,38,36
-ENR473,23.3892,89.7777,Dhaka,Faridpur,Saltha,Jadunandi,Bara Khardia,27,691
-ENR468,23.3929,89.7786,Dhaka,Faridpur,Saltha,Sonapur,Jogardia,76,206
-ENR469,23.3915,89.7793,Dhaka,Faridpur,Saltha,Jadunandi,Bara Khardia,24,447
-ENR470,23.39,89.7802,Dhaka,Faridpur,Saltha,Jadunandi,Bara Khardia,15,61
-ENR464,23.3948,89.7805,Dhaka,Faridpur,Saltha,Sonapur,Jogardia,24,41
-ENR466,23.3938,89.781,Dhaka,Faridpur,Saltha,Sonapur,Jogardia,24,421
-ENK474,23.3913,89.8194,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,14,186
-ENK475,23.3916,89.8202,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,11,169
-ENK477,23.3925,89.8217,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,14,161
-ENK478,23.3929,89.8218,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,15,265
-ENK479,23.3925,89.8224,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,21,280
-ENK481,23.391,89.8245,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,14,271
-ENP486,23.4113,89.8493,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,21,317
-ENP484,23.4146,89.8494,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,20,327
-ENP488,23.4137,89.8503,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,15,264
-ENP492,23.415,89.851,Dhaka,Faridpur,Saltha,Majhardia,Harina,24,288
-ENP493,23.4133,89.8514,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,15,535
-ENP491,23.4143,89.8516,Dhaka,Faridpur,Saltha,Majhardia,Harina,17,367
-ENP490,23.4132,89.8522,Dhaka,Faridpur,Saltha,Majhardia,Harina,33,149
-ENP489,23.4125,89.8523,Dhaka,Faridpur,Saltha,Majhardia,Harina,49,160
+id,lat,lon,division,district,upazila,union,div,dis,upa,uni,mou,depth,colour,as
+WJM 003,23.4132,88.7605,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,32,Red,5
+WJM 004,23.4121,88.7609,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,40,Red,5
+WJM 051,23.4125,88.7622,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,0,Red,8.3
+WJM 052,23.4123,88.7622,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,27,Red,10.7
+WJM 005,23.4116,88.7623,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Medinipur,44,Red,15
+WJS 057,23.4213,88.7927,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Sankhari,14,Black,0.3
+WJS 053,23.4249,88.7965,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Sankhari,23,Red,18.4
+WJS 054,23.4234,88.7976,Khulna,Chuadanga,Jiban Nagar,Simanta,Khulna,Chuadanga,Jiban Nagar,Simanta,Sankhari,30,Red,24.5
+WTJ 009,23.4157,88.8281,Khulna,Chuadanga,Jiban Nagar,Banka,Khulna,Chuadanga,Jiban Nagar,Banka,Pratappur,50,Red,66
+WTJ 007,23.4183,88.8284,Khulna,Chuadanga,Jiban Nagar,Banka,Khulna,Chuadanga,Jiban Nagar,Banka,Pratappur,20,Red,282
+WTJ 011,23.4174,88.8308,Khulna,Chuadanga,Jiban Nagar,Banka,Khulna,Chuadanga,Jiban Nagar,Banka,Pratappur,24,Red,6
+WJH 013,23.4066,88.859,Khulna,Chuadanga,Jiban Nagar,Banka,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,32,Red,16
+WJH 015,23.4057,88.8609,Khulna,Chuadanga,Jiban Nagar,Banka,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,37,Red,11
+WJH 017,23.4059,88.8615,Khulna,Chuadanga,Jiban Nagar,Banka,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,59,Red,8
+WJH 016,23.4063,88.8628,Khulna,Chuadanga,Jiban Nagar,Banka,Khulna,Chuadanga,Jiban Nagar,Banka,Panara Sati,50,Red,10
+WMR 024,23.4027,88.8906,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,14,Black,4
+WMR 019,23.4036,88.8913,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,40,Red,99
+WMR 020,23.4057,88.8918,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,40,Red,140
+WMR 111,23.4036,88.8918,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,37,Red,139
+WMR 110,23.4036,88.8919,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,15,Red,82
+WMR 021,23.4042,88.893,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Chandpur,17,Black,1
+WMK 027,23.3934,88.9223,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,18,Red,8
+WMK 026,23.3945,88.9229,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,18,Red,67
+WMK 028,23.3954,88.9229,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,40,Red,23.1
+WMK 030,23.3958,88.9241,Khulna,Jhenaidah,Maheshpur,Fatehpur,Khulna,Jhenaidah,Maheshpur,Fatehpur,Purandapur,44,Red,27.1
+WMB 031,23.3915,88.9566,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,15,Red,58
+WMB 033,23.3931,88.957,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,21,Black,40.5
+WMB 034,23.3949,88.9577,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,46,Red,39.6
+WMB 036,23.3947,88.958,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,17,Red,33.7
+WMB 105,23.3951,88.958,Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Khulna,Jhenaidah,Maheshpur,S.k.b.(sundarpur),Bazrapur,15,Black,2.6
+WKK 038,23.4121,88.982,Khulna,Jhenaidah,Kotchandpur,Baluhar,Khulna,Jhenaidah,Kotchandpur,Baluhar,Ramchandrapur,58,Black,0.6
+WKK 037,23.4116,88.9829,Khulna,Jhenaidah,Kotchandpur,Baluhar,Khulna,Jhenaidah,Kotchandpur,Baluhar,Ramchandrapur,37,Red,31.8
+WKK 040,23.4097,88.9837,Khulna,Jhenaidah,Kotchandpur,Baluhar,Khulna,Jhenaidah,Kotchandpur,Baluhar,Ramchandrapur,58,Black,0.3
+WKP 045,23.4088,89.0323,Khulna,Jhenaidah,Kotchandpur,Kotchandpur Paurashava,,,,,,72,Black,35.9
+WKP 047,23.4093,89.0323,Khulna,Jhenaidah,Kotchandpur,Kotchandpur Paurashava,,,,,,76,Red,37.9
+WKP 043,23.4065,89.0334,Khulna,Jhenaidah,Kotchandpur,Kotchandpur Paurashava,,,,,,46,Red,60.4
+MKE320,23.4043,89.0505,Khulna,Jhenaidah,Kotchandpur,Elangi,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,30,Red,42
+MKE319,23.4045,89.0506,Khulna,Jhenaidah,Kotchandpur,Elangi,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,49,Black,2.8
+MKE322,23.4034,89.0512,Khulna,Jhenaidah,Kotchandpur,Elangi,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,64,Black,5
+MKE325,23.4019,89.0514,Khulna,Jhenaidah,Kotchandpur,Elangi,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,78,Red,87
+MKE318,23.4033,89.052,Khulna,Jhenaidah,Kotchandpur,Elangi,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,55,Black,2
+MKE321,23.4047,89.052,Khulna,Jhenaidah,Kotchandpur,Elangi,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,58,Black,0
+MKE326,23.4041,89.0524,Khulna,Jhenaidah,Kotchandpur,Elangi,Khulna,Jhenaidah,Kotchandpur,Elangi,Elangi,44,Black,0
+MKL316,23.3983,89.0811,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,55,Black,59
+MKL317,23.3989,89.0811,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,56,Red,24
+MKL326,23.3992,89.0822,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,50,Black,29
+MKL320,23.399,89.0823,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,43,Black,43
+MKL325,23.3983,89.0856,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Khulna,Jhenaidah,Kaliganj,Trilochanpur,Bara Ghighati,50,Black,0
+MKK060,23.4006,89.1158,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,24,Red,6
+MKK067,23.4028,89.1163,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,27,Red,8
+MKK063,23.4016,89.1171,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,38,Red,11
+MKK069,23.4022,89.1174,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Khulna,Jhenaidah,Kaliganj,Simla Rokonpur,Ishwarba,43,Black,7
+MKG078,23.4107,89.1557,Khulna,Jhenaidah,Kaliganj,Niamatpur,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,56,Black,0.2
+MKG072,23.4116,89.1576,Khulna,Jhenaidah,Kaliganj,Niamatpur,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,30,Red,52.4
+MKG074,23.4115,89.1576,Khulna,Jhenaidah,Kaliganj,Niamatpur,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,52,Red,7.3
+MKG071,23.4121,89.1579,Khulna,Jhenaidah,Kaliganj,Niamatpur,Khulna,Jhenaidah,Kaliganj,Niamatpur,Ghoshnagar,49,Red,36.3
+MKG076,23.4118,89.158,Khulna,Jhenaidah,Kaliganj,Niamatpur,Khulna,Jhenaidah,Kaliganj,Niamatpur,Niamatpur,43,Red,36.7
+MKG081,23.4131,89.1611,Khulna,Jhenaidah,Kaliganj,Niamatpur,Khulna,Jhenaidah,Kaliganj,Niamatpur,Niamatpur,52,Red,30.6
+MKKL088,23.4086,89.1973,Khulna,Jhenaidah,Kaliganj,Niamatpur,Khulna,Jhenaidah,Kaliganj,Niamatpur,Raghunathpur,56,Red,70.4
+MKKL082,23.4079,89.2014,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Kola,43,Black,0.3
+MKKL086,23.4094,89.2016,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Kola,52,Black,0.2
+MKKL084,23.4075,89.2033,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Kola,49,Black,0.1
+MKKL093,23.4075,89.2053,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Kola,49,Black,0.4
+MKKL092,23.408,89.2123,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Kola,18,Red,40.4
+MKM099,23.4103,89.2301,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Madhyapur,55,Red,91
+MKM097,23.4067,89.2321,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Madhyapur,55,Black,0
+MKM301,23.4038,89.2322,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Khalkula,44,Black,0
+MKM094,23.4092,89.233,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Madhyapur,41,Black,1
+MKM304,23.4161,89.2368,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Pariat,49,Black,0.3
+MKS306,23.4128,89.2501,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,49,Black,248.9
+MKS307,23.4119,89.2547,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,64,Black,0.2
+MKS314,23.4087,89.2578,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,49,Black,0.3
+MKS312,23.4076,89.26,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,46,Black,0.1
+MKS315,23.4092,89.2603,Khulna,Jhenaidah,Kaliganj,Kola,Khulna,Jhenaidah,Kaliganj,Kola,Sarabaria,55,Black,0.5
+MST337,23.3887,89.2837,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,55,Black,0
+MST327,23.392,89.2844,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,29,Black,0
+MST329,23.3923,89.2861,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,50,Black,0
+MST332,23.3913,89.2865,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,52,Black,0
+MST330,23.3922,89.2866,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,58,Black,1
+MST338,23.3922,89.2867,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Magura,Shalikha,Dhaneshwargati,Tilkhari,55,Black,10
+MST334,23.3919,89.2903,Khulna,Magura,Shalikha,Dhaneshwargati,Khulna,Magura,Shalikha,Dhaneshwargati,Singra,61,Black,9
+MSS339,23.3876,89.3125,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Bhulbaria,49,Black,1
+MSS340,23.3887,89.3145,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Bhulbaria,49,Black,0
+MSS341,23.3893,89.316,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Satanfuria,55,Black,1
+MSS342,23.3892,89.3188,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Satanfuria,56,Black,1
+MSS343,23.3887,89.321,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Satanfuria,49,Red,25
+MSS345,23.3886,89.3219,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Satanfuria,50,Black,1030
+MSS346,23.3885,89.3224,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Satanfuria,50,Black,1
+MSS347,23.3892,89.3226,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Satanfuria,58,Black,4
+MSS348,23.3884,89.3229,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Satanfuria,46,Black,0
+MSU358,23.3877,89.356,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Uchgram,58,Red,75
+MSU359,23.3873,89.3584,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Uchgram,49,Red,102
+MSU351,23.3882,89.3586,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Uchgram,40,Red,85
+MSU354,23.3866,89.3599,Khulna,Magura,Shalikha,Talkhari,Khulna,Magura,Shalikha,Talkhari,Uchgram,52,Red,24
+MSU355,23.3854,89.3604,Khulna,Magura,Shalikha,Arpara,Khulna,Magura,Shalikha,Arpara,Chukinagar,52,Red,119
+MSA366,23.388,89.3936,Khulna,Magura,Shalikha,Arpara,Khulna,Magura,Shalikha,Arpara,Alokdia,52,Black,0
+MSA372,23.3891,89.3938,Khulna,Magura,Shalikha,Arpara,Khulna,Magura,Shalikha,Arpara,Alokdia,49,Black,0
+MSA370,23.3892,89.394,Khulna,Magura,Shalikha,Arpara,Khulna,Magura,Shalikha,Arpara,Alokdia,56,Black,0
+MSA364,23.3872,89.3947,Khulna,Magura,Shalikha,Arpara,Khulna,Magura,Shalikha,Arpara,Alokdia,55,Black,3
+MSA363,23.3869,89.3961,Khulna,Magura,Shalikha,Arpara,Khulna,Magura,Shalikha,Arpara,Dari Salai,53,Red,17
+MSA361,23.3864,89.3964,Khulna,Magura,Shalikha,Arpara,Khulna,Magura,Shalikha,Arpara,Dari Salai,55,Black,82
+MSmA376,23.3896,89.4385,Khulna,Magura,Magura Sadar,Kuchiamora,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,37,Black,0
+MSmA382,23.3922,89.4397,Khulna,Magura,Magura Sadar,Kuchiamora,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,49,Black,0
+MSmA383,23.3916,89.4397,Khulna,Magura,Magura Sadar,Kuchiamora,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,49,Black,0
+MSmA374,23.3865,89.4399,Khulna,Magura,Magura Sadar,Kuchiamora,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,55,Black,0
+MSmA378,23.3925,89.441,Khulna,Magura,Magura Sadar,Kuchiamora,Khulna,Magura,Magura Sadar,Kuchiamora,Amuria,49,Red,0
+MSmB389,23.3837,89.4614,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,61,Black,0
+MSmB392,23.3822,89.4621,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,49,Black,0
+MSmB395,23.3821,89.463,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,55,Black,0
+MSmB387,23.3803,89.4633,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,49,Black,0
+MSmB386,23.3808,89.4648,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,66,Red,20
+MSmB384,23.3811,89.4683,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Baharbagh,55,Black,0
+MSmS397,23.3867,89.4858,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,55,Black,0
+MSmS399,23.3895,89.4892,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,46,Black,1
+MSmS401,23.391,89.4913,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,46,Black,0
+MSmS402,23.3911,89.4914,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Sankochkhali,46,Red,8
+MSmS405,23.3917,89.4962,Khulna,Magura,Magura Sadar,Gopalgram,Khulna,Magura,Magura Sadar,Gopalgram,Gopalgram,61,Black,0
+EMK406,23.3786,89.5278,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Rajpat,55,Black,0
+EMK408,23.3858,89.5344,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,46,Black,0
+EMK409,23.3899,89.5366,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,46,Black,0
+EMK417,23.391,89.5375,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,50,Red,11
+EMK410,23.3897,89.5382,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,55,Red,284
+EMK416,23.3895,89.5417,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,58,Red,3
+EMK415,23.3903,89.542,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,55,Black,1
+EMK418,23.3862,89.5423,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,55,Black,0
+EMK419,23.3897,89.5426,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,52,Red,4
+EMK412,23.39,89.5429,Khulna,Magura,Mohammadpur,Rajapur,Khulna,Magura,Mohammadpur,Rajapur,Kamaldhari,62,Red,2
+EMK414,23.3888,89.5437,Khulna,Magura,Mohammadpur,Balidia,Khulna,Magura,Mohammadpur,Balidia,Nikharhata,50,Black,3
+EMK413,23.389,89.5492,Khulna,Magura,Mohammadpur,Balidia,Khulna,Magura,Mohammadpur,Balidia,Sreepur,55,Red,15
+EMN422,23.3987,89.5814,Khulna,Magura,Mohammadpur,Mohammadpur,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,23,Red,54
+EMN421,23.3989,89.5815,Khulna,Magura,Mohammadpur,Mohammadpur,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,107,Black,27
+EMN426,23.3989,89.5825,Khulna,Magura,Mohammadpur,Mohammadpur,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,79,Black,0
+EMN424,23.3982,89.5829,Khulna,Magura,Mohammadpur,Mohammadpur,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,91,Black,108
+EMN431,23.3997,89.5838,Khulna,Magura,Mohammadpur,Mohammadpur,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,91,Black,729
+EMN432,23.398,89.5854,Khulna,Magura,Mohammadpur,Mohammadpur,Khulna,Magura,Mohammadpur,Mohammadpur,Kanainagar,50,Red,211
+EBO437,23.3814,89.6371,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,15,Red,50
+EBO433,23.3818,89.6374,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,37,Black,1
+EBO441,23.3774,89.6384,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Kamarhela,15,Red,57
+EBO436,23.384,89.6393,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,20,Red,28
+EBO435,23.3831,89.6394,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Umarnagar,20,Red,384
+EBG447,23.3806,89.6723,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,58,Black,0
+EBG446,23.3818,89.6736,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,69,Black,1
+EBG448,23.3829,89.6737,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,58,Red,109
+EBG445,23.3819,89.6744,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,56,Black,1
+EBG450,23.3825,89.6745,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,20,Red,44
+EBG444,23.3816,89.6749,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,38,Red,39
+EBG452,23.3823,89.6749,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,67,Black,0
+EBG454,23.3829,89.6749,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,64,Black,19
+EBG449,23.3834,89.675,Dhaka,Faridpur,Boalmari,Gunbaha,Dhaka,Faridpur,Boalmari,Gunbaha,Gunbaha,59,Red,69
+EBP460,23.3846,89.7264,Dhaka,Faridpur,Boalmari,Chatul,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,34,Red,199
+EBP462,23.386,89.7286,Dhaka,Faridpur,Boalmari,Chatul,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,27,Red,167
+EBP459,23.3851,89.7291,Dhaka,Faridpur,Boalmari,Chatul,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,24,Red,63
+EBP457,23.3843,89.7304,Dhaka,Faridpur,Boalmari,Chatul,Dhaka,Faridpur,Boalmari,Chatul,Dhulpukuria,38,Red,36
+ENR473,23.3892,89.7777,Dhaka,Faridpur,Saltha,Jadunandi,Dhaka,Faridpur,Saltha,Jadunandi,Bara Khardia,27,Red,691
+ENR468,23.3929,89.7786,Dhaka,Faridpur,Saltha,Sonapur,Dhaka,Faridpur,Saltha,Sonapur,Jogardia,76,Red,206
+ENR469,23.3915,89.7793,Dhaka,Faridpur,Saltha,Jadunandi,Dhaka,Faridpur,Saltha,Jadunandi,Bara Khardia,24,Red,447
+ENR470,23.39,89.7802,Dhaka,Faridpur,Saltha,Jadunandi,Dhaka,Faridpur,Saltha,Jadunandi,Bara Khardia,15,Red,61
+ENR464,23.3948,89.7805,Dhaka,Faridpur,Saltha,Sonapur,Dhaka,Faridpur,Saltha,Sonapur,Jogardia,24,Red,41
+ENR466,23.3938,89.781,Dhaka,Faridpur,Saltha,Sonapur,Dhaka,Faridpur,Saltha,Sonapur,Jogardia,24,Red,421
+ENK474,23.3913,89.8194,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,14,Red,186
+ENK475,23.3916,89.8202,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,11,Red,169
+ENK477,23.3925,89.8217,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,14,Red,161
+ENK478,23.3929,89.8218,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,15,Red,265
+ENK479,23.3925,89.8224,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,21,Red,280
+ENK481,23.391,89.8245,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Kagdi,14,Red,271
+ENP486,23.4113,89.8493,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,21,Red,317
+ENP484,23.4146,89.8494,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,20,Red,327
+ENP488,23.4137,89.8503,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,15,Red,264
+ENP492,23.415,89.851,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Harina,24,Red,288
+ENP493,23.4133,89.8514,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Khalishpatti,15,Red,535
+ENP491,23.4143,89.8516,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Harina,17,Red,367
+ENP490,23.4132,89.8522,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Harina,33,Red,149
+ENP489,23.4125,89.8523,Dhaka,Faridpur,Saltha,Majhardia,Dhaka,Faridpur,Saltha,Majhardia,Harina,49,Red,160
