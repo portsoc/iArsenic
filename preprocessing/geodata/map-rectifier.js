@@ -43,3 +43,30 @@ function main(options) {
 }
 
 main(cli.getParameters());
+
+function rectifyTopojsonMap(inputFilePath) {
+  const inputFile = JSON.parse(fs.readFileSync(inputFilePath));
+  const inputMap = topojson.feature(inputFile, inputFile.objects.map);
+
+  for (let i = 0; i < inputMap.features.length; i++) {
+    // p is a reference
+    const p = inputMap.features[i].properties;
+    if (!p.mou) {
+      if (!p.uni) {
+        if (!p.upa) {
+          if (!p.dis) {
+            inputMap.features[i].properties.dis = p.div;
+          }
+          inputMap.features[i].properties.upa = p.dis;
+        }
+        inputMap.features[i].properties.uni = p.upa;
+      }
+      inputMap.features[i].properties.mou = p.uni;
+    }
+  }
+  return inputMap;
+}
+
+module.exports = {
+  rectifyTopojsonMap,
+};
