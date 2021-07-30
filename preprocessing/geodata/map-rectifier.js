@@ -39,11 +39,13 @@ function main(options) {
     }
   }
 
+  // writes GEOJson NOT TopoJSON
   fs.writeFileSync(options.output, JSON.stringify(inputMap));
 }
 
 main(cli.getParameters());
 
+// use as a preloader
 function rectifyTopojsonMap(inputFilePath) {
   const inputFile = JSON.parse(fs.readFileSync(inputFilePath));
   const inputMap = topojson.feature(inputFile, inputFile.objects.map);
