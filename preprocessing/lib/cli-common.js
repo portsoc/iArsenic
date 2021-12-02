@@ -1,7 +1,13 @@
+/*
+ * This script reads a model id, an input CSV file, and an output file
+ * or directory. It then loads the corresponding model and returns it
+ * along with the parameters.
+ */
+
 const commandLineArgs = require('command-line-args');
 const path = require('path');
 
-const DEFAULT_MODEL = 'model4';
+const DEFAULT_MODEL = 'model5';
 
 const optionDefinitions = [
   { name: 'help', alias: 'h', type: Boolean },
@@ -23,6 +29,16 @@ const optionDefinitions = [
     alias: 'o',
     type: String,
   },
+  {
+    name: 'inputFile',
+    alias: 'i',
+    type: String,
+  },
+  {
+    name: 'corrections',
+    alias: 'c',
+    type: String,
+  },
 ];
 
 function usage() {
@@ -34,13 +50,27 @@ Options:
 
   -m modelid
   --model=modelid          Use model <modelid> instead of the default.
-                           Too see what models are available, look in models/
+                           To see what models are available, look in models/
 
   [-p] path1 path2 ...
                            Use the given CSV files as input data.
 
-  -o directory             If any files are produced, they will be in <directory>.
+  -c file                  (in load-data.js, when loading data for processing)
+                           The file with name corrections to apply on the loaded data.
+
+  -i file                  (only in find-name-corrections.js, see data-import/README.md)
+                           An input CSV file that may contain incorrect regions.
+
+  -o directory             (everywhere except in find-name-corrections.js)
+                           If any files are produced, they will be in <directory>.
                            Without -o, the content of those files will go in the console.
+
+  -o file                  (in find-name-corrections.js)
+                           The file where to store name corrections.
+                           The contents of the file will be loaded on start and the
+                           name corrections already there will be used when loading
+                           the -i file.
+
 `.trim());
 }
 

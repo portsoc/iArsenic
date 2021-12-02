@@ -1,0 +1,27 @@
+{
+  "name": "preprocessing",
+  "version": "0.0.1",
+  "description": "Instant Arsenic screening of hand pump tubewells in Bangladesh",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/datastore": "^4.1.3",
+    "colors": "^1.4.0",
+    "command-line-args": "^5.1.1",
+    "csv-parse": "^4.3.3",
+    "csv-stringify": "^5.5.0",
+    "d3": "^5.15.0",
+    "prompt-sync": "^4.2.0",
+    "simple-google-openid": "^0.3.0",
+    "topojson": "^3.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0",
+    "eslint-config-portsoc": "^0.8.1",
+    "jest": "^24.4.0"
+  },
+  "scripts": {
+    "test": "jest preprocessing/tests/",
+    "lint": "eslint ."
+  }
+}

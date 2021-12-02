@@ -23,6 +23,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
 
   if (!union) {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
+    return retval;
   }
 
   if (depth < 90) {
@@ -33,13 +34,16 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
     arsenicValues = union.d;
   }
 
+  retval.lowerQ = round(arsenicValues.lo, 10, 1);
+  retval.upperQ = round(arsenicValues.up, 10, 1);
+
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
     // Flood is not yet a provided input so we have commented it out ready for future implementation
 
     // const floodWarning =
-    //   (depth <= 15 && flood === 'No')
+    //   (depth <= 15.3 && flood === 'No')
     //     ? ' but may be vulnerable to nitrate and pathogens'
     //     : '';
     const floodWarning = '';
@@ -70,7 +74,7 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil) 
         ? 'and concentration may be around'
         : ', a chemical test is needed as concentration can be high, ranging around';
 
-    retval.message = 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(arsenicValues.lo, 10, 1) + ' to ' + round(arsenicValues.up, 10, 1) + ' µg/L ';
+    retval.message = 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + retval.lowerQ + ' to ' + retval.upperQ + ' µg/L ';
   } else {
     retval.message = 'We are unable to assess your tubewell with the information you supplied, please fill all the sections';
   }

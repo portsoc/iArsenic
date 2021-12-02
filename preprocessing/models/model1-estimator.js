@@ -29,13 +29,18 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
       ? 'not enough data '
       : '';
 
+  retval.lowerQ = round(union.lower_quantile_under_90, 10, 1);
+  retval.upperQ = round(union.upper_quantile_under_90, 10, 1);
+
   if (colour === 'Black' || utensil === 'No colour change to slightly blackish') {
     const warningSeverity = (depth > 150) ? 'HIGHLY ' : '';
 
     const floodWarning =
-      (depth <= 15 && flood === 'No')
+      (depth <= 15.3 && flood === 'No')
         ? ' but may be vulnerable to nitrate and pathogens'
         : '';
+
+    retval.severity = 'safe';
 
     retval.message = notEnoughData + 'Your tubewell is ' + warningSeverity + 'likely to be arsenic-safe' + floodWarning;
   } else if (colour === 'Red' | utensil === 'Red') {
@@ -44,27 +49,32 @@ function produceEstimate(divisions, div, dis, upa, uni, depth, colour, utensil, 
         (union.as_median_under_90 > 20 && union.as_median_under_90 <= 50)
           ? 'likely to be Polluted'
           : (union.as_median_under_90 > 50 && union.as_median_under_90 <= 200)
-            ? 'likely to be HIGHLY Polluted'
-            : (union.as_median_under_90 > 200)
-              ? 'likely to be SEVERELY Polluted'
-              : 'likely to be arsenic-safe';
+              ? 'likely to be HIGHLY Polluted'
+              : (union.as_median_under_90 > 200)
+                  ? 'likely to be SEVERELY Polluted'
+                  : 'likely to be arsenic-safe';
 
       const chemTestStatus =
         (union.as_max_under_90 <= 100)
           ? 'and concentration may be around'
           : ', a chemical test is needed as concentration can be high, ranging around';
 
-      retval.message = notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + round(union.lower_quantile_under_90, 10, 1) + ' to ' + round(union.upper_quantile_under_90, 10, 1) + ' µg/L ';
+      retval.severity = (union.as_median_under_90 <= 20) ? 'safe' : 'polluted';
+      retval.message = notEnoughData + 'Your tubewell is ' + pollutionStatus + ' ' + chemTestStatus + ' ' + retval.lowerQ + ' to ' + retval.upperQ + ' µg/L ';
     } else if (depth <= 150) {
+      retval.severity = (union.as_mean_over_90 < 50) ? 'safe' : 'polluted';
+
       if (union.as_mean_over_90 >= 50) {
         retval.message = notEnoughData + 'Your tubewell is highly likely to be Polluted.';
       } else {
         retval.message = notEnoughData + 'Your tubewell may be arsenic-safe.';
       }
     } else {
+      retval.severity = 'safe';
       retval.message = notEnoughData + 'Your tubewell is HIGHLY likely to be arsenic-safe';
     }
   }
+
   return retval;
 }
 

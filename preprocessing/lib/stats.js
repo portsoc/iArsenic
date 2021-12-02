@@ -1,3 +1,7 @@
+/*
+ * Basic stats functions
+ */
+
 // return quantile of the sorted sample (this is type-1 quantile in R)
 // the parameter `sorted` must be a sorted array of numbers
 // and p must be between 0 and 1 inclusive
@@ -17,7 +21,7 @@ function max(sorted) {
 }
 
 function median(sorted) {
-  let half = Math.floor(sorted.length / 2);
+  const half = Math.floor(sorted.length / 2);
 
   if (sorted.length % 2 !== 0) {
     return sorted[half];

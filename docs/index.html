@@ -18,7 +18,7 @@
     <img id="logo" src="img/logo.png" alt="iArsenic Logo">
 
     <h1>iArsenic</h1>
-    <h2>Instant Arsenic screening of hand pump tubewells in Bangladesh, version&nbsp;<time datetime="2019-07-26">2019-07-26</time></h2>
+    <h2>Instant Arsenic screening of hand pump tubewells in Bangladesh, version&nbsp;<time datetime="2021-07-27">2021-07-27</time></h2>
   </header>
 
   <main>
@@ -41,6 +41,11 @@
 
         <label for="unionDD">Union:</label>
         <select id="unionDD" disabled>
+          <option value=''>&hellip;</option>
+        </select>
+
+        <label for="mouzaDD">Mouza:</label>
+        <select id="mouzaDD" disabled>
           <option value=''>&hellip;</option>
         </select>
       </section>
@@ -114,17 +119,33 @@
         <p class="hint">If your well is over 1000ft-deep, please enter 1000ft.</p>
       </section>
 
+      <section id="floodingSection" class="hidden">
+        <h2>Is this area susceptible to flooding?</h2>
+
+        <fieldset>
+          <label class="radioLabel">
+            <input type="radio" id="floodingYes" name="flooding" value="yes">
+            Yes
+          </label>
+
+          <label class="radioLabel">
+            <input type="radio" id="floodingNo" name="flooding" value="no">
+            No
+          </label>
+        </fieldset>
+      </section>
+
       <section id="drinkingSection">
         <h2>Is anyone drinking from this well?</h2>
 
         <fieldset>
           <label class="radioLabel">
-            <input type="radio" id="yes" name="drink" value="yes">
+            <input type="radio" id="drinkingYes" name="drink" value="yes">
             Yes
           </label>
 
           <label class="radioLabel">
-            <input type="radio" id="no" name="drink" value="no">
+            <input type="radio" id="drinkingNo" name="drink" value="no">
             No
           </label>
         </fieldset>
@@ -141,7 +162,7 @@
     <section id="assessment" class="hidden">
       <h2>Below is your assessment</h2>
 
-      <p id="result" class="loading" placeholder="Please wait&hellip;"></p>
+      <p id="result" class="loading" placeholder="Processing&hellip;"></p>
 
       <section id="disclaimer">
         <h2>Disclaimer:</h2>
@@ -161,7 +182,6 @@
   </main>
 
   <script type="text/javascript" src="script.js"></script>
-  <script type="text/javascript" src="aggregate-data.js"></script>
   <script type="text/javascript" src="dropdown-data.js"></script>
   <script type="text/javascript" src="estimator.js"></script>
 </body>
