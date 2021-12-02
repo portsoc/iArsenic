@@ -45,12 +45,18 @@ function runTests(allModels, div, dis, upa, uni, mou, depth, colour, arsenic) {
     `${arsenic},${modelOutputs.join()}`);
 }
 
+// const ALL_MODELS = ['model1', 'model3', 'model4', 'model5'];
+const ALL_MODELS = ['model5'];
+
+// const ALL_MODELS_ABBR = ['m1', 'm3', 'm4', 'm5'];
+const ALL_MODELS_ABBR = ['m5'];
+
 function getModels(data) {
   const modelDir = path.join(__dirname, '..', 'models');
   const retval = {};
 
   try {
-    for (const model of ['model1', 'model3', 'model4', 'model5']) {
+    for (const model of ALL_MODELS) {
       const preprocessor = require(path.join(modelDir, `${model}-preprocessor.js`));
       const estimator = require(path.join(modelDir, `${model}-estimator.js`));
 
@@ -74,11 +80,10 @@ function main(options) {
 
   const allModels = getModels(data);
 
-  console.log('div,dis,upa,uni,mou,depth,stain,arsenic,' +
-    'm1-msg,m1-severity,m1-lowerQ,m1-upperQ,m1-estimate,' +
-    'm3-msg,m3-severity,m3-lowerQ,m3-upperQ,m3-estimate,' +
-    'm4-msg,m4-severity,m4-lowerQ,m4-upperQ,m4-estimate,' +
-    'm5-msg,m5-severity,m5-lowerQ,m5-upperQ,m5-estimate');
+  const modelColumns = ['-msg', '-severity', '-lowerQ', '-upperQ', '-estimate'];
+  const modelColumnNames = ALL_MODELS_ABBR.flatMap(abbr => modelColumns.map(col => abbr + col)).join(',');
+
+  console.log('div,dis,upa,uni,mou,depth,stain,arsenic,' + modelColumnNames);
 
   const vgqData = parse(fs.readFileSync(DATA_PATH), CSV_PARSE_OPTIONS);
   for (const well of vgqData) {
@@ -95,8 +100,8 @@ function main(options) {
   }
 }
 
-console.error('As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.');
-process.exit(-1);
+// console.error('As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.');
+// process.exit(-1);
 
 /* eslint-disable-next-line no-unreachable */
 main(cli.getParameters());
