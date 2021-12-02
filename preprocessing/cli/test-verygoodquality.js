@@ -23,8 +23,8 @@ function discernAccuracy(arsenic, upperQ, lowerQ) {
   return (lowerQ > arsenic)
     ? 'overestimate'
     : (upperQ < arsenic)
-        ? 'underestimate'
-        : 'accurate';
+      ? 'underestimate'
+      : 'accurate';
 }
 
 function runTests(allModels, div, dis, upa, uni, mou, depth, colour, arsenic) {
