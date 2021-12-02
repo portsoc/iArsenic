@@ -10,7 +10,7 @@
 const parse = require('csv-parse/lib/sync');
 const path = require('path');
 const fs = require('fs');
-const csvLoader = require('../lib/load-data');
+const csvLoader = require('../lib/load-data').loadData;
 const cli = require('../lib/cli-common');
 
 const DATA_PATH = path.join(__dirname, '..', '..', 'data', 'vgqd', 'vgqd-all-data.csv');
