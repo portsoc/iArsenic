@@ -134,7 +134,7 @@ function gatherInputs() {
     return null;
   }
 
-  if (!retval.flooding && depthOutput.value < 50 && floodingSection.classList.contains('invalid')) {
+  if (!retval.flooding && depthOutput.value <= 50 && floodingSection.classList.contains('invalid')) {
     scrollToSection(floodingSection);
     return null;
   }
@@ -247,7 +247,7 @@ function displayElement(element, show) {
 }
 
 function showOrHideFlooding() {
-  displayElement(floodingSection, depthOutput.value < 50);
+  displayElement(floodingSection, depthOutput.value <= 50);
 }
 
 function validateInputs() {
