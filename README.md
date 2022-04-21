@@ -36,20 +36,3 @@ Web-based application to estimate arsenic levels in untested wells in Bangladesh
   * in a Google Cloud Function
 
 Original scripts in R can now be found [here](https://github.com/portsoc/iArsenic/releases/tag/rscripts).
-
-## Deploying a Model
-
-The following steps are taken to deploy a new model as the default. It is assumed that the model estimator and preprocessor files are located in `preprocessing/models/` and are named like so:
-
-* `model#-preprocessor.js`
-* `model#-estimator.js`
-
-where '`#`' is the model number.
-
-1. In `preprocessing/lib/cli-common.js` there is a global variable called `DEFAULT_MODEL` which should be set to a string like `model#` _(note: there is no dash there)_
-
-2. Next use the following commands in a terminal to deploy the new default to the UI.
-
-   * `node preprocessing/cli/produce-aggregate-data-files.js -o docs`
-
-   * This will replace the preprocessed data and the estimator script in the web files. **If done on the `master` branch, this will affect the running app.**

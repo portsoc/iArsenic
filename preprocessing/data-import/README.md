@@ -1,16 +1,16 @@
 ## About
 
-The purpose of the files in data-import is to make importing well data in the .RData
-format more straightforward.
+We originally received well data in R (in the `.RData` file format), which needs
+to be converted into CSV; files in `data-import/` do this conversion.
 
-To use .RData it needs to be converted to .csv format and we need to ensure the names
-of the regions in the new data match the names in our current data.#
+To use `.RData` it needs to be converted to `.csv` format and we need to ensure the names
+of the regions in the new data match the names in our current `data.#`
 
-The .RData is converted to .csv with the rdata-to-csv.r and consolidate-csv.js scripts.
+The `.RData` is converted to `.csv` with the `rdata-to-csv.r` and `consolidate-csv.js` scripts.
 
-Name corrections for the new data is generated using the find-name-corrections.js script.
+Name corrections for the new data is generated using the `find-name-corrections.js` script.
 
-These name corrections can then be used by /iArsenic/preprocessing/lib/load-data.js to apply
+These name corrections can then be used by `preprocessing/lib/load-data.js` to apply
 to any given dataset currently being loaded.
 
 Having a consistent regions names is important so we don't mistake wells in the same
@@ -55,6 +55,4 @@ iArsenic/preprocessing/data-import
 ├── rdata-to-csv.r                // Converts .RData files to .csv files
 ├── r-data-csv/                   // Stores .csv files being imported
 └── r-data-rdata/                 // Stores .RData files being imported
-
-2 directories, 4 files
 ```

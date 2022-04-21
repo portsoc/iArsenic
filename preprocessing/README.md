@@ -1,52 +1,75 @@
 # iArsenic Data Preprocessing
 
-## Requirements
+## Requirements on input data files
 
 * Ensure the csv headers are as follows (**Case matters!**):
   * `Division,District,Upazila,Union,Mouza,Depth,Arsenic`
 
 ## How to Use It
 
-* Run ./cli/produce-aggregate-data-files.js
-  * This will parse the csv file (using load-data.js)
-    * If no file path is provided, it will use the default files in ../data/
-  * Produces geographical hierarchy data
+When the input data or the processing model is updated (see also the last sections in this page), you should do this:
+
+* Run `./cli/produce-aggregate-data-files.js`
+  * This will parse the csv file (using `load-data.js`)
+    * If no file path is provided, it will use the default files in `../data/`
+  * Produces geographical hierarchy data `dropdown-data.js`
   * Model-specific pre-processor will:
-    * Describe model-specific data structure
-    * Prepare the aggregate data from the output of load-data.js (described below)
-  * Puts a copy of <modelid>-estimator.js in ./docs/estimator.js
-  * Puts a copy of the geographical hierarchy in ./docs/dropdown-data.js
+    * Prepare the aggregate data from the output of `load-data.js` (described below)
+  * Puts a copy of `<modelid>-estimator.js` in `./docs/estimator.js`
+  * Puts a copy of the geographical hierarchy in `./docs/dropdown-data.js`
+* Commit the changes in `docs/` and push to GitHub to deploy (if appropriate)
 
 ## Models
 
 1. original model from R scripts
-  * Black is safe
-  * over 150m deep is safe
-  * wells shallower than 90m decided by median
-  * wells 90-150m deep decided by mean
-  * too few wells => get wells from bigger administrative region
+   * Black is safe
+   * over 150m deep is safe
+   * wells shallower than 90m decided by median
+   * wells 90-150m deep decided by mean
+   * too few wells => get wells from bigger administrative region
 2. ~~skipped~~
 3. using only median
-  * Black is safe
-  * 0-90m, 90-150m, 150m+ decided by median
-  * too few wells => get wells from bigger administrative region
+   * Black is safe
+   * 0-90m, 90-150m, 150m+ decided by median
+   * too few wells => get wells from bigger administrative region
 4. more stratification
-  * Black is safe
-  * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
-  * too few wells => get wells from bigger administrative region
+   * Black is safe
+   * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
+   * too few wells => get wells from bigger administrative region
 5. more sensible widening of location to get enough wells
-  * Black is safe
-  * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
-  * too few wells => get wells from deeper stratum and nearby geographical locations (going by centroids) – details in model5-preprocessor
-  * if depth is <=15.3m, there may be flooding :
-    * if there is flooding AND the well is red, we use the arsenic 95 percentile of available data of the stratum
-    * if there is no flooding AND the well is red, we use the arsenic 75 percentile of available data of the stratum
-    * if the well is black, we use the arsenic 25 percentile of available data of the stratum no matter if there is flooding or not
+   * Black is safe
+   * 0-15.3m, 15.3-45m, 45-65m, 65-90m, 90-150m, 150m+ all decided by median
+   * too few wells => get wells from deeper stratum and nearby geographical locations (going by centroids) – details in model5-preprocessor
+   * if depth is <=15.3m, there may be flooding :
+     * if there is flooding AND the well is red, we use the arsenic 95 percentile of available data of the stratum
+     * if there is no flooding AND the well is red, we use the arsenic 75 percentile of available data of the stratum
+     * if the well is black, we use the arsenic 25 percentile of available data of the stratum no matter if there is flooding or not
 
 
-more possible models:
+For every model, Model-specific pre-processor will:
+  * Describe model-specific data structure
+
+More possible models:
 * all models with 10% or so overlap between strata
 * machine learning
+
+### Deploying a Model
+
+The following steps are taken to deploy a new model as the default. It is assumed that the model estimator and preprocessor files are located in `preprocessing/models/` and are named like so:
+
+* `model#-preprocessor.js`
+* `model#-estimator.js`
+
+where '`#`' is the model number.
+
+1. In `preprocessing/lib/cli-common.js` there is a global variable called `DEFAULT_MODEL` which should be set to a string like `model#` _(note: there is no dash there)_
+
+2. Next use the following commands in a terminal to deploy the new default to the UI.
+
+   * `node preprocessing/cli/produce-aggregate-data-files.js -o docs`
+
+   * This will replace the preprocessed data and the estimator script in the web files. **If done on the `master` branch, this will affect the running app.**
+
 
 ## File Structure
 
@@ -59,13 +82,13 @@ iArsenic/preprocessing
 ├── lib/                // Various tools for converting and fixing data
 ├── models/             // Stores the models used to find the arsenic levels
 └── tests/              // Tests for functions in ./lib/stats.js
-
-6 directories, 1 file
 ```
 
 ## Output Structures
 
 ### load-data.js Output
+
+When we parse input CSV data, we give it to the rest of the scripts in this form:
 
 ```
 const divisions = {
@@ -88,7 +111,7 @@ const divisions = {
                   'mouza name': {
                   wells: [],
                   name: 'mouza name',
-              },
+                },
               },
             },
           },
@@ -103,6 +126,8 @@ const divisions = {
 ```
 
 ### dropdown-data.js Output
+
+When we generate the geographical hierarchy from the available input data, we create a JSON file like this, which is then used by the client-side scripts to let the user select their region.
 
 ```
 const dropdownData = [
