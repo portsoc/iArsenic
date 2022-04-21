@@ -156,6 +156,7 @@ function sortWells(locationArr) {
     region[stratum].sort(numericalCompare);
     if (region[stratum + 'Wider']) region[stratum + 'Wider'].sort(numericalCompare);
   }
+  if (region.s15FloodWider) region.s15FloodWider.sort(numericalCompare);
 }
 
 function computeWellStats(locationArr) {
