@@ -1,0 +1,171 @@
+div,dis,upa,uni,mou,depth,stain,arsenic,m5-msg,m5-severity,m5-lowerQ,m5-upperQ,m5-estimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Medinipur",32,Red,5,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,overestimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Medinipur",40,Red,5,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,overestimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Medinipur",0,Red,8.3,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,overestimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Medinipur",27,Red,10.7,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,underestimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Medinipur",44,Red,15,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,underestimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Sankhari",14,Black,0.3,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,overestimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Sankhari",23,Red,18.4,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,underestimate
+"Khulna","Chuadanga","Jiban Nagar","Simanta","Sankhari",30,Red,24.5,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,underestimate
+"Khulna","Chuadanga","Jiban Nagar","Banka","Pratappur",50,Red,66,"Your tubewell is likely to be polluted and concentration may be around 0 to 90 µg/L ",polluted,,90,accurate
+"Khulna","Chuadanga","Jiban Nagar","Banka","Pratappur",20,Red,282,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 130 µg/L ",polluted,10,130,underestimate
+"Khulna","Chuadanga","Jiban Nagar","Banka","Pratappur",24,Red,6,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 130 µg/L ",polluted,10,130,overestimate
+"Khulna","Chuadanga","Jiban Nagar","Banka","Panara Sati",32,Red,16,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 60 µg/L ",safe,10,60,accurate
+"Khulna","Chuadanga","Jiban Nagar","Banka","Panara Sati",37,Red,11,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 60 µg/L ",safe,10,60,accurate
+"Khulna","Chuadanga","Jiban Nagar","Banka","Panara Sati",59,Red,8,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 300 µg/L ",safe,10,300,overestimate
+"Khulna","Chuadanga","Jiban Nagar","Banka","Panara Sati",50,Red,10,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 300 µg/L ",safe,10,300,accurate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Chandpur",14,Black,4,"Your tubewell is likely to be arsenic-safe and concentration may be around 30 to 30 µg/L ",safe,30,30,overestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Chandpur",40,Red,99,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 60 µg/L ",safe,10,60,underestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Chandpur",40,Red,140,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 60 µg/L ",safe,10,60,underestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Chandpur",37,Red,139,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 60 µg/L ",safe,10,60,underestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Chandpur",15,Red,82,"Your tubewell is likely to be arsenic-safe and concentration may be around 30 to 30 µg/L ",safe,30,30,underestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Chandpur",17,Black,1,"Your tubewell is likely to be arsenic-safe",safe,10,60,overestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Purandapur",18,Red,8,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,overestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Purandapur",18,Red,67,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,underestimate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Purandapur",40,Red,23.1,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,accurate
+"Khulna","Jhenaidah","Maheshpur","Fatehpur","Purandapur",44,Red,27.1,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,accurate
+"Khulna","Jhenaidah","Maheshpur","S.k.b.(sundarpur)","Bazrapur",15,Red,58,"Your tubewell is likely to be HIGHLY polluted and concentration may be around 10 to 10 µg/L ",highlyPolluted,10,10,underestimate
+"Khulna","Jhenaidah","Maheshpur","S.k.b.(sundarpur)","Bazrapur",21,Black,40.5,"Your tubewell is likely to be arsenic-safe",safe,10,30,underestimate
+"Khulna","Jhenaidah","Maheshpur","S.k.b.(sundarpur)","Bazrapur",46,Red,39.6,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 130 µg/L ",polluted,10,130,accurate
+"Khulna","Jhenaidah","Maheshpur","S.k.b.(sundarpur)","Bazrapur",17,Red,33.7,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 30 µg/L ",safe,10,30,underestimate
+"Khulna","Jhenaidah","Maheshpur","S.k.b.(sundarpur)","Bazrapur",15,Black,2.6,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,overestimate
+"Khulna","Jhenaidah","Kotchandpur","Baluhar","Ramchandrapur",58,Black,0.6,"Your tubewell is likely to be arsenic-safe",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kotchandpur","Baluhar","Ramchandrapur",37,Red,31.8,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 60 µg/L ",polluted,10,60,accurate
+"Khulna","Jhenaidah","Kotchandpur","Baluhar","Ramchandrapur",58,Black,0.3,"Your tubewell is likely to be arsenic-safe",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kotchandpur","Elangi","Elangi",30,Red,42,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 50 µg/L ",safe,10,50,accurate
+"Khulna","Jhenaidah","Kotchandpur","Elangi","Elangi",49,Black,2.8,"Your tubewell is likely to be arsenic-safe",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kotchandpur","Elangi","Elangi",64,Black,5,"Your tubewell is likely to be arsenic-safe",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kotchandpur","Elangi","Elangi",78,Red,87,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 10 to 90 µg/L ",safe,10,90,accurate
+"Khulna","Jhenaidah","Kotchandpur","Elangi","Elangi",55,Black,2,"Your tubewell is likely to be arsenic-safe",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kotchandpur","Elangi","Elangi",58,Black,0,"Your tubewell is likely to be arsenic-safe",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kotchandpur","Elangi","Elangi",44,Black,0,"Your tubewell is likely to be arsenic-safe",safe,10,50,overestimate
+"Khulna","Jhenaidah","Kaliganj","Trilochanpur","Bara Ghighati",55,Black,59,"Your tubewell is likely to be arsenic-safe",safe,10,10,underestimate
+"Khulna","Jhenaidah","Kaliganj","Trilochanpur","Bara Ghighati",56,Red,24,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 10 µg/L ",safe,10,10,underestimate
+"Khulna","Jhenaidah","Kaliganj","Trilochanpur","Bara Ghighati",50,Black,29,"Your tubewell is likely to be arsenic-safe",safe,10,10,underestimate
+"Khulna","Jhenaidah","Kaliganj","Trilochanpur","Bara Ghighati",43,Black,43,"Your tubewell is likely to be arsenic-safe",safe,10,10,underestimate
+"Khulna","Jhenaidah","Kaliganj","Trilochanpur","Bara Ghighati",50,Black,0,"Your tubewell is likely to be arsenic-safe",safe,10,10,overestimate
+"Khulna","Jhenaidah","Kaliganj","Simla Rokonpur","Ishwarba",24,Red,6,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kaliganj","Simla Rokonpur","Ishwarba",27,Red,8,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kaliganj","Simla Rokonpur","Ishwarba",38,Red,11,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Simla Rokonpur","Ishwarba",43,Black,7,"Your tubewell is likely to be arsenic-safe",safe,10,30,overestimate
+"Khulna","Jhenaidah","Kaliganj","Niamatpur","Ghoshnagar",56,Black,0.2,"Your tubewell is likely to be arsenic-safe",safe,10,50,overestimate
+"Khulna","Jhenaidah","Kaliganj","Niamatpur","Ghoshnagar",30,Red,52.4,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,underestimate
+"Khulna","Jhenaidah","Kaliganj","Niamatpur","Ghoshnagar",52,Red,7.3,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 50 µg/L ",safe,10,50,overestimate
+"Khulna","Jhenaidah","Kaliganj","Niamatpur","Ghoshnagar",49,Red,36.3,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 50 µg/L ",safe,10,50,accurate
+"Khulna","Jhenaidah","Kaliganj","Niamatpur","Niamatpur",43,Red,36.7,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 30 µg/L ",safe,10,30,underestimate
+"Khulna","Jhenaidah","Kaliganj","Niamatpur","Niamatpur",52,Red,30.6,"Your tubewell is likely to be arsenic-safe and concentration may be around 10 to 50 µg/L ",safe,10,50,accurate
+"Khulna","Jhenaidah","Kaliganj","Niamatpur","Raghunathpur",56,Red,70.4,"Your tubewell is likely to be arsenic-safe and concentration may be around 0 to 30 µg/L ",safe,,30,underestimate
+"Khulna","Jhenaidah","Kaliganj","Kola","Kola",43,Black,0.3,"Your tubewell is likely to be arsenic-safe",safe,,10,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Kola",52,Black,0.2,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Kola",49,Black,0.1,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Kola",49,Black,0.4,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Kola",18,Red,40.4,"Your tubewell is likely to be arsenic-safe and concentration may be around 0 to 10 µg/L ",safe,,10,underestimate
+"Khulna","Jhenaidah","Kaliganj","Kola","Madhyapur",55,Red,91,"Your tubewell is likely to be arsenic-safe and concentration may be around 0 to 30 µg/L ",safe,,30,underestimate
+"Khulna","Jhenaidah","Kaliganj","Kola","Madhyapur",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Khalkula",44,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,10,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Madhyapur",41,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,60,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Pariat",49,Black,0.3,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Sarabaria",49,Black,248.9,"Your tubewell is likely to be arsenic-safe",safe,,30,underestimate
+"Khulna","Jhenaidah","Kaliganj","Kola","Sarabaria",64,Black,0.2,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Sarabaria",49,Black,0.3,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Sarabaria",46,Black,0.1,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Jhenaidah","Kaliganj","Kola","Sarabaria",55,Black,0.5,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Dhaneshwargati","Tilkhari",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Dhaneshwargati","Tilkhari",29,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,60,accurate
+"Khulna","Magura","Shalikha","Dhaneshwargati","Tilkhari",50,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Dhaneshwargati","Tilkhari",52,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Dhaneshwargati","Tilkhari",58,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Dhaneshwargati","Tilkhari",55,Black,10,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Dhaneshwargati","Singra",61,Black,9,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Bhulbaria",49,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Bhulbaria",49,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Satanfuria",55,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Satanfuria",56,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Satanfuria",49,Red,25,"Your tubewell is likely to be arsenic-safe and concentration may be around 0 to 30 µg/L ",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Satanfuria",50,Black,1030,"Your tubewell is likely to be arsenic-safe",safe,,30,underestimate
+"Khulna","Magura","Shalikha","Talkhari","Satanfuria",50,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Satanfuria",58,Black,4,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Satanfuria",46,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,30,accurate
+"Khulna","Magura","Shalikha","Talkhari","Uchgram",58,Red,75,"Your tubewell is likely to be HIGHLY polluted and concentration may be around 50 to 100 µg/L ",highlyPolluted,50,100,accurate
+"Khulna","Magura","Shalikha","Talkhari","Uchgram",49,Red,102,"Your tubewell is likely to be HIGHLY polluted and concentration may be around 50 to 100 µg/L ",highlyPolluted,50,100,underestimate
+"Khulna","Magura","Shalikha","Talkhari","Uchgram",40,Red,85,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",polluted,,100,accurate
+"Khulna","Magura","Shalikha","Talkhari","Uchgram",52,Red,24,"Your tubewell is likely to be HIGHLY polluted and concentration may be around 50 to 100 µg/L ",highlyPolluted,50,100,overestimate
+"Khulna","Magura","Shalikha","Arpara","Chukinagar",52,Red,119,"Your tubewell is likely to be HIGHLY polluted and concentration may be around 50 to 100 µg/L ",highlyPolluted,50,100,underestimate
+"Khulna","Magura","Shalikha","Arpara","Alokdia",52,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,200,accurate
+"Khulna","Magura","Shalikha","Arpara","Alokdia",49,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,200,accurate
+"Khulna","Magura","Shalikha","Arpara","Alokdia",56,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,200,accurate
+"Khulna","Magura","Shalikha","Arpara","Alokdia",55,Black,3,"Your tubewell is likely to be arsenic-safe",safe,,200,accurate
+"Khulna","Magura","Shalikha","Arpara","Dari Salai",53,Red,17,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 200 µg/L ",safe,,200,accurate
+"Khulna","Magura","Shalikha","Arpara","Dari Salai",55,Black,82,"Your tubewell is likely to be arsenic-safe",safe,,200,accurate
+"Khulna","Magura","Magura Sadar","Kuchiamora","Amuria",37,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Kuchiamora","Amuria",49,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Kuchiamora","Amuria",49,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Kuchiamora","Amuria",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Kuchiamora","Amuria",49,Red,0,"Your tubewell is likely to be HIGHLY polluted and concentration may be around 30 to 60 µg/L ",highlyPolluted,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Baharbagh",61,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Baharbagh",49,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Baharbagh",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Baharbagh",49,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Baharbagh",66,Red,20,"Your tubewell is likely to be polluted and concentration may be around 0 to 90 µg/L ",polluted,,90,accurate
+"Khulna","Magura","Magura Sadar","Gopalgram","Baharbagh",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Sankochkhali",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Sankochkhali",46,Black,1,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Sankochkhali",46,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Sankochkhali",46,Red,8,"Your tubewell is likely to be HIGHLY polluted and concentration may be around 30 to 60 µg/L ",highlyPolluted,30,60,overestimate
+"Khulna","Magura","Magura Sadar","Gopalgram","Gopalgram",61,Black,0,"Your tubewell is likely to be arsenic-safe",safe,30,60,overestimate
+"Khulna","Magura","Mohammadpur","Rajapur","Rajpat",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",46,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",46,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",50,Red,11,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",55,Red,284,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,underestimate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",58,Red,3,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",55,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",55,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",52,Red,4,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Rajapur","Kamaldhari",62,Red,2,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Balidia","Nikharhata",50,Black,3,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Balidia","Sreepur",55,Red,15,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Mohammadpur","Kanainagar",23,Red,54,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,accurate
+"Khulna","Magura","Mohammadpur","Mohammadpur","Kanainagar",107,Black,27,"Your tubewell is likely to be arsenic-safe",safe,,130,accurate
+"Khulna","Magura","Mohammadpur","Mohammadpur","Kanainagar",79,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,90,accurate
+"Khulna","Magura","Mohammadpur","Mohammadpur","Kanainagar",91,Black,108,"Your tubewell is likely to be arsenic-safe",safe,,130,accurate
+"Khulna","Magura","Mohammadpur","Mohammadpur","Kanainagar",91,Black,729,"Your tubewell is likely to be arsenic-safe",safe,,130,underestimate
+"Khulna","Magura","Mohammadpur","Mohammadpur","Kanainagar",50,Red,211,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,underestimate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Umarnagar",15,Red,50,"Your tubewell is likely to be arsenic-safe and concentration may be around 30 to 100 µg/L ",safe,30,100,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Umarnagar",37,Black,1,"Your tubewell is likely to be arsenic-safe",safe,10,100,overestimate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Kamarhela",15,Red,57,"Your tubewell is likely to be arsenic-safe and concentration may be around 60 to 100 µg/L ",safe,60,100,overestimate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Umarnagar",20,Red,28,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Umarnagar",20,Red,384,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",58,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",69,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,300,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",58,Red,109,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,underestimate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",56,Black,1,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",20,Red,44,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 130 µg/L ",safe,,130,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",38,Red,39,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 130 µg/L ",safe,,130,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",67,Black,0,"Your tubewell is likely to be arsenic-safe",safe,,300,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",64,Black,19,"Your tubewell is likely to be arsenic-safe",safe,,100,accurate
+"Dhaka","Faridpur","Boalmari","Gunbaha","Gunbaha",59,Red,69,"Your tubewell is likely to be arsenic-safe, a chemical test is needed as concentration can be high, ranging around 0 to 100 µg/L ",safe,,100,accurate
+"Dhaka","Faridpur","Boalmari","Chatul","Dhulpukuria",34,Red,199,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 0 to 130 µg/L ",polluted,,130,underestimate
+"Dhaka","Faridpur","Boalmari","Chatul","Dhulpukuria",27,Red,167,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 0 to 130 µg/L ",polluted,,130,underestimate
+"Dhaka","Faridpur","Boalmari","Chatul","Dhulpukuria",24,Red,63,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 0 to 130 µg/L ",polluted,,130,accurate
+"Dhaka","Faridpur","Boalmari","Chatul","Dhulpukuria",38,Red,36,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 0 to 130 µg/L ",polluted,,130,accurate
+"Dhaka","Faridpur","Saltha","Jadunandi","Bara Khardia",27,Red,691,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Sonapur","Jogardia",76,Red,206,"Your tubewell is likely to be HIGHLY polluted, a chemical test is needed as concentration can be high, ranging around 0 to 250 µg/L ",highlyPolluted,,250,accurate
+"Dhaka","Faridpur","Saltha","Jadunandi","Bara Khardia",24,Red,447,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Jadunandi","Bara Khardia",15,Red,61,"Your tubewell is likely to be polluted and concentration may be around 50 to 10 µg/L ",polluted,50,10,underestimate
+"Dhaka","Faridpur","Saltha","Sonapur","Jogardia",24,Red,41,"Your tubewell is likely to be HIGHLY polluted, a chemical test is needed as concentration can be high, ranging around 30 to 250 µg/L ",highlyPolluted,30,250,accurate
+"Dhaka","Faridpur","Saltha","Sonapur","Jogardia",24,Red,421,"Your tubewell is likely to be HIGHLY polluted, a chemical test is needed as concentration can be high, ranging around 30 to 250 µg/L ",highlyPolluted,30,250,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Kagdi",14,Red,186,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Kagdi",11,Red,169,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Kagdi",14,Red,161,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Kagdi",15,Red,265,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Kagdi",21,Red,280,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Kagdi",14,Red,271,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Khalishpatti",21,Red,317,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Khalishpatti",20,Red,327,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Khalishpatti",15,Red,264,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Harina",24,Red,288,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Khalishpatti",15,Red,535,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Harina",17,Red,367,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Harina",33,Red,149,"Your tubewell is likely to be polluted, a chemical test is needed as concentration can be high, ranging around 10 to 100 µg/L ",polluted,10,100,underestimate
+"Dhaka","Faridpur","Saltha","Majhardia","Harina",49,Red,160,"Your tubewell is likely to be HIGHLY polluted, a chemical test is needed as concentration can be high, ranging around 50 to 250 µg/L ",highlyPolluted,50,250,accurate

@@ -144,6 +144,8 @@ function stratifyWells(locationArr) {
       region.sD.push(well.arsenic);
     }
   }
+
+  // todo sort here instead of in sortWells
 }
 
 const STRATA = ['s15', 's45', 's65', 's90', 's150', 'sD'];
@@ -188,6 +190,9 @@ function computeWellStats(locationArr) {
         location[`${stratum}_p25`] = stats.quantile(wells, 0.25);
         location[`${stratum}_p75`] = stats.quantile(wells, 0.75);
         location[`${stratum}_p95`] = stats.quantile(wells, 0.95);
+        if (stats.quantile(wells, 0.95) < stats.quantile(wells, 0.75)) {
+          console.log(wells, stats.quantile(wells, 0.95), stats.quantile(wells, 0.75));
+        }
       }
     } else {
       // if we don't have enough well data on a given stratum,
@@ -273,6 +278,8 @@ function getEnoughData(locationArr) {
   location.sDWider = widen(location.sD, ...nearbyWells(100, 'sD'));
 
   cleanNearbyRegions(locationArr);
+
+  // todo sort added well arrays here instead of in sortWells
 }
 
 function computeRegionWidening(locationArr) {
@@ -435,6 +442,7 @@ function extractStats(data, hierarchyPath) {
 function forEachMouza(divisions, f) {
   for (const div of Object.values(divisions)) {
     for (const dis of Object.values(div.districts)) {
+      console.log(div.name, '->', dis.name);
       for (const upa of Object.values(dis.upazilas)) {
         for (const uni of Object.values(upa.unions)) {
           for (const mou of Object.values(uni.mouzas)) {
@@ -448,18 +456,23 @@ function forEachMouza(divisions, f) {
 
 function main(divisions) {
   // split wells into strata
+  console.log(' split wells into strata');
   forEachMouza(divisions, stratifyWells);
 
   // add the region object to each centroid
+  console.log(' add the region object to each centroid');
   annotateCentroids(divisions);
 
   // if a stratum doesn't have enough wells, widen the search
   forEachMouza(divisions, getEnoughData);
+  console.log(" if a stratum doesn't have enough wells, widen the search");
 
   // sort the wells so the stats functions work well
+  console.log(' sort the wells so the stats functions work well');
   forEachMouza(divisions, sortWells);
 
   // get the actual stats
+  console.log(' get the actual stats');
   forEachMouza(divisions, computeWellStats);
 
   const aggregateData = extractStats(divisions, ['division', 'district', 'upazila', 'union', 'mouza']);

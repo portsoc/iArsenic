@@ -3,8 +3,7 @@
  * drive as iArsenic_test_Data_verygoodquality.xlsx
  *
  * IMPORTANT !!!!!!!!!!!!!!!!!!!!!!
- * As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.
- * Also, model 5 deals with flooding, which VGQD doesn't seem to cover either.
+ * Model 5 deals with flooding, which VGQD doesn't seem to cover.
  */
 
 const parse = require('csv-parse/lib/sync');
@@ -23,8 +22,8 @@ function discernAccuracy(arsenic, upperQ, lowerQ) {
   return (lowerQ > arsenic)
     ? 'overestimate'
     : (upperQ < arsenic)
-      ? 'underestimate'
-      : 'accurate';
+        ? 'underestimate'
+        : 'accurate';
 }
 
 function runTests(allModels, div, dis, upa, uni, mou, depth, colour, arsenic) {
@@ -100,8 +99,4 @@ function main(options) {
   }
 }
 
-// console.error('As of 2021-07-20 this cannot work – model 5 now uses mouzas, but the VGQD testing data does not have mouzas.');
-// process.exit(-1);
-
-/* eslint-disable-next-line no-unreachable */
 main(cli.getParameters());
