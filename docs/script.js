@@ -187,6 +187,12 @@ function populateDropdown(dd, nameProp, subDivProp, ddData) {
       opt.subdivisionData = ddData[i][subDivProp];
 
       dd.add(opt);
+
+      if (ddData.length === 1) {
+        opt.selected = true;
+        if (dd.nextDropdown) handleDropDownSelection({ target: dd });
+        if (dd === disDD) loadDistrictData();
+      }
     }
   }
 }
