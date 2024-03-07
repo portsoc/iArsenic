@@ -5,7 +5,7 @@
  * probably for inspection and debugging purposes.
  */
 
-const csvLoader = require('./../lib/load-data');
+const { loadData } = require('./../lib/load-data');
 const cli = require('./../lib/cli-common');
 const colors = require('colors');
 const fs = require('fs');
@@ -29,7 +29,7 @@ function main(cliArgs) {
   console.log(cliArgs.paths);
   if (!checkArguments(cliArgs)) return;
 
-  const inputJson = csvLoader(cliArgs.paths);
+  const inputJson = loadData(cliArgs.paths);
 
   const outputJson = JSON.stringify(inputJson);
   fs.writeFileSync(cliArgs.output, outputJson);
