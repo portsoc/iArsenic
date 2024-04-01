@@ -1,4 +1,4 @@
-import { Box, Button, Card, MobileStepper, Typography } from "@mui/material";
+import { Box, Button, Card, FormControl, FormControlLabel, FormLabel, MobileStepper, Radio, RadioGroup, Typography } from "@mui/material";
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import React from "react";
@@ -56,7 +56,7 @@ export default function Staining(): JSX.Element {
                             <Typography textAlign='center' marginBottom='1rem' variant='h6'>
                                 {step.heading}
                             </Typography>
-                            <Typography height='6rem' marginBottom='1rem' variant='body1'>
+                            <Typography height='7rem' marginBottom='1rem' variant='body1'>
                                 {step.body}
                             </Typography>
                             {Math.abs(activeStep - index) <= 2 ? (
@@ -100,18 +100,26 @@ export default function Staining(): JSX.Element {
                 />
             </Card>
 
-            <Card raised variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
-                <Typography variant='body1'>
-                    placeholder
+            <Card raised variant='outlined' sx={{ width: '100%', margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
+                    Is There Staining On The Platform?
                 </Typography>
+
+                <FormControl>
+                    <RadioGroup name="staining-selector">
+                        <FormControlLabel value="red" control={<Radio />} label="Red" />
+                        <FormControlLabel value="black" control={<Radio />} label="Black" />
+                        <FormControlLabel value="not-sure" control={<Radio />} label="Mixed or Unsure" />
+                    </RadioGroup>
+                </FormControl>
             </Card>
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/briefing`)}
+                onClick={() => navigate(`${config.basePath}/depth`)}
             >
-                Get Started
+                Next Step
             </Button>
         </>
     );
