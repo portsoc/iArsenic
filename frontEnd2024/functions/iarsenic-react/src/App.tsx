@@ -31,7 +31,7 @@ function App() {
             />
 
             <AppBar sx={{ marginBottom: '2rem'}} position='static'>
-                <Stack margin='auto' width='100%' maxWidth='30rem' justifyContent='space-around' direction='row' alignItems='center'>
+                <Stack paddingLeft='2rem' paddingRight='2rem' margin='auto' width='100%' maxWidth='50em' justifyContent='space-between' direction='row' alignItems='center'>
                     <Typography variant='h6'>iArsenic</Typography>
 
                     <Box>
