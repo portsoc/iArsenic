@@ -1,4 +1,4 @@
-import { Container, Typography, Autocomplete, TextField, Button, Stack } from "@mui/material";
+import { Typography, Autocomplete, TextField, Button, Stack } from "@mui/material";
 import config from "../../config";
 import { useEffect, useState } from "react";
 
@@ -111,7 +111,7 @@ export default function Region(): JSX.Element {
                     disabled={!selectedUnion}
                 />
             </Stack>
-            <Button sx={{height: '5rem'}} variant="contained" color="primary">Next Step</Button>
+            <Button sx={{ height: '5rem' }} variant="contained" color="primary">Next Step</Button>
         </Stack>
     );
 }
