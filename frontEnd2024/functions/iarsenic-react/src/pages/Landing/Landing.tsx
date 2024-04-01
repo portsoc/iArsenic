@@ -1,4 +1,6 @@
 import { Button, Card, Stack, Typography } from "@mui/material";
+import config from "../../config";
+import { navigate } from "wouter/use-browser-location";
 
 export default function Landing(): JSX.Element {
     return (
@@ -16,7 +18,11 @@ export default function Landing(): JSX.Element {
                 </Typography>
             </Card>
 
-            <Button sx={{ height: '4rem', margin: '0 1rem' }} variant='contained'>
+            <Button
+                sx={{ height: '4rem', margin: '0 1rem' }}
+                variant='contained'
+                onClick={() => navigate(`${config.basePath}/briefing`)}
+            >
                 Get Started
             </Button>
         </Stack>

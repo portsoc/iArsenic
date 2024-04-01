@@ -32,7 +32,7 @@ function App() {
 
             <AppBar sx={{ marginBottom: '2rem'}} position='static'>
                 <Stack paddingLeft='2rem' paddingRight='2rem' margin='auto' width='100%' maxWidth='50em' justifyContent='space-between' direction='row' alignItems='center'>
-                    <Typography variant='h6'>iArsenic</Typography>
+                    <Typography sx={{ cursor: 'pointer' }} variant='h6'>iArsenic</Typography>
 
                     <Box>
                         <Button
