@@ -1,6 +1,6 @@
 import { Route, Router } from 'wouter'
 import { createTheme } from '@mui/material/styles'
-import { AppBar, ThemeProvider, Toolbar, Typography } from '@mui/material'
+import { AppBar, Avatar, Box, Button, Container, Icon, IconButton, Stack, ThemeProvider, Toolbar, Typography } from '@mui/material'
 import {
     Briefing,
     Depth,
@@ -25,12 +25,38 @@ const Theme = {
 function App() {
     return (
         <ThemeProvider theme={Theme.theme}>
-            <AppBar sx={{ marginBottom: '2rem'}} position='static'>
-                <Toolbar>
-                    <Typography>iArsenic</Typography>
-                </Toolbar>
+            <link
+                rel="stylesheet"
+                href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            />
 
+            <AppBar sx={{ marginBottom: '2rem'}} position='static'>
+                <Stack margin='auto' width='100%' maxWidth='30rem' justifyContent='space-around' direction='row' alignItems='center'>
+                    <Typography variant='h6'>iArsenic</Typography>
+
+                    <Box>
+                        <Button
+                            sx={{ marginRight: '1rem' }}
+                            startIcon={
+                                <Avatar
+                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
+                                    src={`${config.basePath}/british.png`}
+                                />
+                            }
+                        />
+
+                        <Button
+                            startIcon={
+                                <Avatar
+                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
+                                    src={`${config.basePath}/bangladesh.jpg`}
+                                />
+                            }
+                        />
+                    </Box>
+                </Stack>
             </AppBar>
+
             <Router base={config.basePath}>
                 <Route path='/' component={Landing}/>
                 <Route path='/briefing' component={Briefing}/>
