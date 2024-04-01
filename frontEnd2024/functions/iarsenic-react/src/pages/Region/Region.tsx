@@ -1,6 +1,7 @@
 import { Typography, Autocomplete, TextField, Button, Stack } from "@mui/material";
 import config from "../../config";
 import { useEffect, useState } from "react";
+import { navigate } from "wouter/use-browser-location";
 
 interface Union {
     union: string;
@@ -45,16 +46,10 @@ export default function Region(): JSX.Element {
     const unionOptions = selectedUpazila?.unions || [];
 
     return (
-        <Stack
-            maxHeight={'min-content'}
-            maxWidth={'30rem'}
-            margin='auto'
-            spacing={4}
-            direction='column'
-        >
+        <>
             <Typography alignSelf='center' variant="h4">Region</Typography>
 
-            <Stack spacing={2}>
+            <Stack width='90%' spacing={2}>
                 <Autocomplete
                     options={dropdownData}
                     value={selectedDivision}
@@ -111,7 +106,14 @@ export default function Region(): JSX.Element {
                     disabled={!selectedUnion}
                 />
             </Stack>
-            <Button sx={{ height: '5rem' }} variant="contained" color="primary">Next Step</Button>
-        </Stack>
+
+            <Button
+                sx={{ width: '90%', height: '4rem' }}
+                variant='contained'
+                onClick={() => navigate(`${config.basePath}/staining`)}
+            >
+                Next Step
+            </Button>
+        </>
     );
 }

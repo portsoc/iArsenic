@@ -11,6 +11,7 @@ import {
     StainingGuide,
 } from './pages'
 import config from './config'
+import { navigate } from 'wouter/use-browser-location'
 
 const Theme = {
     theme: createTheme({
@@ -32,7 +33,11 @@ function App() {
 
             <AppBar sx={{ marginBottom: '2rem'}} position='static'>
                 <Stack paddingLeft='2rem' paddingRight='2rem' margin='auto' width='100%' maxWidth='50em' justifyContent='space-between' direction='row' alignItems='center'>
-                    <Typography sx={{ cursor: 'pointer' }} variant='h6'>iArsenic</Typography>
+                    <Typography
+                        sx={{ cursor: 'pointer' }}
+                        variant='h6'
+                        onClick={() => navigate(config.basePath)}
+                    >iArsenic</Typography>
 
                     <Box>
                         <Button
@@ -57,15 +62,25 @@ function App() {
                 </Stack>
             </AppBar>
 
-            <Router base={config.basePath}>
-                <Route path='/' component={Landing}/>
-                <Route path='/briefing' component={Briefing}/>
-                <Route path='/depth' component={Depth}/>
-                <Route path='/region' component={Region}/>
-                <Route path='/review' component={Review}/>
-                <Route path='/staining' component={Staining}/>
-                <Route path='/staining-guide' component={StainingGuide}/>
-            </Router>
+            <Stack
+                maxHeight={'min-content'}
+                maxWidth={'30rem'}
+                margin='auto'
+                spacing={4}
+                direction='column'
+                marginBottom='2rem'
+                alignItems='center'
+            >
+                <Router base={config.basePath}>
+                    <Route path='/' component={Landing}/>
+                    <Route path='/briefing' component={Briefing}/>
+                    <Route path='/depth' component={Depth}/>
+                    <Route path='/region' component={Region}/>
+                    <Route path='/review' component={Review}/>
+                    <Route path='/staining' component={Staining}/>
+                    <Route path='/staining-guide' component={StainingGuide}/>
+                </Router>
+            </Stack>
         </ThemeProvider>
     )
 }

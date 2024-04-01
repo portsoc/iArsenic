@@ -1,11 +1,12 @@
-import { Button, Card, Stack, Typography } from "@mui/material";
+import { Button, Card, Typography } from "@mui/material";
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 
 export default function Landing(): JSX.Element {
     return (
-        <Stack paddingBottom={3}>
-            <Typography marginBottom='2rem' textAlign='center' variant='h4'>iArsenic</Typography>
+        <>
+            <Typography marginBottom='1rem' textAlign='center' variant='h4'>iArsenic</Typography>
+
             <Card raised variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
                 <Typography variant='body1'>
                     iArsenic is an estimates the arsenic concentration for a well in Bangladesh based on its geographic region, depth and visible staining on the well. This is achieved by aggregating source data about these wells and using that aggregate data to produce expert system prediction models which are available via a web-app.
@@ -19,12 +20,12 @@ export default function Landing(): JSX.Element {
             </Card>
 
             <Button
-                sx={{ height: '4rem', margin: '0 1rem' }}
+                sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={() => navigate(`${config.basePath}/briefing`)}
             >
                 Get Started
             </Button>
-        </Stack>
+        </>
     )
 }
