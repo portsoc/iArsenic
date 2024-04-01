@@ -11,6 +11,7 @@ import {
     Staining,
     StainingGuide,
 } from './pages'
+import config from './config'
 
 const Theme = {
     theme: createTheme({
@@ -25,7 +26,7 @@ const Theme = {
 function App() {
     return (
         <ThemeProvider theme={Theme.theme}>
-            <Router base='/iarsenic-staging/us-central1/app'>
+            <Router base={config.basePath}>
                 <Route path='/' component={Landing}/>
                 <Route path='/briefing' component={Briefing}/>
                 <Route path='/depth' component={Depth}/>
