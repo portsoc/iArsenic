@@ -1,7 +1,6 @@
-import './App.css'
 import { Route, Router } from 'wouter'
 import { createTheme } from '@mui/material/styles'
-import { ThemeProvider } from '@mui/material'
+import { AppBar, ThemeProvider, Toolbar, Typography } from '@mui/material'
 import {
     Briefing,
     Depth,
@@ -17,7 +16,7 @@ const Theme = {
     theme: createTheme({
         palette: {
             primary: {
-                main: '#f00'
+                main: '#154734'
             }
         }
     })
@@ -26,6 +25,12 @@ const Theme = {
 function App() {
     return (
         <ThemeProvider theme={Theme.theme}>
+            <AppBar sx={{ marginBottom: '2rem'}} position='static'>
+                <Toolbar>
+                    <Typography>iArsenic</Typography>
+                </Toolbar>
+
+            </AppBar>
             <Router base={config.basePath}>
                 <Route path='/' component={Landing}/>
                 <Route path='/briefing' component={Briefing}/>

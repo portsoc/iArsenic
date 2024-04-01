@@ -1,4 +1,4 @@
-import { Container, Typography, Autocomplete, TextField } from "@mui/material";
+import { Container, Typography, Autocomplete, TextField, Button, Stack } from "@mui/material";
 import config from "../../config";
 import { useEffect, useState } from "react";
 
@@ -45,63 +45,73 @@ export default function Region(): JSX.Element {
     const unionOptions = selectedUpazila?.unions || [];
 
     return (
-        <Container>
-            <Typography variant="h6">Hello From Region Page</Typography>
-            <Autocomplete
-                options={dropdownData}
-                value={selectedDivision}
-                onChange={(_, newValue) => {
-                    setSelectedDivision(newValue);
-                    setSelectedDistrict(null);
-                    setSelectedUpazila(null);
-                    setSelectedUnion(null);
-                }}
-                getOptionLabel={(option) => option.division}
-                renderInput={(params) => <TextField {...params} label="Division" />}
-            />
-            <Autocomplete
-                options={districtOptions}
-                value={selectedDistrict}
-                onChange={(_, newValue) => {
-                    setSelectedDistrict(newValue);
-                    setSelectedUpazila(null);
-                    setSelectedUnion(null);
-                }}
-                getOptionLabel={(option) => option.district}
-                renderInput={(params) => <TextField {...params} label="District" />}
-                disabled={!selectedDivision}
-            />
-            <Autocomplete
-                options={upazilaOptions}
-                value={selectedUpazila}
-                onChange={(_, newValue) => {
-                    setSelectedUpazila(newValue);
-                    setSelectedUnion(null);
-                }}
-                getOptionLabel={(option) => option.upazila}
-                renderInput={(params) => <TextField {...params} label="Upazila" />}
-                disabled={!selectedDistrict}
-            />
-            <Autocomplete
-                options={unionOptions}
-                value={selectedUnion}
-                onChange={(_, newValue) => {
-                    setSelectedUnion(newValue);
-                }}
-                getOptionLabel={(option) => option.union}
-                renderInput={(params) => <TextField {...params} label="Union" />}
-                disabled={!selectedUpazila}
-            />
-            <Autocomplete
-                options={selectedUnion ? selectedUnion.mouzas : []}
-                value={selectedMouza}
-                onChange={(_, newValue) => {
-                    setSelectedMouza(newValue);
-                }}
-                getOptionLabel={(mouza) => mouza}
-                renderInput={(params) => <TextField {...params} label="Mouza" />}
-                disabled={!selectedUnion}
-            />
-        </Container>
+        <Stack
+            maxHeight={'min-content'}
+            maxWidth={'30rem'}
+            margin='auto'
+            spacing={4}
+            direction='column'
+        >
+            <Typography alignSelf='center' variant="h4">Region</Typography>
+
+            <Stack spacing={2}>
+                <Autocomplete
+                    options={dropdownData}
+                    value={selectedDivision}
+                    onChange={(_, newValue) => {
+                        setSelectedDivision(newValue);
+                        setSelectedDistrict(null);
+                        setSelectedUpazila(null);
+                        setSelectedUnion(null);
+                    }}
+                    getOptionLabel={(option) => option.division}
+                    renderInput={(params) => <TextField {...params} label="Division" />}
+                />
+                <Autocomplete
+                    options={districtOptions}
+                    value={selectedDistrict}
+                    onChange={(_, newValue) => {
+                        setSelectedDistrict(newValue);
+                        setSelectedUpazila(null);
+                        setSelectedUnion(null);
+                    }}
+                    getOptionLabel={(option) => option.district}
+                    renderInput={(params) => <TextField {...params} label="District" />}
+                    disabled={!selectedDivision}
+                />
+                <Autocomplete
+                    options={upazilaOptions}
+                    value={selectedUpazila}
+                    onChange={(_, newValue) => {
+                        setSelectedUpazila(newValue);
+                        setSelectedUnion(null);
+                    }}
+                    getOptionLabel={(option) => option.upazila}
+                    renderInput={(params) => <TextField {...params} label="Upazila" />}
+                    disabled={!selectedDistrict}
+                />
+                <Autocomplete
+                    options={unionOptions}
+                    value={selectedUnion}
+                    onChange={(_, newValue) => {
+                        setSelectedUnion(newValue);
+                    }}
+                    getOptionLabel={(option) => option.union}
+                    renderInput={(params) => <TextField {...params} label="Union" />}
+                    disabled={!selectedUpazila}
+                />
+                <Autocomplete
+                    options={selectedUnion ? selectedUnion.mouzas : []}
+                    value={selectedMouza}
+                    onChange={(_, newValue) => {
+                        setSelectedMouza(newValue);
+                    }}
+                    getOptionLabel={(mouza) => mouza}
+                    renderInput={(params) => <TextField {...params} label="Mouza" />}
+                    disabled={!selectedUnion}
+                />
+            </Stack>
+            <Button sx={{height: '5rem'}} variant="contained" color="primary">Next Step</Button>
+        </Stack>
     );
 }
