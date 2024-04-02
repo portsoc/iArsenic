@@ -4,19 +4,20 @@ import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 
 export default function Depth(): JSX.Element {
-    const [unit, setUnit] = useState<'meter' | 'feet'>('feet');
+    const [unit, setUnit] = useState<'meters' | 'ft'>('ft');
     const [depth, setDepth] = useState(0);
 
-    function handleSliderChange() {
-        console.log('hello from handleSliderChange');
+    function handleSliderChange(_: React.ChangeEvent<HTMLInputElement>, newValue: number) {
+        setDepth(newValue);
     }
 
-    function handleDepthChange() {
-        console.log('hello from handleDepthChange');
+    function handleDepthChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const value: number = Number(event.target.value);
+        setDepth(value);
     }
 
     function switchUnits() {
-        console.log('hello from switchUnits');
+        setUnit(unit === 'ft' ? 'meters' : 'ft');
     }
 
     return (
@@ -69,22 +70,33 @@ export default function Depth(): JSX.Element {
                     </Box>
                 </Box>
 
-                <Slider sx={{ width: '85%' }} onChange={handleSliderChange}></Slider>
+                <Slider
+                    sx={{ width: '85%' }}
+                    onChange={handleSliderChange}
+                    value={depth}
+                    step={1}
+                    min={0}
+                    max={unit === 'ft' ? 328 : 100}
+                    valueLabelDisplay="auto"
+                />
 
                 <TextField
                     id="outlined-number"
-                    label="Number"
+                    label={unit}
                     type="number"
+                    value={depth}
+                    onChange={handleDepthChange}
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    sx={{ width: '85%' }}
                 />
             </Card>
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/depth`)}
+                onClick={() => navigate(`${config.basePath}/review`)}
             >
                 Review Input
             </Button>
