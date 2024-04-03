@@ -7,8 +7,8 @@ export default function Depth(): JSX.Element {
     const [unit, setUnit] = useState<'meters' | 'ft'>('ft');
     const [depth, setDepth] = useState(0);
 
-    function handleSliderChange(_: React.ChangeEvent<HTMLInputElement>, newValue: number) {
-        setDepth(newValue);
+    function handleSliderChange(_: Event, newValue: number | number[]) {
+        setDepth(newValue as number);
     }
 
     function handleDepthChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -96,7 +96,10 @@ export default function Depth(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/review`)}
+                onClick={() => {
+                    localStorage.setItem('depth', depth.toString());
+                    navigate(`${config.basePath}/review`)
+                }}
             >
                 Review Input
             </Button>

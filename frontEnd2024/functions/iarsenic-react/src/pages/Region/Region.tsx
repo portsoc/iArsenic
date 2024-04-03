@@ -110,7 +110,16 @@ export default function Region(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/staining`)}
+                onClick={() => {
+                    localStorage.setItem('region', JSON.stringify({
+                        division: selectedDivision?.division,
+                        district: selectedDistrict?.district,
+                        upazila: selectedUpazila?.upazila,
+                        union: selectedUnion?.union,
+                        mouza: selectedMouza
+                    }));
+                    navigate(`${config.basePath}/staining`)
+                }}
             >
                 Next Step
             </Button>

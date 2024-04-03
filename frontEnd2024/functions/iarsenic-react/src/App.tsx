@@ -48,6 +48,7 @@ function App() {
                                     src={`${config.basePath}/british.png`}
                                 />
                             }
+                            onClick={() => console.log('update to English')}
                         />
 
                         <Button
@@ -57,6 +58,7 @@ function App() {
                                     src={`${config.basePath}/bangladesh.jpg`}
                                 />
                             }
+                            onClick={() => console.log('update to Bengali')}
                         />
                     </Box>
                 </Stack>

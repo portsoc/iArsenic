@@ -1,7 +1,7 @@
-import { Box, Button, Card, FormControl, FormControlLabel, FormLabel, MobileStepper, Radio, RadioGroup, Typography } from "@mui/material";
+import { Collapse, Box, Button, Card, FormControl, FormControlLabel, MobileStepper, Radio, RadioGroup, Typography } from "@mui/material";
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
-import React from "react";
+import { useState } from "react";
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views-react-18-fix';
@@ -20,7 +20,9 @@ const images = [
 ];
 
 export default function Staining(): JSX.Element {
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [activeStep, setActiveStep] = useState(0);
+    const [wellStaining, setWellStaining] = useState<'red' | 'black' | 'not-sure'>()
+    const [utensilStaining, setUtensilStaining] = useState<'red' | 'black' | 'not-sure'>()
     const maxSteps = images.length;
 
     const handleNext = () => {
@@ -106,18 +108,68 @@ export default function Staining(): JSX.Element {
                 </Typography>
 
                 <FormControl>
-                    <RadioGroup name="staining-selector">
+                    <RadioGroup
+                        onChange={(event) => {
+                            setWellStaining(event.target.value as 'red' | 'black' | 'not-sure')
+                        }}
+                        name="staining-selector"
+                    >
                         <FormControlLabel value="red" control={<Radio />} label="Red" />
                         <FormControlLabel value="black" control={<Radio />} label="Black" />
                         <FormControlLabel value="not-sure" control={<Radio />} label="Mixed or Unsure" />
                     </RadioGroup>
                 </FormControl>
+
+                <Collapse in={wellStaining === 'not-sure'}>
+                    <Typography variant="h5" textAlign='center' style={{ marginTop: '1rem' }}>
+                        Is there staining on your utensil?
+                    </Typography>
+                    <RadioGroup
+                        onChange={(event) => {
+                            setUtensilStaining(event.target.value as 'red' | 'black' | 'not-sure')
+                        }}
+                        name="staining-selector"
+                    >
+                        <FormControlLabel value="red" control={<Radio />} label="Red" />
+                        <FormControlLabel value="black" control={<Radio />} label="No colour change to slightly blackish" />
+                        <FormControlLabel value="not-sure" control={<Radio />} label="No color" />
+                    </RadioGroup>
+                </Collapse>
             </Card>
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/depth`)}
+                onClick={() => {
+                    if (!wellStaining) {
+                        alert('Please select a staining type for the well platform');
+                        return;
+                    }
+
+                    if (wellStaining === 'not-sure' && !utensilStaining) {
+                        alert('Please select a staining type for the utensil');
+                        return;
+                    }
+
+                    if (wellStaining === 'not-sure' && utensilStaining === 'not-sure') {
+                        alert('Please select a staining type for the utensil');
+                        return;
+                    }
+
+                    if (wellStaining === 'red' || wellStaining === 'black') {
+                        localStorage.setItem('staining', JSON.stringify({
+                            staining: wellStaining
+                        }));
+                    }
+
+                    if (utensilStaining === 'red' || utensilStaining === 'black') {
+                        localStorage.setItem('staining', JSON.stringify({
+                            staining: utensilStaining
+                        }));
+                    }
+
+                    navigate(`${config.basePath}/depth`)
+                }}
             >
                 Next Step
             </Button>
