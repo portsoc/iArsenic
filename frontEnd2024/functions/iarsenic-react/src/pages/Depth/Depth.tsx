@@ -97,7 +97,14 @@ export default function Depth(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={() => {
-                    localStorage.setItem('depth', depth.toString());
+                    localStorage.setItem(
+                        'depth',
+                        JSON.stringify({
+                            depth: depth.toString(),
+                            unit: unit,
+                        }),
+                    );
+
                     navigate(`${config.basePath}/review`)
                 }}
             >

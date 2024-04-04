@@ -9,6 +9,7 @@ import {
     Review,
     Staining,
     StainingGuide,
+    Result,
 } from './pages'
 import config from './config'
 import { navigate } from 'wouter/use-browser-location'
@@ -81,6 +82,7 @@ function App() {
                     <Route path='/review' component={Review}/>
                     <Route path='/staining' component={Staining}/>
                     <Route path='/staining-guide' component={StainingGuide}/>
+                    <Route path='/result' component={Result}/>
                 </Router>
             </Stack>
         </ThemeProvider>

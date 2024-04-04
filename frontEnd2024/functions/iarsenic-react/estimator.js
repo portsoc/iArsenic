@@ -89,6 +89,19 @@ function produceEstimate(divisions, div, dis, upa, uni, mou, depth, colour, uten
   const union = upazila?.unions[uni];
   const mouza = union?.mouzas[mou];
 
+  console.log('--------------------------------')
+  console.log(divisions);
+  console.log(div)
+  console.log(dis)
+  console.log(upa)
+  console.log(uni)
+  console.log(mou)
+  console.log(depth)
+  console.log(colour)
+  console.log(utensil)
+  console.log(flood)
+  console.log('--------------------------------')
+
   let retval = {};
 
   if (!mouza) {

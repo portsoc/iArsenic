@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "public/dropdown-data.js"],
+  "include": ["src", "public/dropdown-data.js", "estimator.js"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

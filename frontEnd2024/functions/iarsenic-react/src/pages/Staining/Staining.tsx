@@ -21,8 +21,8 @@ const images = [
 
 export default function Staining(): JSX.Element {
     const [activeStep, setActiveStep] = useState(0);
-    const [wellStaining, setWellStaining] = useState<'red' | 'black' | 'not-sure'>()
-    const [utensilStaining, setUtensilStaining] = useState<'red' | 'black' | 'not-sure'>()
+    const [wellStaining, setWellStaining] = useState<'Red' | 'Black' | 'not-sure'>()
+    const [utensilStaining, setUtensilStaining] = useState<'Red' | 'Black' | 'not-sure'>()
     const maxSteps = images.length;
 
     const handleNext = () => {
@@ -110,12 +110,12 @@ export default function Staining(): JSX.Element {
                 <FormControl>
                     <RadioGroup
                         onChange={(event) => {
-                            setWellStaining(event.target.value as 'red' | 'black' | 'not-sure')
+                            setWellStaining(event.target.value as 'Red' | 'Black' | 'not-sure')
                         }}
                         name="staining-selector"
                     >
-                        <FormControlLabel value="red" control={<Radio />} label="Red" />
-                        <FormControlLabel value="black" control={<Radio />} label="Black" />
+                        <FormControlLabel value="Red" control={<Radio />} label="Red" />
+                        <FormControlLabel value="Black" control={<Radio />} label="Black" />
                         <FormControlLabel value="not-sure" control={<Radio />} label="Mixed or Unsure" />
                     </RadioGroup>
                 </FormControl>
@@ -126,12 +126,12 @@ export default function Staining(): JSX.Element {
                     </Typography>
                     <RadioGroup
                         onChange={(event) => {
-                            setUtensilStaining(event.target.value as 'red' | 'black' | 'not-sure')
+                            setUtensilStaining(event.target.value as 'Red' | 'Black' | 'not-sure')
                         }}
                         name="staining-selector"
                     >
-                        <FormControlLabel value="red" control={<Radio />} label="Red" />
-                        <FormControlLabel value="black" control={<Radio />} label="No colour change to slightly blackish" />
+                        <FormControlLabel value="Red" control={<Radio />} label="Red" />
+                        <FormControlLabel value="Black" control={<Radio />} label="No colour change to slightly blackish" />
                         <FormControlLabel value="not-sure" control={<Radio />} label="No color" />
                     </RadioGroup>
                 </Collapse>
@@ -156,17 +156,10 @@ export default function Staining(): JSX.Element {
                         return;
                     }
 
-                    if (wellStaining === 'red' || wellStaining === 'black') {
-                        localStorage.setItem('staining', JSON.stringify({
-                            staining: wellStaining
-                        }));
-                    }
-
-                    if (utensilStaining === 'red' || utensilStaining === 'black') {
-                        localStorage.setItem('staining', JSON.stringify({
-                            staining: utensilStaining
-                        }));
-                    }
+                    localStorage.setItem('staining', JSON.stringify({
+                        well: wellStaining,
+                        utensil: utensilStaining,
+                    }));
 
                     navigate(`${config.basePath}/depth`)
                 }}
