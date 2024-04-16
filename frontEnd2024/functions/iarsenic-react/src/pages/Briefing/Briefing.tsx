@@ -7,7 +7,7 @@ export default function Briefing(): JSX.Element {
         <>
             <Typography marginBottom='1rem' textAlign='center' variant='h4'>Debriefing</Typography>
 
-            <Card raised variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
                 <Typography variant='body1'>
                     To produce an estimate, the following information is required:
                 </Typography>
@@ -24,7 +24,7 @@ export default function Briefing(): JSX.Element {
                 </List>
             </Card>
 
-            <Card raised variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
                 <Typography variant='body1'>
                     We collect limited anonymous data about your prediction. To see our data policy click here.
                 </Typography>

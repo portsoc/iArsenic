@@ -27,7 +27,6 @@ export default function Depth(): JSX.Element {
             </Typography>
 
             <Card
-                raised
                 variant='outlined'
                 sx={{
                     margin: '0 1rem 1rem 1rem',

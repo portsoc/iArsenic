@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import ReactSpeedometer, { CustomSegmentLabelPosition } from "react-d3-speedometer"
 import config from "../../config";
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Stack, Typography } from "@mui/material";
 import { MessageCode, PredictionData, RegionKey, UtensilStaining, WellStaining } from "../../types";
+import { navigate } from "wouter/use-browser-location";
 
 export default function Result(): JSX.Element {
     const [regionData, setRegionData] = useState<RegionKey>();
     const [depth, setDepth] = useState<number>();
     const [staining, setStaining] = useState<WellStaining>();
     const [predictionData, setPredictionData] = useState()
-    const [estimate, setEstimate] = useState<MessageCode>()
     const [speedoValue, setSpeedoValue] = useState<number>()
     const [warningMessage, setWarningMessage] = useState<string>()
 
@@ -110,7 +110,27 @@ export default function Result(): JSX.Element {
     }, [])
 
     useEffect(() => {
-        if (!regionData || !depth || !staining || !predictionData) return;
+        if (!regionData) {
+            console.error('Region data not found');
+            return;
+        }
+
+        if (!depth) {
+            console.error('Depth data not found');
+            return;
+        }
+
+        if (!staining) {
+            console.error('Staining data not found');
+            return;
+        }
+
+        if (!predictionData) {
+            console.error('Prediction data not found');
+            return;
+        }
+
+        console.log('ready to calculate estimate')
 
         const newEstimate = produceEstimate(
             predictionData,
@@ -121,28 +141,21 @@ export default function Result(): JSX.Element {
             false, // TODO GET THIS FROM USER
         );
 
-        if (newEstimate) {
-            setEstimate(newEstimate);
-        }
-
         const messageCode = (() => {
             switch (newEstimate) {
-                case 0:
+                case 0: // unable to make an estimate
                     return 2;
                 case 1:
                     return 0;
                 case 2:
-                    return 1;
                 case 3:
                     return 1;
                 case 4:
-                    return 2;
                 case 5:
                     return 2;
                 case 6:
                     return 3;
                 case 7:
-                    return 4;
                 case 8:
                     return 4;
             }
@@ -191,10 +204,9 @@ export default function Result(): JSX.Element {
 
         setSpeedoValue(messageCode + 0.5)
         setWarningMessage(estimateMessageDict[messageCode])
-
     }, [regionData, depth, staining, predictionData]);
 
-    if (!estimate) {
+    if (!regionData) {
         return (
             <h1>Region data not found</h1>
         )
@@ -257,31 +269,28 @@ export default function Result(): JSX.Element {
                 </Stack>
             </Grid>
 
-            {estimate ? (
-                <Stack sx={{ alignItems: 'center' }}>
-                    <Grid item xs={12}>
-                        <Box textAlign='center'>
-                            <Paper elevation={3} sx={{ padding: '20px' }}>
-                                <Typography variant="h6" gutterBottom>
-                                    Estimate Message:
-                                </Typography>
-                                <Typography variant="body1" sx={{ marginBottom: '20px' }}>
-                                    {warningMessage}
-                                </Typography>
-                                {/* <Typography variant="subtitle1">
-                                    Severity: <strong>{warningMessage}</strong>
-                                </Typography> */}
-                            </Paper>
-                        </Box>
-                    </Grid>
-                </Stack>
-            ) : (
+            <Stack sx={{ alignItems: 'center' }}>
                 <Grid item xs={12}>
-                    <Typography variant="h6" textAlign="center">
-                        Calculating estimate...
-                    </Typography>
+                    <Box textAlign='center'>
+                        <Paper elevation={3} sx={{ padding: '20px' }}>
+                            <Typography variant="h6" gutterBottom>
+                                Estimate Message:
+                            </Typography>
+                            <Typography variant="body1" sx={{ marginBottom: '20px' }}>
+                                {warningMessage}
+                            </Typography>
+                        </Paper>
+                    </Box>
                 </Grid>
-            )}
+            </Stack>
+
+            <Button
+                sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
+                variant='contained'
+                onClick={() => navigate(`${config.basePath}/depth`)}
+            >
+                Return To Start
+            </Button>
         </Grid>
     );
 }
