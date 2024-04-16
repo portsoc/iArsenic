@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import ReactSpeedometer, { CustomSegmentLabelPosition } from "react-d3-speedometer"
 import config from "../../config";
 import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
-import { RegionKey } from "../../types";
+import { MessageCode, PredictionData, RegionKey, UtensilStaining, WellStaining } from "../../types";
 
 export default function Result(): JSX.Element {
     const [regionData, setRegionData] = useState<RegionKey>();
     const [depth, setDepth] = useState<number>();
-    const [staining, setStaining] = useState<'Red' | 'Black' | 'not-sure'>();
+    const [staining, setStaining] = useState<WellStaining>();
     const [predictionData, setPredictionData] = useState()
-    const [estimate, setEstimate] = useState<{ message: string, severity: string, lowerQ: number, upperQ: number }>()
+    const [estimate, setEstimate] = useState<MessageCode>()
     const [speedoValue, setSpeedoValue] = useState<number>()
+    const [warningMessage, setWarningMessage] = useState<string>()
 
     async function fetchPredictionData(div: string, dis: string) {
-        console.log(`${config.basePath}/model5/aggregate-data/${div}-${dis}.json`)
         const res = await fetch(`${config.basePath}/model5/aggregate-data/${div}-${dis}.json`)
 
         if (!res.ok) {
@@ -25,14 +25,58 @@ export default function Result(): JSX.Element {
     }
 
     function produceEstimate(
-        predictionData,
+        predictionData: PredictionData,
         region: RegionKey,
         depth: number,
         wellStaining: WellStaining,
-        utensilStaining: UtenstilStaining,
+        utensilStaining: UtensilStaining,
         flood: boolean,
-    ) {
+    ): MessageCode {
+        const regionData = predictionData[region.division]
+            .districts[region.district]
+            .upazilas[region.upazila]
+            .unions[region.union]
+            .mouzas[region.mouza]
 
+        const regionStrataKey= (() => {
+            if (depth < 15.3) return 's15';
+            else if (depth < 45) return 's45';
+            else if (depth < 65) return 's65';
+            else if (depth < 90) return 's90';
+            else if (depth < 150) return 's150';
+            else return 'sD';
+        })()
+
+        const regionStrataModel = regionData[regionStrataKey]
+
+        /*
+            if depth is < 15.3 attempt to use the flooding model
+            if the flooding model is available, the key 'm2' will
+            exist in the prediction data for this region
+        */
+        if (regionStrataKey === 's15' && 'm2' in regionStrataModel) {
+            if (wellStaining === 'Black' && regionStrataModel.m2 !== undefined) {
+                return regionStrataModel.m2;
+            } else if (flood === true && regionStrataModel.m9 !== undefined) {
+                return regionStrataModel.m9;
+            } else if (regionStrataModel.m7 !== undefined) {
+                return regionStrataModel.m7;
+            } else {
+                throw new Error('model keys required for flooding model misisng')
+            }
+        } else {
+            if (wellStaining === 'Black' || utensilStaining === 'No colour change to slightly blackish') {
+                return 1;
+            } else if (wellStaining === 'Red' || utensilStaining === 'Red') {
+                if (regionStrataModel.m !== undefined) {
+                    return regionStrataModel.m;
+                } else {
+                    throw new Error('model key required for red staining missing');
+                }
+            } else {
+                return 0;
+            }
+        }
     }
 
     useEffect(() => {
@@ -68,27 +112,86 @@ export default function Result(): JSX.Element {
     useEffect(() => {
         if (!regionData || !depth || !staining || !predictionData) return;
 
-        const newEstimate = (window as any).produceEstimate(
+        const newEstimate = produceEstimate(
             predictionData,
-            regionData.division,
-            regionData.district,
-            regionData.upazila,
-            regionData.union,
-            regionData.mouza,
+            regionData,
             depth,
             staining,
-            '',
-            ''
-        ) as { message: string, severity: string, lowerQ: number, upperQ: number };
+            undefined,
+            false, // TODO GET THIS FROM USER
+        );
 
         if (newEstimate) {
-            setEstimate(newEstimate as { message: string, severity: string, lowerQ: number, upperQ: number });
+            setEstimate(newEstimate);
         }
 
-        if (newEstimate.message.includes('SEVERELY')) setSpeedoValue(4.5);
-        if (newEstimate.message.includes('HIGHLY')) setSpeedoValue(3.5);
-        if (newEstimate.severity === 'polluted') setSpeedoValue(2.5);
-        if (newEstimate.severity === 'safe') setSpeedoValue(1.5);
+        const messageCode = (() => {
+            switch (newEstimate) {
+                case 0:
+                    return 2;
+                case 1:
+                    return 0;
+                case 2:
+                    return 1;
+                case 3:
+                    return 1;
+                case 4:
+                    return 2;
+                case 5:
+                    return 2;
+                case 6:
+                    return 3;
+                case 7:
+                    return 4;
+                case 8:
+                    return 4;
+            }
+        })()
+
+        const estimateMessageDict = {
+            0: `
+                Your tube well water is categorised as 'Rare Risk'
+                for arsenic. It is generally considered safe for
+                use. However, if feasible, we recommend arranging
+                for a water quality test to confirm the arsenic levels.
+            `,
+            1: `
+                Your tube well water falls under 'Low Risk' for
+                arsenic contamination. It is likely safe, but
+                we advise you to arrange a water quality test,
+                particularly if there are young children,
+                pregnant women, or individuals with health concerns
+                in your household.
+            `,
+            2: `
+                Your tube well is at 'Medium Risk' of arsenic
+                contamination. We suggest you seek an alternative
+                water source known to be safe. Additionally, it
+                is important to arrange a chemical test of your
+                well's water to determine the precise arsenic
+                concentration.
+            `,
+            3: `
+                Your tube well is categorised as 'High Risk'
+                for arsenic. It is strongly recommended that you
+                use an alternative safe water source. Immediate
+                testing of your water is crucial. Please also
+                contact your local DPHE for further assistance
+                and information.
+            `,
+            4: `
+                Your tube well is in the 'Severe Risk' category
+                for arsenic contamination. Do not use this
+                water for drinking or cooking. Seek an alternative
+                safe water source immediately. Arrange for a water
+                test as soon as possible, and consult with local
+                DPHE for detailed guidance and support.
+            `
+        }
+
+        setSpeedoValue(messageCode + 0.5)
+        setWarningMessage(estimateMessageDict[messageCode])
+
     }, [regionData, depth, staining, predictionData]);
 
     if (!estimate) {
@@ -163,14 +266,11 @@ export default function Result(): JSX.Element {
                                     Estimate Message:
                                 </Typography>
                                 <Typography variant="body1" sx={{ marginBottom: '20px' }}>
-                                    {estimate.message}
+                                    {warningMessage}
                                 </Typography>
-                                <Typography variant="subtitle1">
-                                    Severity: <strong>{estimate.severity}</strong>
-                                </Typography>
-                                <Typography variant="subtitle1">
-                                    Range: {estimate.lowerQ} - {estimate.upperQ}
-                                </Typography>
+                                {/* <Typography variant="subtitle1">
+                                    Severity: <strong>{warningMessage}</strong>
+                                </Typography> */}
                             </Paper>
                         </Box>
                     </Grid>

@@ -30,9 +30,10 @@ export type DropdownDivision = {
 
 // staining types
 export type WellStaining = 'Black' | 'Red' | 'Not sure';
-export type UtensilStaining = 'Red' | 'Black' | 'No colour change to slightly blackish';
+export type UtensilStaining = 'Red' | 'Black' | 'No colour change to slightly blackish' | undefined;
 
 // prediction data
+export type MessageCode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export type PredictionData = {
     [key: string]: {
         districts: {
@@ -44,29 +45,29 @@ export type PredictionData = {
                                 mouzas: {
                                     [key: string]: {
                                         s15: {
-                                            m: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                                            m: MessageCode,
                                             l?: number,
                                             u?: number,
-                                            m2?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
-                                            m7?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
-                                            m9?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                                            m2?: MessageCode,
+                                            m7?: MessageCode,
+                                            m9?: MessageCode,
                                         },
                                         s45: {
-                                            m: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                                            m: MessageCode,
                                         },
                                         s65: {
-                                            m: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                                            m: MessageCode,
                                         },
                                         s90: {
-                                            m: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                                            m: MessageCode,
                                         },
                                         s150: {
-                                            m: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                                            m: MessageCode,
                                             l: number,
                                             u: number,
                                         },
                                         sD: {
-                                            m: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+                                            m: MessageCode,
                                             l: number,
                                             u: number,
                                         }

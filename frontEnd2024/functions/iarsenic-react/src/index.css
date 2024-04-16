@@ -2,3 +2,8 @@
     box-sizing: border-box;
     margin: 0;
 }
+
+/* hide speedo numerical value */
+.current-value {
+    display: none;
+}
