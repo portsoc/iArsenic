@@ -24,6 +24,10 @@ const Theme = {
     })
 }
 
+function setLanguage(language: 'english' | 'bengali') {
+    document.body.className = language
+}
+
 function App() {
     return (
         <ThemeProvider theme={Theme.theme}>
@@ -33,12 +37,23 @@ function App() {
             />
 
             <AppBar sx={{ marginBottom: '2rem'}} position='static'>
-                <Stack paddingLeft='2rem' paddingRight='2rem' margin='auto' width='100%' maxWidth='50em' justifyContent='space-between' direction='row' alignItems='center'>
+                <Stack
+                    paddingLeft='2rem'
+                    paddingRight='2rem'
+                    margin='auto'
+                    width='100%'
+                    maxWidth='50em'
+                    justifyContent='space-between'
+                    direction='row'
+                    alignItems='center'
+                >
                     <Typography
                         sx={{ cursor: 'pointer' }}
                         variant='h6'
                         onClick={() => navigate(config.basePath)}
-                    >iArsenic</Typography>
+                    >
+                        iArsenic
+                    </Typography>
 
                     <Box>
                         <Button
@@ -49,7 +64,7 @@ function App() {
                                     src={`${config.basePath}/british.png`}
                                 />
                             }
-                            onClick={() => console.log('update to English')}
+                            onClick={() => setLanguage('english')}
                         />
 
                         <Button
@@ -59,7 +74,7 @@ function App() {
                                     src={`${config.basePath}/bangladesh.jpg`}
                                 />
                             }
-                            onClick={() => console.log('update to Bengali')}
+                            onClick={() => setLanguage('bengali')}
                         />
                     </Box>
                 </Stack>

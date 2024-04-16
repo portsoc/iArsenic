@@ -7,3 +7,11 @@
 .current-value {
     display: none;
 }
+
+body.bengali .english {
+    display: none;
+}
+
+body.english .bengali {
+    display: none;
+}

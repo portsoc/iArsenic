@@ -287,7 +287,7 @@ export default function Result(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/depth`)}
+                onClick={() => navigate(`${config.basePath}/`)}
             >
                 Return To Start
             </Button>
