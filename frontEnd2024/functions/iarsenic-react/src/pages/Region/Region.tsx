@@ -2,38 +2,19 @@ import { Typography, Autocomplete, TextField, Button, Stack } from "@mui/materia
 import config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-
-interface Union {
-    union: string;
-    mouzas: string[];
-}
-
-interface Upazila {
-    upazila: string;
-    unions: Union[];
-}
-
-interface District {
-    district: string;
-    upazilas: Upazila[];
-}
-
-interface Division {
-    division: string;
-    districts: District[];
-}
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from "../../types";
 
 export default function Region(): JSX.Element {
-    const [dropdownData, setDropdownData] = useState<Division[]>([]);
-    const [selectedDivision, setSelectedDivision] = useState<Division | null>(null);
-    const [selectedDistrict, setSelectedDistrict] = useState<District | null>(null);
-    const [selectedUpazila, setSelectedUpazila] = useState<Upazila | null>(null);
-    const [selectedUnion, setSelectedUnion] = useState<Union | null>(null);
+    const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
+    const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
+    const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
+    const [selectedUpazila, setSelectedUpazila] = useState<DropdownUpazila | null>(null);
+    const [selectedUnion, setSelectedUnion] = useState<DropdownUnion | null>(null);
     const [selectedMouza, setSelectedMouza] = useState<string | null>(null);
 
     async function fetchDropdownData() {
         const response = await fetch(`${config.basePath}/model5/dropdown-data.json`);
-        const data: Division[] = await response.json();
+        const data: DropdownDivision[] = await response.json();
         setDropdownData(data);
     }
 

@@ -2,15 +2,10 @@ import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
+import { RegionKey } from '../../types';
 
 export default function Review() {
-    const [regionData, setRegionData] = useState<{
-        division: string,
-        district: string,
-        upazila: string,
-        union: string,
-        mouza: string,
-    }>();
+    const [regionData, setRegionData] = useState<RegionKey>();
     const [depth, setDepth] = useState<{ depth: number, unit: 'meters' | 'ft' }>();
     const [staining, setStaining] = useState<string>();
 

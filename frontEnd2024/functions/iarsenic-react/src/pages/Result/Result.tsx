@@ -2,29 +2,10 @@ import { useEffect, useState } from "react";
 import ReactSpeedometer, { CustomSegmentLabelPosition } from "react-d3-speedometer"
 import config from "../../config";
 import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
-
-declare function produceEstimate(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    predictionData: any,
-    division: string,
-    district: string,
-    upazila: string,
-    union: string,
-    mouza: string,
-    depth: number,
-    staining: 'Red' | 'Black' | 'not-sure' | '',
-    utensil: 'Red' | 'No colour change to slightly blackish' | '',
-    flood: 'yes' | 'no' | '',
-): unknown;
+import { RegionKey } from "../../types";
 
 export default function Result(): JSX.Element {
-    const [regionData, setRegionData] = useState<{
-        division: string,
-        district: string,
-        upazila: string,
-        union: string,
-        mouza: string,
-    }>();
+    const [regionData, setRegionData] = useState<RegionKey>();
     const [depth, setDepth] = useState<number>();
     const [staining, setStaining] = useState<'Red' | 'Black' | 'not-sure'>();
     const [predictionData, setPredictionData] = useState()
@@ -41,6 +22,17 @@ export default function Result(): JSX.Element {
 
         const data = await res.json()
         setPredictionData(data)
+    }
+
+    function produceEstimate(
+        predictionData,
+        region: RegionKey,
+        depth: number,
+        wellStaining: WellStaining,
+        utensilStaining: UtenstilStaining,
+        flood: boolean,
+    ) {
+
     }
 
     useEffect(() => {
@@ -76,7 +68,7 @@ export default function Result(): JSX.Element {
     useEffect(() => {
         if (!regionData || !depth || !staining || !predictionData) return;
 
-        const newEstimate = produceEstimate(
+        const newEstimate = (window as any).produceEstimate(
             predictionData,
             regionData.division,
             regionData.district,

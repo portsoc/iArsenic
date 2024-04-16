@@ -4,6 +4,8 @@ import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import SwipeableViews from 'react-swipeable-views-react-18-fix';
 
 const images = [
