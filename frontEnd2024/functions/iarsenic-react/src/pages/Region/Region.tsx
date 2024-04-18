@@ -39,8 +39,8 @@ export default function Region(): JSX.Element {
         };
         setErrors(newErrors);
 
-        return !Object.values(newErrors).some(Boolean);
-    };
+        return !Object.values(newErrors).some(value => value);
+    }
 
     useEffect(() => {
         fetchDropdownData();
