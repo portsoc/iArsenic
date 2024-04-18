@@ -291,48 +291,95 @@ export default function Result(): JSX.Element {
                 <Stack sx={{
                     alignItems: 'center',
                 }}>
-                    <ReactSpeedometer
-                        maxValue={5}
-                        value={speedoValue}
-                        needleHeightRatio={0.7}
-                        currentValueText=''
-                        needleColor="steelblue"
-                        needleTransitionDuration={1000}
-                        segmentColors={[
-                            '#01ce35',
-                            '#9acb31',
-                            '#ffcc32',
-                            '#ff6600',
-                            '#fe0000',
-                        ]}
-                        customSegmentLabels={[
-                            {
-                                text: 'Rare',
-                                position: CustomSegmentLabelPosition.Outside,
-                                color: 'black',
-                            },
-                            {
-                                text: 'Low',
-                                position: CustomSegmentLabelPosition.Outside,
-                                color: 'black',
-                            },
-                            {
-                                text: 'Medium',
-                                position: CustomSegmentLabelPosition.Outside,
-                                color: 'black',
-                            },
-                            {
-                                text: 'High',
-                                position: CustomSegmentLabelPosition.Outside,
-                                color: 'black',
-                            },
-                            {
-                                text: 'Severe',
-                                position: CustomSegmentLabelPosition.Outside,
-                                color: 'black',
-                            },
-                        ]}
-                    />
+                    <Box className='bengali'>
+                        <ReactSpeedometer
+                            maxValue={5}
+                            value={speedoValue}
+                            needleHeightRatio={0.7}
+                            currentValueText=''
+                            needleColor="steelblue"
+                            needleTransitionDuration={1000}
+                            segmentColors={[
+                                '#01ce35',
+                                '#9acb31',
+                                '#ffcc32',
+                                '#ff6600',
+                                '#fe0000',
+                            ]}
+                            customSegmentLabels={[
+                                {
+                                    text: 'BENGALI PLACEHOLER',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'BENGALI PLACEHOLER',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'BENGALI PLACEHOLER',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'BENGALI PLACEHOLER',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'BENGALI PLACEHOLER',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                            ]}
+                        />
+                    </Box>
+
+                    <Box>
+                        <ReactSpeedometer
+                            maxValue={5}
+                            value={speedoValue}
+                            needleHeightRatio={0.7}
+                            currentValueText=''
+                            needleColor="steelblue"
+                            needleTransitionDuration={1000}
+                            segmentColors={[
+                                '#01ce35',
+                                '#9acb31',
+                                '#ffcc32',
+                                '#ff6600',
+                                '#fe0000',
+                            ]}
+                            customSegmentLabels={[
+                                {
+                                    text: 'Rare',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'Low',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'Medium',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'High',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                                {
+                                    text: 'Severe',
+                                    position: CustomSegmentLabelPosition.Outside,
+                                    color: 'black',
+                                },
+                            ]}
+                        />
+                    </Box>
                 </Stack>
             </Grid>
 
@@ -373,7 +420,13 @@ export default function Result(): JSX.Element {
                 variant='contained'
                 onClick={() => navigate(`${config.basePath}/`)}
             >
-                Return To Start
+                <Typography className='english'>
+                    Return To Start
+                </Typography>
+
+                <Typography className='bengali'>
+                    Bengali Placeholder
+                </Typography>
             </Button>
         </Grid>
     );

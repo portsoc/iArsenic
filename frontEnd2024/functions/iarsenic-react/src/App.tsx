@@ -24,9 +24,28 @@ const Theme = {
     })
 }
 
-function setLanguage(language: 'english' | 'bengali') {
+function changeLanguage(language: 'english' | 'bengali') {
+    localStorage.setItem('language', language)
+
     document.body.className = language
 }
+
+function setLanguage() {
+    if (localStorage.getItem('language')) {
+        if (localStorage.getItem('language') === 'english') {
+            changeLanguage('english')
+        } else if (localStorage.getItem('language') === 'bengali') {
+            changeLanguage('bengali')
+        } else {
+            console.error(`invalid language option ${localStorage.getItem('language')}`)
+            localStorage.removeItem('language')
+        }
+    } else {
+        changeLanguage('english')
+    }
+}
+
+setLanguage()
 
 function App() {
     return (
@@ -64,7 +83,7 @@ function App() {
                                     src={`${config.basePath}/british.png`}
                                 />
                             }
-                            onClick={() => setLanguage('english')}
+                            onClick={() => changeLanguage('english')}
                         />
 
                         <Button
@@ -74,7 +93,7 @@ function App() {
                                     src={`${config.basePath}/bangladesh.jpg`}
                                 />
                             }
-                            onClick={() => setLanguage('bengali')}
+                            onClick={() => changeLanguage('bengali')}
                         />
                     </Box>
                 </Stack>
