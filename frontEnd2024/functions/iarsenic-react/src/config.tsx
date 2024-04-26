@@ -1,3 +1,3 @@
 export default {
-    basePath: '/iArsenic2024',
+    basePath: '',
 }
