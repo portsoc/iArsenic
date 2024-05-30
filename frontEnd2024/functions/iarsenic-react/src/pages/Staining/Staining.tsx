@@ -1,4 +1,4 @@
-import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack } from "@mui/material";
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
@@ -21,19 +21,26 @@ export default function Staining(): JSX.Element {
 
         setErrors(newErrors);
 
-        return !Object.values(newErrors).some(Boolean); // Return false if any field is in error
+        // Return false if any field is in error
+        return !Object.values(newErrors).some(Boolean);
     }
 
     return (
         <>
-            <Typography marginBottom='1rem' textAlign='center' variant='h4'>Staining</Typography>
+            <Typography marginBottom='1rem' textAlign='center' variant='h4'>
+                Staining
+            </Typography>
 
-            <Card raised variant='outlined' sx={{ width: '100%', margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <Card
+                raised
+                variant='outlined'
+                sx={{ width: '100%', margin: '0 1rem 1rem 1rem', padding: '1rem'}}
+            >
                 <Typography marginBottom='1rem' textAlign='center' variant='h5'>
                     Is There Staining On The Platform?
                 </Typography>
 
-                {/* <Stack mb={2} alignItems='center'>
+                <Stack mb={2} alignItems='center'>
                     <Button
                         sx={{ width: '70%', height: '3rem' }}
                         variant='outlined'
@@ -41,7 +48,7 @@ export default function Staining(): JSX.Element {
                     >
                         See Staining Guide
                     </Button>
-                </Stack> */}
+                </Stack>
 
                 <FormControl error={errors.wellStaining} component="fieldset">
                     <RadioGroup
