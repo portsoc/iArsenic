@@ -13,6 +13,7 @@ import {
 } from './pages'
 import config from './config'
 import { navigate } from 'wouter/use-browser-location'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 
 const Theme = {
     theme: createTheme({
@@ -117,6 +118,7 @@ function App() {
                     <Route path='/staining' component={Staining}/>
                     <Route path='/staining-guide' component={StainingGuide}/>
                     <Route path='/result' component={Result}/>
+                    <Route path='/privacy-policy' component={PrivacyPolicy}/>
                 </Router>
             </Stack>
         </ThemeProvider>
