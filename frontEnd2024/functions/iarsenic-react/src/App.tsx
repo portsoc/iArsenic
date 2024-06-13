@@ -1,6 +1,6 @@
-import { Route, Router } from 'wouter'
-import { createTheme } from '@mui/material/styles'
-import { AppBar, Avatar, Box, Button, Stack, ThemeProvider, Typography } from '@mui/material'
+import { Route, Router } from 'wouter';
+import { createTheme } from '@mui/material/styles';
+import { AppBar, Avatar, Box, Button, Stack, ThemeProvider, Typography } from '@mui/material';
 import {
     Briefing,
     Depth,
@@ -10,10 +10,10 @@ import {
     Staining,
     StainingGuide,
     Result,
-} from './pages'
-import config from './config'
-import { navigate } from 'wouter/use-browser-location'
-import PrivacyPolicy from './pages/PrivacyPolicy'
+} from './pages';
+import config from './config';
+import { navigate } from 'wouter/use-browser-location';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 const Theme = {
     theme: createTheme({
@@ -23,30 +23,30 @@ const Theme = {
             }
         }
     })
-}
+};
 
 function changeLanguage(language: 'english' | 'bengali') {
-    localStorage.setItem('language', language)
+    localStorage.setItem('language', language);
 
-    document.body.className = language
+    document.body.className = language;
 }
 
 function setLanguage() {
     if (localStorage.getItem('language')) {
         if (localStorage.getItem('language') === 'english') {
-            changeLanguage('english')
+            changeLanguage('english');
         } else if (localStorage.getItem('language') === 'bengali') {
-            changeLanguage('bengali')
+            changeLanguage('bengali');
         } else {
-            console.error(`invalid language option ${localStorage.getItem('language')}`)
-            localStorage.removeItem('language')
+            console.error(`invalid language option ${localStorage.getItem('language')}`);
+            localStorage.removeItem('language');
         }
     } else {
-        changeLanguage('english')
+        changeLanguage('english');
     }
 }
 
-setLanguage()
+setLanguage();
 
 function App() {
     return (
@@ -122,7 +122,7 @@ function App() {
                 </Router>
             </Stack>
         </ThemeProvider>
-    )
+    );
 }
 
-export default App
+export default App;

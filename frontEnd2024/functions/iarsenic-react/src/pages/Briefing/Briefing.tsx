@@ -115,12 +115,12 @@ export default function Briefing(): JSX.Element {
                     আপনার ব্যক্তিগত তথ্যের গোপনীয়তা আমাদের কাছে গুরুত্বপূর্ণ। আমরা য
                     ে তথ্য সংগ্রহ করি তা সম্পূর্ণ অব্যক্তিগত এবং বেনামি। আমরা শুধুমাত্র
                     আমাদের অনুমানের সঠিকতা উন্নত করার জন্য এই তথ্য ব্যবহার করি।
-                    আমাদের ডেটা অনুশীলনগুলির বিশদ ব্যাখ্যার জন্য, এখানে ক্লিক করুন।
+                    আমাদের ডেটা অনুশীলনগুলির বিশদ ব্যাখ্যার জন্য,
                     <Link
                         onClick={() => navigate(`${config.basePath}/privacy-policy`)}
                         sx={{ cursor: 'pointer' }}
                     >
-                        click here
+                        এখানে ক্লিক করুন।
                     </Link>.
                 </Typography>
             </Card>
@@ -160,5 +160,5 @@ export default function Briefing(): JSX.Element {
                 <Typography className='bengali'>ঝুঁকি  মূল্যায়ন করুন</Typography>
             </Button>
         </>
-    )
+    );
 }

@@ -3,6 +3,7 @@ import config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from "../../types";
+import PredictorsStorage from "../../utils/PredictorsStorage";
 
 export default function Region(): JSX.Element {
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
@@ -68,7 +69,7 @@ export default function Region(): JSX.Element {
                                 error={errors.division}
                                 helperText={errors.division ? 'Please select a division' : ''}
                             />
-                        )
+                        );
                     }}
                 />
 
@@ -89,7 +90,7 @@ export default function Region(): JSX.Element {
                                 helperText={errors.district ? 'Please select a district' : ''}
                                 disabled={!selectedDivision}
                             />
-                        )
+                        );
                     }}
                 />
 
@@ -109,7 +110,7 @@ export default function Region(): JSX.Element {
                                 helperText={errors.upazila ? 'Please select an upazila' : ''}
                                 disabled={!selectedDistrict}
                             />
-                        )
+                        );
                     }}
                 />
 
@@ -128,7 +129,7 @@ export default function Region(): JSX.Element {
                                 helperText={errors.union ? 'Please select a union' : ''}
                                 disabled={!selectedUpazila}
                             />
-                        )
+                        );
                     }}
                 />
 
@@ -147,7 +148,7 @@ export default function Region(): JSX.Element {
                                 helperText={errors.mouza ? 'Please select a mouza' : ''}
                                 disabled={!selectedUnion}
                             />
-                        )
+                        );
                     }}
                 />
             </Stack>
@@ -156,15 +157,27 @@ export default function Region(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={() => {
-                    if (!handleValidation()) return
+                    if (!handleValidation()) return;
 
-                    localStorage.setItem('region', JSON.stringify({
-                        division: selectedDivision?.division,
-                        district: selectedDistrict?.district,
-                        upazila: selectedUpazila?.upazila,
-                        union: selectedUnion?.union,
-                        mouza: selectedMouza
-                    }));
+                    // if validation returns true, we know these values are
+                    // all strings, check anyway to satisfy TS
+
+                    if (!selectedDivision?.division ||
+                        !selectedDistrict?.district ||
+                        !selectedUpazila?.upazila ||
+                        !selectedUnion?.union ||
+                        !selectedMouza
+                    ) return;
+
+                    PredictorsStorage.set({
+                        regionKey: {
+                            division: selectedDivision?.division,
+                            district: selectedDistrict?.district,
+                            upazila: selectedUpazila?.upazila,
+                            union: selectedUnion?.union,
+                            mouza: selectedMouza,
+                        }
+                    });
                     navigate(`${config.basePath}/staining`);
                 }}
             >

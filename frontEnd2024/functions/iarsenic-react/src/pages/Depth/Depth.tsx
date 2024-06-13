@@ -2,9 +2,10 @@ import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/m
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
+import PredictorsStorage from "../../utils/PredictorsStorage";
 
 export default function Depth(): JSX.Element {
-    const [unit, setUnit] = useState<'meters' | 'ft'>('ft');
+    const [unit, setUnit] = useState<'m' | 'ft'>('ft');
     const [depth, setDepth] = useState(0);
 
     function handleSliderChange(_: Event, newValue: number | number[]) {
@@ -17,7 +18,10 @@ export default function Depth(): JSX.Element {
     }
 
     function switchUnits() {
-        setUnit(unit === 'ft' ? 'meters' : 'ft');
+        setUnit(unit === 'ft' ? 'm' : 'ft');
+
+        if (unit === 'ft') setDepth(depth * 0.3048);
+        if (unit === 'm') setDepth(depth / 0.3048);
     }
 
     return (
@@ -96,15 +100,14 @@ export default function Depth(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={() => {
-                    localStorage.setItem(
-                        'depth',
-                        JSON.stringify({
-                            depth: depth.toString(),
-                            unit: unit,
-                        }),
-                    );
+                    PredictorsStorage.set({
+                        depth: {
+                            unit,
+                            value: depth
+                        }
+                    });
 
-                    navigate(`${config.basePath}/review`)
+                    navigate(`${config.basePath}/review`);
                 }}
             >
                 Review Input

@@ -92,5 +92,5 @@ export default function Landing(): JSX.Element {
                 <Typography className='bengali'>আপনার মূল্যায়ন শুরু করুন</Typography>
             </Button>
         </>
-    )
+    );
 }

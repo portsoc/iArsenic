@@ -2,57 +2,34 @@ import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import { RegionKey } from '../../types';
+import PredictorsStorage, { Predictors } from '../../utils/PredictorsStorage';
 
 export default function Review() {
-    const [regionData, setRegionData] = useState<RegionKey>();
-    const [depth, setDepth] = useState<{ depth: number, unit: 'meters' | 'ft' }>();
-    const [staining, setStaining] = useState<string>();
+    const [predictors, setPredictors] = useState<Predictors>();
 
     useEffect(() => {
-        const regionStr = JSON.parse(localStorage.getItem('region') || '{}')
+        const storedPredictors = PredictorsStorage.get();
+        const valid = PredictorsStorage.validate(storedPredictors);
 
-        if (regionStr.division) {
-            setRegionData(regionStr);
-        } else {
-            setRegionData({
-                division: 'null',
-                district: 'null',
-                upazila: 'null',
-                union: 'null',
-                mouza: 'null',
-            });
+        if (!valid.ok) {
+            alert(valid.msg);
+            navigate(`${config.basePath}/`);
         }
 
-        const depthStr = JSON.parse(localStorage.getItem('depth') || '{}')
-        if (depthStr.depth) {
-            setDepth(depthStr);
-        } else {
-            setDepth({ depth: 0, unit: 'meters' });
-        }
+        const predictors = storedPredictors as Predictors;
 
-        const stainingStr = JSON.parse(localStorage.getItem('staining') || '{}')
-        if (stainingStr.well) {
-            setStaining(stainingStr.well);
-        } else if (stainingStr.utensil) {
-            setStaining(stainingStr.utensil);
-        } else {
-            setStaining('null');
-        }
-    }, [])
+        setPredictors({
+            regionKey: predictors.regionKey,
+            depth: predictors.depth,
+            wellStaining: predictors.wellStaining,
+            utensilStaining: predictors.utensilStaining
+        });
+    }, []);
 
-    if (!regionData || !depth || !staining) {
+    if (!predictors) {
         return (
             <CircularProgress />
-        )
-    }
-
-    const region = {
-        division: regionData?.division,
-        district: regionData?.district,
-        upazila: regionData?.upazila,
-        union: regionData?.union,
-        mouza: regionData?.mouza
+        );
     }
 
     return (
@@ -65,29 +42,35 @@ export default function Review() {
                 <Typography variant="h6" gutterBottom>Region</Typography>
 
                 <Typography variant="body1" component="p" gutterBottom>
-                    Division: {region.division || 'Not set'}
+                    Division: {predictors.regionKey.division}
                 </Typography>
                 <Typography variant="body1" component="p" gutterBottom>
-                    District: {region.district || 'Not set'}
+                    District: {predictors.regionKey.district}
                 </Typography>
                 <Typography variant="body1" component="p" gutterBottom>
-                    Upazila: {region.upazila || 'Not set'}
+                    Upazila: {predictors.regionKey.upazila}
                 </Typography>
                 <Typography variant="body1" component="p" gutterBottom>
-                    Union: {region.union || 'Not set'}
+                    Union: {predictors.regionKey.union}
                 </Typography>
                 <Typography variant="body1" component="p" gutterBottom>
-                    Mouza: {region.mouza || 'Not set'}
+                    Mouza: {predictors.regionKey.mouza}
                 </Typography>
 
                 <Typography variant="h6" gutterBottom>Staining</Typography>
                 <Typography variant="body1" component="p" gutterBottom>
-                    Staining: {staining || 'Not set'}
+                    Staining: {predictors.wellStaining}
                 </Typography>
+
+                {predictors.utensilStaining && (
+                    <Typography variant="body1" component="p" gutterBottom>
+                        Utensil Staining: {predictors.utensilStaining}
+                    </Typography>
+                )}
 
                 <Typography variant="h6" gutterBottom>Depth</Typography>
                 <Typography variant="body1" component="p">
-                    Depth: {depth.depth} {depth.unit}
+                    Depth: {predictors.depth.value} {predictors.depth.unit}
                 </Typography>
             </Card>
 
@@ -99,7 +82,7 @@ export default function Review() {
                     marginBottom: '16px'
                 }}
                 onClick={() => {
-                    navigate(`${config.basePath}/result`)
+                    navigate(`${config.basePath}/result`);
                 }}
             >
                 Results

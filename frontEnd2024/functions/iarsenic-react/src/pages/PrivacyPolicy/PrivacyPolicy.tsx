@@ -259,5 +259,5 @@ export default function PrivacyPolicy(): JSX.Element {
                 </Typography>
             </Card>
         </>
-    )
+    );
 }

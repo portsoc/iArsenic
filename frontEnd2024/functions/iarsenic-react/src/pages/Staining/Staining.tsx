@@ -2,10 +2,12 @@ import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGrou
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
+import { WellStaining, UtensilStaining } from "../../types";
+import PredictorsStorage from "../../utils/PredictorsStorage";
 
 export default function Staining(): JSX.Element {
-    const [wellStaining, setWellStaining] = useState<'Red' | 'Black' | 'not-sure'>();
-    const [utensilStaining, setUtensilStaining] = useState<'Red' | 'Black' | 'not-sure'>();
+    const [wellStaining, setWellStaining] = useState<WellStaining>();
+    const [utensilStaining, setUtensilStaining] = useState<UtensilStaining>();
 
     // State to manage input errors
     const [errors, setErrors] = useState({
@@ -16,7 +18,7 @@ export default function Staining(): JSX.Element {
     function handleValidation() {
         const newErrors = {
             wellStaining: !wellStaining,
-            utensilStaining: wellStaining === 'not-sure' && !utensilStaining
+            utensilStaining: wellStaining === 'Not sure' && !utensilStaining
         };
 
         setErrors(newErrors);
@@ -53,34 +55,54 @@ export default function Staining(): JSX.Element {
                 <FormControl error={errors.wellStaining} component="fieldset">
                     <RadioGroup
                         onChange={(event) => {
-                            setWellStaining(event.target.value as 'Red' | 'Black' | 'not-sure');
+                            setWellStaining(event.target.value as WellStaining);
                             setErrors(e => ({ ...e, wellStaining: false }));
                         }}
                         name="well-staining-selector"
                     >
                         <FormControlLabel value="Red" control={<Radio />} label="Red" />
                         <FormControlLabel value="Black" control={<Radio />} label="Black" />
-                        <FormControlLabel value="not-sure" control={<Radio />} label="Mixed or Unsure" />
+                        <FormControlLabel
+                            value="Not sure"
+                            control={<Radio />}
+                            label="Mixed or Unsure"
+                        />
                     </RadioGroup>
-                    {errors.wellStaining && <Typography color="error">Please select a staining type for the well platform.</Typography>}
+                    {errors.wellStaining &&
+                        <Typography color="error">
+                            Please select a staining type for the well platform.
+                        </Typography>
+                    }
                 </FormControl>
 
-                <Collapse in={wellStaining === 'not-sure'}>
+                <Collapse in={wellStaining === 'Not sure'}>
                     <FormControl error={errors.utensilStaining} component="fieldset">
                         <Typography variant="h5" textAlign='center' style={{ marginTop: '1rem' }}>
                             Is there staining on your utensil?
                         </Typography>
                         <RadioGroup
                             onChange={(event) => {
-                                setUtensilStaining(event.target.value as 'Red' | 'Black' | 'not-sure');
+                                setUtensilStaining(event.target.value as UtensilStaining);
                                 setErrors(e => ({ ...e, utensilStaining: false }));
                             }}
                             name="utensil-staining-selector"
                         >
-                            <FormControlLabel value="Red" control={<Radio />} label="Red" />
-                            <FormControlLabel value="Black" control={<Radio />} label="No colour change to slightly blackish" />
+                            <FormControlLabel
+                                value="Red"
+                                control={<Radio />}
+                                label="Red"
+                            />
+                            <FormControlLabel
+                                value="Black"
+                                control={<Radio />}
+                                label="No colour change to slightly blackish"
+                            />
                         </RadioGroup>
-                        {errors.utensilStaining && <Typography color="error">Please select a staining type for the utensil.</Typography>}
+                        {errors.utensilStaining &&
+                            <Typography color="error">
+                                Please select a staining type for the utensil.
+                            </Typography>
+                        }
                     </FormControl>
                 </Collapse>
             </Card>
@@ -90,8 +112,8 @@ export default function Staining(): JSX.Element {
                 variant='contained'
                 onClick={() => {
                     if (!handleValidation()) return;
-                    localStorage.setItem('staining', JSON.stringify({ well: wellStaining, utensil: utensilStaining }));
-                    navigate(`${config.basePath}/depth`)
+                    PredictorsStorage.set({ wellStaining, utensilStaining });
+                    navigate(`${config.basePath}/depth`);
                 }}
             >
                 Next Step

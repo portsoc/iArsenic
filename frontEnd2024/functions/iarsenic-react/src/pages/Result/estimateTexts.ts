@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 export default {
     0: {
         english: {
@@ -20,7 +21,6 @@ export default {
             `,
         },
     },
-
     1: {
         english: {
             title: 'Low Risk (under 50 µg/L)',
@@ -112,4 +112,4 @@ export default {
             `,
         },
     }
-}
+};
