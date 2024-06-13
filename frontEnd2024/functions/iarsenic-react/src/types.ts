@@ -34,7 +34,7 @@ export type UtensilStaining = 'Red' | 'Black' | 'No colour change to slightly bl
 
 // prediction data
 export type MessageCode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type PredictionData = {
+export type ModelData = {
     [key: string]: {
         districts: {
             [key: string]: {
@@ -80,8 +80,5 @@ export type PredictionData = {
                 }
             }
         }
-
     }
 }
-
-

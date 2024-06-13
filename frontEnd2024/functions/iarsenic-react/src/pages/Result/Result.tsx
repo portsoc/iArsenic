@@ -1,93 +1,97 @@
 import { useEffect, useState } from "react";
 import config from "../../config";
-import { Box, Button, Grid, Paper, Stack, Typography } from "@mui/material";
-import { RegionKey, WellStaining } from "../../types";
+import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
+import { ModelData } from "../../types";
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";
 import estimateTexts from "./estimateTexts";
 import produceEstimate from "./produceEstimate";
+import PredictorsStorage, { Predictors } from "../../utils/PredictorsStorage";
+
+type EstimateTexts = {
+    english: {
+        title: string,
+        body: string,
+    },
+    bengali: {
+        title: string,
+        body: string,
+    }
+}
 
 export default function Result(): JSX.Element {
-    const [regionData, setRegionData] = useState<RegionKey>();
-    const [depth, setDepth] = useState<number>();
-    const [staining, setStaining] = useState<WellStaining>();
-    const [predictionData, setPredictionData] = useState()
-    const [speedoValue, setSpeedoValue] = useState<number>()
-    const [englishWarningBody, setEnglishWarningBody] = useState<string>()
-    const [englishWarningTitle, setEnglishWarningTitle] = useState<string>()
-    const [bengaliWarningBody, setBengaliWarningBody] = useState<string>()
-    const [bengaliWarningTitle, setBengaliWarningTitle] = useState<string>()
+    const [predictors, setPredictors] = useState<Predictors>()
+    const [modelData, setModelData] = useState<ModelData>()
 
-    async function fetchPredictionData(div: string, dis: string) {
+    const [speedoValue, setSpeedoValue] = useState<number>()
+    const [warningTexts, setWarningTexts] = useState<EstimateTexts>()
+
+    async function fetchModelData(div: string, dis: string) {
         const res = await fetch(`${config.basePath}/model5/aggregate-data/${div}-${dis}.json`)
 
         if (!res.ok) {
             return console.error('Failed to fetch prediction data')
         }
 
-        const data = await res.json()
-        setPredictionData(data)
+        // additional type checking would be good here
+        const data = await res.json() as ModelData;
+
+        setModelData(data);
     }
 
-    useEffect(() => {
-        const regionData = JSON.parse(localStorage.getItem('region') || '{}')
+    function loadPredictors() {
+        const storedPredictors = PredictorsStorage.get();
+        const valid = PredictorsStorage.validate(storedPredictors);
 
-        if (regionData.division) {
-            setRegionData(regionData);
-        } else {
-            setRegionData({
-                division: 'null',
-                district: 'null',
-                upazila: 'null',
-                union: 'null',
-                mouza: 'null',
-            });
+        if (!valid.ok) {
+            alert(valid.msg);
+            navigate(`${config.basePath}/`);
         }
 
-        const depthStr = JSON.parse(localStorage.getItem('depth') || '{}')
-        if (depthStr.depth) {
-            if (depthStr.unit === 'ft') {
-                setDepth(depthStr.depth * 0.3048)
-            } else {
-                setDepth(depthStr.depth);
-            }
-        }
+        const predictors = storedPredictors as Predictors;
 
-        const stainingStr = JSON.parse(localStorage.getItem('staining') || '{}')
-        setStaining(stainingStr.well);
+        setPredictors({
+            regionKey: predictors.regionKey,
+            depth: predictors.depth,
+            wellStaining: predictors.wellStaining,
+            utensilStaining: predictors.utensilStaining
+        });
+    }
 
-        fetchPredictionData(regionData.division, regionData.district)
-    }, [])
+    useEffect(loadPredictors, []);
 
     useEffect(() => {
-        if (!regionData) {
-            console.error('Region data not found');
+        if (!predictors) {
             return;
         }
 
-        if (!depth) {
-            console.error('Depth data not found');
+        fetchModelData(predictors.regionKey.division, predictors.regionKey.district)
+    }, [predictors])
+
+    useEffect(() => {
+        if (!modelData) {
+            console.error('attempting to produce estimate without model data')
             return;
         }
 
-        if (!staining) {
-            console.error('Staining data not found');
-            return;
+        const storedPredictors = PredictorsStorage.get();
+        const valid = PredictorsStorage.validate(storedPredictors);
+
+        if (!valid.ok) {
+            alert(valid.msg);
+            navigate(`${config.basePath}/`);
         }
 
-        if (!predictionData) {
-            console.error('Prediction data not found');
-            return;
-        }
+        const predictors = storedPredictors as Predictors;
 
         const newEstimate = produceEstimate(
-            predictionData,
-            regionData,
-            depth,
-            staining,
-            undefined,
-            false, // TODO GET THIS FROM USER
+            modelData,
+            predictors.regionKey,
+            predictors.depth.value,
+            predictors.wellStaining,
+            predictors.utensilStaining,
+            false,
         );
 
         const messageCode = (() => {
@@ -112,15 +116,23 @@ export default function Result(): JSX.Element {
 
         setSpeedoValue(messageCode + 0.5)
 
-        setEnglishWarningTitle(estimateTexts[messageCode].english.title)
-        setEnglishWarningBody(estimateTexts[messageCode].english.body)
-        setBengaliWarningTitle(estimateTexts[messageCode].bengali.title)
-        setBengaliWarningBody(estimateTexts[messageCode].bengali.body)
-    }, [regionData, depth, staining, predictionData]);
+        setWarningTexts({
+            english: {
+                title: estimateTexts[messageCode].english.title,
+                body: estimateTexts[messageCode].english.body,
+            },
+            bengali: {
+                title: estimateTexts[messageCode].bengali.title,
+                body: estimateTexts[messageCode].bengali.body,
+            }
+        })
+    }, [modelData])
 
-    if (!regionData) {
+    if (!predictors || !modelData || !speedoValue || !warningTexts) {
         return (
-            <h1>Region data not found</h1>
+            <Stack direction='column' alignContent='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
         )
     }
 
@@ -151,27 +163,19 @@ export default function Result(): JSX.Element {
                     <Box textAlign='center'>
                         <Paper elevation={3} sx={{ padding: '20px' }}>
                             <Typography className='english'variant="h6" gutterBottom>
-                                {englishWarningTitle}
+                                {warningTexts.english.title}
                             </Typography>
 
                             <Typography className='bengali'variant="h6" gutterBottom>
-                                {bengaliWarningTitle}
-                            </Typography>
-
-                            <Typography className='english' variant="h6" gutterBottom>
-                                Estimate Message:
-                            </Typography>
-
-                            <Typography className='bengali' variant="h6" gutterBottom>
-                                BENGALI PLACEHOLDER
+                                {warningTexts.bengali.title}
                             </Typography>
 
                             <Typography className='english' variant="body1" sx={{ marginBottom: '20px' }}>
-                                {englishWarningBody}
+                                {warningTexts.english.body}
                             </Typography>
 
                             <Typography className='bengali' variant="body1" sx={{ marginBottom: '20px' }}>
-                                {bengaliWarningBody}
+                                {warningTexts.bengali.body}
                             </Typography>
                         </Paper>
                     </Box>
