@@ -71,7 +71,6 @@ export type ModelData = {
                                             l: number,
                                             u: number,
                                         }
-
                                     }
                                 }
                             }

@@ -87,10 +87,7 @@ export default function Result(): JSX.Element {
 
         const newEstimate = produceEstimate(
             modelData,
-            predictors.regionKey,
-            predictors.depth.value,
-            predictors.wellStaining,
-            predictors.utensilStaining,
+            predictors,
             false,
         );
 
