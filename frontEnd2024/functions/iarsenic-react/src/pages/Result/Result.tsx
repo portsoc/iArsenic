@@ -21,17 +21,17 @@ type EstimateTexts = {
 }
 
 export default function Result(): JSX.Element {
-    const [predictors, setPredictors] = useState<Predictors>()
-    const [modelData, setModelData] = useState<ModelData>()
+    const [predictors, setPredictors] = useState<Predictors>();
+    const [modelData, setModelData] = useState<ModelData>();
 
-    const [speedoValue, setSpeedoValue] = useState<number>()
-    const [warningTexts, setWarningTexts] = useState<EstimateTexts>()
+    const [speedoValue, setSpeedoValue] = useState<number>();
+    const [warningTexts, setWarningTexts] = useState<EstimateTexts>();
 
     async function fetchModelData(div: string, dis: string) {
-        const res = await fetch(`${config.basePath}/model5/aggregate-data/${div}-${dis}.json`)
+        const res = await fetch(`${config.basePath}/model5/aggregate-data/${div}-${dis}.json`);
 
         if (!res.ok) {
-            return console.error('Failed to fetch prediction data')
+            return console.error('Failed to fetch prediction data');
         }
 
         // additional type checking would be good here
@@ -66,12 +66,12 @@ export default function Result(): JSX.Element {
             return;
         }
 
-        fetchModelData(predictors.regionKey.division, predictors.regionKey.district)
-    }, [predictors])
+        fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
+    }, [predictors]);
 
     useEffect(() => {
         if (!modelData) {
-            console.error('attempting to produce estimate without model data')
+            console.error('attempting to produce estimate without model data');
             return;
         }
 
@@ -109,9 +109,9 @@ export default function Result(): JSX.Element {
                 case 8:
                     return 4;
             }
-        })()
+        })();
 
-        setSpeedoValue(messageCode + 0.5)
+        setSpeedoValue(messageCode + 0.5);
 
         setWarningTexts({
             english: {
@@ -122,15 +122,15 @@ export default function Result(): JSX.Element {
                 title: estimateTexts[messageCode].bengali.title,
                 body: estimateTexts[messageCode].bengali.body,
             }
-        })
-    }, [modelData])
+        });
+    }, [modelData]);
 
     if (!predictors || !modelData || !speedoValue || !warningTexts) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
                 <CircularProgress />
             </Stack>
-        )
+        );
     }
 
     return (

@@ -1,1 +1,1 @@
-export { default } from './Region'
+export { default } from './Region';

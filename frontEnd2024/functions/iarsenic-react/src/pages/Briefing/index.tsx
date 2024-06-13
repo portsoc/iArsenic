@@ -1,1 +1,1 @@
-export { default } from './Briefing'
+export { default } from './Briefing';

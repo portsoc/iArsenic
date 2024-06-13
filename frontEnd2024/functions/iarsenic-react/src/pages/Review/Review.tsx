@@ -24,12 +24,12 @@ export default function Review() {
             wellStaining: predictors.wellStaining,
             utensilStaining: predictors.utensilStaining
         });
-    }, [])
+    }, []);
 
     if (!predictors) {
         return (
             <CircularProgress />
-        )
+        );
     }
 
     return (
@@ -82,7 +82,7 @@ export default function Review() {
                     marginBottom: '16px'
                 }}
                 onClick={() => {
-                    navigate(`${config.basePath}/result`)
+                    navigate(`${config.basePath}/result`);
                 }}
             >
                 Results

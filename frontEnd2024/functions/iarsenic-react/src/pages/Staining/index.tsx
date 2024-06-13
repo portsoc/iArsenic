@@ -1,1 +1,1 @@
-export { default } from './Staining'
+export { default } from './Staining';

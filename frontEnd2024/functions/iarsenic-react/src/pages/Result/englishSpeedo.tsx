@@ -1,4 +1,4 @@
-import ReactSpeedometer, { CustomSegmentLabelPosition } from "react-d3-speedometer"
+import ReactSpeedometer, { CustomSegmentLabelPosition } from "react-d3-speedometer";
 
 interface props {
     value: number | undefined
@@ -48,5 +48,5 @@ export default function EnglishSpeedo({ value }: props): JSX.Element {
                 },
             ]}
         />
-    )
+    );
 }

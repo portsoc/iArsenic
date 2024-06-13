@@ -113,7 +113,7 @@ export default function Staining(): JSX.Element {
                 onClick={() => {
                     if (!handleValidation()) return;
                     PredictorsStorage.set({ wellStaining, utensilStaining });
-                    navigate(`${config.basePath}/depth`)
+                    navigate(`${config.basePath}/depth`);
                 }}
             >
                 Next Step

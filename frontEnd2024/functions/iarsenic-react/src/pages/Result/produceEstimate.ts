@@ -10,7 +10,7 @@ export default function produceEstimate(
         .districts[predictors.regionKey.district]
         .upazilas[predictors.regionKey.upazila]
         .unions[predictors.regionKey.union]
-        .mouzas[predictors.regionKey.mouza]
+        .mouzas[predictors.regionKey.mouza];
 
     const depth = (() => {
         if (predictors.depth.unit === 'ft') {
@@ -27,9 +27,9 @@ export default function produceEstimate(
         else if (depth < 90) return 's90';
         else if (depth < 150) return 's150';
         else return 'sD';
-    })()
+    })();
 
-    const regionStrataModel = regionData[regionStrataKey]
+    const regionStrataModel = regionData[regionStrataKey];
 
     /*
         if depth is < 15.3 attempt to use the flooding model
@@ -44,7 +44,7 @@ export default function produceEstimate(
         } else if (regionStrataModel.m7 !== undefined) {
             return regionStrataModel.m7;
         } else {
-            throw new Error('model keys required for flooding model misisng')
+            throw new Error('model keys required for flooding model misisng');
         }
     } else {
         if (predictors.wellStaining === 'Black' || predictors.utensilStaining === 'Black') {

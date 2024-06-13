@@ -160,5 +160,5 @@ export default function Briefing(): JSX.Element {
                 <Typography className='bengali'>ঝুঁকি  মূল্যায়ন করুন</Typography>
             </Button>
         </>
-    )
+    );
 }
