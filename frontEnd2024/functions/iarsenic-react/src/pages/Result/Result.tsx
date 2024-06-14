@@ -59,22 +59,7 @@ export default function Result(): JSX.Element {
         });
     }
 
-    useEffect(loadPredictors, []);
-
-    useEffect(() => {
-        if (!predictors) {
-            return;
-        }
-
-        fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
-    }, [predictors]);
-
-    useEffect(() => {
-        if (!modelData) {
-            console.error('attempting to produce estimate without model data');
-            return;
-        }
-
+    function setOutput(modelData: ModelData) {
         const storedPredictors = PredictorsStorage.get();
         const valid = PredictorsStorage.validate(storedPredictors);
 
@@ -123,6 +108,25 @@ export default function Result(): JSX.Element {
                 body: estimateTexts[messageCode].bengali.body,
             }
         });
+    }
+
+    useEffect(loadPredictors, []);
+
+    useEffect(() => {
+        if (!predictors) {
+            return;
+        }
+
+        fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
+    }, [predictors]);
+
+    useEffect(() => {
+        if (!modelData) {
+            console.error('attempting to produce estimate without model data');
+            return;
+        }
+
+        setOutput(modelData);
     }, [modelData]);
 
     if (!predictors || !modelData || !speedoValue || !warningTexts) {
