@@ -1,11 +1,14 @@
-import { Typography, Autocomplete, TextField, Button, Stack } from "@mui/material";
+import { Typography, Autocomplete, TextField, Button, Stack, CircularProgress } from "@mui/material";
 import config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from "../../types";
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
 import PredictorsStorage from "../../utils/PredictorsStorage";
+import LanguageSelector from "../../utils/LanguageSelector";
 
 export default function Region(): JSX.Element {
+    const [language, setLanguage] = useState<'english' | 'bengali'>();
+    const [translations, setTranslations] = useState<RegionTranslations>();
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
     const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
@@ -27,6 +30,7 @@ export default function Region(): JSX.Element {
     async function fetchDropdownData() {
         const response = await fetch(`${config.basePath}/model5/dropdown-data.json`);
         const data = await response.json();
+
         setDropdownData(data);
     }
 
@@ -43,9 +47,32 @@ export default function Region(): JSX.Element {
         return !Object.values(newErrors).some(value => value);
     }
 
+    async function fetchTranslations() {
+        const response = await fetch(`${config.basePath}/region-translations.json`);
+        const data = await response.json();
+
+        setTranslations(data);
+    }
+
     useEffect(() => {
         fetchDropdownData();
+        setLanguage(LanguageSelector.get());
     }, []);
+
+    useEffect(() => {
+        if (language === 'bengali') {
+            fetchTranslations();
+        }
+
+    }, [language]);
+
+    if ((!language || !dropdownData) || (language === 'bengali' && !translations)) {
+        return (
+            <Stack alignContent='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
+        );
+    }
 
     return (
         <>
@@ -62,10 +89,22 @@ export default function Region(): JSX.Element {
                         setSelectedUnion(null);
                         setErrors(e => ({ ...e, division: false }));
                     }}
-                    getOptionLabel={(option) => option.division}
+                    getOptionLabel={(option) => {
+                        if (language === 'english') return option.division;
+                        if (!translations) throw new Error('Translations not loaded');
+                        return translations.Districts[option.division];
+                    }}
                     renderInput={(params) => {
+                        const label = (() => {
+                            if (language === 'english') return "Division";
+                            if (!translations) throw new Error('Translations not loaded');
+                            return translations.Divisions['Division'];
+                        })();
+
                         return (
-                            <TextField {...params} label="Division"
+                            <TextField
+                                {...params}
+                                label={label}
                                 error={errors.division}
                                 helperText={errors.division ? 'Please select a division' : ''}
                             />
@@ -82,10 +121,22 @@ export default function Region(): JSX.Element {
                         setSelectedUnion(null);
                         setErrors(e => ({ ...e, district: false }));
                     }}
-                    getOptionLabel={(option) => option.district}
+                    getOptionLabel={(option) => {
+                        if (language === 'english') return option.district;
+                        if (!translations) throw new Error('Translations not loaded');
+                        return translations.Districts[option.district];
+                    }}
                     renderInput={(params) => {
+                        const label = (() => {
+                            if (language === 'english') return "District";
+                            if (!translations) throw new Error('Translations not loaded');
+                            return translations.Districts['District'];
+                        })();
+
                         return (
-                            <TextField {...params} label="District"
+                            <TextField
+                                {...params}
+                                label={label}
                                 error={errors.district}
                                 helperText={errors.district ? 'Please select a district' : ''}
                                 disabled={!selectedDivision}
@@ -102,10 +153,22 @@ export default function Region(): JSX.Element {
                         setSelectedUnion(null);
                         setErrors(e => ({ ...e, upazila: false }));
                     }}
-                    getOptionLabel={(option) => option.upazila}
+                    getOptionLabel={(option) => {
+                        if (language === 'english') return option.upazila;
+                        if (!translations) throw new Error('Translations not loaded');
+                        return translations.Upazilas[option.upazila];
+                    }}
                     renderInput={(params) => {
+                        const label = (() => {
+                            if (language === 'english') return "Upazila";
+                            if (!translations) throw new Error('Translations not loaded');
+                            return translations.Districts['Upazila'];
+                        })();
+
                         return (
-                            <TextField {...params} label="Upazila"
+                            <TextField
+                                {...params}
+                                label={label}
                                 error={errors.upazila}
                                 helperText={errors.upazila ? 'Please select an upazila' : ''}
                                 disabled={!selectedDistrict}
@@ -121,10 +184,22 @@ export default function Region(): JSX.Element {
                         setSelectedUnion(newValue);
                         setErrors(e => ({ ...e, union: false }));
                     }}
-                    getOptionLabel={(option) => option.union}
+                    getOptionLabel={(option) => {
+                        if (language === 'english') return option.union;
+                        if (!translations) throw new Error('Translations not loaded');
+                        return translations.Unions[option.union];
+                    }}
                     renderInput={(params) => {
-                    return (
-                            <TextField {...params} label="Union"
+                        const label = (() => {
+                            if (language === 'english') return "Union";
+                            if (!translations) throw new Error('Translations not loaded');
+                            return translations.Unions['Union'];
+                        })();
+
+                        return (
+                            <TextField
+                                {...params}
+                                label={label}
                                 error={errors.union}
                                 helperText={errors.union ? 'Please select a union' : ''}
                                 disabled={!selectedUpazila}
@@ -140,10 +215,22 @@ export default function Region(): JSX.Element {
                         setSelectedMouza(newValue);
                         setErrors(e => ({ ...e, mouza: false }));
                     }}
-                    getOptionLabel={(mouza) => mouza}
+                    getOptionLabel={(option) => {
+                        if (language === 'english') return option;
+                        if (!translations) throw new Error('Translations not loaded');
+                        return translations.Mouzas[option];
+                    }}
                     renderInput={(params) => {
+                        const label = (() => {
+                            if (language === 'english') return "Mouza";
+                            if (!translations) throw new Error('Translations not loaded');
+                            return translations.Mouzas['Mouza'];
+                        })();
+
                         return (
-                            <TextField {...params} label="Mouza"
+                            <TextField
+                                {...params}
+                                label={label}
                                 error={errors.mouza}
                                 helperText={errors.mouza ? 'Please select a mouza' : ''}
                                 disabled={!selectedUnion}

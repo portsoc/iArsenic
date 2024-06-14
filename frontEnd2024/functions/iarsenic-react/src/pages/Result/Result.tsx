@@ -110,8 +110,11 @@ export default function Result(): JSX.Element {
         });
     }
 
+    // 1. load user entered predictor data - no dpendencies
     useEffect(loadPredictors, []);
 
+    // 2. load model data - depends on predictors to download predictions for
+    // this district only
     useEffect(() => {
         if (!predictors) {
             return;
@@ -120,6 +123,7 @@ export default function Result(): JSX.Element {
         fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
     }, [predictors]);
 
+    // 3. get output message - depends on model data for prediction
     useEffect(() => {
         if (!modelData) {
             console.error('attempting to produce estimate without model data');
