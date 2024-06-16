@@ -34,6 +34,7 @@
     "@typescript-eslint/parser": "^7.13.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^8.57.0",
+    "eslint-config-google": "^0.14.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.7",
     "vite": "^5.2.0"
