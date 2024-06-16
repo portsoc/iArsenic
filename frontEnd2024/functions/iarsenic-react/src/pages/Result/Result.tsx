@@ -59,22 +59,7 @@ export default function Result(): JSX.Element {
         });
     }
 
-    useEffect(loadPredictors, []);
-
-    useEffect(() => {
-        if (!predictors) {
-            return;
-        }
-
-        fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
-    }, [predictors]);
-
-    useEffect(() => {
-        if (!modelData) {
-            console.error('attempting to produce estimate without model data');
-            return;
-        }
-
+    function setOutput(modelData: ModelData) {
         const storedPredictors = PredictorsStorage.get();
         const valid = PredictorsStorage.validate(storedPredictors);
 
@@ -123,6 +108,29 @@ export default function Result(): JSX.Element {
                 body: estimateTexts[messageCode].bengali.body,
             }
         });
+    }
+
+    // 1. load user entered predictor data - no dpendencies
+    useEffect(loadPredictors, []);
+
+    // 2. load model data - depends on predictors to download predictions for
+    // this district only
+    useEffect(() => {
+        if (!predictors) {
+            return;
+        }
+
+        fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
+    }, [predictors]);
+
+    // 3. get output message - depends on model data for prediction
+    useEffect(() => {
+        if (!modelData) {
+            console.error('attempting to produce estimate without model data');
+            return;
+        }
+
+        setOutput(modelData);
     }, [modelData]);
 
     if (!predictors || !modelData || !speedoValue || !warningTexts) {

@@ -81,3 +81,22 @@ export type ModelData = {
         }
     }
 }
+
+// key is english region name, value is bengali
+export type RegionTranslations = {
+    "Divisions": {
+        [key: string]: string
+    },
+    "Districts": {
+        [key: string]: string
+    },
+    "Upazilas": {
+        [key: string]: string
+    },
+    "Unions": {
+        [key: string]: string
+    },
+    "Mouzas": {
+        [key: string]: string
+    }
+}

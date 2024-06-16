@@ -6,3 +6,4 @@ export { default as Review } from './Review';
 export { default as Staining } from './Staining';
 export { default as StainingGuide } from './StainingGuide';
 export { default as Result } from './Result';
+export { default as PrivacyPolicy } from './PrivacyPolicy';
