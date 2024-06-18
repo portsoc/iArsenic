@@ -107,7 +107,7 @@ export default function Depth(): JSX.Element {
                         }
                     });
 
-                    navigate(`${config.basePath}/review`);
+                    navigate(`${config.basePath}/flooding`);
                 }}
             >
                 Review Input

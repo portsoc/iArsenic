@@ -43,12 +43,15 @@ export default function EnglishRegionSelector({
                     setSelectedDistrict(null);
                     setSelectedUpazila(null);
                     setSelectedUnion(null);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, division: false }));
                 }}
                 getOptionLabel={(option) => option.division}
                 renderInput={(params) => {
                     return (
-                        <TextField {...params} label="Division"
+                        <TextField
+                            {...params}
+                            label="Division"
                             error={errors.division}
                             helperText={errors.division ? 'Please select a division' : ''}
                         />
@@ -63,12 +66,15 @@ export default function EnglishRegionSelector({
                     setSelectedDistrict(newValue);
                     setSelectedUpazila(null);
                     setSelectedUnion(null);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, district: false }));
                 }}
                 getOptionLabel={(option) => option.district}
                 renderInput={(params) => {
                     return (
-                        <TextField {...params} label="District"
+                        <TextField
+                            {...params}
+                            label="District"
                             error={errors.district}
                             helperText={errors.district ? 'Please select a district' : ''}
                             disabled={!selectedDivision}
@@ -83,12 +89,15 @@ export default function EnglishRegionSelector({
                 onChange={(_, newValue) => {
                     setSelectedUpazila(newValue);
                     setSelectedUnion(null);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, upazila: false }));
                 }}
                 getOptionLabel={(option) => option.upazila}
                 renderInput={(params) => {
                     return (
-                        <TextField {...params} label="Upazila"
+                        <TextField
+                            {...params}
+                            label="Upazila"
                             error={errors.upazila}
                             helperText={errors.upazila ? 'Please select an upazila' : ''}
                             disabled={!selectedDistrict}
@@ -102,12 +111,15 @@ export default function EnglishRegionSelector({
                 value={selectedUnion}
                 onChange={(_, newValue) => {
                     setSelectedUnion(newValue);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, union: false }));
                 }}
                 getOptionLabel={(option) => option.union}
                 renderInput={(params) => {
                 return (
-                        <TextField {...params} label="Union"
+                        <TextField
+                            {...params}
+                            label="Union"
                             error={errors.union}
                             helperText={errors.union ? 'Please select a union' : ''}
                             disabled={!selectedUpazila}
@@ -126,7 +138,9 @@ export default function EnglishRegionSelector({
                 getOptionLabel={(mouza) => mouza}
                 renderInput={(params) => {
                     return (
-                        <TextField {...params} label="Mouza"
+                        <TextField
+                            {...params}
+                            label="Mouza"
                             error={errors.mouza}
                             helperText={errors.mouza ? 'Please select a mouza' : ''}
                             disabled={!selectedUnion}

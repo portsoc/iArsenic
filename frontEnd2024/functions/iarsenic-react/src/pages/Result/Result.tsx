@@ -55,6 +55,7 @@ export default function Result(): JSX.Element {
             regionKey: predictors.regionKey,
             depth: predictors.depth,
             wellStaining: predictors.wellStaining,
+            flooding: predictors.flooding,
             utensilStaining: predictors.utensilStaining
         });
     }
@@ -73,7 +74,6 @@ export default function Result(): JSX.Element {
         const newEstimate = produceEstimate(
             modelData,
             predictors,
-            false,
         );
 
         const messageCode = (() => {
