@@ -45,6 +45,7 @@ export default function EnglishRegionSelector({
                     setSelectedDistrict(null);
                     setSelectedUpazila(null);
                     setSelectedUnion(null);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, division: false }));
                 }}
                 getOptionLabel={(option) => rt.Divisions[option.division]}
@@ -67,6 +68,7 @@ export default function EnglishRegionSelector({
                     setSelectedDistrict(newValue);
                     setSelectedUpazila(null);
                     setSelectedUnion(null);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, district: false }));
                 }}
                 getOptionLabel={(option) => rt.Districts[option.district]}
@@ -89,6 +91,7 @@ export default function EnglishRegionSelector({
                 onChange={(_, newValue) => {
                     setSelectedUpazila(newValue);
                     setSelectedUnion(null);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, upazila: false }));
                 }}
                 getOptionLabel={(option) => rt.Upazilas[option.upazila]}
@@ -110,6 +113,7 @@ export default function EnglishRegionSelector({
                 value={selectedUnion}
                 onChange={(_, newValue) => {
                     setSelectedUnion(newValue);
+                    setSelectedMouza(null);
                     setErrors(e => ({ ...e, union: false }));
                 }}
                 getOptionLabel={(option) => rt.Unions[option.union]}

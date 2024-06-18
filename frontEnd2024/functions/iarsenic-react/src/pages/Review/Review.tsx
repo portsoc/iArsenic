@@ -22,6 +22,7 @@ export default function Review() {
             regionKey: predictors.regionKey,
             depth: predictors.depth,
             wellStaining: predictors.wellStaining,
+            flooding: predictors.flooding,
             utensilStaining: predictors.utensilStaining
         });
     }, []);
@@ -33,60 +34,82 @@ export default function Review() {
     }
 
     return (
-        <Box width="100%" height="100%" p={2} bgcolor="background.default">
+        <>
             <Typography variant="h4" gutterBottom textAlign="center">
                 Review
             </Typography>
 
-            <Card variant="outlined" sx={{ padding: '16px', marginBottom: '16px' }}>
-                <Typography variant="h6" gutterBottom>Region</Typography>
+            <Card
+                variant="outlined"
+                sx={{
+                    width: '100%',
+                    padding: '16px',
+                    marginBottom: '16px',
+                }}
+            >
+                <Box mb={2}>
+                    <Typography variant="h6" gutterBottom>Region</Typography>
 
-                <Typography variant="body1" component="p" gutterBottom>
-                    Division: {predictors.regionKey.division}
-                </Typography>
-                <Typography variant="body1" component="p" gutterBottom>
-                    District: {predictors.regionKey.district}
-                </Typography>
-                <Typography variant="body1" component="p" gutterBottom>
-                    Upazila: {predictors.regionKey.upazila}
-                </Typography>
-                <Typography variant="body1" component="p" gutterBottom>
-                    Union: {predictors.regionKey.union}
-                </Typography>
-                <Typography variant="body1" component="p" gutterBottom>
-                    Mouza: {predictors.regionKey.mouza}
-                </Typography>
-
-                <Typography variant="h6" gutterBottom>Staining</Typography>
-                <Typography variant="body1" component="p" gutterBottom>
-                    Staining: {predictors.wellStaining}
-                </Typography>
-
-                {predictors.utensilStaining && (
                     <Typography variant="body1" component="p" gutterBottom>
-                        Utensil Staining: {predictors.utensilStaining}
+                        Division: {predictors.regionKey.division}
                     </Typography>
-                )}
 
-                <Typography variant="h6" gutterBottom>Depth</Typography>
-                <Typography variant="body1" component="p">
-                    Depth: {predictors.depth.value} {predictors.depth.unit}
-                </Typography>
+                    <Typography variant="body1" component="p" gutterBottom>
+                        District: {predictors.regionKey.district}
+                    </Typography>
+
+                    <Typography variant="body1" component="p" gutterBottom>
+                        Upazila: {predictors.regionKey.upazila}
+                    </Typography>
+
+                    <Typography variant="body1" component="p" gutterBottom>
+                        Union: {predictors.regionKey.union}
+                    </Typography>
+
+                    <Typography variant="body1" component="p" gutterBottom>
+                        Mouza: {predictors.regionKey.mouza}
+                    </Typography>
+                </Box>
+
+                <Box mb={2}>
+                    <Typography variant="h6" gutterBottom>Staining</Typography>
+                    <Typography variant="body1" component="p" gutterBottom>
+                        Staining: {predictors.wellStaining}
+                    </Typography>
+
+                    {predictors.utensilStaining && (
+                        <Typography variant="body1" component="p" gutterBottom>
+                            Utensil Staining: {predictors.utensilStaining}
+                        </Typography>
+                    )}
+                </Box>
+
+                <Box mb={2}>
+                    <Typography variant="h6" gutterBottom>Depth</Typography>
+                    <Typography variant="body1" component="p">
+                        Depth: {predictors.depth.value} {predictors.depth.unit}
+                    </Typography>
+                </Box>
+
+                <Box>
+                    <Typography variant="h6" gutterBottom>Flooding</Typography>
+                    <Typography variant="body1" component="p">
+                        Flooding: {predictors.flooding}
+                    </Typography>
+                </Box>
             </Card>
 
             <Button
-                variant="contained"
-                sx={{
-                    width: '100%',
-                    height: '56px',
-                    marginBottom: '16px'
-                }}
+                sx={{ width: '90%', height: '4rem' }}
+                variant='contained'
+
                 onClick={() => {
+                    // save data here
                     navigate(`${config.basePath}/result`);
                 }}
             >
                 Results
             </Button>
-        </Box>
+        </>
     );
 }

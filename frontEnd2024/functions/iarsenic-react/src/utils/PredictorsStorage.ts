@@ -6,6 +6,7 @@ export type Predictors = {
         unit: 'ft' | 'm'
         value: number
     },
+    flooding: 'yes' | 'no',
     wellStaining: WellStaining,
     utensilStaining?: UtensilStaining,
 }
@@ -34,6 +35,7 @@ export default class PredictorsStorage {
         if (predictors.regionKey === undefined) return { ok: false, msg: 'Region not set' };
         if (predictors.depth === undefined) return { ok: false, msg: 'Depth not set' };
         if (predictors.wellStaining === undefined) return { ok: false, msg: 'Well staining not set' };
+        if (predictors.flooding === undefined) return { ok: false, msg: 'Flooding not set' };
 
         return { ok: true, msg: 'valid' };
     };

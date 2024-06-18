@@ -4,7 +4,6 @@ import { Predictors } from '../../utils/PredictorsStorage';
 export default function produceEstimate(
         modelData: ModelData,
         predictors: Predictors,
-        flood: boolean,
     ): MessageCode {
     const regionData = modelData[predictors.regionKey.division]
         .districts[predictors.regionKey.district]
@@ -39,7 +38,7 @@ export default function produceEstimate(
     if (regionStrataKey === 's15' && 'm2' in regionStrataModel) {
         if (predictors.wellStaining === 'Black' && regionStrataModel.m2 !== undefined) {
             return regionStrataModel.m2;
-        } else if (flood === true && regionStrataModel.m9 !== undefined) {
+        } else if (predictors.flooding === 'yes' && regionStrataModel.m9 !== undefined) {
             return regionStrataModel.m9;
         } else if (regionStrataModel.m7 !== undefined) {
             return regionStrataModel.m7;

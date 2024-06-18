@@ -13,6 +13,29 @@ export default function Landing(): JSX.Element {
                 আইআর্সেনিকে আপনাকে স্বাগতম
             </Typography>
 
+            <Card
+                variant='outlined'
+                sx={{
+                    margin: '0 1rem 1rem 1rem',
+                    padding: '1rem',
+                    borderColor: 'red',
+                    boxShadow: '0 0 2px red',
+                }}
+            >
+                <Typography className='english' variant='h6' textAlign='center' gutterBottom>
+                    WARNING
+                </Typography>
+
+                <Typography className='english' variant='body1' mb={2}>
+                    This is a research release which is <b>not ready or approved
+                    for use in the field.</b>
+                </Typography>
+
+                <Typography className='english' variant='body1'>
+                    Please use this deployment for testing and demo purposes only.
+                </Typography>
+            </Card>
+
             <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
                 <Typography mb={2} variant='body1' className='english'>
                     Protect your health with a few clicks.

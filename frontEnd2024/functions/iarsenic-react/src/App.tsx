@@ -10,6 +10,7 @@ import {
     Staining,
     StainingGuide,
     Result,
+    Flooding,
     PrivacyPolicy,
 } from './pages';
 import config from './config';
@@ -50,7 +51,7 @@ function App() {
                     <Typography
                         sx={{ cursor: 'pointer' }}
                         variant='h6'
-                        onClick={() => navigate(config.basePath)}
+                        onClick={() => navigate(`${config.basePath}/`)}
                     >
                         iArsenic
                     </Typography>
@@ -93,12 +94,13 @@ function App() {
                     <Route path='/' component={Landing}/>
                     <Route path='/briefing' component={Briefing}/>
                     <Route path='/depth' component={Depth}/>
-                    <Route path='/region' component={Region}/>
-                    <Route path='/review' component={Review}/>
-                    <Route path='/staining' component={Staining}/>
-                    <Route path='/staining-guide' component={StainingGuide}/>
-                    <Route path='/result' component={Result}/>
+                    <Route path='/flooding' component={Flooding}/>
                     <Route path='/privacy-policy' component={PrivacyPolicy}/>
+                    <Route path='/region' component={Region}/>
+                    <Route path='/result' component={Result}/>
+                    <Route path='/review' component={Review}/>
+                    <Route path='/staining-guide' component={StainingGuide}/>
+                    <Route path='/staining' component={Staining}/>
                 </Router>
             </Stack>
         </ThemeProvider>
