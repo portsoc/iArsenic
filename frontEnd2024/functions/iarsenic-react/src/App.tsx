@@ -51,7 +51,7 @@ function App() {
                     <Typography
                         sx={{ cursor: 'pointer' }}
                         variant='h6'
-                        onClick={() => navigate(config.basePath)}
+                        onClick={() => navigate(`${config.basePath}/`)}
                     >
                         iArsenic
                     </Typography>
