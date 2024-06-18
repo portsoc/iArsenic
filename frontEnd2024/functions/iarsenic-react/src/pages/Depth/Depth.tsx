@@ -20,8 +20,8 @@ export default function Depth(): JSX.Element {
     function switchUnits() {
         setUnit(unit === 'ft' ? 'm' : 'ft');
 
-        if (unit === 'ft') setDepth(depth * 0.3048);
-        if (unit === 'm') setDepth(depth / 0.3048);
+        if (unit === 'ft') setDepth(Math.floor(depth * 0.3048));
+        if (unit === 'm') setDepth(Math.floor(depth / 0.3048));
     }
 
     return (
