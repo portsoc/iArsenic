@@ -2,8 +2,10 @@ import functions from 'firebase-functions';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
-import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
-import { getFirestore, Timestamp, FieldValue, Filter } from 'firebase-admin/firestore';
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import fs from 'fs';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 initializeApp();
 const db = getFirestore();
@@ -18,6 +20,57 @@ app.get('/api/healthcheck', (_, res) => {
     res.json({
         status: 'ok',
         message: `Server is running. Timestamp: ${new Date().toISOString()}`,
+    });
+});
+
+app.get('/api/gps-region', async (req, res) => {
+    const { lat, lon } = req.query;
+
+    if (!lat || !lon) {
+        res.status(400).json({ error: 'Missing required query parameters' });
+        return;
+    }
+
+    const div = JSON.parse(fs.readFileSync('./geodata/div-c005-s010-vw-pr.geojson', 'utf8'));
+    const dis = JSON.parse(fs.readFileSync('./geodata/dis-c005-s010-vw-pr.geojson', 'utf8'));
+    const upa = JSON.parse(fs.readFileSync('./geodata/upa-c005-s010-vw-pr.geojson', 'utf8'));
+    const uni = JSON.parse(fs.readFileSync('./geodata/uni-c005-s010-vw-pr.geojson', 'utf8'));
+    const mou = JSON.parse(fs.readFileSync('./geodata/mou-c005-s010-vw-pr.geojson', 'utf8'));
+
+    const division = div.features
+        .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
+
+    if (!division) {
+        res.status(404).json({ error: 'Area not inside Bangladesh' });
+        return;
+    }
+
+    const district = dis.features
+        .filter((feature) => feature.properties.div === division.properties.div)
+        .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
+
+    const upazila = upa.features
+        .filter((feature) => feature.properties.dis === district.properties.dis)
+        .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
+
+    const union = uni.features
+        .filter((feature) => feature.properties.upa === upazila.properties.upa)
+        .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
+
+    const mouza = mou.features
+        .filter((feature) => feature.properties.union === union.properties.union)
+        .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
+
+    const regionKey = {
+        division: division.properties.div,
+        district: district.properties.dis,
+        upazila: upazila.properties.upa,
+        union: union.properties.uni,
+        mouza: mouza.properties.mou,
+    }
+
+    res.status(200).json({
+        regionKey,
     });
 });
 
@@ -55,7 +108,7 @@ app.post('/api/save-prediction', async (req, res) => {
             },
         });
 
-        res.json({ status: 'ok' });
+        res.status(200).json({ status: 'User data saved successfully' });
     } catch (error) {
         console.error('Error saving prediction:', error);
         res.status(500).json({ error: 'Internal Server Error' });
