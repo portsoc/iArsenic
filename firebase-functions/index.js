@@ -31,11 +31,7 @@ app.get('/api/gps-region', async (req, res) => {
         return;
     }
 
-    const div = JSON.parse(fs.readFileSync('./geodata/div-c005-s010-vw-pr.geojson', 'utf8'));
-    const dis = JSON.parse(fs.readFileSync('./geodata/dis-c005-s010-vw-pr.geojson', 'utf8'));
-    const upa = JSON.parse(fs.readFileSync('./geodata/upa-c005-s010-vw-pr.geojson', 'utf8'));
-    const uni = JSON.parse(fs.readFileSync('./geodata/uni-c005-s010-vw-pr.geojson', 'utf8'));
-    const mou = JSON.parse(fs.readFileSync('./geodata/mou-c005-s010-vw-pr.geojson', 'utf8'));
+    let div = JSON.parse(fs.readFileSync('./geodata/div-c005-s010-vw-pr.geojson', 'utf8'));
 
     const division = div.features
         .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
@@ -45,17 +41,29 @@ app.get('/api/gps-region', async (req, res) => {
         return;
     }
 
+    div = null
+    let dis = JSON.parse(fs.readFileSync('./geodata/dis-c005-s010-vw-pr.geojson', 'utf8'));
+
     const district = dis.features
         .filter((feature) => feature.properties.div === division.properties.div)
         .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
+
+    dis = null
+    let upa = JSON.parse(fs.readFileSync('./geodata/upa-c005-s010-vw-pr.geojson', 'utf8'));
 
     const upazila = upa.features
         .filter((feature) => feature.properties.dis === district.properties.dis)
         .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
 
+    upa = null
+    let uni = JSON.parse(fs.readFileSync('./geodata/uni-c005-s010-vw-pr.geojson', 'utf8'));
+
     const union = uni.features
         .filter((feature) => feature.properties.upa === upazila.properties.upa)
         .find((feature) => booleanPointInPolygon([lon, lat], feature.geometry));
+
+    uni = null
+    let mou = JSON.parse(fs.readFileSync('./geodata/mou-c005-s010-vw-pr.geojson', 'utf8'));
 
     const mouza = mou.features
         .filter((feature) => feature.properties.union === union.properties.union)
@@ -119,4 +127,4 @@ app.get('*', (_, res) => {
     res.sendFile(path.resolve(staticPath, 'index.html'));
 });
 
-export default functions.https.onRequest(app);
+export default functions.runWith({ memory: '512MB' }).https.onRequest(app);

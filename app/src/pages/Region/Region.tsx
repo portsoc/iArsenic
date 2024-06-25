@@ -121,6 +121,7 @@ export default function Region(): JSX.Element {
     useEffect(() => {
         fetchDropdownData();
         fetchRegionTranslations();
+        getGeolocation();
     }, []);
 
     useEffect(() => {
