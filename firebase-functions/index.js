@@ -16,6 +16,8 @@ app.use(cors());
 const staticPath = path.resolve('static');
 app.use(express.static(staticPath));
 
+app.use(express.json());
+
 app.get('/api/healthcheck', (_, res) => {
     res.json({
         status: 'ok',
@@ -83,37 +85,35 @@ app.get('/api/gps-region', async (req, res) => {
 });
 
 app.post('/api/save-prediction', async (req, res) => {
-    const { data } = req.body;
+    const data = req.body;
 
     try {
         const predictionsRef = db.collection('default');
 
-        await predictionsRef.add({
+        predictionsRef.add({
+            id: data.id,
             predictors: {
                 regionKey: {
-                    division: data.predictors.regionKey.division,
-                    district: data.predictors.regionKey.district,
-                    upazila: data.predictors.regionKey.upazila,
-                    union: data.predictors.regionKey.union,
-                    mouza: data.predictors.regionKey.mouza,
+                    division: data.regionKey.division,
+                    district: data.regionKey.district,
+                    upazila: data.regionKey.upazila,
+                    union: data.regionKey.union,
+                    mouza: data.regionKey.mouza,
                 },
                 depth: {
-                    unit: data.predictors.depth.unit,
-                    value: data.predictors.depth.value,
+                    unit: data.depth.unit,
+                    value: data.depth.value,
                 },
-                flooding: data.predictors.flooding,
-                wellStaining: data.predictors.wellStaining,
-                utensilStaining: data.predictors.utensilStaining,
+                flooding: data.flooding,
+                wellStaining: data.wellStaining,
+                utensilStaining: data.utensilStaining ? data.utensilStaining : 'N/A',
             },
             createdAt: Timestamp.now(),
             model: data.model,
             prediction: data.prediction,
-            requesterIp: req.ip,
+            modelPrediction: data.modelPrediction,
             language: data.language,
-            location: {
-                latitude: data.location.latitude,
-                longitude: data.location.longitude,
-            },
+            location: data.geolocation,
         });
 
         res.status(200).json({ status: 'User data saved successfully' });

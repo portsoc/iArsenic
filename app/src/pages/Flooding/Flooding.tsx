@@ -71,8 +71,10 @@ export default function Depth(): JSX.Element {
                         return;
                     }
 
+                    const floodingBool = flooding === 'yes';
+
                     PredictorsStorage.set({
-                        flooding,
+                        flooding: floodingBool,
                     });
 
                     navigate(`${config.basePath}/review`);

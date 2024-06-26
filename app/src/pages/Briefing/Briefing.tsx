@@ -1,6 +1,8 @@
 import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import config from "../../config";
+import { v4 as uuidv4 } from 'uuid';
+import PredictorsStorage from "../../utils/PredictorsStorage";
 
 export default function Briefing(): JSX.Element {
     return (
@@ -154,7 +156,13 @@ export default function Briefing(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/region`)}
+                onClick={() => {
+                    PredictorsStorage.set({
+                        id: uuidv4(),
+                    });
+
+                    navigate(`${config.basePath}/region`);
+                }}
             >
                 <Typography className='english'>Generate Estimate</Typography>
                 <Typography className='bengali'>ঝুঁকি  মূল্যায়ন করুন</Typography>

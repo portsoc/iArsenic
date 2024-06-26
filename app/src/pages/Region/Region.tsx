@@ -31,6 +31,8 @@ export default function Region(): JSX.Element {
         mouza: false
     });
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
+    const [regionGeovalidated, setRegionGeovalidated] = useState<boolean>(false);
+    const [geolocation, setGeolocation] = useState<[number, number]>();
 
     async function fetchDropdownData() {
         const response = await fetch(`${config.basePath}/model5/dropdown-data.json`);
@@ -77,6 +79,9 @@ export default function Region(): JSX.Element {
 
             <GeolocationButton
                 dropdownData={dropdownData}
+                setRegionGeovalidated={setRegionGeovalidated}
+                geolocation={geolocation}
+                setGeolocation={setGeolocation}
                 setSelectedDivision={setSelectedDivision}
                 setSelectedDistrict={setSelectedDistrict}
                 setSelectedUpazila={setSelectedUpazila}
@@ -140,8 +145,14 @@ export default function Region(): JSX.Element {
                             upazila: selectedUpazila?.upazila,
                             union: selectedUnion?.union,
                             mouza: selectedMouza,
-                        }
+                        },
+                        regionGeovalidated,
                     });
+
+                    if (geolocation) {
+                        PredictorsStorage.set({ geolocation });
+                    }
+
                     navigate(`${config.basePath}/staining`);
                 }}
             >

@@ -8,6 +8,7 @@ import BengaliSpeedo from "./bengaliSpeedo";
 import estimateTexts from "./estimateTexts";
 import produceEstimate from "./produceEstimate";
 import PredictorsStorage, { Predictors } from "../../utils/PredictorsStorage";
+import LanguageSelector from "../../utils/LanguageSelector";
 
 type EstimateTexts = {
     english: {
@@ -23,6 +24,7 @@ type EstimateTexts = {
 export default function Result(): JSX.Element {
     const [predictors, setPredictors] = useState<Predictors>();
     const [modelData, setModelData] = useState<ModelData>();
+    const [modelPrediction, setModelPrediction] = useState<number>();
 
     const [speedoValue, setSpeedoValue] = useState<number>();
     const [warningTexts, setWarningTexts] = useState<EstimateTexts>();
@@ -51,13 +53,7 @@ export default function Result(): JSX.Element {
 
         const predictors = storedPredictors as Predictors;
 
-        setPredictors({
-            regionKey: predictors.regionKey,
-            depth: predictors.depth,
-            wellStaining: predictors.wellStaining,
-            flooding: predictors.flooding,
-            utensilStaining: predictors.utensilStaining
-        });
+        setPredictors(predictors);
     }
 
     function setOutput(modelData: ModelData) {
@@ -96,6 +92,7 @@ export default function Result(): JSX.Element {
             }
         })();
 
+        setModelPrediction(newEstimate);
         setSpeedoValue(messageCode + 0.5);
 
         setWarningTexts({
@@ -110,15 +107,33 @@ export default function Result(): JSX.Element {
         });
     }
 
+    async function submitSession(predictors: Predictors) {
+        const res = await fetch(`${config.basePath}/api/save-prediction`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'model5',
+                modelPrediction: modelPrediction,
+                prediction: speedoValue,
+                language: LanguageSelector.get(),
+                ...predictors,
+            })
+        });
+
+        if (!res.ok) {
+            console.error('Failed to submit predictors');
+        }
+    }
+
     // 1. load user entered predictor data - no dpendencies
     useEffect(loadPredictors, []);
 
     // 2. load model data - depends on predictors to download predictions for
     // this district only
     useEffect(() => {
-        if (!predictors) {
-            return;
-        }
+        if (!predictors) return;
 
         fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
     }, [predictors]);
@@ -132,6 +147,13 @@ export default function Result(): JSX.Element {
 
         setOutput(modelData);
     }, [modelData]);
+
+    // 4. submit prediction & predictors
+    useEffect(() => {
+        if (!predictors) return;
+
+        submitSession(predictors);
+    }, [speedoValue]);
 
     if (!predictors || !modelData || !speedoValue || !warningTexts) {
         return (
