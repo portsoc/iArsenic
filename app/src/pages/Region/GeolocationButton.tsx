@@ -7,6 +7,9 @@ import config from "../../config";
 
 type props = {
     dropdownData: DropdownDivision[],
+    setRegionGeovalidated: (geovalidated: boolean) => void,
+    geolocation: [number, number] | undefined,
+    setGeolocation: (geolocation: [number, number]) => void,
     setSelectedDivision: (selectedDivision: DropdownDivision) => void,
     setSelectedDistrict: (selectedDistrict: DropdownDistrict) => void,
     setSelectedUpazila: (selectedUpazila: DropdownUpazila) => void,
@@ -16,13 +19,15 @@ type props = {
 
 export default function GeolocationButton({
     dropdownData,
+    setRegionGeovalidated,
+    geolocation,
+    setGeolocation,
     setSelectedDivision,
     setSelectedDistrict,
     setSelectedUpazila,
     setSelectedUnion,
     setSelectedMouza,
 }: props): JSX.Element {
-    const [geolocation, setGeolocation] = useState<[number, number]>();
     const [geolocationFailed, setGeolocationFailed] = useState<boolean>(false);
     const [gettingRegionKey, setGettingRegionKey] = useState<boolean>(false);
     const [regionNotFound, setRegionNotFound] = useState<boolean>(false);
@@ -33,8 +38,6 @@ export default function GeolocationButton({
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-                    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-                    console.log(`${latitude}, ${longitude}`);
                     setGeolocation([latitude, longitude]);
                 },
                 (error) => {
@@ -109,12 +112,14 @@ export default function GeolocationButton({
             return;
         }
         setSelectedMouza(geoRegionKey.mouza);
+        setRegionGeovalidated(true);
         setGettingRegionKey(false);
     }
 
     useEffect(() => {
         if (!geolocation) return;
 
+        setGeolocation(geolocation);
         setRegionFromGeolocation(geolocation, dropdownData);
     }, [geolocation]);
 

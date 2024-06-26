@@ -18,13 +18,7 @@ export default function Review() {
 
         const predictors = storedPredictors as Predictors;
 
-        setPredictors({
-            regionKey: predictors.regionKey,
-            depth: predictors.depth,
-            wellStaining: predictors.wellStaining,
-            flooding: predictors.flooding,
-            utensilStaining: predictors.utensilStaining
-        });
+        setPredictors(predictors);
     }, []);
 
     if (!predictors) {
@@ -94,7 +88,7 @@ export default function Review() {
                 <Box>
                     <Typography variant="h6" gutterBottom>Flooding</Typography>
                     <Typography variant="body1" component="p">
-                        Flooding: {predictors.flooding}
+                        Flooding: {predictors.flooding ? 'Yes' : 'No'}
                     </Typography>
                 </Box>
             </Card>

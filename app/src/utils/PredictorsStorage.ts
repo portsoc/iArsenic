@@ -1,14 +1,17 @@
 import { RegionKey, WellStaining, UtensilStaining } from '../types';
 
 export type Predictors = {
+    id: string,
     regionKey: RegionKey
     depth: {
         unit: 'ft' | 'm'
         value: number
     },
-    flooding: 'yes' | 'no',
+    flooding: boolean,
     wellStaining: WellStaining,
     utensilStaining?: UtensilStaining,
+    geolocation?: [number, number],
+    regionGeovalidated: boolean,
 }
 
 export default class PredictorsStorage {
@@ -32,10 +35,12 @@ export default class PredictorsStorage {
     };
 
     static validate = (predictors: Partial<Predictors>): { ok: boolean, msg: string } => {
+        if (predictors.id === undefined) return { ok: false, msg: 'ID not set' };
         if (predictors.regionKey === undefined) return { ok: false, msg: 'Region not set' };
         if (predictors.depth === undefined) return { ok: false, msg: 'Depth not set' };
-        if (predictors.wellStaining === undefined) return { ok: false, msg: 'Well staining not set' };
         if (predictors.flooding === undefined) return { ok: false, msg: 'Flooding not set' };
+        if (predictors.wellStaining === undefined) return { ok: false, msg: 'Well staining not set' };
+        if (predictors.regionGeovalidated === undefined) return { ok: false, msg: 'Region geovalidation not set' };
 
         return { ok: true, msg: 'valid' };
     };

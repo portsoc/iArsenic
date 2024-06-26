@@ -38,7 +38,7 @@ export default function produceEstimate(
     if (regionStrataKey === 's15' && 'm2' in regionStrataModel) {
         if (predictors.wellStaining === 'Black' && regionStrataModel.m2 !== undefined) {
             return regionStrataModel.m2;
-        } else if (predictors.flooding === 'yes' && regionStrataModel.m9 !== undefined) {
+        } else if (predictors.flooding && regionStrataModel.m9 !== undefined) {
             return regionStrataModel.m9;
         } else if (regionStrataModel.m7 !== undefined) {
             return regionStrataModel.m7;
