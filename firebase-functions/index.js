@@ -91,36 +91,52 @@ app.post('/api/save-prediction', async (req, res) => {
         const predictionsRef = db.collection('default');
 
         predictionsRef.add({
-            id: data.id,
+            id: data.id || 'N/A',
             predictors: {
                 regionKey: {
-                    division: data.regionKey.division,
-                    district: data.regionKey.district,
-                    upazila: data.regionKey.upazila,
-                    union: data.regionKey.union,
-                    mouza: data.regionKey.mouza,
+                    division: (data.regionKey && data.regionKey.division) || 'N/A',
+                    district: (data.regionKey && data.regionKey.district) || 'N/A',
+                    upazila: (data.regionKey && data.regionKey.upazila) || 'N/A',
+                    union: (data.regionKey && data.regionKey.union) || 'N/A',
+                    mouza: (data.regionKey && data.regionKey.mouza) || 'N/A',
                 },
                 depth: {
-                    unit: data.depth.unit,
-                    value: data.depth.value,
+                    unit: (data.depth && data.depth.unit) || 'N/A',
+                    value: (data.depth && data.depth.value) || 'N/A',
                 },
-                flooding: data.flooding,
-                wellStaining: data.wellStaining,
-                utensilStaining: data.utensilStaining ? data.utensilStaining : 'N/A',
+                flooding: data.flooding || 'N/A',
+                wellStaining: data.wellStaining || 'N/A',
+                utensilStaining: data.utensilStaining || 'N/A',
             },
             createdAt: Timestamp.now(),
-            model: data.model,
-            prediction: data.prediction,
-            modelPrediction: data.modelPrediction,
-            language: data.language,
-            location: data.geolocation,
-        });
+            model: data.model || 'N/A',
+            prediction: data.prediction || 'N/A',
+            modelPrediction: data.modelPrediction || 'N/A',
+            language: data.language || 'N/A',
+            geolocation: data.geolocation || 'N/A',
+        })
 
         res.status(200).json({ status: 'User data saved successfully' });
     } catch (error) {
         console.error('Error saving prediction:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+});
+
+app.get('/api/interactive-map', (_, res) => {
+    const map = fs.readFileSync('./interactive-map/interactive-map.geojson', 'utf8');
+    console.log('got map')
+
+    res.status(200).json(JSON.parse(map));
+});
+
+app.get('/api/predictions', async (req, res) => {
+    const predictions = db.collection('default');
+    const snapshot = await predictions.get();
+    const data = snapshot.docs.map((doc) => doc.data());
+
+    res.status(200).json({ data });
+
 });
 
 app.get('*', (_, res) => {

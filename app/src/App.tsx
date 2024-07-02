@@ -12,10 +12,13 @@ import {
     Result,
     Flooding,
     PrivacyPolicy,
+    Map,
 } from './pages';
 import config from './config';
 import { navigate } from 'wouter/use-browser-location';
 import LanguageSelector from './utils/LanguageSelector';
+import PublicIcon from '@mui/icons-material/Public';
+
 
 const Theme = {
     theme: createTheme({
@@ -48,13 +51,21 @@ function App() {
                     direction='row'
                     alignItems='center'
                 >
-                    <Typography
-                        sx={{ cursor: 'pointer' }}
-                        variant='h6'
-                        onClick={() => navigate(`${config.basePath}/`)}
-                    >
-                        iArsenic
-                    </Typography>
+                    <Stack direction='row' alignItems='center'>
+                        <Typography
+                            sx={{ cursor: 'pointer' }}
+                            variant='h6'
+                            onClick={() => navigate(`${config.basePath}/`)}
+                        >
+                            iArsenic
+                        </Typography>
+                        <Button
+                            variant='outlined'
+                            startIcon={<PublicIcon sx={{ color: 'whitesmoke' }} />}
+                            onClick={() => navigate(`${config.basePath}/map`)}
+                        >
+                        </Button>
+                    </Stack>
 
                     <Box>
                         <Button
@@ -81,16 +92,16 @@ function App() {
                 </Stack>
             </AppBar>
 
-            <Stack
-                maxHeight={'min-content'}
-                maxWidth={'30rem'}
-                margin='auto'
-                spacing={4}
-                direction='column'
-                marginBottom='2rem'
-                alignItems='center'
-            >
-                <Router base={config.basePath}>
+            <Router base={config.basePath}>
+                <Stack
+                    maxHeight='min-content'
+                    maxWidth='30rem'
+                    margin='auto'
+                    spacing={4}
+                    direction='column'
+                    marginBottom='2rem'
+                    alignItems='center'
+                >
                     <Route path='/' component={Landing}/>
                     <Route path='/briefing' component={Briefing}/>
                     <Route path='/depth' component={Depth}/>
@@ -101,8 +112,9 @@ function App() {
                     <Route path='/review' component={Review}/>
                     <Route path='/staining-guide' component={StainingGuide}/>
                     <Route path='/staining' component={Staining}/>
-                </Router>
-            </Stack>
+                </Stack>
+                <Route path='/map' component={Map}/>
+            </Router>
         </ThemeProvider>
     );
 }

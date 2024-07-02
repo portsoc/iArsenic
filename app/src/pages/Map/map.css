@@ -1,0 +1,5 @@
+.leaflet-container {
+    height: 85vh;
+    width: 95vw;
+    outline: 2px solid black;
+}
