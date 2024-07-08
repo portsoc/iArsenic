@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './map.css';
-import { LatLngExpression} from 'leaflet';
+import { LatLngExpression } from 'leaflet';
 import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
@@ -12,10 +12,18 @@ import ReactDOMServer from 'react-dom/server';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 
-L.Icon.Default.mergeOptions({
-    iconUrl: `${config.basePath}/map-pin.png`,
-    shadowUrl: markerShadow,
-});
+// todo undo unstaged changes use color to change uri of icon
+function createCustomIcon(color: string) {
+    return L.icon({
+        iconUrl: `${config.basePath}/map-markers/${color}.png`,
+        shadowUrl: markerShadow,
+        iconSize: [25, 41],
+        shadowSize: [41, 41],
+        iconAnchor: [12, 41], // point icon corresponds to marker
+        shadowAnchor: [12, 41],  // point shadow corresponds to marker
+        popupAnchor: [1, -34], // point from which the popup should open relative to the iconAnchor
+    });
+}
 
 export default function Map() {
     const position: LatLngExpression = [23.8041, 90.4152];
@@ -45,10 +53,31 @@ export default function Map() {
                 (typeof p.geolocation[1] === 'number');
             });
 
+        let colourIndex = 0;
+
         return coordPredictions?.map((p: Partial<Predictors>, index) => {
             const pr = (p as { predictors: Predictors }).predictors as Predictors; // todo fix typing
+
+            const icon = createCustomIcon(((): string => {
+                colourIndex++;
+                switch (colourIndex % 4) {
+                    case 0:
+                        return 'green';
+                    case 1:
+                        return 'lime';
+                    case 2:
+                        return 'yellow';
+                    case 3:
+                        return 'orange';
+                    case 4:
+                        return 'red';
+                    default:
+                        'one';
+                }
+                return 'one';
+            })());
             return (
-                <Marker key={index} position={p.geolocation as LatLngExpression}>
+                <Marker icon={icon} key={index} position={p.geolocation as LatLngExpression}>
                     <Popup>
                         <Typography variant='body1'>
                             ID: {p.id}
