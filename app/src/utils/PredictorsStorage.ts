@@ -1,18 +1,4 @@
-import { RegionKey, WellStaining, UtensilStaining } from '../types';
-
-export type Predictors = {
-    id: string,
-    regionKey: RegionKey
-    depth: {
-        unit: 'ft' | 'm'
-        value: number
-    },
-    flooding: boolean,
-    wellStaining: WellStaining,
-    utensilStaining?: UtensilStaining,
-    geolocation?: [number, number],
-    regionGeovalidated: boolean,
-}
+import { Predictors } from '../types';
 
 export default class PredictorsStorage {
     static dataKey: string = 'predictionData';

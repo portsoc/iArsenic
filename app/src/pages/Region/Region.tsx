@@ -55,7 +55,7 @@ export default function Region(): JSX.Element {
     }
 
     async function fetchRegionTranslations() {
-        const translations = await RegionTranslationsFetcher()
+        const translations = await RegionTranslationsFetcher();
         setRegionTranslations(translations);
     }
 

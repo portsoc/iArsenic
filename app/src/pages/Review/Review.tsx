@@ -2,7 +2,8 @@ import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import PredictorsStorage, { Predictors } from '../../utils/PredictorsStorage';
+import PredictorsStorage from '../../utils/PredictorsStorage';
+import { Predictors } from '../../types';
 
 export default function Review() {
     const [predictors, setPredictors] = useState<Predictors>();
@@ -98,7 +99,6 @@ export default function Review() {
                 variant='contained'
 
                 onClick={() => {
-                    // save data here
                     navigate(`${config.basePath}/result`);
                 }}
             >
