@@ -25,7 +25,7 @@ export default function Markers({ sessionData, regionTranslations }: props): JSX
 
     function getIcon(prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5): L.Icon<L.IconOptions> {
         const iconColor = (() => {
-            switch ((prediction - 0.5) % 4) {
+            switch (prediction - 0.5) {
                 case 0:
                     return 'green';
                 case 1:
@@ -45,6 +45,23 @@ export default function Markers({ sessionData, regionTranslations }: props): JSX
         return createCustomIcon(iconColor);
     }
 
+    function predictionToRiskFactor(prediction: number): { english: string, bengali: string } {
+        switch (prediction) {
+            case 0.5:
+                return { english: 'Rare', bengali: 'বিরল' };
+            case 1.5:
+                return { english: 'Low', bengali: 'কম' };
+            case 2.5:
+                return { english: 'Medium', bengali: 'মাঝারি' };
+            case 3.5:
+                return { english: 'High', bengali: 'উচ্চ' };
+            case 4.5:
+                return { english: 'Severe', bengali: 'গুরুতর' };
+            default:
+                return { english: 'Unknown', bengali: 'N/A' };
+        }
+    }
+
     return (
         <>
             {sessionData.filter(s => s.geolocation !== 'N/A').map((p, index) =>
@@ -52,6 +69,14 @@ export default function Markers({ sessionData, regionTranslations }: props): JSX
                     <Popup>
                         <Typography variant='body1'>
                             ID: {p.id}
+                        </Typography>
+
+                        <Typography className='english' variant='body1'>
+                            Risk Factor: {predictionToRiskFactor(p.prediction).english}
+                        </Typography>
+
+                        <Typography className='bengali' variant='body1'>
+                            BENGALI PLACEHOLDER: {predictionToRiskFactor(p.prediction).bengali}
                         </Typography>
 
                         <Typography className='english' variant='body1'>
@@ -98,6 +123,51 @@ export default function Markers({ sessionData, regionTranslations }: props): JSX
                             ${regionTranslations.Mouzas.Mouza}:
                             ${regionTranslations.Mouzas[p.predictors.regionKey.mouza]}
                         `}</Typography>
+
+                        <Typography className='english' variant='body1'>
+                            Depth: {
+                                p.predictors.depth.unit === 'm' ?
+                                `${p.predictors.depth.value}m` :
+                                `${Math.floor(p.predictors.depth.value * 0.3048)}m`
+                            }
+                        </Typography>
+
+                        <Typography className='bengali' variant='body1'>
+                            BENGALI PLACEHOLDER: {
+                                p.predictors.depth.unit === 'm' ?
+                                `${p.predictors.depth.value}m` :
+                                `${Math.floor(p.predictors.depth.value * 0.3048)}m`
+                            }
+                        </Typography>
+
+                        <Typography className='english' variant='body1'>
+                            Flooding: {p.predictors.flooding ? 'Yes' : 'No'}
+                        </Typography>
+
+                        <Typography className='bengali' variant='body1'>
+                            BENGALI PLACEHOLDER: {p.predictors.flooding ? 'Yes' : 'No'}
+                        </Typography>
+
+                        <Typography className='english' variant='body1'>
+                            Well Staining: {p.predictors.wellStaining}
+                        </Typography>
+
+                        <Typography className='english' variant='body1'>
+                            BENGALI PLACEHOLDER: {p.predictors.wellStaining}
+                        </Typography>
+
+                        {
+                            (p.predictors.utensilStaining !== 'N/A') &&
+                            <>
+                                <Typography className='english' variant='body1'>
+                                    Utensil Staining: {p.predictors.utensilStaining}
+                                </Typography>
+
+                                <Typography className='bengali' variant='body1'>
+                                    BENGALI PLACEHOLDER: {p.predictors.utensilStaining}
+                                </Typography>
+                            </>
+                        }
                     </Popup>
                 </Marker>
             )}

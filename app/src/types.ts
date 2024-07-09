@@ -44,7 +44,7 @@ export type Predictors = {
 
 // staining types
 export type WellStaining = 'Black' | 'Red' | 'Not sure';
-export type UtensilStaining = 'Red' | 'Black' | 'No colour change to slightly blackish' | undefined;
+export type UtensilStaining = 'Red' | 'Black' | 'No colour change to slightly blackish' | 'N/A' | undefined;
 
 // prediction data
 export type MessageCode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
