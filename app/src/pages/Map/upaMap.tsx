@@ -20,7 +20,7 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
         <GeoJSONComponent
             data={{
                 ...interactiveMap,
-                type: 'FeatureCollection'
+                type: 'FeatureCollection', // TODO fix typing
             }}
             style={(feature) => ({
                 fillColor: getColor(feature?.properties.as),
