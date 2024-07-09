@@ -123,13 +123,6 @@ app.post('/api/save-prediction', async (req, res) => {
     }
 });
 
-// todo why not put this map file in the static folder?
-app.get('/api/interactive-map', (_, res) => {
-    const map = fs.readFileSync('./interactive-map/interactive-map.geojson', 'utf8');
-
-    res.status(200).json(JSON.parse(map));
-});
-
 app.get('/api/predictions', async (req, res) => {
     const predictions = db.collection('default');
     const snapshot = await predictions.get();
