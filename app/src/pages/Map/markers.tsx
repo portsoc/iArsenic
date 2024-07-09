@@ -39,7 +39,7 @@ export default function Markers({ sessionData, regionTranslations }: props): JSX
                 default:
                     'blue';
             }
-            return 'blue'
+            return 'blue';
         })();
 
         return createCustomIcon(iconColor);
@@ -172,5 +172,5 @@ export default function Markers({ sessionData, regionTranslations }: props): JSX
                 </Marker>
             )}
         </>
-    )
+    );
 }

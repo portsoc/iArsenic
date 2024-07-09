@@ -1,10 +1,11 @@
 import { Typography } from "@mui/material";
 import ReactDOMServer from "react-dom/server";
-import { GeoJSON } from 'react-leaflet';
+import { GeoJSON as GeoJSONComponent } from 'react-leaflet';
+import { GeoJSON } from 'leaflet';
 import { RegionTranslations } from "../../types";
 
 type props = {
-    interactiveMap: any,
+    interactiveMap: GeoJSON,
     regionTranslations: RegionTranslations,
 }
 
@@ -16,8 +17,11 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
     }
 
     return (
-        <GeoJSON
-            data={interactiveMap}
+        <GeoJSONComponent
+            data={{
+                ...interactiveMap,
+                type: 'FeatureCollection'
+            }}
             style={(feature) => ({
                 fillColor: getColor(feature?.properties.as),
                 weight: 1,
@@ -67,5 +71,5 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
                 ));
             }}
         />
-    )
+    );
 }
