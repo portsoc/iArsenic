@@ -1,32 +1,20 @@
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './map.css';
 import { CircularProgress, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import L, { LatLngExpression } from 'leaflet';
+import { LatLngExpression } from 'leaflet';
 import config from '../../config';
 import { SessionData } from '../../types';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import ReactDOMServer from 'react-dom/server';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
-
-function createCustomIcon(color: string) {
-    return L.icon({
-        iconUrl: `${config.basePath}/map-markers/${color}.png`,
-        shadowUrl: markerShadow,
-        iconSize: [25, 41],
-        shadowSize: [41, 41],
-        iconAnchor: [12, 41], // point icon corresponds to marker
-        shadowAnchor: [12, 41],  // point shadow corresponds to marker
-        popupAnchor: [1, -34], // point from which the popup should open relative to the iconAnchor
-    });
-}
+import Markers from './markers';
 
 export default function Map() {
     const position: LatLngExpression = [23.8041, 90.4152];
     const [interactiveMap, setInteractiveMap] = useState();
-    const [predictions, setPredictions] = useState<SessionData[]>();
+    const [sessionData, setSessionData] = useState<SessionData[]>();
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
 
     async function getInteractiveMap() {
@@ -39,90 +27,10 @@ export default function Map() {
     async function getPredictionPinData() {
         const res = await fetch(`${config.basePath}/api/predictions`);
         const predictions = await res.json();
-        setPredictions(predictions.data);
+        setSessionData(predictions.data);
     }
 
-    function getMarkers(): JSX.Element[] | undefined {
-        if (!predictions || !regionTranslations) return;
-
-        const geoSessions = predictions.filter((p: SessionData) => p.geolocation !== 'N/A');
-        console.log(geoSessions);
-
-        return geoSessions?.map((p: SessionData, index) => {
-            const icon = createCustomIcon(((): string => {
-                switch ((p.prediction - 0.5) % 4) {
-                    case 0:
-                        return 'green';
-                    case 1:
-                        return 'lime';
-                    case 2:
-                        return 'yellow';
-                    case 3:
-                        return 'orange';
-                    case 4:
-                        return 'red';
-                    default:
-                        'blue';
-                }
-                return 'blue';
-            })());
-            return (
-                <Marker icon={icon} key={index} position={p.geolocation as LatLngExpression}>
-                    <Popup>
-                        <Typography variant='body1'>
-                            ID: {p.id}
-                        </Typography>
-
-                        <Typography className='english' variant='body1'>
-                            Division: {p.predictors.regionKey.division}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                                ${regionTranslations.Divisions.Division}:
-                                ${regionTranslations.Divisions[p.predictors.regionKey.division]}
-                        `}</Typography>
-
-                        <Typography className='english' variant='body1'>
-                            District: {p.predictors.regionKey.district}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                                ${regionTranslations.Districts.District}:
-                                ${regionTranslations.Districts[p.predictors.regionKey.district]}
-                        `}</Typography>
-
-                        <Typography className='english' variant='body1'>
-                            Upazila: {p.predictors.regionKey.upazila}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Upazilas.Upazila}:
-                            ${regionTranslations.Upazilas[p.predictors.regionKey.upazila]}
-                        `}</Typography>
-
-                        <Typography className='english' variant='body1'>
-                            Union: {p.predictors.regionKey.union}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Unions.Union}:
-                            ${regionTranslations.Unions[p.predictors.regionKey.union]}
-                        `}</Typography>
-
-                        <Typography className='english' variant='body1'>
-                            Mouza: {p.predictors.regionKey.mouza}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Mouzas.Mouza}:
-                            ${regionTranslations.Mouzas[p.predictors.regionKey.mouza]}
-                        `}</Typography>
-                    </Popup>
-                </Marker>
-            );
-        });
-    }
-
+    // todo put in separate component file
     function getGeoJSONLayer() {
         if (!interactiveMap || !regionTranslations) {
             return (
@@ -131,7 +39,6 @@ export default function Map() {
                 </Stack>
             );
         }
-        console.log('hello');
 
         return (
             <GeoJSON
@@ -207,7 +114,7 @@ export default function Map() {
         getPredictionPinData();
     }, []);
 
-    if (!interactiveMap || !predictions) return (
+    if (!interactiveMap || !sessionData || !regionTranslations) return (
         <Stack alignItems='center' justifyContent='center'>
             <CircularProgress />
         </Stack>
@@ -221,7 +128,7 @@ export default function Map() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {getGeoJSONLayer()}
-                {getMarkers()}
+                <Markers sessionData={sessionData} regionTranslations={regionTranslations} />
             </MapContainer>
         </Stack>
     );
