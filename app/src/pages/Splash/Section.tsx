@@ -74,7 +74,7 @@ export default function Section({
                     <Box mx={{ xs: 1, sm: 1, md: 4 }}>
                         <img
                             src={imageConfig.imageUrl}
-                            style={{ maxWidth: '100%', height: 'auto', borderRadius: imageBorderRadius }}
+                            style={{ maxWidth: '100%', maxHeight: '50rem', height: 'auto', borderRadius: imageBorderRadius }}
                             alt={imageConfig.imageAlt}
                         />
                     </Box>

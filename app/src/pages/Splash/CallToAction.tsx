@@ -66,7 +66,7 @@ export default function CallToAction(): JSX.Element {
                 onClick={() => navigate(`${config.basePath}/landing`)}
                 sx={{ padding: '1rem 2rem', fontSize: '1.2rem' }}
             >
-                Try the App!
+                Try the App
             </Button>
         </Box>
     );

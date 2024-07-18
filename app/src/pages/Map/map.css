@@ -1,6 +1,6 @@
 .leaflet-container {
-    height: min(calc(100vh - calc(20 * 1vh)), 80vh);
-    width: 95vw;
+    height: 100vh;
+    width: 100vw;
     outline: 2px solid black;
 }
 
@@ -9,8 +9,5 @@
     font-size: 0.8rem;
 }
 
-.shift-red {
-    outline: '2px solid red';
-}
 
 

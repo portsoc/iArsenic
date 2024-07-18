@@ -11,9 +11,9 @@ type props = {
 
 export default function UpaMap({ interactiveMap, regionTranslations }: props): JSX.Element {
     function getColor(as: number): string {
-        if (as < 10) return 'rgba(100, 149, 237, 0.5)';
-        if (as < 50) return 'rgba(144, 238, 144, 0.5)';
-        return 'rgba(255, 69, 0, 0.5)';
+        if (as < 10) return 'rgba(51, 204, 56, 0.5)';
+        if (as < 50) return 'rgba(250, 205, 61, 0.5)';
+        return 'rgba(245, 35, 28, 0.5)';
     }
 
     return (
