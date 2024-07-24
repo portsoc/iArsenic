@@ -2,6 +2,7 @@ import { Button, useTheme } from '@mui/material';
 import config from '../../config';
 import Section from './Section';
 import CallToAction from './CallToAction';
+import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
 
 
@@ -119,6 +120,8 @@ export default function SplashPage(): JSX.Element {
                     </Button>
                 }
             />
+
+            <Credits />
         </>
     );
 }
