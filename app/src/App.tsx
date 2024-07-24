@@ -13,9 +13,11 @@ import {
     Flooding,
     PrivacyPolicy,
     Splash,
+    Map,
 } from './pages';
 import config from './config';
 import LanguageSelector from './utils/LanguageSelector';
+
 import { HeaderBar } from './components';
 
 const Theme = {
@@ -46,7 +48,8 @@ function App() {
             <Router base={config.basePath}>
                 <Switch>
                     {/* Splash Page */}
-                    <Route path='/' component={Splash}/>
+                    <Route path='/' component={Splash} />
+                    <Route path='/map' component={Map} />
                     {/* App Pages with HeaderBar and Stack layout */}
                     <Route>
                         <HeaderBar />

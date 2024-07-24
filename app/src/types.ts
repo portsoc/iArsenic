@@ -28,9 +28,23 @@ export type DropdownDivision = {
     districts: DropdownDistrict[];
 }
 
+export type Predictors = {
+    id: string,
+    regionKey: RegionKey
+    depth: {
+        unit: 'ft' | 'm'
+        value: number
+    },
+    flooding: boolean,
+    wellStaining: WellStaining,
+    utensilStaining?: UtensilStaining,
+    geolocation?: [number, number],
+    regionGeovalidated: boolean,
+}
+
 // staining types
 export type WellStaining = 'Black' | 'Red' | 'Not sure';
-export type UtensilStaining = 'Red' | 'Black' | 'No colour change to slightly blackish' | undefined;
+export type UtensilStaining = 'Red' | 'Black' | 'No colour change to slightly blackish' | 'N/A' | undefined;
 
 // prediction data
 export type MessageCode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -99,4 +113,16 @@ export type RegionTranslations = {
     "Mouzas": {
         [key: string]: string
     }
+}
+
+// data stored in firebase
+export type SessionData = {
+    createdAt: Date,
+    id: string,
+    language: 'english' | 'bengali',
+    geolocation: [number, number] | 'N/A',
+    model: 'model5',
+    modelPrediction: MessageCode,
+    prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5,
+    predictors: Predictors,
 }

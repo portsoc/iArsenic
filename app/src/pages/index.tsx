@@ -8,4 +8,5 @@ export { default as StainingGuide } from './StainingGuide';
 export { default as Result } from './Result';
 export { default as PrivacyPolicy } from './PrivacyPolicy';
 export { default as Flooding } from './Flooding';
+export { default as Map } from './Map';
 export { default as Splash } from './Splash';

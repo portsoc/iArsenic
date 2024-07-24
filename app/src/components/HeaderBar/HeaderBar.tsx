@@ -2,6 +2,7 @@ import { AppBar, Stack, Typography, Box, Button, Avatar } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import config from "../../config";
 import LanguageSelector from "../../utils/LanguageSelector";
+import PublicIcon from '@mui/icons-material/Public';
 
 export default function HeaderBar(): JSX.Element {
     return (
@@ -16,13 +17,21 @@ export default function HeaderBar(): JSX.Element {
                 direction='row'
                 alignItems='center'
             >
-                <Typography
-                    sx={{ cursor: 'pointer' }}
-                    variant='h6'
-                    onClick={() => navigate(`${config.basePath}/`)}
-                >
-                    iArsenic
-                </Typography>
+                <Stack direction='row' alignItems='center'>
+                    <Typography
+                        sx={{ cursor: 'pointer' }}
+                        variant='h6'
+                        onClick={() => navigate(`${config.basePath}/`)}
+                    >
+                        iArsenic
+                    </Typography>
+                    <Button
+                        variant='outlined'
+                        startIcon={<PublicIcon sx={{ color: 'whitesmoke' }} />}
+                        onClick={() => navigate(`${config.basePath}/map`)}
+                    >
+                    </Button>
+                </Stack>
 
                 <Box>
                     <Button

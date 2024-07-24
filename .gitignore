@@ -14,6 +14,9 @@ tmp
 preprocessing/geodata/maps/dist/mou/*.geojson
 firebase-functions/geodata/
 firebase-functions/static/
+firebase-functions/firebase-debug.log
+firebase-functions/interactive-map/
+.firebase/
 
 # Logs
 logs

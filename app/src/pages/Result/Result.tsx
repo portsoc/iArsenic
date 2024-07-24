@@ -7,8 +7,9 @@ import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";
 import estimateTexts from "./estimateTexts";
 import produceEstimate from "./produceEstimate";
-import PredictorsStorage, { Predictors } from "../../utils/PredictorsStorage";
+import PredictorsStorage from "../../utils/PredictorsStorage";
 import LanguageSelector from "../../utils/LanguageSelector";
+import { Predictors } from "../../types";
 
 type EstimateTexts = {
     english: {
