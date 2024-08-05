@@ -93,6 +93,20 @@ export default function SplashPage(): JSX.Element {
             />
 
             <Section
+                title='Interactive Maps'
+                texts={[
+                    `See user data appear on an interactive map in real time.`
+                ]}
+                imageConfig={{
+                    imageUrl: `${config.basePath}/splashPage/interactive_map.png`,
+                    imageSide: 'left',
+                    imageAlt: 'Interactive map of Bangladesh',
+                }}
+                backgroundColor='#1d5e16'
+                maxTextWidth='50%'
+            />
+
+            <Section
                 title='The Bottom Line'
                 texts={[
                     `The iArsenic project will enable citizens to assess tubewell water quality

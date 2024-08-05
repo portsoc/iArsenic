@@ -90,11 +90,21 @@ function CreditCard({ imageSrc, name, role }: CreditCardProps): JSX.Element {
                     <img
                         src={`${config.basePath}${imageSrc}`}
                         alt={name}
-                        style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                        style={{
+                            width: 'auto',
+                            height: '100%',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            aspectRatio: '1',
+                        }}
                     />
                 ) : (
                     <Box
-                        style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                        style={{ width: '100%',
+                            height: '100%',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                        }}
                         fontSize='200px'
                     >🧑‍💻</Box>
                 )}
@@ -120,6 +130,7 @@ export default function Credits(): JSX.Element {
                 }}
                 alignItems='center'
                 justifyContent='center'
+                flexWrap='wrap'
             >
                 {CreditCard({
                     imageSrc: '/contributors/Mo_Hoque.jpg',
@@ -205,7 +216,7 @@ export default function Credits(): JSX.Element {
                 })}
 
                 {CreditCard({
-                    name: 'Lewis Knewton',
+                    name: 'Lewis Newton',
                     role: 'Researcher, University of Portsmouth',
                     imageSrc: '/contributors/lewis.webp',
                 })}
