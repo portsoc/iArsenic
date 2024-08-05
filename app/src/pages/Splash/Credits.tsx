@@ -34,20 +34,17 @@ function OrgCreditCard({ name, imageSrc }: OrgCreditCardProps): JSX.Element {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: '1rem',
                 backgroundColor: 'white',
                 color: 'black',
                 borderRadius: '8px',
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                width: '600px',
+                width: '330px',
+                maxWidth: '100%',
                 height: '225px',
                 textAlign: 'center',
-                margin: '1rem',
             }}
+            m={2}
         >
-            {/* <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                {name}
-            </Typography> */}
             {imageSrc && (
                 <Box
                     sx={{
@@ -55,12 +52,13 @@ function OrgCreditCard({ name, imageSrc }: OrgCreditCardProps): JSX.Element {
                         borderRadius: '8px',
                         overflow: 'hidden',
                         marginRight: '1rem',
+                        padding: '1rem',
                     }}
                 >
                     <img
                         src={`${config.basePath}${imageSrc}`}
                         alt={name}
-                        style={{ width: 'auto', height: '100%' }}
+                        style={{ width: 'auto', maxWidth: '100%', height: '100%' }}
                     />
                 </Box>
             )}
@@ -124,14 +122,63 @@ export default function Credits(): JSX.Element {
                 justifyContent='center'
             >
                 {CreditCard({
-                    imageSrc: '/contributors/mo.webp',
+                    imageSrc: '/contributors/Mo_Hoque.jpg',
                     name: 'Dr Mo Hoque',
-                    role: 'Academic Lead, University of Portsmouth',
+                    role: 'Principal Investigator, University of Portsmouth',
                 })}
                 {CreditCard({
                     imageSrc: '/contributors/kane.png',
                     name: 'Kane Swartz',
-                    role: 'Technical Lead',
+                    role: 'Technical Lead, University of Portsmouth',
+                })}
+                {CreditCard({
+                    imageSrc: '/contributors/Atikul_Islam.jpg',
+                    name: 'Atikul Islam',
+                    role: 'Researcher, University of Dhaka & University of Portsmouth',
+                })}
+
+                {CreditCard({
+                    name: 'Fuad Jamali',
+                    role: 'Researcher, University of Portsmouth',
+                    imageSrc: '/contributors/Fuad_Jamali.jpg',
+                })}
+            </Stack>
+
+            <Typography variant='h3'>Academic Collaborators</Typography>
+            <Stack
+                direction={{
+                    md: 'column-reverse',
+                    lg: 'row',
+                }}
+                alignItems='center'
+                justifyContent='center'
+                maxWidth='100%'
+                flexWrap='wrap'
+            >
+                {CreditCard({
+                    name: 'Dr Jacek Kopecký',
+                    role: 'School of Computing, University of Portsmouth',
+                    imageSrc: '/contributors/jacek.jpg',
+                })}
+                {CreditCard({
+                    imageSrc: '/contributors/Jim_Smith.jpg',
+                    name: 'Prof Jim Smith',
+                    role: 'School of Earth & Environmental Sciences, University of Portsmouth',
+                })}
+                {CreditCard({
+                    imageSrc: '/contributors/Shubhankar_Dam.jpg',
+                    name: 'Prof Shubhankar Dam',
+                    role: 'School of Law, University of Portsmouth',
+                })}
+                {CreditCard({
+                    imageSrc: '/contributors/Adrian_Butler.jpg',
+                    name: 'Prof Adrian Butler',
+                    role: 'Department of Civil and Environmental Engineering, Imperial College London',
+                })}
+                {CreditCard({
+                    name: 'Prof Kazi Ahmed',
+                    role: 'Department of Geology, University of Dhaka, Bangladesh',
+                    imageSrc: '/contributors/Kazi_Matin_Ahmed.jpg',
                 })}
             </Stack>
 
@@ -147,30 +194,10 @@ export default function Credits(): JSX.Element {
                 flexWrap='wrap'
             >
                 {CreditCard({
-                    name: 'Dr Jacek Kopecký',
-                    role: 'Academic Investigator, University of Portsmouth',
+                    name: 'Dr Simon Parker',
+                    role: 'Researcher, Imperial College London',
+                    imageSrc: '/contributors/Simon_Parker.jpg',
                 })}
-
-                {CreditCard({
-                    name: 'Prof Jim Smith',
-                    role: 'Academic Investigator, University of Portsmouth',
-                })}
-
-                {CreditCard({
-                    name: 'Prof Shubhankar Dam',
-                    role: 'Academic Investigator, University of Portsmouth',
-                })}
-
-                {CreditCard({
-                    name: 'Dr Adrian Butler',
-                    role: 'Academic Investigator, Imperial College London',
-                })}
-
-                {CreditCard({
-                    name: 'Prof Kazi Ahmed',
-                    role: 'Academic Investigator, University of Dhaka',
-                })}
-
                 {CreditCard({
                     name: "Dillon O'Shea",
                     role: 'Researcher, University of Portsmouth',
@@ -180,6 +207,7 @@ export default function Credits(): JSX.Element {
                 {CreditCard({
                     name: 'Lewis Knewton',
                     role: 'Researcher, University of Portsmouth',
+                    imageSrc: '/contributors/lewis.webp',
                 })}
 
                 {CreditCard({
@@ -198,21 +226,6 @@ export default function Credits(): JSX.Element {
                     name: 'Fiona Plant',
                     role: 'Researcher, University of Portsmouth',
                 })}
-
-                {CreditCard({
-                    name: 'Dr Simon Parker',
-                    role: 'Researcher, Imperial College London',
-                })}
-
-                {CreditCard({
-                    name: 'Atikul Islan',
-                    role: 'University of Dhaka & University of Portsmouth',
-                })}
-
-                {CreditCard({
-                    name: 'Fuad Islam',
-                    role: 'University of Portsmouth',
-                })}
             </Stack>
             <Typography variant='h3'>In Partnership With</Typography>
             <Stack
@@ -226,18 +239,18 @@ export default function Credits(): JSX.Element {
                 flexWrap='wrap'
             >
                 {OrgCreditCard({
-                    name: 'University of Dhaka',
-                    imageSrc: '/contributors/university_of_dhaka.png',
-                })}
-
-                {OrgCreditCard({
                     name: 'University of Portsmouth',
                     imageSrc: '/contributors/university_of_portsmouth.png',
                 })}
 
                 {OrgCreditCard({
                     name: 'Imperial College London ',
-                    imageSrc: '/contributors/imperial_college_london.jpg',
+                    imageSrc: '/contributors/imperial_college_london.png',
+                })}
+
+                {OrgCreditCard({
+                    name: 'University of Dhaka',
+                    imageSrc: '/contributors/university_of_dhaka.png',
                 })}
             </Stack>
         </Box>

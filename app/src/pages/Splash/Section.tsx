@@ -46,7 +46,6 @@ export default function Section({
     imageBorderRadius,
     appendage,
 }: props): JSX.Element {
-    console.log(textAlign)
     return (
         <Box sx={{ ...sectionStyle, backgroundColor }} px={{ xs: 1, sm: 1, md: 4 }}>
             <Typography variant='h3'>{title}</Typography>
