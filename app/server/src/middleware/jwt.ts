@@ -5,6 +5,7 @@ export default async function apiKeyOrJwt(
     next: Next
 ) {
     const jwt = ctx.request.headers['authorization']
+    console.log(jwt)
 
     // get JWT from database
 
