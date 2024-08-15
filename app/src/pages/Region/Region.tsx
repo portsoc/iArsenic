@@ -7,6 +7,7 @@ import PredictorsStorage from "../../utils/PredictorsStorage";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";
 import GeolocationButton from "./GeolocationButton";
+import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
 
 export type RegionErrors = {
     division: boolean;
@@ -54,11 +55,9 @@ export default function Region(): JSX.Element {
     }
 
     async function fetchRegionTranslations() {
-        const response = await fetch(`${config.basePath}/region-translations.json`);
-        const data = await response.json();
-        setRegionTranslations(data);
+        const translations = await RegionTranslationsFetcher();
+        setRegionTranslations(translations);
     }
-
 
     useEffect(() => {
         fetchDropdownData();
