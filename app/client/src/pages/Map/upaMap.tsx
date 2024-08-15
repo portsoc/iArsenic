@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import ReactDOMServer from "react-dom/server";
 import { GeoJSON as GeoJSONComponent } from 'react-leaflet';
 import { GeoJSON } from 'leaflet';
-import { RegionTranslations } from "../../types";
+import { RegionTranslations } from "../../../../types";
 
 type props = {
     interactiveMap: GeoJSON,

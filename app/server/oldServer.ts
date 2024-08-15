@@ -123,7 +123,7 @@ app.post('/api/save-prediction', async (req, res) => {
     }
 });
 
-app.get('/api/predictions', async (req, res) => {
+app.get('/api/predictions', async (_, res) => {
     const predictions = db.collection('default');
     const snapshot = await predictions.get();
     const data = snapshot.docs.map((doc) => doc.data());

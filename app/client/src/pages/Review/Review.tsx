@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
 import PredictorsStorage from '../../utils/PredictorsStorage';
-import { Predictors } from '../../types';
+import { Predictors } from '../../../../types';
 
 export default function Review() {
     const [predictors, setPredictors] = useState<Predictors>();

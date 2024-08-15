@@ -1,4 +1,4 @@
-import { Predictors } from '../types';
+import { Predictors } from '../../../types';
 
 export default class PredictorsStorage {
     static dataKey: string = 'predictionData';
