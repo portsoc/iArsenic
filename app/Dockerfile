@@ -1,3 +1,4 @@
+# docker build . -t iarsenic && docker run --rm -ti -p 3005:3005 iarsenic
 FROM node:20-alpine AS build-server
 WORKDIR /app
 
