@@ -2,7 +2,7 @@ import { Repository } from './repo.interface';
 import { Token, TokenSchema } from '../models/token.model';
 import db from '../db';
 
-export class JwtRepository implements Repository<Token> {
+export default class TokenRepo implements Repository<Token> {
     async findById(id: string): Promise<Token | null> {
         const doc = await db.collection('token').doc(id).get();
 
