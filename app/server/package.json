@@ -20,5 +20,11 @@
     "koa-helmet": "^7.0.2",
     "uuid4": "^2.0.3",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.15.0",
+    "@types/koa__cors": "^5.0.0",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/uuid4": "^2.0.3"
   }
 }
