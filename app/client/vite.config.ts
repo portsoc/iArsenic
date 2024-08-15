@@ -10,5 +10,8 @@ dotenvConfig({ path: resolve(__dirname, '.env') });
 export default defineConfig({
   plugins: [react()],
   base: process.env.VITE_APP_BASE_PATH || '',
-  build: { outDir: 'static' },
+  build: {
+    outDir: 'static',
+    minify: true,
+  },
 });

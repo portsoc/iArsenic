@@ -1,13 +1,16 @@
-import './bootstrap'
-import bodyParser from 'koa-bodyparser'
-import config from './config'
+import './server/bootstrap'
+import config from './server/config'
 import cors from '@koa/cors'
 import helmet from 'koa-helmet'
 import Koa from 'koa'
-import routes from './routes'
+import routes from './server/routes'
 import uuid4 from 'uuid4'
 import fs from 'fs';
 import path from 'path';
+import * as functions from 'firebase-functions';
+import hybridBodyParser from './server/middleware/hybridBodyparser'
+
+const isServerless = !!process.env.GCLOUD_PROJECT;
 
 const api = new Koa();
 const staticDir = path.resolve(__dirname, 'static');
@@ -23,8 +26,8 @@ api.use(async (ctx, next) => {
 
 // middleware
 api.use(cors())
-api.use(bodyParser())
 api.use(helmet())
+api.use(hybridBodyParser())
 
 // mount the routes
 api.use(routes.routes())
@@ -43,5 +46,9 @@ api.use(async ctx => {
 });
 
 // start the server
-api.listen(config.port)
-console.log(`server listening on port ${config.port}`)
+if (!isServerless) {
+    api.listen(config.port)
+    console.log(`server listening on port ${config.port}`)
+}
+
+export default functions.runWith({ memory: '512MB' }).https.onRequest(api.callback());

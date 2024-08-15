@@ -14,6 +14,18 @@ export default class UserRepo implements Repository<User> {
         return user;
     }
 
+    async findByEmail(email: string): Promise<User | null> {
+        const lcEmail = email.toLowerCase();
+        const snapshot = await db.collection('user').where('email', '==', lcEmail).get();
+
+        if (snapshot.empty) return null;
+        const doc = snapshot.docs.map(doc => doc.data())[0];
+        if (!doc) return null;
+
+        const user = UserSchema.parse(doc);
+        return user;
+    }
+
     async findAll(): Promise<User[]> {
         const snapshot = await db.collection('user').get();
         const users: User[] = [];

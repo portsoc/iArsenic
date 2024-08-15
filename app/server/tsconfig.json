@@ -1,32 +1,31 @@
 {
     "compilerOptions": {
-      "target": "ES2020",
-      "module": "commonjs",
-      "lib": ["ES2020"],
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node",
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-      "noImplicitAny": true,
-      "noImplicitReturns": true,
-      "noImplicitThis": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "noFallthroughCasesInSwitch": true,
-      "noUncheckedIndexedAccess": true,
-      "outDir": "./dist",
-      "rootDir": "./src",
-      "baseUrl": "./",
+        "target": "ESNext",
+        "module": "commonjs",
+        "strict": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "esModuleInterop": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "baseUrl": "./",
     },
     "include": [
-      "src/**/*"
+        "src/**/*"
     ],
     "exclude": [
-      "node_modules",
-      "**/*.spec.ts",
-      "**/*.test.ts"
+        "node_modules",
+        "**/*.spec.ts",
+        "**/*.test.ts"
     ]
-  }
+}

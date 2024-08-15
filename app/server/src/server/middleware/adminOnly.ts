@@ -1,5 +1,4 @@
 import { ParameterizedContext, Next } from 'koa'
-import config from '../config'
 
 export default async function adminOnly(
     ctx: ParameterizedContext,

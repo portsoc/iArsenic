@@ -4,6 +4,11 @@ import 'module-alias/register'
 // load environment variables into `process.env`
 import dotenv from 'dotenv'
 
+//
+import { initializeApp } from 'firebase-admin/app';
+
+initializeApp()
+
 // Determine the environment file based on the environment variable
 const envFile = process.env.ENV_FILE || '.env'
 
