@@ -1,14 +1,17 @@
 import { ParameterizedContext, Next } from 'koa'
 import config from '../config'
 
-export default async function apiKey(
+export default async function adminOnly(
     ctx: ParameterizedContext,
     next: Next
 ) {
-    // TODO store the API keys in a database
-    const apiKey = ctx.request.headers['x-api-key']
+    const jwt = ctx.request.headers['authorization']
 
-    if (apiKey !== config.apiKey) {
+    // get JWT from database
+
+    // get user id from database using jwt
+
+    if (!jwt) {
         ctx.status = 401
         ctx.body = {
             error: true,
