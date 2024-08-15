@@ -57,5 +57,5 @@ export default function HeaderBar(): JSX.Element {
                 </Box>
             </Stack>
         </AppBar>
-    )
+    );
 }
