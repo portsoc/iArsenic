@@ -32,14 +32,14 @@ export const RegionKeySchema = z.object({
 
 export const WellSchema = z.object({
     id: z.string(),
-    regionKey: RegionKeySchema,
-    depth: z.number(), // in meters
-    flooding: z.boolean(),
-    staining: z.enum(['red', 'black', 'not sure']),
-    utensilStaining: z.enum(['red', 'black', 'blackish', 'N/A']),
-    geolocation: z.union([z.tuple([z.number(), z.number()]), z.literal('N/A')]),
     createdAt: z.date(),
     userId: z.string(),
+    regionKey: RegionKeySchema.optional(),
+    depth: z.number().optional(), // in meters
+    flooding: z.boolean().optional(),
+    staining: z.enum(['red', 'black', 'not sure']).optional(),
+    utensilStaining: z.enum(['red', 'black', 'blackish', 'N/A']).optional(),
+    geolocation: z.union([z.tuple([z.number(), z.number()]), z.literal('N/A')]).optional(),
     prediction: z.object({
         modelOutput: ModelMessageCodeSchema,
         riskAssesment: RiskAssesmentSchema,

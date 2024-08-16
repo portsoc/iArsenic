@@ -26,10 +26,18 @@ export const WellRepo: Repository<Well> = {
 
     async create(well: Well): Promise<Well> {
         const docRef = await db.collection('well').add(well);
-        const createdDoc = await docRef.get();
+        const docSnapshot = await docRef.get();
+        const doc = docSnapshot.data();
 
-        const createdWell = WellSchema.parse(createdDoc.data());
-        return createdWell;
+        if (!doc) throw new Error('Failed to create well');
+
+        const createdWell = {
+            ...doc,
+            createdAt: doc.createdAt.toDate(),
+        }
+
+        const validatedWell = WellSchema.parse(createdWell);
+        return validatedWell;
     },
 
     async update(well: Well): Promise<Well> {

@@ -1,6 +1,7 @@
 import { Repository } from './repo.interface';
 import { Token, TokenSchema } from '../models/token.model';
 import db from '../db';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export const TokenRepo: Repository<Token> = {
     async findById(id: string): Promise<Token | null> {
@@ -12,9 +13,12 @@ export const TokenRepo: Repository<Token> = {
 
         const doc = {
             ...docData,
-            createdAt: docData.createdAt.toDate(),
-            expiresAt: docData.expiresAt.toDate(),
-            revokedAt: docData.revokedAt.toDate(),
+            createdAt: docData.createdAt instanceof Timestamp ?
+                docData.createdAt.toDate() : docData.createdAt,
+            expiresAt: docData.expiresAt instanceof Timestamp ?
+                docData.expiresAt.toDate() : docData.expiresAt,
+            revokedAt: docData.revokedAt instanceof Timestamp ?
+                docData.revokedAt.toDate() : docData.revokedAt,
         }
 
         const jwtData = TokenSchema.parse(doc);
@@ -31,9 +35,12 @@ export const TokenRepo: Repository<Token> = {
 
         const jwt = {
             ...doc,
-            createdAt: doc.createdAt.toDate(),
-            expiresAt: doc.expiresAt.toDate(),
-            revokedAt: doc.revokedAt.toDate(),
+            createdAt: doc.createdAt.toDate() instanceof Timestamp ?
+                doc.createdAt.toDate() : doc.createdAt,
+            expiresAt: doc.expiresAt instanceof Timestamp ?
+                doc.expiresAt.toDate() : doc.expiresAt,
+            revokedAt: doc.revokedAt instanceof Timestamp ?
+                doc.revokedAt.toDate() : doc.revokedAt,
         }
 
         const validatedJwt = TokenSchema.parse(jwt);
