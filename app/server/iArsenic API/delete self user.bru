@@ -1,0 +1,15 @@
+meta {
+  name: delete self user
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{base_url}}/api/v1/self/well?wellId
+  body: none
+  auth: none
+}
+
+query {
+  wellId: 
+}

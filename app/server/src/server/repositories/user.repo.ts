@@ -1,7 +1,6 @@
 import { Repository } from './repo.interface';
 import { User, UserSchema } from '../models/user.model';
 import db from '../db';
-import { Timestamp } from 'firebase-admin/firestore';
 
 export interface IUserRepo extends Repository<User> {
     findByEmail: (email: string) => Promise<User | null>;
@@ -19,8 +18,7 @@ export const UserRepo: IUserRepo = {
 
         const doc = {
             ...docData,
-            createdAt: docData.createdAt instanceof Timestamp ?
-                docData.createdAt.toDate() : docData.createdAt,
+            createdAt: docData.createdAt.toDate()
         }
 
         const user = UserSchema.parse(doc);
@@ -37,8 +35,7 @@ export const UserRepo: IUserRepo = {
 
         const doc = {
             ...snapshot.docs[0]?.data(),
-            createdAt: docData.createdAt instanceof Timestamp ?
-                docData.createdAt.toDate() : docData.createdAt,
+            createdAt: docData.createdAt.toDate(),
         }
 
         const user = UserSchema.parse(doc);
@@ -66,8 +63,7 @@ export const UserRepo: IUserRepo = {
 
         const createdUser = {
             ...doc,
-            createdAt: doc.createdAt instanceof Timestamp ?
-                doc.createdAt.toDate() : doc.createdAt,
+            createdAt: doc.createdAt.toDate(),
         }
 
         const validatedUser = UserSchema.parse(createdUser);
