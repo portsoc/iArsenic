@@ -45,6 +45,38 @@ export const UserService = {
             type: "access",
         })
 
+        // TODO revoke user's previous tokens
+
         return jwt
+    },
+
+    async register(email: string, password: string, name: string): Promise<void> {
+        const existingUser = await UserRepo.findByEmail(email)
+
+        if (existingUser != null) {
+            throw new KnownError({
+                message: 'User with this email already exists',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        const hashedPassword = bcrypt.hashSync(password, 10)
+
+        const user = await UserRepo.create({
+            id: uuid4(),
+            email: email,
+            emailVerified: false,
+            password: hashedPassword,
+            name: name,
+            type: 'user',
+            createdAt: new Date(),
+        })
+
+        const result = validateModel(user, UserSchema)
+
+        if (!result.ok) throw new Error(
+            `Invalid user data: ${result.error.message} for user ID: ${user.id}`
+        );
     }
 }

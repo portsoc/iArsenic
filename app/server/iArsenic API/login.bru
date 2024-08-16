@@ -4,16 +4,15 @@ meta {
   seq: 3
 }
 
-get {
-  url: http://localhost:3005/api/v1/login
+post {
+  url: {{base_url}}/api/v1/user/login
   body: json
   auth: none
 }
 
 body:json {
   {
-    "email": "kane.swartz@port.ac.uk",
-    "extra": "kane.swartz@port.ac.uk",
+    "email": "kane.swartz@myport.ac.uk",
     "password": "badpassword1234"
   }
 }

@@ -11,11 +11,18 @@ const LoginRequestSchema = z.object({
 
 type LoginRequest = z.infer<typeof LoginRequestSchema>
 
+const RegisterRequestSchema = z.object({
+    email: z.string(),
+    password: z.string(),
+    name: z.string(),
+})
+
+type RegisterRequest = z.infer<typeof RegisterRequestSchema>
+
 export const UserController = {
 
     async login(ctx: Context): Promise<void> {
-        const body: LoginRequest = LoginRequestSchema.parse(ctx.request.body)
-        const result = validateModel(body, LoginRequestSchema)
+        const result = validateModel(ctx.request.body, LoginRequestSchema)
 
         if (!result.ok) {
             throw new KnownError({
@@ -25,10 +32,37 @@ export const UserController = {
             });
         }
 
-       const accessToken: Token = await UserService.login(body.email, body.password)
-       console.log(accessToken)
+        const body = ctx.request.body as LoginRequest
 
-       ctx.status = 200
-       ctx.body = { accessToken }
+        const accessToken: Token = await UserService.login(
+            body.email,
+            body.password,
+        )
+
+        ctx.status = 200
+        ctx.body = { accessToken }
+    },
+
+    async register(ctx: Context): Promise<void> {
+        const result = validateModel(ctx.request.body, RegisterRequestSchema)
+
+        if (!result.ok) {
+            throw new KnownError({
+                message: result.error.message,
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        const body = ctx.request.body as RegisterRequest
+
+        await UserService.register(
+            body.email,
+            body.password,
+            body.name,
+        )
+
+        ctx.status = 201
+        ctx.body = { message: 'User created' }
     }
 }

@@ -1,0 +1,19 @@
+meta {
+  name: register
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/api/v1/user/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "kane.swartz+test@port.ac.uk",
+    "password": "Testzxcv",
+    "name": "Kane"
+  }
+}

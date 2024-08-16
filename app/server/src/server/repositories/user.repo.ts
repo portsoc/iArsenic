@@ -51,10 +51,19 @@ export const UserRepo: IUserRepo = {
 
     async create(user: User): Promise<User> {
         const docRef = await db.collection('user').add(user);
-        const createdDoc = await docRef.get();
+        const docSnapshot = await docRef.get();
+        const doc = docSnapshot.data();
 
-        const createdUser = UserSchema.parse(createdDoc.data());
-        return createdUser;
+        if (!doc) throw new Error('Failed to create user');
+
+        const createdUser = {
+            ...doc,
+            createdAt: doc.createdAt instanceof Timestamp ?
+                doc.createdAt.toDate() : doc.createdAt,
+        }
+
+        const validatedUser = UserSchema.parse(createdUser);
+        return validatedUser;
     },
 
     async update(user: User): Promise<User> {

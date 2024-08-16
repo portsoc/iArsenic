@@ -28,7 +28,7 @@ export const TokenRepo: Repository<Token> = {
                 doc.expiresAt.toDate() : doc.expiresAt,
         }
 
-        const validatedJwt: Token = TokenSchema.parse(jwt);
+        const validatedJwt = TokenSchema.parse(jwt);
         return validatedJwt;
     }
 }

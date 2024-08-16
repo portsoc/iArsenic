@@ -13,5 +13,6 @@ user.get('/', (ctx) => {
 });
 
 user.post('/login', ctx => UserController.login(ctx));
+user.post('/register', ctx => UserController.register(ctx));
 
 export default user
