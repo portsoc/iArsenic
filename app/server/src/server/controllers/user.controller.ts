@@ -1,8 +1,9 @@
-import { validateModel, Token } from '../models'
+import { validateModel, Token, TokenSchema, UserSchema, User } from '../models'
 import { KnownError } from '../errors'
 import { z } from 'zod'
 import { Context } from 'koa'
 import { UserService } from '../services'
+import { UserRepo } from '../repositories'
 
 const LoginRequestSchema = z.object({
     email: z.string(),
@@ -20,6 +21,62 @@ const RegisterRequestSchema = z.object({
 type RegisterRequest = z.infer<typeof RegisterRequestSchema>
 
 export const UserController = {
+
+    async getUserByToken(ctx: Context): Promise<void> {
+        const token = TokenSchema.parse(ctx.state.token);
+        const userId = token.userId;
+
+        const userRes = await UserRepo.findById(userId);
+
+        if (userRes == null) {
+            console.error('Token:', token);
+            console.error('UserId:', userId);
+            throw new KnownError({
+                message: 'UserId on JWT not found',
+                code: 404,
+                name: 'UserNotFoundError',
+            });
+        }
+
+        const { password, ...user } = userRes;
+
+        ctx.status = 200;
+        ctx.body = { user };
+    },
+
+    async updateUserByToken(ctx: Context): Promise<void> {
+        const token = TokenSchema.parse(ctx.state.token);
+        const userId = token.userId;
+
+        const result = validateModel(ctx.request.body, UserSchema.partial());
+
+        if (!result.ok) {
+            throw new KnownError({
+                message: result.error.message,
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        const body = ctx.request.body as Partial<User>
+
+        // Remove fields that should not be updated by user
+        delete body.id
+        delete body.email
+        delete body.emailVerified
+        delete body.type
+        delete body.createdAt
+
+        const updatedUser = await UserService.updateUser(
+            userId,
+            body,
+        );
+
+        const { password, ...user } = updatedUser;
+
+        ctx.status = 200;
+        ctx.body = { user };
+    },
 
     async login(ctx: Context): Promise<void> {
         const result = validateModel(ctx.request.body, LoginRequestSchema)

@@ -5,15 +5,25 @@ import { Timestamp } from 'firebase-admin/firestore';
 
 export interface IUserRepo extends Repository<User> {
     findByEmail: (email: string) => Promise<User | null>;
+    update: (user: User) => Promise<User>;
 }
 
 export const UserRepo: IUserRepo = {
     async findById(id: string): Promise<User | null> {
-        const doc = await db.collection('user').doc(id).get();
+        console.log(id)
+        const snapshot = await db.collection('user').where('id', '==', id).get();
 
-        if (!doc.exists) return null;
+        if (snapshot.empty) return null;
+        const docData = snapshot.docs[0]?.data();
+        if (!docData) return null;
 
-        const user = UserSchema.parse(doc.data());
+        const doc = {
+            ...docData,
+            createdAt: docData.createdAt instanceof Timestamp ?
+                docData.createdAt.toDate() : docData.createdAt,
+        }
+
+        const user = UserSchema.parse(doc);
         return user;
     },
 
@@ -22,16 +32,14 @@ export const UserRepo: IUserRepo = {
         const snapshot = await db.collection('user').where('email', '==', lcEmail).get();
 
         if (snapshot.empty) return null;
-        const doc = snapshot.docs.map(doc => {
-            const docData = doc.data();
-            return {
-                ...docData,
-                id: doc.id,
-                createdAt: docData.createdAt instanceof Timestamp ?
-                    docData.createdAt.toDate() : docData.createdAt,
-            }
-        })[0];
-        if (!doc) return null;
+        const docData = snapshot.docs[0]?.data();
+        if (!docData) return null;
+
+        const doc = {
+            ...snapshot.docs[0]?.data(),
+            createdAt: docData.createdAt instanceof Timestamp ?
+                docData.createdAt.toDate() : docData.createdAt,
+        }
 
         const user = UserSchema.parse(doc);
         return user;

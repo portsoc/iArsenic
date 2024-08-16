@@ -5,12 +5,25 @@ import { Timestamp } from 'firebase-admin/firestore';
 
 export const TokenRepo: Repository<Token> = {
     async findById(id: string): Promise<Token | null> {
-        const doc = await db.collection('token').doc(id).get();
+        const snapshot = await db.collection('token').where('id', '==', id).get();
 
-        if (!doc.exists) return null;
+        if (snapshot.empty) return null;
+        const docData = snapshot.docs[0]?.data();
+        if (!docData) return null;
 
-        const jwtData = TokenSchema.parse(doc.data());
-        return jwtData
+        const doc = {
+            ...docData,
+            createdAt: docData.createdAt instanceof Timestamp ?
+                docData.createdAt.toDate() : docData.createdAt,
+            expiresAt: docData.expiresAt instanceof Timestamp ?
+                docData.expiresAt.toDate() : docData.expiresAt,
+            revokedAt: docData.revokedAt instanceof Timestamp ?
+                docData.revokedAt.toDate() : docData.revokedAt,
+        }
+
+        const jwtData = TokenSchema.parse(doc);
+
+        return jwtData;
     },
 
     async create(jwtData: Token): Promise<Token> {
@@ -26,6 +39,8 @@ export const TokenRepo: Repository<Token> = {
                 doc.createdAt.toDate() : doc.createdAt,
             expiresAt: doc.expiresAt instanceof Timestamp ?
                 doc.expiresAt.toDate() : doc.expiresAt,
+            revokedAt: doc.revokedAt instanceof Timestamp ?
+                doc.revokedAt.toDate() : doc.revokedAt,
         }
 
         const validatedJwt = TokenSchema.parse(jwt);

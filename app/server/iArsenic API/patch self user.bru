@@ -1,0 +1,19 @@
+meta {
+  name: patch self user
+  type: http
+  seq: 6
+}
+
+patch {
+  url: {{base_url}}/api/v1/self/user
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{access_token}}
+}
+
+body:json {
+  { "id": "Kane Swartz" }
+}

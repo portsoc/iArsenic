@@ -6,6 +6,7 @@ export const TokenSchema = z.object({
     createdAt: z.date(),
     expiresAt: z.date(),
     type: z.literal('access'),
+    revokedAt: z.date().optional(),
 });
 
 export type Token = z.infer<typeof TokenSchema>;

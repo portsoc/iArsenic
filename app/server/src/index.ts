@@ -8,7 +8,7 @@ import uuid4 from 'uuid4'
 import fs from 'fs';
 import path from 'path';
 import * as functions from 'firebase-functions';
-import hybridBodyParser from './server/middleware/hybridBodyparser'
+import hybridBodyParser from './server/middleware/hybridBodyParser'
 
 const isServerless = !!process.env.GCLOUD_PROJECT;
 

@@ -1,6 +1,6 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { Token, UserSchema } from '../models';
+import { Token, User, UserSchema } from '../models';
 import { UserRepo, TokenRepo } from '../repositories'
 import { validateModel } from '../models';
 import bcrypt from 'bcrypt'
@@ -48,6 +48,26 @@ export const UserService = {
         // TODO revoke user's previous tokens
 
         return jwt
+    },
+
+    async updateUser(userId: string, userUpdates: Partial<User>): Promise<User> {
+        const user = await UserRepo.findById(userId)
+
+        if (user == null) {
+            throw new KnownError({
+                message: 'User not found',
+                code: 404,
+                name: 'UserNotFoundError',
+            });
+        }
+
+        const newUser = {
+            ...user,
+            ...userUpdates,
+        }
+
+        const validatedNewUser = UserSchema.parse(newUser)
+        return await UserRepo.update(validatedNewUser)
     },
 
     async register(email: string, password: string, name: string): Promise<void> {
