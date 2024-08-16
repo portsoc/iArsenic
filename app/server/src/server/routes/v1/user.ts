@@ -1,4 +1,5 @@
 import Router from '@koa/router'
+import { UserController } from '../../controllers'
 
 const user = new Router({ prefix: '/user' })
 
@@ -10,5 +11,7 @@ user.get('/', (ctx) => {
 
     return
 });
+
+user.post('/login', ctx => UserController.login(ctx));
 
 export default user

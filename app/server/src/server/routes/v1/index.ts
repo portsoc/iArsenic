@@ -1,6 +1,5 @@
 import { errorHandler } from '../../middleware'
 import healthcheck from './healthcheck'
-import login from './login'
 import Router from '@koa/router'
 import self from './self'
 import user from './user'
@@ -12,7 +11,6 @@ routes.use(errorHandler)
 
 // mount the sub routes
 routes.use(healthcheck.routes())
-routes.use(login.routes())
 routes.use(user.routes())
 routes.use(self.routes())
 

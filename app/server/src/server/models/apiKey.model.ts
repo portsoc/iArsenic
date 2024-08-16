@@ -8,4 +8,4 @@ export const ApiKeySchema = z.object({
     revokedAt: z.date().optional(),
 });
 
-export type Token = z.infer<typeof ApiKeySchema>;
+export type ApiKey = z.infer<typeof ApiKeySchema>;

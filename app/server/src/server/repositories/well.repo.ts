@@ -2,17 +2,15 @@ import { Repository } from './repo.interface';
 import { Well, WellSchema } from '../models/well.model';
 import db from '../db';
 
-export default class WellRepo implements Repository<Well> {
+export const WellRepo: Repository<Well> = {
     async findById(id: string): Promise<Well | null> {
         const doc = await db.collection('well').doc(id).get();
 
-        if (!doc.exists) {
-            return null;
-        }
+        if (!doc.exists) return null;
 
         const well = WellSchema.parse(doc.data());
         return well;
-    }
+    },
 
     async findAll(): Promise<Well[]> {
         const snapshot = await db.collection('well').get();
@@ -24,7 +22,7 @@ export default class WellRepo implements Repository<Well> {
         });
 
         return wells;
-    }
+    },
 
     async create(well: Well): Promise<Well> {
         const docRef = await db.collection('well').add(well);
@@ -32,14 +30,14 @@ export default class WellRepo implements Repository<Well> {
 
         const createdWell = WellSchema.parse(createdDoc.data());
         return createdWell;
-    }
+    },
 
     async update(well: Well): Promise<Well> {
         await db.collection('well').doc(well.id).set(well, { merge: true });
         return well;
-    }
+    },
 
-    async delete(id: string): Promise<void> {
+    async del(id: string): Promise<void> {
         await db.collection('well').doc(id).delete();
-    }
+    },
 }
