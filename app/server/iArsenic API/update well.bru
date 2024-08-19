@@ -5,7 +5,25 @@ meta {
 }
 
 patch {
-  url: 
-  body: none
+  url: {{base_url}}/api/v1/self/well/{{well_id}}
+  body: json
   auth: none
+}
+
+headers {
+  authorization: Bearer {{access_token}}
+}
+
+body:json {
+  {
+    "regionKey": {
+      "division": "Khulna",
+      "district": "Chuadanga",
+      "upazila": "Alamdanga",
+      "union": "Baradi",
+      "mouza": "Anupnagar"
+    },
+    "depth": 20,
+    "staining": "red"
+  }
 }

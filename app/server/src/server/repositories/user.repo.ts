@@ -4,12 +4,11 @@ import db from '../db';
 
 export interface IUserRepo extends Repository<User> {
     findByEmail: (email: string) => Promise<User | null>;
-    update: (user: User) => Promise<User>;
+    update: (user: User) => Promise<void>;
 }
 
 export const UserRepo: IUserRepo = {
     async findById(id: string): Promise<User | null> {
-        console.log(id)
         const snapshot = await db.collection('user').where('id', '==', id).get();
 
         if (snapshot.empty) return null;
@@ -66,13 +65,13 @@ export const UserRepo: IUserRepo = {
             createdAt: doc.createdAt.toDate(),
         }
 
+
         const validatedUser = UserSchema.parse(createdUser);
         return validatedUser;
     },
 
-    async update(user: User): Promise<User> {
+    async update(user: User): Promise<void> {
         await db.collection('user').doc(user.id).set(user, { merge: true });
-        return user;
     },
 
     async del(id: string): Promise<void> {

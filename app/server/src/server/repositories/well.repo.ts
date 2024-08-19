@@ -1,14 +1,30 @@
 import { Repository } from './repo.interface';
 import { Well, WellSchema } from '../models/well.model';
 import db from '../db';
+import { Timestamp } from 'firebase-admin/firestore';
 
-export const WellRepo: Repository<Well> = {
+export interface IWellRepo extends Repository<Well> {
+    update: (well: Well) => Promise<void>;
+    getByQuery: (queries: QueryTuple[]) => Promise<Well[]>;
+}
+
+type QueryTuple = [string, FirebaseFirestore.WhereFilterOp, any];
+
+export const WellRepo: IWellRepo = {
     async findById(id: string): Promise<Well | null> {
-        const doc = await db.collection('well').doc(id).get();
+        const snapshot = await db.collection('well').where('id', '==', id).get();
 
-        if (!doc.exists) return null;
+        if (snapshot.empty) return null;
+        const docData = snapshot.docs[0]?.data();
+        if (!docData) return null;
 
-        const well = WellSchema.parse(doc.data());
+        const doc = {
+            ...docData,
+            createdAt: docData.createdAt instanceof Timestamp ?
+                docData.createdAt.toDate() : docData,
+        }
+
+        const well = WellSchema.parse(doc);
         return well;
     },
 
@@ -16,10 +32,19 @@ export const WellRepo: Repository<Well> = {
         const snapshot = await db.collection('well').get();
         const wells: Well[] = [];
 
-        snapshot.forEach((doc) => {
-            const well = WellSchema.parse(doc.data());
-            wells.push(well);
-        });
+        for (const well of snapshot.docs) {
+            const docData = well.data();
+
+            const wellData = {
+                ...docData,
+                createdAt: docData.createdAt instanceof Timestamp ?
+                    docData.createdAt.toDate() :
+                    docData.createdAt,
+            };
+
+            const validatedWell = WellSchema.parse(wellData);
+            wells.push(validatedWell);
+        }
 
         return wells;
     },
@@ -40,12 +65,40 @@ export const WellRepo: Repository<Well> = {
         return validatedWell;
     },
 
-    async update(well: Well): Promise<Well> {
+    async update(well: Well): Promise<void> {
         await db.collection('well').doc(well.id).set(well, { merge: true });
-        return well;
     },
 
     async del(id: string): Promise<void> {
         await db.collection('well').doc(id).delete();
     },
+
+    async getByQuery(queries: QueryTuple[]): Promise<Well[]> {
+        let dbQuery: FirebaseFirestore.Query<
+            FirebaseFirestore.DocumentData
+        > = db.collection('well');
+
+        for (const [key, operator, value] of queries) {
+            dbQuery = dbQuery.where(key, operator, value);
+        }
+
+        const snapshot = await dbQuery.get();
+        const wells: Well[] = [];
+
+        for (const well of snapshot.docs) {
+            const docData = well.data();
+
+            const wellData = {
+                ...docData,
+                createdAt: docData.createdAt instanceof Timestamp ?
+                    docData.createdAt.toDate() :
+                    docData.createdAt,
+            };
+
+            const validatedWell = WellSchema.parse(wellData);
+            wells.push(validatedWell);
+        }
+
+        return wells;
+    }
 }

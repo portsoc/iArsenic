@@ -21,7 +21,6 @@ const RegisterRequestSchema = z.object({
 type RegisterRequest = z.infer<typeof RegisterRequestSchema>
 
 export const UserController = {
-
     async getUserByToken(ctx: Context): Promise<void> {
         const token = TokenSchema.parse(ctx.state.token);
         const userId = token.userId;
@@ -121,5 +120,10 @@ export const UserController = {
 
         ctx.status = 201
         ctx.body = { message: 'User created' }
+    },
+
+    async deleteUserByToken(ctx: Context): Promise<void> {
+        ctx.status = 501
+        ctx.body = { error: 'Not Implemented' }
     }
 }

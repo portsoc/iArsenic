@@ -2,7 +2,7 @@ import { Typography, Button, CircularProgress, Stack } from "@mui/material";
 import config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../../../types";
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../../types";
 import PredictorsStorage from "../../utils/PredictorsStorage";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import config from "../../config";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { ModelData } from "../../../../types";
+import { ModelData } from "../../../types";
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";
@@ -9,7 +9,7 @@ import estimateTexts from "./estimateTexts";
 import produceEstimate from "./produceEstimate";
 import PredictorsStorage from "../../utils/PredictorsStorage";
 import LanguageSelector from "../../utils/LanguageSelector";
-import { Predictors } from "../../../../types";
+import { Predictors } from "../../../types";
 
 type EstimateTexts = {
     english: {

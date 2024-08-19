@@ -1,11 +1,11 @@
 meta {
   name: healthcheck
   type: http
-  seq: 1
+  seq: 2
 }
 
 get {
-  url: http://localhost:3005/healthcheck
+  url: {{base_url}}/api/v1/healthcheck
   body: none
   auth: none
 }

@@ -2,7 +2,7 @@ import { Button, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionKey } from "../../../../types";
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionKey } from "../../../types";
 import config from "../../config";
 
 type props = {

@@ -67,7 +67,9 @@ export const UserService = {
         }
 
         const validatedNewUser = UserSchema.parse(newUser)
-        return await UserRepo.update(validatedNewUser)
+
+        await UserRepo.update(validatedNewUser)
+        return validatedNewUser
     },
 
     async register(email: string, password: string, name: string): Promise<void> {

@@ -35,7 +35,7 @@ export const TokenRepo: Repository<Token> = {
 
         const jwt = {
             ...doc,
-            createdAt: doc.createdAt.toDate() instanceof Timestamp ?
+            createdAt: doc.createdAt instanceof Timestamp ?
                 doc.createdAt.toDate() : doc.createdAt,
             expiresAt: doc.expiresAt instanceof Timestamp ?
                 doc.expiresAt.toDate() : doc.expiresAt,

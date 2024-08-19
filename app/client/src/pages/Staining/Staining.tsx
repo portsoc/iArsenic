@@ -2,7 +2,7 @@ import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGrou
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
-import { WellStaining, UtensilStaining } from "../../../../types";
+import { WellStaining, UtensilStaining } from "../../../types";
 import PredictorsStorage from "../../utils/PredictorsStorage";
 
 export default function Staining(): JSX.Element {

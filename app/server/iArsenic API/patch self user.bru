@@ -1,7 +1,7 @@
 meta {
   name: patch self user
   type: http
-  seq: 5
+  seq: 6
 }
 
 patch {
@@ -11,9 +11,9 @@ patch {
 }
 
 headers {
-  Authorization: Bearer {{access_token}}
+  authorization: Bearer {{access_token}}
 }
 
 body:json {
-  { "id": "Kane Swartz" }
+  { "name": "Kane Swartz" }
 }

@@ -9,7 +9,9 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": ["npm --prefix ../app/server run build"]
+      "predeploy": [
+        "npm --prefix ../app/server run build"
+      ]
     }
   ],
   "hosting": {
@@ -25,5 +27,20 @@
         "function": "default"
       }
     ]
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
   }
 }
