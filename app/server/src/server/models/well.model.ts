@@ -13,6 +13,8 @@ export const ModelMessageCodeSchema = z.union([
     z.literal(8),
 ]);
 
+export type ModelMessageCode = z.infer<typeof ModelMessageCodeSchema>;
+
 // value shown on speedometer
 export const RiskAssesmentSchema = z.union([
     z.literal(0.5),
@@ -22,6 +24,8 @@ export const RiskAssesmentSchema = z.union([
     z.literal(4.5),
 ]);
 
+export type RiskAssesmentSchema = z.infer<typeof RiskAssesmentSchema>;
+
 export const RegionKeySchema = z.object({
     division: z.string(),
     district: z.string(),
@@ -30,24 +34,38 @@ export const RegionKeySchema = z.object({
     mouza: z.string(),
 });
 
+export type RegionKey = z.infer<typeof RegionKeySchema>;
+
+export const PredictionSchema = z.object({
+    modelOutput: ModelMessageCodeSchema,
+    riskAssesment: RiskAssesmentSchema,
+    model: z.string(),
+});
+
+export type Prediction = z.infer<typeof PredictionSchema>;
+
 export const WellSchema = z.object({
     id: z.string(),
     createdAt: z.date(),
     userId: z.string(),
+    drinkingWaterSource: z.boolean().optional(), // is anyone drinking from this well?
     regionKey: RegionKeySchema.optional(),
     depth: z.number().optional(), // in meters
     flooding: z.boolean().optional(),
     staining: z.enum(['red', 'black', 'not sure']).optional(),
     utensilStaining: z.enum(['red', 'black', 'blackish', 'N/A']).optional(),
     geolocation: z.union([z.tuple([z.number(), z.number()]), z.literal('N/A')]).optional(),
-    prediction: z.object({
-        modelOutput: ModelMessageCodeSchema,
-        riskAssesment: RiskAssesmentSchema,
-        model: z.string(),
-    }).optional(),
+    prediction: PredictionSchema.optional(),
 });
 
-export type RegionKey = z.infer<typeof RegionKeySchema>;
 export type Well = z.infer<typeof WellSchema>;
-export type ModelMessageCode = z.infer<typeof ModelMessageCodeSchema>;
-export type RiskAssesmentSchema = z.infer<typeof RiskAssesmentSchema>;
+
+export const PredictorsSchema = z.object({
+    regionKey: RegionKeySchema,
+    depth: z.number(),
+    flooding: z.boolean(),
+    staining: z.enum(['red', 'black', 'not sure']),
+    utensilStaining: z.enum(['red', 'black', 'blackish', 'N/A']).optional(),
+});
+
+export type Predictors = z.infer<typeof PredictorsSchema>;

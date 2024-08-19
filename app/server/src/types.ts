@@ -3,10 +3,7 @@ import { RegionKey } from './server/models/well.model';
 export type Predictors = {
     id: string,
     regionKey: RegionKey
-    depth: {
-        unit: 'ft' | 'm'
-        value: number
-    },
+    depth: number, // meters
     flooding: boolean,
     wellStaining: WellStaining,
     utensilStaining?: UtensilStaining,

@@ -106,7 +106,20 @@ export const WellController = {
     },
 
     async predictWellByIdByToken(ctx: Context) {
-        ctx.status = 501
-        ctx.body = { error: 'Not Implemented' }
+        const token = TokenSchema.parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+
+        if (!wellId) {
+            ctx.status = 400
+            ctx.body = { error: 'Well ID is required' }
+
+            return
+        }
+
+        const prediction = await WellService.generateEstimate(userId, wellId);
+
+        ctx.status = 200
+        ctx.body = { prediction }
     }
 }

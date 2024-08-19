@@ -1,32 +1,40 @@
-import { MessageCode, ModelData } from '../../../types';
-import { Predictors } from '../../../types';
+import { MessageCode, ModelData } from '../../../types'
+import { Predictors } from '../../models/well.model'
+import path from 'path'
+import fs from 'fs'
 
-export default function produceEstimate(
-        modelData: ModelData,
-        predictors: Predictors,
-    ): MessageCode {
-    const divData = modelData[predictors.regionKey.division];
+export default function produceEstimate(predictors: Predictors): MessageCode {
+    const div = predictors.regionKey.division;
+    const dis = predictors.regionKey.district;
+    const upa = predictors.regionKey.upazila;
+    const uni = predictors.regionKey.union;
+    const mou = predictors.regionKey.mouza;
+
+    const modelData: ModelData = JSON.parse(
+        fs.readFileSync(
+            path.join(
+                `model5/aggregate-data/${div}-${dis}.json`
+            ),
+            'utf-8'
+        )
+    )
+
+    const divData = modelData[div];
     if (!divData) throw new Error('division not found in model data');
 
-    const disData = divData.districts[predictors.regionKey.district];
+    const disData = divData.districts[dis];
     if (!disData) throw new Error('district not found in model data');
 
-    const upaData = disData.upazilas[predictors.regionKey.upazila];
+    const upaData = disData.upazilas[upa];
     if (!upaData) throw new Error('upazila not found in model data');
 
-    const uniData = upaData.unions[predictors.regionKey.union];
+    const uniData = upaData.unions[uni];
     if (!uniData) throw new Error('union not found in model data');
 
-    const mouData = uniData.mouzas[predictors.regionKey.mouza];
+    const mouData = uniData.mouzas[mou];
     if (!mouData) throw new Error('mouza not found in model data');
 
-    const depth = (() => {
-        if (predictors.depth.unit === 'ft') {
-            return predictors.depth.value * 0.3048;
-        }
-
-        return predictors.depth.value;
-    })();
+    const depth = predictors.depth;
 
     const regionStrataKey = (() => {
         if (depth < 15.3) return 's15';
@@ -45,7 +53,7 @@ export default function produceEstimate(
         exist in the prediction data for this region
     */
     if (regionStrataKey === 's15' && 'm2' in regionStrataModel) {
-        if (predictors.wellStaining === 'Black' && regionStrataModel.m2 !== undefined) {
+        if (predictors.staining === 'black' && regionStrataModel.m2 !== undefined) {
             return regionStrataModel.m2;
         } else if (predictors.flooding && regionStrataModel.m9 !== undefined) {
             return regionStrataModel.m9;
@@ -55,9 +63,9 @@ export default function produceEstimate(
             throw new Error('model keys required for flooding model misisng');
         }
     } else {
-        if (predictors.wellStaining === 'Black' || predictors.utensilStaining === 'Black') {
+        if (predictors.staining === 'black' || predictors.utensilStaining === 'black') {
             return 1;
-        } else if (predictors.wellStaining === 'Red' || predictors.utensilStaining === 'Red') {
+        } else if (predictors.staining === 'red' || predictors.utensilStaining === 'red') {
             if (regionStrataModel.m !== undefined) {
                 return regionStrataModel.m;
             } else {

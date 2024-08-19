@@ -66,7 +66,18 @@ export const WellRepo: IWellRepo = {
     },
 
     async update(well: Well): Promise<void> {
-        await db.collection('well').doc(well.id).set(well, { merge: true });
+        const wellRef = db.collection('well');
+
+        const querySnapshot = await wellRef.where('id', '==', well.id).get();
+
+        if (querySnapshot.empty) {
+            throw new Error('Well not found');
+        }
+
+        const doc = querySnapshot.docs[0];
+        if (!doc) throw new Error('Well not found');
+
+        await doc.ref.set(well, { merge: true });
     },
 
     async del(id: string): Promise<void> {
