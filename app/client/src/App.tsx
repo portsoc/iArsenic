@@ -14,6 +14,9 @@ import {
     PrivacyPolicy,
     Splash,
     Map,
+    Login,
+    ForgotPassword,
+    SignUp,
 } from './pages';
 import config from './config';
 import LanguageSelector from './utils/LanguageSelector';
@@ -62,16 +65,19 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
-                            <Route path='/landing' component={Landing}/>
-                            <Route path='/briefing' component={Briefing}/>
-                            <Route path='/depth' component={Depth}/>
-                            <Route path='/flooding' component={Flooding}/>
-                            <Route path='/privacy-policy' component={PrivacyPolicy}/>
-                            <Route path='/region' component={Region}/>
-                            <Route path='/result' component={Result}/>
-                            <Route path='/review' component={Review}/>
-                            <Route path='/staining-guide' component={StainingGuide}/>
-                            <Route path='/staining' component={Staining}/>
+                            <Route path='/sign-up' component={SignUp} />
+                            <Route path='/forgot-password' component={ForgotPassword} />
+                            <Route path='/login' component={Login} />
+                            <Route path='/landing' component={Landing} />
+                            <Route path='/briefing' component={Briefing} />
+                            <Route path='/depth' component={Depth} />
+                            <Route path='/flooding' component={Flooding} />
+                            <Route path='/privacy-policy' component={PrivacyPolicy} />
+                            <Route path='/region' component={Region} />
+                            <Route path='/result' component={Result} />
+                            <Route path='/review' component={Review} />
+                            <Route path='/staining-guide' component={StainingGuide} />
+                            <Route path='/staining' component={Staining} />
                         </Stack>
                     </Route>
                 </Switch>

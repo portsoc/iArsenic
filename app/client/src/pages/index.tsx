@@ -10,3 +10,6 @@ export { default as PrivacyPolicy } from './PrivacyPolicy';
 export { default as Flooding } from './Flooding';
 export { default as Map } from './Map';
 export { default as Splash } from './Splash';
+export { default as Login } from './Login';
+export { default as ForgotPassword } from './ForgotPassword';
+export { default as SignUp } from './SignUp';
