@@ -1,13 +1,18 @@
-import { AppBar, Stack, Typography, Box, Button, Avatar } from "@mui/material";
-import { navigate } from "wouter/use-browser-location";
-import config from "../../config";
-import LanguageSelector from "../../utils/LanguageSelector";
-import PublicIcon from '@mui/icons-material/Public';
+import { AppBar, Stack, Typography, Box, Button, Avatar, IconButton } from '@mui/material';
+import { navigate } from 'wouter/use-browser-location';
+import config from '../../config';
+import LanguageSelector from '../../utils/LanguageSelector';
 import LoginIcon from '@mui/icons-material/Login';
 
+import MenuIcon from '@mui/icons-material/Menu';
+import { useState } from 'react';
+import NavMenu from './NavMenu';
+
 export default function HeaderBar(): JSX.Element {
+    const [open, setOpen] = useState(false);
+
     return (
-        <AppBar sx={{ marginBottom: '2rem'}} position='static'>
+        <AppBar sx={{ marginBottom: '2rem' }} position='static'>
             <Stack
                 paddingLeft='2rem'
                 paddingRight='2rem'
@@ -19,6 +24,21 @@ export default function HeaderBar(): JSX.Element {
                 alignItems='center'
             >
                 <Stack direction='row' alignItems='center'>
+                    <IconButton
+                        color='inherit'
+                        aria-label='open drawer'
+                        onClick={() => setOpen(true)}
+                        edge='start'
+                        sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+
+                    <NavMenu
+                        open={open}
+                        setOpen={setOpen}
+                    />
+
                     <Typography
                         sx={{ cursor: 'pointer' }}
                         variant='h6'
@@ -26,12 +46,6 @@ export default function HeaderBar(): JSX.Element {
                     >
                         iArsenic
                     </Typography>
-                    <Button
-                        variant='outlined'
-                        startIcon={<PublicIcon sx={{ color: 'whitesmoke' }} />}
-                        onClick={() => navigate(`${config.basePath}/map`)}
-                    >
-                    </Button>
                 </Stack>
 
                 <Box>
@@ -57,7 +71,12 @@ export default function HeaderBar(): JSX.Element {
                     />
 
                     <Button
-                        startIcon={<LoginIcon sx={{ fontSize: '1.3rem', color: 'whitesmoke' }} />}
+                        startIcon={
+                            <LoginIcon sx={{
+                                fontSize: '1.3rem',
+                                color: 'whitesmoke',
+                                }}
+                            />}
                         onClick={() => navigate(`${config.basePath}/login`)}
                         sx={{ padding: '8px', minWidth: 'auto' }}
                     >

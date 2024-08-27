@@ -10,8 +10,7 @@ export default function MyWells(): JSX.Element {
     const [wells, setWells] = useState<Well[]>([]);
 
     async function fetchUserWells() {
-        const token = AccessToken.get();
-        console.log(token)
+        const token = await AccessToken.get();
 
         if (!token) {
             navigate(`${Config.basePath}/login`);
@@ -45,7 +44,7 @@ export default function MyWells(): JSX.Element {
     }
 
     async function addWell() {
-        const token = AccessToken.get();
+        const token = await AccessToken.get();
 
         if (!token) {
             navigate(`${Config.basePath}/login`);

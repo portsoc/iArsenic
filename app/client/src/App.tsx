@@ -32,8 +32,8 @@ const Theme = {
                 dark: '#0b2c1f',
             },
             secondary: {
-                main: '#eb3746',
-                dark: '#420303',
+                main: '#f5f5f5',
+                dark: '#626262',
             }
         }
     })

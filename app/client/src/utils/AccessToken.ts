@@ -1,8 +1,10 @@
 import { IAccessToken } from '../../types'
+import Config from '../config'
+
 export default class AccessToken {
     static dataKey: string = 'accessToken';
 
-    static get = (): IAccessToken | null => {
+    static get = async (): Promise<IAccessToken | null> => {
         const accessToken = localStorage.getItem(this.dataKey) || null;
 
         if (!accessToken) return null
@@ -17,7 +19,19 @@ export default class AccessToken {
             return null;
         }
 
-        return JSON.parse(accessToken);
+        const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
+            headers: {
+                authorization: `Bearer ${parsedAccessToken.id}`,
+            }
+        })
+
+        if (!res.ok) {
+            console.error('Failed to fetch user using access token:', res);
+            return null;
+        }
+
+        // TODO add zod
+        return parsedAccessToken as IAccessToken;
     };
 
     static set = (accessToken: IAccessToken) => {
