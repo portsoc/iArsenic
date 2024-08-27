@@ -1,11 +1,13 @@
-import { Button, Card, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { Button, Card, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import Config from '../../config';
+import { KnownServerError } from '../../../types';
 
 export default function SignUp(): JSX.Element {
-    const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [name, setName] = useState<string>();
+    const [email, setEmail] = useState<string>();
+    const [password, setPassword] = useState<string>();
+    const [confirmPassword, setConfirmPassword] = useState<string>();
     const [error, setError] = useState<string | null>(null);
 
     function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -24,7 +26,31 @@ export default function SignUp(): JSX.Element {
         setConfirmPassword(event.target.value);
     }
 
-    function handleSubmit() {
+    function validatePassword(password: string): string | null {
+        if (password.length < 10) {
+            return "Password must be at least 10 characters long.";
+        }
+        if (!/[A-Z]/.test(password)) {
+            return "Password must contain at least one uppercase letter.";
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            return "Password must contain at least one symbol.";
+        }
+        return null;
+    }
+
+    async function handleSubmit() {
+        if (!name || !email || !password || !confirmPassword) {
+            setError('All fields are required');
+            return
+        }
+
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+            setError(passwordError);
+            return;
+        }
+
         if (password !== confirmPassword) {
             setError("Passwords do not match");
             return;
@@ -32,7 +58,31 @@ export default function SignUp(): JSX.Element {
 
         setError(null);
 
-        console.log('Sign up with:', { name, email, password });
+        const result = await fetch(`${Config.basePath}/api/v1/user/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, email, password }),
+        })
+
+        const resBody = await result.json();
+
+        if (!result.ok) {
+            if (resBody.knownError === true) {
+                const knownError: KnownServerError = resBody
+
+                if (knownError.name === 'ValidationError') {
+                    setError(knownError.message);
+                    return;
+                }
+            }
+
+            setError(`Failed to sign up, request id: ${resBody.requestId}`);
+            return;
+        }
+
+        alert('Sign up successful!');
     }
 
     return (

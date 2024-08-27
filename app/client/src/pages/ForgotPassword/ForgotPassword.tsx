@@ -2,7 +2,7 @@ import { Button, Card, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
 export default function ForgotPassword(): JSX.Element {
-    const [email, setEmail] = useState<string>("");
+    const [email, setEmail] = useState<string>();
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
         setEmail(event.target.value);

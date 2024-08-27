@@ -1,58 +1,49 @@
-import { Button, Card, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { Button, Card, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import { navigate } from 'wouter/use-browser-location';
+import Config from '../../config';
+import AccessToken from '../../utils/AccessToken';
 
-export default function SignUp(): JSX.Element {
-    const [name, setName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [error, setError] = useState<string | null>(null);
-
-    function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setName(event.target.value);
-    }
+export default function Login(): JSX.Element {
+    const [email, setEmail] = useState<string>();
+    const [password, setPassword] = useState<string>();
+    const [err, setErr] = useState<string | null>(null);
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setErr(null);
         setEmail(event.target.value);
     }
 
     function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setErr(null);
         setPassword(event.target.value);
     }
 
-    function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setConfirmPassword(event.target.value);
-    }
+    async function handleSubmit() {
+        const result = await fetch(`${Config.basePath}/api/v1/user/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
 
-    function validatePassword(password: string): string | null {
-        if (password.length < 10) {
-            return "Password must be at least 10 characters long.";
-        }
-        if (!/[A-Z]/.test(password)) {
-            return "Password must contain at least one uppercase letter.";
-        }
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            return "Password must contain at least one symbol.";
-        }
-        return null;
-    }
+        if (!result.ok) {
+            if (result.status === 401) {
+                setErr('Invalid email or password');
+                return;
+            }
 
-    function handleSubmit() {
-        const passwordError = validatePassword(password);
-        if (passwordError) {
-            setError(passwordError);
+            console.error('Failed to login:', result);
             return;
         }
 
-        if (password !== confirmPassword) {
-            setError("Passwords do not match");
-            return;
-        }
+        const data = await result.json();
 
-        setError(null);
+        const token = data.accessToken;
+        AccessToken.set(token);
 
-        // Handle sign-up logic here
-        console.log('Sign up with:', { name, email, password });
+        navigate(`${Config.basePath}/my-wells`);
     }
 
     return (
@@ -67,20 +58,11 @@ export default function SignUp(): JSX.Element {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '1rem',
-                    pb: '2rem',
                 }}
             >
                 <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                    Sign Up
+                    Login
                 </Typography>
-
-                <TextField
-                    label="Name"
-                    type="text"
-                    value={name}
-                    onChange={handleNameChange}
-                    sx={{ width: '85%' }}
-                />
 
                 <TextField
                     label="Email"
@@ -98,24 +80,47 @@ export default function SignUp(): JSX.Element {
                     sx={{ width: '85%' }}
                 />
 
-                <TextField
-                    label="Confirm Password"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={handleConfirmPasswordChange}
-                    sx={{ width: '85%' }}
-                />
-
-                {error && (
-                    <Typography color="error" variant="body2">
-                        {error}
+                {err && (
+                    <Typography color='error'>
+                        {err}
                     </Typography>
                 )}
 
                 <Button
-                    sx={{ width: '90%', height: '3rem' }}
+                    onClick={() => navigate(`${Config.basePath}/forgot-password`)}
+                >
+                    Forgot Password?
+                </Button>
+
+                <Button
+                    sx={{ width: '90%', height: '4rem' }}
                     variant='contained'
                     onClick={handleSubmit}
+                >
+                    Login
+                </Button>
+            </Card>
+
+            <Card
+                variant='outlined'
+                sx={{
+                    margin: '0 1rem 1rem 1rem',
+                    padding: '1rem',
+                    width: '100%',
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                }}
+            >
+                <Typography textAlign='center' variant='h5'>
+                    Don't have an account?
+                </Typography>
+
+                <Button
+                    sx={{ width: '90%', height: '4rem' }}
+                    variant='outlined'
+                    onClick={() => navigate(`${Config.basePath}/sign-up`)}
                 >
                     Sign Up
                 </Button>

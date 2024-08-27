@@ -17,6 +17,7 @@ import {
     Login,
     ForgotPassword,
     SignUp,
+    MyWells,
 } from './pages';
 import config from './config';
 import LanguageSelector from './utils/LanguageSelector';
@@ -65,6 +66,7 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
+                            <Route path='/my-wells' component={MyWells} />
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/login' component={Login} />

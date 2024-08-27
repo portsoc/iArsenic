@@ -3,6 +3,7 @@ import { navigate } from "wouter/use-browser-location";
 import config from "../../config";
 import LanguageSelector from "../../utils/LanguageSelector";
 import PublicIcon from '@mui/icons-material/Public';
+import LoginIcon from '@mui/icons-material/Login';
 
 export default function HeaderBar(): JSX.Element {
     return (
@@ -54,6 +55,14 @@ export default function HeaderBar(): JSX.Element {
                         }
                         onClick={() => LanguageSelector.set('bengali')}
                     />
+
+                    <Button
+                        startIcon={<LoginIcon sx={{ fontSize: '1.3rem', color: 'whitesmoke' }} />}
+                        onClick={() => navigate(`${config.basePath}/login`)}
+                        sx={{ padding: '8px', minWidth: 'auto' }}
+                    >
+                        Login
+                    </Button>
                 </Box>
             </Stack>
         </AppBar>
