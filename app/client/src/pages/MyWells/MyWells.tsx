@@ -1,4 +1,4 @@
-import { Button, Card, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
 import { Well } from '../../../types';
@@ -30,7 +30,7 @@ export default function MyWells(): JSX.Element {
 
         const data = await result.json();
 
-        setWells(data.wells.map((well: any) => {
+        setWells(data.wells.map((well: Well) => {
             return {
                 id: well.id,
                 createdAt: new Date(well.createdAt),
@@ -76,7 +76,14 @@ export default function MyWells(): JSX.Element {
                 My Wells
             </Typography>
 
-            <Card
+            <Button
+                onClick={() => addWell()}
+                variant='contained'
+            >
+                Add Well
+            </Button>
+
+            <Box
                 sx={{
                     margin: '0 1rem 1rem 1rem',
                     padding: '1rem',
@@ -86,14 +93,7 @@ export default function MyWells(): JSX.Element {
                 {wells.map(well => (
                     <WellCard key={well.id} well={well} />
                 ))}
-            </Card>
-
-            <Button
-                onClick={() => { addWell() }}
-                variant='contained'
-            >
-                Add Well
-            </Button>
+            </Box>
         </>
     );
 };

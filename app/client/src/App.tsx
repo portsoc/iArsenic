@@ -18,6 +18,7 @@ import {
     Splash,
     Staining,
     StainingGuide,
+    Well,
 } from './pages';
 import config from './config';
 import LanguageSelector from './utils/LanguageSelector';
@@ -80,6 +81,7 @@ function App() {
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
                             <Route path='/staining' component={Staining} />
+                            <Route path='/well/:id' component={Well} />
                         </Stack>
                     </Route>
                 </Switch>

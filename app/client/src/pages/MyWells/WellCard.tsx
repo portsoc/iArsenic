@@ -1,53 +1,94 @@
-import { Card, CardContent, Typography, Box, Button } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
 import { Well } from '../../../types';
+import { navigate } from 'wouter/use-browser-location';
+import Config from '../../config';
 
 interface props {
     well: Well;
 }
 
 export default function WellCard({ well }: props): JSX.Element {
+    console.log(well)
     return (
-        <Card variant="outlined" sx={{ marginBottom: '1rem' }}>
+        <Card
+            variant="outlined"
+            sx={{ marginBottom: '1.5rem', padding: '1rem', boxShadow: 2, cursor: 'pointer' }}
+            onClick={() => navigate(`${Config.basePath}/well/${well.id}`)}
+        >
             <CardContent>
-                <Typography fontWeight='bold' component="div">
+                {/* Well ID */}
+                <Typography variant="h6" fontWeight="bold" gutterBottom>
                     Well ID: {well.id}
                 </Typography>
-                <Typography component="div">
-                    Date Created: {well.createdAt.toISOString()}
+
+                {/* Created Date */}
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                    Date Created: {new Date(well.createdAt).toLocaleDateString()}
                 </Typography>
+
+                {/* Region Details */}
                 {well.regionKey && (
-                    <Typography>
-                        Region: {well.regionKey.division}, {well.regionKey.district}, {well.regionKey.upazila}, {well.regionKey.union}, {well.regionKey.mouza}
-                    </Typography>
-                )}
-                {well.depth && (
-                    <Typography>
-                        Depth: {well.depth} meters
-                    </Typography>
-                )}
-                {well.flooding && (
-                    <Typography>
-                        Flooding: {well.flooding}
-                    </Typography>
-                )}
-                {well.staining && (
-                    <Typography>
-                        Staining: {well.staining}
-                    </Typography>
-                )}
-                {well.prediction && (
                     <Box mt={2}>
-                        <Typography>
-                            Risk Assessment: {well.prediction.riskAssesment}
+                        <Typography variant="subtitle1" color="text.primary">
+                            Region
                         </Typography>
-                        <Typography>
-                            Model Output: {well.prediction.modelOutput}
+                        <Typography variant="body2" color="text.secondary">
+                            {well.regionKey.division}, {well.regionKey.district}, {well.regionKey.upazila}, {well.regionKey.union}, {well.regionKey.mouza}
                         </Typography>
                     </Box>
                 )}
 
-                <Button variant='outlined' sx={{ mx: 'auto' }}>Modify</Button>
+                {/* Well Details in Grid */}
+                <Grid container spacing={2} mt={2}>
+                    {well.depth && (
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle2">Depth</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {well.depth} meters
+                            </Typography>
+                        </Grid>
+                    )}
+                    {well.flooding !== undefined && (
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle2">Flooding</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {well.flooding ? 'Yes' : 'No'}
+                            </Typography>
+                        </Grid>
+                    )}
+                    {well.staining && (
+                        <Grid item xs={6}>
+                            <Typography variant="subtitle2">Staining</Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {well.staining}
+                            </Typography>
+                        </Grid>
+                    )}
+                </Grid>
+
+                {/* Prediction Details */}
+                {well.prediction && (
+                    <Box mt={3}>
+                        <Typography variant="subtitle1" color="text.primary">
+                            Prediction
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <Typography variant="subtitle2">Risk Assessment</Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {well.prediction.riskAssesment}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography variant="subtitle2">Model Output</Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {well.prediction.modelOutput}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                )}
             </CardContent>
         </Card>
     );
-};
+}
