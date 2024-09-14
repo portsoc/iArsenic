@@ -4,20 +4,20 @@ import { Stack, ThemeProvider } from '@mui/material';
 import {
     Briefing,
     Depth,
+    Flooding,
+    ForgotPassword,
     Landing,
+    Login,
+    Map,
+    MyWells,
+    PrivacyPolicy,
     Region,
+    Result,
     Review,
+    SignUp,
+    Splash,
     Staining,
     StainingGuide,
-    Result,
-    Flooding,
-    PrivacyPolicy,
-    Splash,
-    Map,
-    Login,
-    ForgotPassword,
-    SignUp,
-    MyWells,
 } from './pages';
 import config from './config';
 import LanguageSelector from './utils/LanguageSelector';
@@ -66,18 +66,18 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
-                            <Route path='/my-wells' component={MyWells} />
-                            <Route path='/sign-up' component={SignUp} />
-                            <Route path='/forgot-password' component={ForgotPassword} />
-                            <Route path='/login' component={Login} />
-                            <Route path='/landing' component={Landing} />
                             <Route path='/briefing' component={Briefing} />
                             <Route path='/depth' component={Depth} />
                             <Route path='/flooding' component={Flooding} />
+                            <Route path='/forgot-password' component={ForgotPassword} />
+                            <Route path='/landing' component={Landing} />
+                            <Route path='/login' component={Login} />
+                            <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
                             <Route path='/region' component={Region} />
                             <Route path='/result' component={Result} />
                             <Route path='/review' component={Review} />
+                            <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
                             <Route path='/staining' component={Staining} />
                         </Stack>

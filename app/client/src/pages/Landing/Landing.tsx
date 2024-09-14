@@ -1,5 +1,5 @@
 import { Button, Card, List, ListItem, Typography } from "@mui/material";
-import config from "../../config";
+import Config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 
 export default function Landing(): JSX.Element {
@@ -36,7 +36,68 @@ export default function Landing(): JSX.Element {
                 </Typography>
             </Card>
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <Card variant='outlined' sx={{ margin: '1 1rem 1rem 1rem', padding: '1rem'}}>
+                <Typography variant='body1' className='english'>
+                    Powered by cutting-edge research to bring
+                    safety to your doorstep.
+                    Get started today to ensure the water
+                    you and your family drink is safe.
+                </Typography>
+
+                <Typography variant='body1' className='bengali'>
+                    আপনার পানিয়জলের নিরাপত্তা  সম্পর্কে  তথ্য দিতে সর্বাধুনিক গবেষণা দ্বারা
+                    চালিত। আপনি এবং আপনার পরিবার নিরাপদ পানি পান করছে কিনা তা
+                    জানতে আজই শুরু করুন ।
+                </Typography>
+            </Card>
+
+            <Card
+                variant='outlined'
+                sx={{
+                    margin: '0 1rem 1rem 1rem',
+                    padding: '1rem',
+                    width: '100%',
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                }}
+            >
+                <Typography className='english' variant='h6' textAlign='center' gutterBottom>
+                    Proceed with an Account
+                </Typography>
+
+                <Typography className='english' variant='body1' textAlign='center'>
+                    Access your personalized dashboard and save your data.
+                </Typography>
+
+                <Button
+                    sx={{ width: '90%', height: '4rem' }}
+                    variant='contained'
+                    onClick={() => navigate(`${Config.basePath}/login`)}
+                >
+
+                    <Typography className='english'>Login or Sign Up</Typography>
+                    <Typography className='bengali'>BENGALI PLACEHOLDER</Typography>
+                </Button>
+            </Card>
+
+            <Card
+                variant='outlined'
+                sx={{
+                    margin: '0 1rem 1rem 1rem',
+                    padding: '1rem',
+                    width: '100%',
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                }}
+            >
+                <Typography className='english' variant='h6' textAlign='center' gutterBottom>
+                    Create an Account
+                </Typography>
+
                 <Typography mb={2} variant='body1' className='english'>
                     Protect your health with a few clicks.
                     iArsenic helps you assess the safety of your
@@ -89,31 +150,16 @@ export default function Landing(): JSX.Element {
                         </Typography>
                     </ListItem>
                 </List>
+
+                <Button
+                    sx={{ width: '90%', height: '4rem' }}
+                    variant='contained'
+                    onClick={() => navigate(`${Config.basePath}/gateway`)}
+                >
+                    <Typography className='english'>Start Your Assesment</Typography>
+                    <Typography className='bengali'>আপনার মূল্যায়ন শুরু করুন</Typography>
+                </Button>
             </Card>
-
-            <Card variant='outlined' sx={{ margin: '1 1rem 1rem 1rem', padding: '1rem'}}>
-                <Typography variant='body1' className='english'>
-                    Powered by cutting-edge research to bring
-                    safety to your doorstep.
-                    Get started today to ensure the water
-                    you and your family drink is safe.
-                </Typography>
-
-                <Typography variant='body1' className='bengali'>
-                    আপনার পানিয়জলের নিরাপত্তা  সম্পর্কে  তথ্য দিতে সর্বাধুনিক গবেষণা দ্বারা
-                    চালিত। আপনি এবং আপনার পরিবার নিরাপদ পানি পান করছে কিনা তা
-                    জানতে আজই শুরু করুন ।
-                </Typography>
-            </Card>
-
-            <Button
-                sx={{ width: '90%', height: '4rem' }}
-                variant='contained'
-                onClick={() => navigate(`${config.basePath}/briefing`)}
-            >
-                <Typography className='english'>Start Your Assesment</Typography>
-                <Typography className='bengali'>আপনার মূল্যায়ন শুরু করুন</Typography>
-            </Button>
         </>
     );
 }
