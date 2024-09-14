@@ -52,7 +52,7 @@ function App() {
 
             <Router base={config.basePath}>
                 <Switch>
-                    {/* Splash Page */}
+                    {/* Splash & Map Page */}
                     <Route path='/' component={Splash} />
                     <Route path='/map' component={Map} />
                     {/* App Pages with HeaderBar and Stack layout */}
@@ -75,12 +75,12 @@ function App() {
                             <Route path='/login' component={Login} />
                             <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
-                            <Route path='/region' component={Region} />
-                            <Route path='/result' component={Result} />
-                            <Route path='/review' component={Review} />
+                            <Route path='/:id/region' component={Region} />
+                            <Route path='/:id/result' component={Result} />
+                            <Route path='/:id/review' component={Review} />
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
-                            <Route path='/staining' component={Staining} />
+                            <Route path='/:id/staining' component={Staining} />
                             <Route path='/well/:id' component={Well} />
                         </Stack>
                     </Route>

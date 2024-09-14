@@ -148,7 +148,19 @@ export default function Review() {
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => navigate(`${config.basePath}/well/${wellId}/edit`)}
+                    onClick={() => {
+                        if (!well?.regionKey) {
+                            navigate(`${config.basePath}/${wellId}/region`)
+                        } else if (!well?.depth) {
+                            navigate(`${config.basePath}/${wellId}/depth`)
+                        } else if (!well?.staining) {
+                            navigate(`${config.basePath}/${wellId}/staining`)
+                        } else if (!well?.flooding) {
+                            navigate(`${config.basePath}/${wellId}/flooding`)
+                        } else {
+                            console.log('Well is complete');
+                        }
+                    }}
                 >
                     Continue Editing Well
                 </Button>
