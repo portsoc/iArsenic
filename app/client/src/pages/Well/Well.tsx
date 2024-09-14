@@ -62,6 +62,8 @@ export default function Review() {
         );
     }
 
+    console.log(well)
+
     return (
         <>
             <Typography variant="h4" gutterBottom textAlign="center">

@@ -1,13 +1,14 @@
 import { Typography, Button, CircularProgress, Stack } from "@mui/material";
-import config from "../../config";
+import Config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../../types";
-import PredictorsStorage from "../../utils/PredictorsStorage";
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations, IAccessToken, RegionKey } from "../../../types";
+import AccessToken from "../../utils/AccessToken";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";
 import GeolocationButton from "./GeolocationButton";
 import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
+import { useRoute } from "wouter";
 
 export type RegionErrors = {
     division: boolean;
@@ -18,6 +19,10 @@ export type RegionErrors = {
 };
 
 export default function Region(): JSX.Element {
+    const [match, params] = useRoute('/:id/region');
+    const wellId = params?.id;
+    const [token, setToken] = useState<IAccessToken>();
+
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
     const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
@@ -36,7 +41,7 @@ export default function Region(): JSX.Element {
     const [geolocation, setGeolocation] = useState<[number, number]>();
 
     async function fetchDropdownData() {
-        const response = await fetch(`${config.basePath}/model5/dropdown-data.json`);
+        const response = await fetch(`${Config.basePath}/model5/dropdown-data.json`);
         const data = await response.json();
         setDropdownData(data);
     }
@@ -60,9 +65,25 @@ export default function Region(): JSX.Element {
     }
 
     useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessToken.get();
+
+            if (token == null) {
+                navigate(`${Config.basePath}/login`);
+                return;
+            }
+
+            setToken(token);
+        }
+
         fetchDropdownData();
         fetchRegionTranslations();
+        fetchToken();
     }, []);
+
+    if (!match) {
+        return <div>Well not found</div>;
+    }
 
     if (!regionTranslations) {
         return (
@@ -124,7 +145,7 @@ export default function Region(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => {
+                onClick={async () => {
                     if (!handleValidation()) return;
 
                     // if validation returns true, we know these values are
@@ -137,22 +158,42 @@ export default function Region(): JSX.Element {
                         !selectedMouza
                     ) return;
 
-                    PredictorsStorage.set({
-                        regionKey: {
-                            division: selectedDivision?.division,
-                            district: selectedDistrict?.district,
-                            upazila: selectedUpazila?.upazila,
-                            union: selectedUnion?.union,
-                            mouza: selectedMouza,
-                        },
-                        regionGeovalidated,
-                    });
-
-                    if (geolocation) {
-                        PredictorsStorage.set({ geolocation });
+                    const headers: HeadersInit = {};
+                    if (token) {
+                        headers['authorization'] = `Bearer ${token.id}`;
                     }
 
-                    navigate(`${config.basePath}/staining`);
+                    const body: { regionKey: RegionKey, geolocation?: [number, number] } = {
+                        regionKey: {
+                            division: selectedDivision.division,
+                            district: selectedDistrict.district,
+                            upazila: selectedUpazila.upazila,
+                            union: selectedUnion.union,
+                            mouza: selectedMouza,
+                        }
+                    }
+
+                    if (regionGeovalidated) {
+                        body.geolocation = geolocation;
+                    }
+
+                    const res = await fetch(`${Config.basePath}/api/v1/self/well/${wellId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...headers,
+                        },
+                        body: JSON.stringify({
+                            ...body
+                        })
+                    })
+
+                    if (!res.ok) {
+                        console.error('Failed to update well:', res);
+                        return;
+                    }
+
+                    navigate(`${Config.basePath}/staining`);
                 }}
             >
                 Next Step
