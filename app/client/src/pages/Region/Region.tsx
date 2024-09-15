@@ -189,7 +189,7 @@ export default function Region(): JSX.Element {
                         return;
                     }
 
-                    navigate(`${Config.basePath}/staining`);
+                    navigate(`${Config.basePath}/${wellId}/staining`);
                 }}
             >
                 Next Step

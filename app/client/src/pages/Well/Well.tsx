@@ -5,6 +5,7 @@ import config from '../../config';
 import { Well, IAccessToken } from '../../../types';
 import { useRoute } from 'wouter';
 import AccessToken from '../../utils/AccessToken';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function Review() {
     const [, params] = useRoute('/well/:id');
@@ -73,6 +74,15 @@ export default function Review() {
             <Typography variant="h4" gutterBottom textAlign="center">
                 Well Details
             </Typography>
+
+            <Button
+                variant='outlined'
+                startIcon={<ArrowBackIcon />}
+                sx={{ alignSelf: 'start' }}
+                onClick={() => navigate(`${config.basePath}/my-wells`)}
+            >
+                Return to My Wells
+            </Button>
 
             {isWellComplete(well).length !== 0 && (
                 <Card

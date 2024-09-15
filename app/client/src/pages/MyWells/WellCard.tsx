@@ -8,7 +8,6 @@ interface props {
 }
 
 export default function WellCard({ well }: props): JSX.Element {
-    console.log(well);
     return (
         <Card
             variant="outlined"
@@ -17,7 +16,7 @@ export default function WellCard({ well }: props): JSX.Element {
         >
             <CardContent>
                 {/* Well ID */}
-                <Typography variant="h6" fontWeight="bold" gutterBottom>
+                <Typography variant="body2" fontWeight="bold" gutterBottom>
                     Well ID: {well.id}
                 </Typography>
 

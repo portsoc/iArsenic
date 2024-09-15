@@ -43,27 +43,27 @@ export default function MyWells(): JSX.Element {
         }));
     }
 
-    async function addWell() {
+    async function addWell(): Promise<Well> {
         const token = await AccessToken.get();
 
         if (!token) {
             navigate(`${Config.basePath}/login`);
-            return;
+            throw new Error('token not valid');
         }
 
-        const result = await fetch(`${Config.basePath}/api/v1/self/well`, {
+        const res = await fetch(`${Config.basePath}/api/v1/self/well`, {
             method: 'POST',
             headers: {
                 authorization: `Bearer ${token.id}`,
             }
         });
 
-        if (!result.ok) {
-            console.error('Failed to add well:', result);
-            return;
+        if (!res.ok) {
+            throw new Error('Failed to add well');
         }
 
-        await fetchUserWells();
+        const data = await res.json();
+        return data.well as Well;
     }
 
     useEffect(() => {
@@ -77,7 +77,10 @@ export default function MyWells(): JSX.Element {
             </Typography>
 
             <Button
-                onClick={() => addWell()}
+                onClick={async () => {
+                    const newWell = await addWell();
+                    navigate(`${Config.basePath}/${newWell.id}/region`);
+                }}
                 variant='contained'
             >
                 Add Well

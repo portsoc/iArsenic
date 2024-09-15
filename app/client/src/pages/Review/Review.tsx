@@ -2,30 +2,77 @@ import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import PredictorsStorage from '../../utils/PredictorsStorage';
-import { Predictors } from '../../../types';
+import { IAccessToken, Well } from '../../../types';
+import AccessToken from '../../utils/AccessToken';
+import { useRoute } from 'wouter';
 
 export default function Review() {
-    const [predictors, setPredictors] = useState<Predictors>();
+    const [, params] = useRoute('/:id/review');
+    const wellId = params?.id;
+    const [token, setToken] = useState<IAccessToken>();
+    const [well, setWell] = useState<Well>();
 
     useEffect(() => {
-        const storedPredictors = PredictorsStorage.get();
-        const valid = PredictorsStorage.validate(storedPredictors);
+        async function fetchToken() {
+            const token = await AccessToken.get();
 
-        if (!valid.ok) {
-            alert(valid.msg);
-            navigate(`${config.basePath}/`);
+            if (token == null) {
+                navigate(`${config.basePath}/login`);
+                return;
+            }
+
+            setToken(token);
         }
 
-        const predictors = storedPredictors as Predictors;
-
-        setPredictors(predictors);
+        fetchToken();
     }, []);
 
-    if (!predictors) {
+    useEffect(() => {
+        async function fetchWell() {
+            if (!wellId || !token) return;
+
+            const result = await fetch(
+                `${config.basePath}/api/v1/self/well/${wellId}`, {
+                    headers: {
+                        'authorization': `Bearer ${token.id}`,
+                    }
+                }
+            );
+
+            if (!result.ok) {
+                console.error('Failed to fetch well:', result);
+                return;
+            }
+
+            const data = await result.json();
+
+            setWell(data.well);
+        }
+
+        fetchWell();
+    }, [token, wellId]);
+
+    if (!well) {
         return (
             <CircularProgress />
         );
+    }
+
+    if (well.regionKey == null) {
+        navigate(`${config.basePath}/${wellId}/region`);
+        return;
+    }
+    if (well.depth == null) {
+        navigate(`${config.basePath}/${wellId}/depth`);
+        return;
+    }
+    if (well.staining == null) {
+        navigate(`${config.basePath}/${wellId}/staining`);
+        return;
+    }
+    if (well.flooding == null) {
+        navigate(`${config.basePath}/${wellId}/flooding`);
+        return;
     }
 
     return (
@@ -46,35 +93,35 @@ export default function Review() {
                     <Typography variant="h6" gutterBottom>Region</Typography>
 
                     <Typography variant="body1" component="p" gutterBottom>
-                        Division: {predictors.regionKey.division}
+                        Division: {well.regionKey.division}
                     </Typography>
 
                     <Typography variant="body1" component="p" gutterBottom>
-                        District: {predictors.regionKey.district}
+                        District: {well.regionKey.district}
                     </Typography>
 
                     <Typography variant="body1" component="p" gutterBottom>
-                        Upazila: {predictors.regionKey.upazila}
+                        Upazila: {well.regionKey.upazila}
                     </Typography>
 
                     <Typography variant="body1" component="p" gutterBottom>
-                        Union: {predictors.regionKey.union}
+                        Union: {well.regionKey.union}
                     </Typography>
 
                     <Typography variant="body1" component="p" gutterBottom>
-                        Mouza: {predictors.regionKey.mouza}
+                        Mouza: {well.regionKey.mouza}
                     </Typography>
                 </Box>
 
                 <Box mb={2}>
                     <Typography variant="h6" gutterBottom>Staining</Typography>
                     <Typography variant="body1" component="p" gutterBottom>
-                        Staining: {predictors.wellStaining}
+                        Staining: {well.staining}
                     </Typography>
 
-                    {predictors.utensilStaining && (
+                    {well.utensilStaining && (
                         <Typography variant="body1" component="p" gutterBottom>
-                            Utensil Staining: {predictors.utensilStaining}
+                            Utensil Staining: {well.utensilStaining}
                         </Typography>
                     )}
                 </Box>
@@ -82,14 +129,14 @@ export default function Review() {
                 <Box mb={2}>
                     <Typography variant="h6" gutterBottom>Depth</Typography>
                     <Typography variant="body1" component="p">
-                        Depth: {predictors.depth.value} {predictors.depth.unit}
+                        Depth: {well.depth} meters
                     </Typography>
                 </Box>
 
                 <Box>
                     <Typography variant="h6" gutterBottom>Flooding</Typography>
                     <Typography variant="body1" component="p">
-                        Flooding: {predictors.flooding ? 'Yes' : 'No'}
+                        Flooding: {well.flooding ? 'Yes' : 'No'}
                     </Typography>
                 </Box>
             </Card>
@@ -99,7 +146,7 @@ export default function Review() {
                 variant='contained'
 
                 onClick={() => {
-                    navigate(`${config.basePath}/result`);
+                    navigate(`${config.basePath}/well/${wellId}`);
                 }}
             >
                 Results

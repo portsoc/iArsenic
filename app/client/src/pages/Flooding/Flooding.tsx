@@ -11,8 +11,6 @@ export default function Depth(): JSX.Element {
     const [, params] = useRoute('/:id/flooding');
     const wellId = params?.id;
     const [token, setToken] = useState<IAccessToken>();
-    console.log('================================');
-    console.log(wellId);
 
     const [flooding, setFlooding] = useState<'yes' | 'no'>();
     const [error, setError] = useState<boolean>(false);
@@ -122,7 +120,6 @@ export default function Depth(): JSX.Element {
                         console.error('Failed to update well:', res);
                         return;
                     }
-                    console.log('submitted flooding', JSON.stringify(body));
 
                     navigate(`${config.basePath}/${wellId}/review`);
                 }}
