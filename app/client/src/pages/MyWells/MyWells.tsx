@@ -21,7 +21,7 @@ export default function MyWells(): JSX.Element {
             headers: {
                 authorization: `Bearer ${token.id}`,
             }
-        })
+        });
 
         if (!result.ok) {
             console.error('Failed to fetch wells:', result);
@@ -39,8 +39,8 @@ export default function MyWells(): JSX.Element {
                 flooding: well.flooding,
                 staining: well.staining,
                 prediction: well.prediction,
-            }
-        }))
+            };
+        }));
     }
 
     async function addWell() {
@@ -56,7 +56,7 @@ export default function MyWells(): JSX.Element {
             headers: {
                 authorization: `Bearer ${token.id}`,
             }
-        })
+        });
 
         if (!result.ok) {
             console.error('Failed to add well:', result);
@@ -68,7 +68,7 @@ export default function MyWells(): JSX.Element {
 
     useEffect(() => {
         fetchUserWells();
-    }, [])
+    }, []);
 
     return (
         <>
@@ -96,4 +96,4 @@ export default function MyWells(): JSX.Element {
             </Box>
         </>
     );
-};
+}

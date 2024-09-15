@@ -1,11 +1,16 @@
 import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack } from "@mui/material";
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
-import { useState } from "react";
-import { WellStaining, UtensilStaining } from "../../../types";
-import PredictorsStorage from "../../utils/PredictorsStorage";
+import { useEffect, useState } from "react";
+import { WellStaining, UtensilStaining, IAccessToken } from "../../../types";
+import { useRoute } from "wouter";
+import AccessToken from "../../utils/AccessToken";
 
 export default function Staining(): JSX.Element {
+    const [, params] = useRoute('/:id/staining');
+    const wellId = params?.id;
+    const [token, setToken] = useState<IAccessToken>();
+
     const [wellStaining, setWellStaining] = useState<WellStaining>();
     const [utensilStaining, setUtensilStaining] = useState<UtensilStaining>();
 
@@ -18,7 +23,7 @@ export default function Staining(): JSX.Element {
     function handleValidation() {
         const newErrors = {
             wellStaining: !wellStaining,
-            utensilStaining: wellStaining === 'Not sure' && !utensilStaining
+            utensilStaining: wellStaining === 'not sure' && !utensilStaining
         };
 
         setErrors(newErrors);
@@ -26,6 +31,21 @@ export default function Staining(): JSX.Element {
         // Return false if any field is in error
         return !Object.values(newErrors).some(Boolean);
     }
+
+    useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessToken.get();
+
+            if (token == null) {
+                navigate(`${config.basePath}/login`);
+                return;
+            }
+
+            setToken(token);
+        }
+
+        fetchToken();
+    }, []);
 
     return (
         <>
@@ -60,10 +80,10 @@ export default function Staining(): JSX.Element {
                         }}
                         name="well-staining-selector"
                     >
-                        <FormControlLabel value="Red" control={<Radio />} label="Red" />
-                        <FormControlLabel value="Black" control={<Radio />} label="Black" />
+                        <FormControlLabel value="red" control={<Radio />} label="Red" />
+                        <FormControlLabel value="black" control={<Radio />} label="Black" />
                         <FormControlLabel
-                            value="Not sure"
+                            value="not sure"
                             control={<Radio />}
                             label="Mixed or Unsure"
                         />
@@ -75,7 +95,7 @@ export default function Staining(): JSX.Element {
                     }
                 </FormControl>
 
-                <Collapse in={wellStaining === 'Not sure'}>
+                <Collapse in={wellStaining === 'not sure'}>
                     <FormControl error={errors.utensilStaining} component="fieldset">
                         <Typography variant="h5" textAlign='center' style={{ marginTop: '1rem' }}>
                             Is there staining on your utensil?
@@ -88,12 +108,12 @@ export default function Staining(): JSX.Element {
                             name="utensil-staining-selector"
                         >
                             <FormControlLabel
-                                value="Red"
+                                value="red"
                                 control={<Radio />}
                                 label="Red"
                             />
                             <FormControlLabel
-                                value="Black"
+                                value="black"
                                 control={<Radio />}
                                 label="No colour change to slightly blackish"
                             />
@@ -110,10 +130,35 @@ export default function Staining(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => {
+                onClick={async () => {
                     if (!handleValidation()) return;
-                    PredictorsStorage.set({ wellStaining, utensilStaining });
-                    navigate(`${config.basePath}/depth`);
+
+                    const headers: HeadersInit = {};
+
+                    if (token) {
+                        headers['authorization'] = `Bearer ${token.id}`;
+                    }
+
+                    const body = {
+                        staining: wellStaining,
+                        utensilStaining,
+                    };
+
+                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...headers,
+                        },
+                        body: JSON.stringify(body),
+                    });
+
+                    if (!res.ok) {
+                        console.error('Failed to update well:', res);
+                        return;
+                    }
+
+                    navigate(`${config.basePath}/${wellId}/depth`);
                 }}
             >
                 Next Step

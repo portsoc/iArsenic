@@ -7,10 +7,20 @@ import { useRoute } from 'wouter';
 import AccessToken from '../../utils/AccessToken';
 
 export default function Review() {
-    const [match, params] = useRoute('/well/:id');
+    const [, params] = useRoute('/well/:id');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
     const [token, setToken] = useState<IAccessToken>();
+
+    function isWellComplete(well: Well): string[] {
+        const missingFields = [];
+        if (well.regionKey == null) missingFields.push('region');
+        if (well.depth == null) missingFields.push('depth');
+        if (well.staining == null) missingFields.push('staining');
+        if (well.flooding == null) missingFields.push('flooding');
+
+        return missingFields;
+    }
 
     useEffect(() => {
         async function fetchToken() {
@@ -25,11 +35,11 @@ export default function Review() {
         }
 
         fetchToken();
-    }, [])
+    }, []);
 
     useEffect(() => {
         async function fetchWell() {
-            if (!wellId || !token) return
+            if (!wellId || !token) return;
 
             const result = await fetch(
                 `${config.basePath}/api/v1/self/well/${wellId}`, {
@@ -52,17 +62,11 @@ export default function Review() {
         fetchWell();
     }, [wellId, token]);
 
-    if (!match) {
-        return <div>Well not found</div>;
-    }
-
     if (!well) {
         return (
             <CircularProgress />
         );
     }
-
-    console.log(well)
 
     return (
         <>
@@ -70,103 +74,103 @@ export default function Review() {
                 Well Details
             </Typography>
 
-            <Card
-                variant='outlined'
-                sx={{
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                }}
-            >
-                <Typography variant="h6" gutterBottom>
-                    Complete Your Well Information
-                </Typography>
-
-                <Typography variant="body1" gutterBottom>
-                    It looks like some information is missing from this well's record.
-                    Please continue where you left off to complete the assessment.
-                </Typography>
-
-                <Typography variant="body1" width='100%'>
-                    <b>Missing Data</b>
-                </Typography>
-
-                <List sx={{ width: '100%' }}>
-                    <ListItem>
-                        <Typography className='english' variant='body1'>
-                            • Region
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>
-                            • অঞ্চল
-                        </Typography>
-                    </ListItem>
-
-                    <ListItem>
-                        <Typography className='english' variant='body1'>
-                            • Well Depth
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>
-                            • টিউবওয়েলের গভীরতা
-                        </Typography>
-                    </ListItem>
-
-                    <ListItem>
-                        <Typography className='english' variant='body1'>
-                            • Staining Colour
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>
-                            • দাগের রঙ
-                        </Typography>
-                    </ListItem>
-
-                    <ListItem>
-                        <Typography className='english' variant='body1'>
-                            • Flooding
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>
-                            • PLACEHOLDER BENGALI
-                        </Typography>
-                    </ListItem>
-
-                    <ListItem>
-                        <Typography className='english' variant='body1'>
-                            • Depth
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>
-                            • PLACEHOLDER BENGALI
-                        </Typography>
-                    </ListItem>
-                </List>
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                        if (!well?.regionKey) {
-                            navigate(`${config.basePath}/${wellId}/region`)
-                        } else if (!well?.depth) {
-                            navigate(`${config.basePath}/${wellId}/depth`)
-                        } else if (!well?.staining) {
-                            navigate(`${config.basePath}/${wellId}/staining`)
-                        } else if (!well?.flooding) {
-                            navigate(`${config.basePath}/${wellId}/flooding`)
-                        } else {
-                            console.log('Well is complete');
-                        }
+            {isWellComplete(well).length !== 0 && (
+                <Card
+                    variant='outlined'
+                    sx={{
+                        margin: '0 1rem 1rem 1rem',
+                        padding: '1rem',
+                        width: '100%',
+                        alignItems: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
                     }}
                 >
-                    Continue Editing Well
-                </Button>
-            </Card>
+                    <Typography variant="h6" gutterBottom>
+                        Complete Your Well Information
+                    </Typography>
+
+                    <Typography variant="body1" gutterBottom>
+                        It looks like some information is missing from this well's record.
+                        Please continue where you left off to complete the assessment.
+                    </Typography>
+
+                    <Typography variant="body1" width='100%'>
+                        <b>Missing Data</b>
+                    </Typography>
+
+                    <List sx={{ width: '100%' }}>
+                        {isWellComplete(well).includes('region') && (
+                            <ListItem>
+                                <Typography className='english' variant='body1'>
+                                    • Region
+                                </Typography>
+
+                                <Typography className='bengali' variant='body1'>
+                                    • অঞ্চল
+                                </Typography>
+                            </ListItem>
+                        )}
+
+                        {isWellComplete(well).includes('depth') && (
+                            <ListItem>
+                                <Typography className='english' variant='body1'>
+                                    • Well Depth
+                                </Typography>
+
+                                <Typography className='bengali' variant='body1'>
+                                    • টিউবওয়েলের গভীরতা
+                                </Typography>
+                            </ListItem>
+                        )}
+
+                        {isWellComplete(well).includes('staining') && (
+                            <ListItem>
+                                <Typography className='english' variant='body1'>
+                                    • Staining Colour
+                                </Typography>
+
+                                <Typography className='bengali' variant='body1'>
+                                    • দাগের রঙ
+                                </Typography>
+                            </ListItem>
+                        )}
+
+                        {isWellComplete(well).includes('flooding') && (
+                            <ListItem>
+                                <Typography className='english' variant='body1'>
+                                    • Flooding
+                                </Typography>
+
+                                <Typography className='bengali' variant='body1'>
+                                    • প্রবল বা সামান্য জলবায়ু
+                                </Typography>
+                            </ListItem>
+                        )}
+                    </List>
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            if (!well?.regionKey) {
+                                navigate(`${config.basePath}/${wellId}/region`);
+                            } else if (!well?.depth) {
+                                navigate(`${config.basePath}/${wellId}/depth`);
+                            } else if (!well?.staining) {
+                                navigate(`${config.basePath}/${wellId}/staining`);
+                            } else if (!well?.flooding) {
+                                navigate(`${config.basePath}/${wellId}/flooding`);
+                            } else {
+                                console.log('Well is complete');
+                            }
+                        }}
+                    >
+                        Complete Well Information
+                    </Button>
+                </Card>
+            )}
 
             <Card
                 variant="outlined"

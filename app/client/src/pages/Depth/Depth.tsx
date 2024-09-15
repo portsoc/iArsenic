@@ -1,10 +1,17 @@
 import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/material";
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PredictorsStorage from "../../utils/PredictorsStorage";
+import { IAccessToken } from "../../../types";
+import { useRoute } from "wouter";
+import AccessToken from "../../utils/AccessToken";
 
 export default function Depth(): JSX.Element {
+    const [, params] = useRoute('/:id/depth');
+    const wellId = params?.id;
+    const [token, setToken] = useState<IAccessToken>();
+
     const [unit, setUnit] = useState<'m' | 'ft'>('ft');
     const [depth, setDepth] = useState(0);
 
@@ -23,6 +30,21 @@ export default function Depth(): JSX.Element {
         if (unit === 'ft') setDepth(Math.floor(depth * 0.3048));
         if (unit === 'm') setDepth(Math.floor(depth / 0.3048));
     }
+
+    useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessToken.get();
+
+            if (token == null) {
+                navigate(`${config.basePath}/login`);
+                return;
+            }
+
+            setToken(token);
+        }
+
+        fetchToken();
+    }, []);
 
     return (
         <>
@@ -99,15 +121,40 @@ export default function Depth(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => {
+                onClick={async () => {
                     PredictorsStorage.set({
                         depth: {
                             unit,
                             value: depth
                         }
                     });
+                    const headers: HeadersInit = {};
+                    if (token) {
+                        headers['authorization'] = `Bearer ${token.id}`;
+                    }
 
-                    navigate(`${config.basePath}/flooding`);
+                    const depthMeters = (() => {
+                        if (unit === 'm') return depth;
+                        return depth * 0.3048;
+                    })();
+
+                    const body = { depth: depthMeters };
+
+                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...headers,
+                        },
+                        body: JSON.stringify(body),
+                    });
+
+                    if (!res.ok) {
+                        console.error('Failed to update well:', res);
+                        return;
+                    }
+
+                    navigate(`${config.basePath}/${wellId}/flooding`);
                 }}
             >
                 Review Input

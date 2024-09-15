@@ -36,7 +36,7 @@ export default function produceEstimate(
         exist in the prediction data for this region
     */
     if (regionStrataKey === 's15' && 'm2' in regionStrataModel) {
-        if (predictors.wellStaining === 'Black' && regionStrataModel.m2 !== undefined) {
+        if (predictors.wellStaining === 'black' && regionStrataModel.m2 !== undefined) {
             return regionStrataModel.m2;
         } else if (predictors.flooding && regionStrataModel.m9 !== undefined) {
             return regionStrataModel.m9;
@@ -46,9 +46,9 @@ export default function produceEstimate(
             throw new Error('model keys required for flooding model misisng');
         }
     } else {
-        if (predictors.wellStaining === 'Black' || predictors.utensilStaining === 'Black') {
+        if (predictors.wellStaining === 'black' || predictors.utensilStaining === 'black') {
             return 1;
-        } else if (predictors.wellStaining === 'Red' || predictors.utensilStaining === 'Red') {
+        } else if (predictors.wellStaining === 'red' || predictors.utensilStaining === 'red') {
             if (regionStrataModel.m !== undefined) {
                 return regionStrataModel.m;
             } else {

@@ -67,20 +67,20 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
+                            <Route path='/:id/depth' component={Depth} />
+                            <Route path='/:id/flooding' component={Flooding} />
+                            <Route path='/:id/forgot-password' component={ForgotPassword} />
+                            <Route path='/:id/region' component={Region} />
+                            <Route path='/:id/result' component={Result} />
+                            <Route path='/:id/review' component={Review} />
+                            <Route path='/:id/staining' component={Staining} />
                             <Route path='/briefing' component={Briefing} />
-                            <Route path='/depth' component={Depth} />
-                            <Route path='/flooding' component={Flooding} />
-                            <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
                             <Route path='/login' component={Login} />
                             <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
-                            <Route path='/:id/region' component={Region} />
-                            <Route path='/:id/result' component={Result} />
-                            <Route path='/:id/review' component={Review} />
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
-                            <Route path='/:id/staining' component={Staining} />
                             <Route path='/well/:id' component={Well} />
                         </Stack>
                     </Route>

@@ -1,7 +1,6 @@
 import config from "../../config";
 import { Box, Button, Card, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { navigate } from "wouter/use-browser-location";
 
 export default function StainingGuide(): JSX.Element {
     return (
@@ -14,7 +13,7 @@ export default function StainingGuide(): JSX.Element {
                 variant='outlined'
                 startIcon={<ArrowBackIcon />}
                 sx={{ alignSelf: 'start' }}
-                onClick={() => navigate(`${config.basePath}/staining`)}
+                onClick={() => window.history.back()}
             >
                 Return to Staining
             </Button>

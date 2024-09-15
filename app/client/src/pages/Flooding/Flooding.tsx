@@ -1,10 +1,19 @@
 import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PredictorsStorage from "../../utils/PredictorsStorage";
+import { useRoute } from "wouter";
+import { IAccessToken } from "../../../types";
+import AccessToken from "../../utils/AccessToken";
 
 export default function Depth(): JSX.Element {
+    const [, params] = useRoute('/:id/flooding');
+    const wellId = params?.id;
+    const [token, setToken] = useState<IAccessToken>();
+    console.log('================================');
+    console.log(wellId);
+
     const [flooding, setFlooding] = useState<'yes' | 'no'>();
     const [error, setError] = useState<boolean>(false);
 
@@ -12,6 +21,21 @@ export default function Depth(): JSX.Element {
         setFlooding(event.target.value as 'yes' | 'no');
         setError(false);
     }
+
+    useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessToken.get();
+
+            if (token == null) {
+                navigate(`${config.basePath}/login`);
+                return;
+            }
+
+            setToken(token);
+        }
+
+        fetchToken();
+    }, []);
 
     return (
         <>
@@ -65,7 +89,7 @@ export default function Depth(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => {
+                onClick={async () => {
                     if (!flooding) {
                         setError(true);
                         return;
@@ -77,10 +101,33 @@ export default function Depth(): JSX.Element {
                         flooding: floodingBool,
                     });
 
-                    navigate(`${config.basePath}/review`);
+                    const body = { flooding: floodingBool };
+
+                    const headers: HeadersInit = {};
+
+                    if (token) {
+                        headers['authorization'] = `Bearer ${token.id}`;
+                    }
+
+                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...headers,
+                        },
+                        body: JSON.stringify(body),
+                    });
+
+                    if (!res.ok) {
+                        console.error('Failed to update well:', res);
+                        return;
+                    }
+                    console.log('submitted flooding', JSON.stringify(body));
+
+                    navigate(`${config.basePath}/${wellId}/review`);
                 }}
             >
-                Review Input
+                Next Step
             </Button>
         </>
     );

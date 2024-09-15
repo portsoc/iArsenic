@@ -8,7 +8,7 @@ interface props {
 }
 
 export default function WellCard({ well }: props): JSX.Element {
-    console.log(well)
+    console.log(well);
     return (
         <Card
             variant="outlined"

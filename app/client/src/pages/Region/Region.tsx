@@ -19,7 +19,7 @@ export type RegionErrors = {
 };
 
 export default function Region(): JSX.Element {
-    const [match, params] = useRoute('/:id/region');
+    const [, params] = useRoute('/:id/region');
     const wellId = params?.id;
     const [token, setToken] = useState<IAccessToken>();
 
@@ -80,10 +80,6 @@ export default function Region(): JSX.Element {
         fetchRegionTranslations();
         fetchToken();
     }, []);
-
-    if (!match) {
-        return <div>Well not found</div>;
-    }
 
     if (!regionTranslations) {
         return (
@@ -171,7 +167,7 @@ export default function Region(): JSX.Element {
                             union: selectedUnion.union,
                             mouza: selectedMouza,
                         }
-                    }
+                    };
 
                     if (regionGeovalidated) {
                         body.geolocation = geolocation;
@@ -186,7 +182,7 @@ export default function Region(): JSX.Element {
                         body: JSON.stringify({
                             ...body
                         })
-                    })
+                    });
 
                     if (!res.ok) {
                         console.error('Failed to update well:', res);

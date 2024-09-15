@@ -1,5 +1,5 @@
-import { IAccessToken } from '../../types'
-import Config from '../config'
+import { IAccessToken } from '../../types';
+import Config from '../config';
 
 export default class AccessToken {
     static dataKey: string = 'accessToken';
@@ -7,7 +7,7 @@ export default class AccessToken {
     static get = async (): Promise<IAccessToken | null> => {
         const accessToken = localStorage.getItem(this.dataKey) || null;
 
-        if (!accessToken) return null
+        if (!accessToken) return null;
 
         const parsedAccessToken = JSON.parse(accessToken);
 
@@ -23,7 +23,7 @@ export default class AccessToken {
             headers: {
                 authorization: `Bearer ${parsedAccessToken.id}`,
             }
-        })
+        });
 
         if (!res.ok) {
             console.error('Failed to fetch user using access token:', res);

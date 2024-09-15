@@ -42,7 +42,7 @@ export default function SignUp(): JSX.Element {
     async function handleSubmit() {
         if (!name || !email || !password || !confirmPassword) {
             setError('All fields are required');
-            return
+            return;
         }
 
         const passwordError = validatePassword(password);
@@ -64,13 +64,13 @@ export default function SignUp(): JSX.Element {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ name, email, password }),
-        })
+        });
 
         const resBody = await result.json();
 
         if (!result.ok) {
             if (resBody.knownError === true) {
-                const knownError: KnownServerError = resBody
+                const knownError: KnownServerError = resBody;
 
                 if (knownError.name === 'ValidationError') {
                     setError(knownError.message);
