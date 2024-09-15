@@ -1,5 +1,4 @@
 import { Typography, Box, useTheme, Button } from '@mui/material';
-import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
 
 const sectionStyle = {
@@ -33,7 +32,12 @@ const backgroundImageStyle: React.CSSProperties = {
     zIndex: -1,
     filter: 'brightness(0.5)',
 };
-export default function CallToAction(): JSX.Element {
+
+interface props {
+    tryAppClick: () => void;
+}
+
+export default function CallToAction({ tryAppClick }: props): JSX.Element {
     const theme = useTheme();
 
     return (
@@ -63,8 +67,8 @@ export default function CallToAction(): JSX.Element {
                 variant='contained'
                 color='primary'
                 size='large'
-                onClick={() => navigate(`${config.basePath}/landing`)}
                 sx={{ padding: '1rem 2rem', fontSize: '1.2rem' }}
+                onClick={tryAppClick}
             >
                 Try the App
             </Button>

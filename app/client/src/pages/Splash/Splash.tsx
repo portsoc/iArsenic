@@ -4,14 +4,35 @@ import Section from './Section';
 import CallToAction from './CallToAction';
 import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
+import { useEffect, useState } from 'react';
+import AccessToken from '../../utils/AccessToken';
+import { IAccessToken } from '../../../types';
 
 
 export default function SplashPage(): JSX.Element {
+    const [token, setToken] = useState<IAccessToken | null>();
     const theme = useTheme();
+
+    function handleTryAppClick() {
+        if (token) navigate(`${config.basePath}/my-wells`);
+        else navigate(`${config.basePath}/landing`);
+    }
+
+    useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessToken.get();
+
+            setToken(token);
+        }
+
+        fetchToken();
+    }, []);
 
     return (
         <>
-            <CallToAction />
+            <CallToAction
+                tryAppClick={handleTryAppClick}
+            />
 
             <Section
                 title='The History'
@@ -127,8 +148,8 @@ export default function SplashPage(): JSX.Element {
                         variant='contained'
                         color='primary'
                         size='large'
-                        onClick={() => navigate(`${config.basePath}/landing`)}
                         sx={{ padding: '1rem 2rem', fontSize: '1.2rem' }}
+                        onClick={handleTryAppClick}
                     >
                         Try the App
                     </Button>
