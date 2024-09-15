@@ -44,6 +44,7 @@ export default function Login(): JSX.Element {
         AccessToken.set(token);
 
         navigate(`${Config.basePath}/my-wells`);
+        window.location.reload();
     }
 
     return (
