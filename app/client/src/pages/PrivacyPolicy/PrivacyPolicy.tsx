@@ -1,7 +1,4 @@
-import { Button, Card, Typography } from "@mui/material";
-import { navigate } from "wouter/use-browser-location";
-import config from "../../config";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Card, Typography } from "@mui/material";
 
 export default function PrivacyPolicy(): JSX.Element {
     return (
@@ -9,15 +6,6 @@ export default function PrivacyPolicy(): JSX.Element {
             <Typography className='english' mb='1rem' textAlign='center' variant='h4'>
                 Privacy Policy
             </Typography>
-
-            <Button
-                variant='outlined'
-                startIcon={<ArrowBackIcon />}
-                sx={{ alignSelf: 'start' }}
-                onClick={() => navigate(`${config.basePath}/briefing`)}
-            >
-                Return to Estimate Preparation
-            </Button>
 
             <Typography className='bengali' mb='1rem' textAlign='center' variant='h4'>
                 PLACEHOLDER BENGALI

@@ -165,3 +165,12 @@ export type SessionData = {
     prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5,
     predictors: Predictors,
 }
+
+export type User = {
+    id: string,
+    email: string,
+    emailVerified: boolean,
+    name: string,
+    type: 'admin' | 'user',
+    createdAt: Date,
+}

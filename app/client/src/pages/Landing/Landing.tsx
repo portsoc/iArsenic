@@ -95,7 +95,7 @@ export default function Landing(): JSX.Element {
                 }}
             >
                 <Typography className='english' variant='h6' textAlign='center' gutterBottom>
-                    Create an Account
+                    Express Assesment
                 </Typography>
 
                 <Typography mb={2} variant='body1' className='english'>
@@ -154,7 +154,7 @@ export default function Landing(): JSX.Element {
                 <Button
                     sx={{ width: '90%', height: '4rem' }}
                     variant='contained'
-                    onClick={() => navigate(`${Config.basePath}/gateway`)}
+                    onClick={() => navigate(`${Config.basePath}/briefing`)}
                 >
                     <Typography className='english'>Start Your Assesment</Typography>
                     <Typography className='bengali'>আপনার মূল্যায়ন শুরু করুন</Typography>

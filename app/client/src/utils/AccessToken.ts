@@ -34,6 +34,10 @@ export default class AccessToken {
         return parsedAccessToken as IAccessToken;
     };
 
+    static delete = () => {
+        localStorage.removeItem(AccessToken.dataKey);
+    };
+
     static set = (accessToken: IAccessToken) => {
         localStorage.setItem(
             AccessToken.dataKey,

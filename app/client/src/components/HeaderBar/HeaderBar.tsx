@@ -1,18 +1,58 @@
-import { AppBar, Stack, Typography, Box, Button, Avatar, IconButton } from '@mui/material';
+import { AppBar, Stack, Typography, Box, Button, IconButton } from '@mui/material';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import LanguageSelector from '../../utils/LanguageSelector';
-import LoginIcon from '@mui/icons-material/Login';
 
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
+import AccessToken from '../../utils/AccessToken';
+import { IAccessToken, User } from '../../../types';
+import Config from '../../config';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
+    const [token, setToken] = useState<IAccessToken>();
+    const [user, setUser] = useState<User>();
+
+    useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessToken.get();
+
+            if (token == null) {
+                navigate(`${Config.basePath}/login`);
+                return;
+            }
+
+            setToken(token);
+        }
+
+        fetchToken();
+    }, []);
+
+    useEffect(() => {
+        async function fetchUser() {
+            if (!token) return;
+
+            const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
+                headers: {
+                    'authorization': `Bearer ${token.id}`,
+                }
+            });
+
+            if (!res.ok) {
+                console.error('Failed to fetch user:', res);
+                return;
+            }
+
+            const data = await res.json();
+            setUser(data.user as User);
+        }
+
+        fetchUser();
+    }, [token]);
 
     return (
-        <AppBar sx={{ marginBottom: '2rem' }} position='static'>
+        <AppBar sx={{ marginBottom: '2rem', height: '3rem' }} position='static'>
             <Stack
                 paddingLeft='2rem'
                 paddingRight='2rem'
@@ -37,6 +77,7 @@ export default function HeaderBar(): JSX.Element {
                     <NavMenu
                         open={open}
                         setOpen={setOpen}
+                        role={user?.type}
                     />
 
                     <Typography
@@ -49,39 +90,28 @@ export default function HeaderBar(): JSX.Element {
                 </Stack>
 
                 <Box>
-                    <Button
-                        sx={{ marginRight: '1rem' }}
-                        startIcon={
-                            <Avatar
-                                sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
-                                src={`${config.basePath}/british.png`}
-                            />
-                        }
-                        onClick={() => LanguageSelector.set('english')}
-                    />
+                    {user && (
+                        <Button
+                            variant='outlined'
+                            sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
+                            onClick={async () => {
+                                await AccessToken.delete();
+                                navigate(`${config.basePath}`);
+                            }}
+                        >
+                            Logout
+                        </Button>
+                    )}
 
-                    <Button
-                        startIcon={
-                            <Avatar
-                                sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
-                                src={`${config.basePath}/bangladesh.jpg`}
-                            />
-                        }
-                        onClick={() => LanguageSelector.set('bengali')}
-                    />
-
-                    <Button
-                        startIcon={
-                            <LoginIcon sx={{
-                                fontSize: '1.3rem',
-                                color: 'whitesmoke',
-                                }}
-                            />}
-                        onClick={() => navigate(`${config.basePath}/login`)}
-                        sx={{ padding: '8px', minWidth: 'auto' }}
-                    >
-                        Login
-                    </Button>
+                    {!user && (
+                        <Button
+                            variant='outlined'
+                            sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
+                            onClick={() => navigate(`${config.basePath}/login`)}
+                        >
+                            Login
+                        </Button>
+                    )}
                 </Box>
             </Stack>
         </AppBar>
