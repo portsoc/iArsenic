@@ -35,11 +35,7 @@ export default function Staining(): JSX.Element {
     useEffect(() => {
         async function fetchToken() {
             const token = await AccessToken.get();
-
-            if (token == null) {
-                navigate(`${config.basePath}/login`);
-                return;
-            }
+            if (token == null) return;
 
             setToken(token);
         }

@@ -28,24 +28,17 @@ export const WellController = {
     async getWellByIdByToken(ctx: Context) {
         const token = TokenSchema.parse(ctx.state.token);
         const userId = token.userId;
-
         const wellId = ctx.params.id;
 
-        const well = await WellService.getWellById(wellId);
-
-        if (!well) {
-            ctx.status = 404
-            ctx.body = { error: 'Not Found' }
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            })
         }
 
-        const validatedWell = WellSchema.parse(well);
-
-        if (validatedWell.userId !== userId) {
-            ctx.status = 403
-            ctx.body = { error: 'Unauthorized' }
-
-            return
-        }
+        const well: Well = await WellService.getWellById(wellId, userId);
 
         ctx.status = 200
         ctx.body = { well }
@@ -56,20 +49,12 @@ export const WellController = {
         const userId = token.userId;
         const wellId = ctx.params.id;
 
-        const well = await WellService.getWellById(wellId);
-
-        if (!well) {
-            ctx.status = 404
-            ctx.body = { error: 'Not Found' }
-
-            return
-        }
-
-        if (well.userId !== userId) {
-            ctx.status = 403
-            ctx.body = { error: 'Unauthorized' }
-
-            return
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            })
         }
 
         const result = validateModel(
@@ -93,6 +78,7 @@ export const WellController = {
 
         const updatedWell = await WellService.updateWell(
             wellId,
+            userId,
             wellData,
         );
 
@@ -117,9 +103,9 @@ export const WellController = {
             return
         }
 
-        const prediction = await WellService.generateEstimate(userId, wellId);
+        const wellWithPrediction = await WellService.generateEstimate(userId, wellId);
 
         ctx.status = 200
-        ctx.body = { prediction }
+        ctx.body = { well: wellWithPrediction }
     }
 }

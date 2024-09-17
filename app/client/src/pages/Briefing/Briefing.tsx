@@ -1,10 +1,32 @@
 import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import config from "../../config";
-import { v4 as uuidv4 } from 'uuid';
-import PredictorsStorage from "../../utils/PredictorsStorage";
+import Config from "../../config";
+import { Well } from "../../../types";
+import AccessToken from "../../utils/AccessToken";
 
 export default function Briefing(): JSX.Element {
+    async function addWell(): Promise<Well> {
+        const token = await AccessToken.get();
+
+        const headers: HeadersInit = {};
+
+        if (token) {
+            headers.authorization = `Bearer ${token.id}`;
+        }
+
+        const res = await fetch(`${Config.basePath}/api/v1/self/well`, {
+            method: 'POST',
+            headers,
+        });
+
+        if (!res.ok) {
+            throw new Error('Failed to add well');
+        }
+
+        const data = await res.json();
+        return data.well as Well;
+    }
+
     return (
         <>
             <Typography className='english' mb='1rem' textAlign='center' variant='h4'>
@@ -106,7 +128,7 @@ export default function Briefing(): JSX.Element {
                     For a detailed explanation of our data
                     practices,&nbsp;
                     <Link
-                        onClick={() => navigate(`${config.basePath}/privacy-policy`)}
+                        onClick={() => navigate(`${Config.basePath}/privacy-policy`)}
                         sx={{ cursor: 'pointer' }}
                     >
                         click here
@@ -119,7 +141,7 @@ export default function Briefing(): JSX.Element {
                     আমাদের অনুমানের সঠিকতা উন্নত করার জন্য এই তথ্য ব্যবহার করি।
                     আমাদের ডেটা অনুশীলনগুলির বিশদ ব্যাখ্যার জন্য,
                     <Link
-                        onClick={() => navigate(`${config.basePath}/privacy-policy`)}
+                        onClick={() => navigate(`${Config.basePath}/privacy-policy`)}
                         sx={{ cursor: 'pointer' }}
                     >
                         এখানে ক্লিক করুন।
@@ -156,12 +178,9 @@ export default function Briefing(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                onClick={() => {
-                    PredictorsStorage.set({
-                        id: uuidv4(),
-                    });
-
-                    navigate(`${config.basePath}/region`);
+                onClick={async () => {
+                    const newWell = await addWell();
+                    navigate(`${Config.basePath}/${newWell.id}/region`);
                 }}
             >
                 <Typography className='english'>Generate Estimate</Typography>

@@ -2,7 +2,6 @@ import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, 
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import PredictorsStorage from "../../utils/PredictorsStorage";
 import { useRoute } from "wouter";
 import { IAccessToken } from "../../../types";
 import AccessToken from "../../utils/AccessToken";
@@ -23,11 +22,7 @@ export default function Depth(): JSX.Element {
     useEffect(() => {
         async function fetchToken() {
             const token = await AccessToken.get();
-
-            if (token == null) {
-                navigate(`${config.basePath}/login`);
-                return;
-            }
+            if (token == null) return;
 
             setToken(token);
         }
@@ -94,13 +89,7 @@ export default function Depth(): JSX.Element {
                     }
 
                     const floodingBool = flooding === 'yes';
-
-                    PredictorsStorage.set({
-                        flooding: floodingBool,
-                    });
-
                     const body = { flooding: floodingBool };
-
                     const headers: HeadersInit = {};
 
                     if (token) {
@@ -124,7 +113,7 @@ export default function Depth(): JSX.Element {
                     navigate(`${config.basePath}/${wellId}/review`);
                 }}
             >
-                Next Step
+                Review
             </Button>
         </>
     );

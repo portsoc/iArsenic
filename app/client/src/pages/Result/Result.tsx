@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import config from "../../config";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { ModelData } from "../../../types";
+import { RiskAssesment, Well } from "../../../types";
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";
 import estimateTexts from "./estimateTexts";
-import produceEstimate from "./produceEstimate";
-import PredictorsStorage from "../../utils/PredictorsStorage";
-import LanguageSelector from "../../utils/LanguageSelector";
-import { Predictors } from "../../../types";
+import { useRoute } from "wouter";
+import AccessToken from "../../utils/AccessToken";
 
 type EstimateTexts = {
     english: {
@@ -23,144 +21,99 @@ type EstimateTexts = {
 }
 
 export default function Result(): JSX.Element {
-    const [predictors, setPredictors] = useState<Predictors>();
-    const [modelData, setModelData] = useState<ModelData>();
-    const [modelPrediction, setModelPrediction] = useState<number>();
+    const [, params] = useRoute('/:id/result');
+    const wellId = params?.id;
+    const [well, setWell] = useState<Well>();
 
     const [speedoValue, setSpeedoValue] = useState<number>();
     const [warningTexts, setWarningTexts] = useState<EstimateTexts>();
 
-    async function fetchModelData(div: string, dis: string) {
-        const res = await fetch(`${config.basePath}/model5/aggregate-data/${div}-${dis}.json`);
+    const [loading, setLoading] = useState<boolean>(true);
 
-        if (!res.ok) {
-            return console.error('Failed to fetch prediction data');
-        }
+    function setOutput(riskAssesment: RiskAssesment) {
+        console.log(riskAssesment);
+        setSpeedoValue(riskAssesment);
 
-        // additional type checking would be good here
-        const data = await res.json() as ModelData;
-
-        setModelData(data);
-    }
-
-    function loadPredictors() {
-        const storedPredictors = PredictorsStorage.get();
-        const valid = PredictorsStorage.validate(storedPredictors);
-
-        if (!valid.ok) {
-            alert(valid.msg);
-            navigate(`${config.basePath}/`);
-        }
-
-        const predictors = storedPredictors as Predictors;
-
-        setPredictors(predictors);
-    }
-
-    function setOutput(modelData: ModelData) {
-        const storedPredictors = PredictorsStorage.get();
-        const valid = PredictorsStorage.validate(storedPredictors);
-
-        if (!valid.ok) {
-            alert(valid.msg);
-            navigate(`${config.basePath}/`);
-        }
-
-        const predictors = storedPredictors as Predictors;
-
-        const newEstimate = produceEstimate(
-            modelData,
-            predictors,
-        );
-
-        const messageCode = (() => {
-            switch (newEstimate) {
-                case 0: // unable to make an estimate
-                    return 2;
-                case 1:
-                    return 0;
-                case 2:
-                case 3:
-                    return 1;
-                case 4:
-                case 5:
-                    return 2;
-                case 6:
-                    return 3;
-                case 7:
-                case 8:
-                    return 4;
-            }
-        })();
-
-        setModelPrediction(newEstimate);
-        setSpeedoValue(messageCode + 0.5);
+        const textIndex = riskAssesment - 0.5 as 0 | 1 | 2 | 3 | 4;
 
         setWarningTexts({
             english: {
-                title: estimateTexts[messageCode].english.title,
-                body: estimateTexts[messageCode].english.body,
+                title: estimateTexts[textIndex].english.title,
+                body: estimateTexts[textIndex].english.body,
             },
             bengali: {
-                title: estimateTexts[messageCode].bengali.title,
-                body: estimateTexts[messageCode].bengali.body,
+                title: estimateTexts[textIndex].bengali.title,
+                body: estimateTexts[textIndex].bengali.body,
             }
         });
     }
 
-    async function submitSession(predictors: Predictors) {
-        const res = await fetch(`${config.basePath}/api/save-prediction`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'model5',
-                modelPrediction: modelPrediction,
-                prediction: speedoValue,
-                language: LanguageSelector.get(),
-                ...predictors,
-            })
-        });
+    useEffect(() => {
+        async function fetchTokenAndWell() {
+            try {
+                if (!wellId) return;
 
-        if (!res.ok) {
-            console.error('Failed to submit predictors');
+                const token = await AccessToken.get();
+
+                const headers: HeadersInit = {};
+                if (token) {
+                    headers['authorization'] = `Bearer ${token.id}`;
+                }
+
+                const result = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                    headers,
+                });
+
+                if (!result.ok) {
+                    throw new Error('Failed to fetch well');
+                }
+
+                const data = await result.json();
+                let fetchedWell = data.well;
+
+                if (fetchedWell.prediction == null) {
+                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}/predict`, {
+                        method: 'POST',
+                        headers,
+                    });
+
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch prediction');
+                    }
+
+                    const data = await res.json();
+                    fetchedWell = data.well;
+                }
+
+                setWell(fetchedWell);
+
+                if (fetchedWell.prediction) {
+                    setOutput(fetchedWell.prediction.riskAssesment);
+                }
+
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
         }
-    }
 
-    // 1. load user entered predictor data - no dpendencies
-    useEffect(loadPredictors, []);
+        fetchTokenAndWell();
+    }, [wellId]);
 
-    // 2. load model data - depends on predictors to download predictions for
-    // this district only
-    useEffect(() => {
-        if (!predictors) return;
-
-        fetchModelData(predictors.regionKey.division, predictors.regionKey.district);
-    }, [predictors]);
-
-    // 3. get output message - depends on model data for prediction
-    useEffect(() => {
-        if (!modelData) {
-            console.error('attempting to produce estimate without model data');
-            return;
-        }
-
-        setOutput(modelData);
-    }, [modelData]);
-
-    // 4. submit prediction & predictors
-    useEffect(() => {
-        if (!predictors) return;
-
-        submitSession(predictors);
-    }, [speedoValue]);
-
-    if (!predictors || !modelData || !speedoValue || !warningTexts) {
+    if (loading) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
                 <CircularProgress />
             </Stack>
+        );
+    }
+
+    if (!well || !speedoValue || !warningTexts) {
+        return (
+            <Typography textAlign="center" variant="h6">
+                Error loading data. Please refresh the page.
+            </Typography>
         );
     }
 

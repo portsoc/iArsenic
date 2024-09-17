@@ -15,11 +15,7 @@ export default function Review() {
     useEffect(() => {
         async function fetchToken() {
             const token = await AccessToken.get();
-
-            if (token == null) {
-                navigate(`${config.basePath}/login`);
-                return;
-            }
+            if (token == null) return;
 
             setToken(token);
         }
@@ -29,13 +25,17 @@ export default function Review() {
 
     useEffect(() => {
         async function fetchWell() {
-            if (!wellId || !token) return;
+            if (!wellId) return;
+
+            const headers: HeadersInit = {};
+
+            if (token) {
+                headers['authorization'] = `Bearer ${token.id}`;
+            }
 
             const result = await fetch(
                 `${config.basePath}/api/v1/self/well/${wellId}`, {
-                    headers: {
-                        'authorization': `Bearer ${token.id}`,
-                    }
+                    headers,
                 }
             );
 
@@ -146,7 +146,11 @@ export default function Review() {
                 variant='contained'
 
                 onClick={() => {
-                    navigate(`${config.basePath}/well/${wellId}`);
+                    if (token) {
+                        navigate(`${config.basePath}/well/${wellId}`);
+                        return;
+                    }
+                    navigate(`${config.basePath}/${wellId}/result`);
                 }}
             >
                 Results

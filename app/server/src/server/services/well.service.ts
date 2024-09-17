@@ -20,7 +20,7 @@ export const WellService = {
         return await WellRepo.getByQuery([['userId', '==', userId]]);
     },
 
-    async getWellById(wellId: string): Promise<Well | null> {
+    async getWellById(wellId: string, userId: string): Promise<Well> {
         const well = await WellRepo.findById(wellId);
 
         if (!well) {
@@ -31,10 +31,24 @@ export const WellService = {
             })
         }
 
-        return well;
+        const validatedWell = WellSchema.parse(well);
+
+        if (validatedWell.userId !== userId) {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            })
+        }
+
+        return validatedWell;
     },
 
-    async updateWell(wellId: string, wellUpdates: Partial<Well>): Promise<Well> {
+    async updateWell(
+        wellId: string,
+        userId: string,
+        wellUpdates: Partial<Well>,
+    ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
 
         if (!well) {
@@ -42,6 +56,14 @@ export const WellService = {
                 message: 'Well not found',
                 code: 404,
                 name: 'WellNotFoundError',
+            })
+        }
+
+        if (well.userId !== userId) {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
             })
         }
 
@@ -112,7 +134,7 @@ export const WellService = {
             model: 'model5',
         }
 
-        await WellService.updateWell(wellId, { prediction });
+        await WellService.updateWell(wellId, userId, { prediction });
 
         well.prediction = prediction;
         return well

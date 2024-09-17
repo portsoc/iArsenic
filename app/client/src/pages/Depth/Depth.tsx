@@ -34,11 +34,7 @@ export default function Depth(): JSX.Element {
     useEffect(() => {
         async function fetchToken() {
             const token = await AccessToken.get();
-
-            if (token == null) {
-                navigate(`${config.basePath}/login`);
-                return;
-            }
+            if (token == null) return;
 
             setToken(token);
         }
@@ -135,7 +131,7 @@ export default function Depth(): JSX.Element {
 
                     const depthMeters = (() => {
                         if (unit === 'm') return depth;
-                        return depth * 0.3048;
+                        return Math.floor(depth * 0.3048);
                     })();
 
                     const body = { depth: depthMeters };
@@ -157,7 +153,7 @@ export default function Depth(): JSX.Element {
                     navigate(`${config.basePath}/${wellId}/flooding`);
                 }}
             >
-                Review Input
+                Next Step
             </Button>
         </>
     );

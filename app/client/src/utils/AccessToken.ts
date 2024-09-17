@@ -1,3 +1,4 @@
+import { navigate } from 'wouter/use-browser-location';
 import { IAccessToken } from '../../types';
 import Config from '../config';
 
@@ -16,6 +17,7 @@ export default class AccessToken {
 
         if (parsedAccessToken.expiresAt < new Date()) {
             localStorage.removeItem(this.dataKey);
+            navigate(`${Config.basePath}/login`);
             return null;
         }
 
