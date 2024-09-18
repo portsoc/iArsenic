@@ -3,7 +3,7 @@ import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import PredictorsStorage from "../../utils/PredictorsStorage";
-import { IAccessToken } from "../../../types";
+import { IAccessToken } from "../../types";
 import { useRoute } from "wouter";
 import AccessToken from "../../utils/AccessToken";
 

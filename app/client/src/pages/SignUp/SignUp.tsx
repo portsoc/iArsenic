@@ -1,7 +1,7 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import Config from '../../config';
-import { KnownServerError } from '../../../types';
+import { KnownServerError } from '../../types';
 
 export default function SignUp(): JSX.Element {
     const [name, setName] = useState<string>();

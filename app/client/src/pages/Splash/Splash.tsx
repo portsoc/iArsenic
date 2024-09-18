@@ -6,7 +6,7 @@ import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
 import AccessToken from '../../utils/AccessToken';
-import { IAccessToken } from '../../../types';
+import { IAccessToken } from '../../types';
 
 
 export default function SplashPage(): JSX.Element {

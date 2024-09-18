@@ -1,4 +1,4 @@
-import { MessageCode, ModelData } from '../../../types'
+import { MessageCode, ModelData } from '../../types'
 import { Predictors } from '../../models/well.model'
 import path from 'path'
 import fs from 'fs'

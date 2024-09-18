@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import config from "../../config";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { RiskAssesment, Well } from "../../../types";
+import { RiskAssesment, Well } from "../../types";
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";

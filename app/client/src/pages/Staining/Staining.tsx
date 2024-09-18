@@ -2,7 +2,7 @@ import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGrou
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { WellStaining, UtensilStaining, IAccessToken } from "../../../types";
+import { WellStaining, UtensilStaining, IAccessToken } from "../../types";
 import { useRoute } from "wouter";
 import AccessToken from "../../utils/AccessToken";
 

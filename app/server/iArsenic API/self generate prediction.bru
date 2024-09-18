@@ -5,11 +5,11 @@ meta {
 }
 
 post {
-  url: 
+  url: {{base_url}}/api/v1/self/well/{{well_id}}/predict
   body: none
   auth: none
 }
 
 headers {
-  authorization: Bearer {{access_token}}
+  ~authorization: Bearer {{access_token}}
 }

@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
-import { Well } from '../../../types';
+import { Well } from '../../types';
 import { navigate } from 'wouter/use-browser-location';
 import Config from '../../config';
 

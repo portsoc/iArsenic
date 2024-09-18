@@ -1,4 +1,4 @@
-import { RegionKey } from './server/models/well.model';
+import { RegionKey } from './models/well.model';
 
 export type Predictors = {
     id: string,

@@ -1,5 +1,5 @@
-import { MessageCode, ModelData } from '../../../types';
-import { Predictors } from '../../../types';
+import { MessageCode, ModelData } from '../../types';
+import { Predictors } from '../../types';
 
 export default function produceEstimate(
         modelData: ModelData,

@@ -1,7 +1,7 @@
 import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import Config from "../../config";
-import { Well } from "../../../types";
+import { Well } from "../../types";
 import AccessToken from "../../utils/AccessToken";
 
 export default function Briefing(): JSX.Element {

@@ -2,7 +2,7 @@ import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import { IAccessToken, Well } from '../../../types';
+import { IAccessToken, Well } from '../../types';
 import AccessToken from '../../utils/AccessToken';
 import { useRoute } from 'wouter';
 

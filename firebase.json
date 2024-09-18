@@ -10,7 +10,7 @@
         "firebase-debug.*.log"
       ],
       "predeploy": [
-        "npm --prefix ../app/server run build"
+        "npm --prefix ../app/server run build:firebase"
       ]
     }
   ],

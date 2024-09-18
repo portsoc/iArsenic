@@ -6,7 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import AccessToken from '../../utils/AccessToken';
-import { IAccessToken, User } from '../../../types';
+import { IAccessToken, User } from '../../types';
 import Config from '../../config';
 
 export default function HeaderBar(): JSX.Element {

@@ -2,7 +2,7 @@ import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from 
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import { Well, IAccessToken } from '../../../types';
+import { Well, IAccessToken } from '../../types';
 import { useRoute } from 'wouter';
 import AccessToken from '../../utils/AccessToken';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
