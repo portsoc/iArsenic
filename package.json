@@ -23,6 +23,6 @@
   "scripts": {
     "test": "jest preprocessing/tests/",
     "lint": "eslint .",
-    "build-app": "npm --prefix app run build && rm -rf firebase-functions/static && mkdir firebase-functions/static && cp -r app/dist/* firebase-functions/static/"
+    "build-app": "npm --prefix app/server run build:firebase"
   }
 }

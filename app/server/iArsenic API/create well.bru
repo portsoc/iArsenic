@@ -1,0 +1,15 @@
+meta {
+  name: create well
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{base_url}}/api/v1/self/well
+  body: none
+  auth: none
+}
+
+headers {
+  ~authorization: Bearer {{access_token}}
+}
