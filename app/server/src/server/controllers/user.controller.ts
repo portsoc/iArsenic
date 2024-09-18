@@ -28,8 +28,6 @@ export const UserController = {
         const userRes = await UserRepo.findById(userId);
 
         if (userRes == null) {
-            console.error('Token:', token);
-            console.error('UserId:', userId);
             throw new KnownError({
                 message: 'UserId on JWT not found',
                 code: 404,
