@@ -9,7 +9,7 @@ dotenvConfig({ path: resolve(__dirname, '.env') });
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: process.env.VITE_APP_BASE_PATH || '/iarsenic-staging/us-central1/default',
+  base: process.env.VITE_APP_BASE_PATH || '',
   build: {
     outDir: 'static',
     minify: true,

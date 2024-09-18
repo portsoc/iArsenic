@@ -10,8 +10,6 @@ RUN npm --prefix client install
 COPY server/package*.json ./server/
 COPY server/ ./server
 
-COPY ./types.ts ./types.ts
-
 RUN npm --prefix server install
 RUN npm --prefix server run build
 
