@@ -14,6 +14,14 @@ export const WellController = {
         ctx.body = { well }
     },
 
+    // todo - add pagination
+    async getAllWells(ctx: Context) {
+        const wells = await WellService.getAllWells();
+
+        ctx.status = 200
+        ctx.body = { wells }
+    },
+
     async getWellsByToken(ctx: Context) {
         const token = TokenSchema.parse(ctx.state.token);
         const userId = token.userId;

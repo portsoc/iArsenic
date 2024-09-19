@@ -2,17 +2,16 @@ import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGrou
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { WellStaining, UtensilStaining } from "../../types";
-import { Token } from 'shared';
+import { Staining, UtensilStaining, Token } from 'shared';
 import { useRoute } from "wouter";
 import AccessToken from "../../utils/AccessToken";
 
-export default function Staining(): JSX.Element {
+export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/:id/staining');
     const wellId = params?.id;
     const [token, setToken] = useState<Token>();
 
-    const [wellStaining, setWellStaining] = useState<WellStaining>();
+    const [wellStaining, setWellStaining] = useState<Staining>();
     const [utensilStaining, setUtensilStaining] = useState<UtensilStaining>();
 
     // State to manage input errors
@@ -72,7 +71,7 @@ export default function Staining(): JSX.Element {
                 <FormControl error={errors.wellStaining} component="fieldset">
                     <RadioGroup
                         onChange={(event) => {
-                            setWellStaining(event.target.value as WellStaining);
+                            setWellStaining(event.target.value as Staining);
                             setErrors(e => ({ ...e, wellStaining: false }));
                         }}
                         name="well-staining-selector"

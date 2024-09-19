@@ -1,5 +1,10 @@
 import { Stack, TextField, Autocomplete } from "@mui/material";
-import { DropdownDivision, DropdownDistrict, DropdownUpazila, DropdownUnion } from "../../types";
+import {
+    DropdownDivision,
+    DropdownDistrict,
+    DropdownUpazila,
+    DropdownUnion,
+} from "../../types";
 import { RegionErrors } from "./Region";
 
 type props = {

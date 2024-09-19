@@ -2,7 +2,8 @@ import { Typography, Button, CircularProgress, Stack } from "@mui/material";
 import Config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations, IAccessToken, RegionKey } from "../../types";
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
+import { RegionKey, Token } from "shared";
 import AccessToken from "../../utils/AccessToken";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";
@@ -21,7 +22,7 @@ export type RegionErrors = {
 export default function Region(): JSX.Element {
     const [, params] = useRoute('/:id/region');
     const wellId = params?.id;
-    const [token, setToken] = useState<IAccessToken>();
+    const [token, setToken] = useState<Token>();
 
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
@@ -151,7 +152,7 @@ export default function Region(): JSX.Element {
                     ) return;
 
                     const headers: HeadersInit = {};
-                    if (token) {
+                    if (token && token.type == 'access') {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 

@@ -1,4 +1,4 @@
-type KnownErrorArgs = { message: string; code: number; name: string }
+import { KnownErrorArgs } from 'shared'
 
 export class KnownError extends Error {
     code: number

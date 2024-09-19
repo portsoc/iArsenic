@@ -6,6 +6,7 @@ import { Timestamp } from 'firebase-admin/firestore';
 export interface IWellRepo extends Repository<Well> {
     update: (well: Well) => Promise<void>;
     getByQuery: (queries: QueryTuple[]) => Promise<Well[]>;
+    findAll: () => Promise<Well[]>;
 }
 
 type QueryTuple = [string, FirebaseFirestore.WhereFilterOp, any];

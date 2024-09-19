@@ -77,6 +77,10 @@ export const WellService = {
         return validatedWell;
     },
 
+    async getAllWells(): Promise<Well[]> {
+        return await WellRepo.findAll();
+    },
+
     async generateEstimate(userId: string, wellId: string): Promise<Well> {
         const well = await WellRepo.findById(wellId);
 

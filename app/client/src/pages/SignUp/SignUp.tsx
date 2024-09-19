@@ -1,7 +1,7 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import Config from '../../config';
-import { KnownServerError } from '../../types';
+import { IKnownError } from 'shared';
 
 export default function SignUp(): JSX.Element {
     const [name, setName] = useState<string>();
@@ -70,7 +70,7 @@ export default function SignUp(): JSX.Element {
 
         if (!result.ok) {
             if (resBody.knownError === true) {
-                const knownError: KnownServerError = resBody;
+                const knownError: IKnownError = resBody;
 
                 if (knownError.name === 'ValidationError') {
                     setError(knownError.message);
