@@ -10,7 +10,7 @@ export default function Briefing(): JSX.Element {
 
         const headers: HeadersInit = {};
 
-        if (token) {
+        if (token && token.type === 'access') {
             headers.authorization = `Bearer ${token.id}`;
         }
 

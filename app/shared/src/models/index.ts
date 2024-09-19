@@ -12,6 +12,9 @@ export { default as validateModel } from './validateModel';
 export { WellSchema } from './well.model';
 export type { Well } from './well.model';
 
+export { CompleteWellSchema } from './well.model';
+export type { CompleteWell } from './well.model';
+
 export { PredictionSchema } from './well.model';
 export type { Prediction } from './well.model';
 
@@ -26,6 +29,9 @@ export type { RegionKey } from './well.model';
 
 export { RiskAssesmentSchema } from './well.model';
 export type { RiskAssesment } from './well.model';
+
+export { ModelMessageCodeSchema } from './well.model';
+export type { ModelMessageCode } from './well.model';
 
 export { StainingSchema } from './well.model';
 export type { Staining } from './well.model';

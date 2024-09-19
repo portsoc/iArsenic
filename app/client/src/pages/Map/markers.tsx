@@ -66,7 +66,7 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
     return (
         <>
             {wells.filter(
-                s => s.geolocation !== 'N/A' &&
+                s => s.geolocation != null &&
                 s.prediction != null &&
                 s.regionKey != null &&
                 s.staining != null &&
@@ -161,7 +161,7 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                             </Typography>
 
                             {
-                                (p.utensilStaining !== 'N/A') &&
+                                (p.utensilStaining != null) &&
                                 <>
                                     <Typography className='english' variant='body1'>
                                         Utensil Staining: {p.utensilStaining}

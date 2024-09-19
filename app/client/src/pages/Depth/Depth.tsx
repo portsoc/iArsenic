@@ -2,7 +2,6 @@ import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/m
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import PredictorsStorage from "../../utils/PredictorsStorage";
 import { Token } from "shared";
 import { useRoute } from "wouter";
 import AccessToken from "../../utils/AccessToken";
@@ -118,12 +117,6 @@ export default function Depth(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={async () => {
-                    PredictorsStorage.set({
-                        depth: {
-                            unit,
-                            value: depth
-                        }
-                    });
                     const headers: HeadersInit = {};
                     if (token && token.type === 'access') {
                         headers['authorization'] = `Bearer ${token.id}`;

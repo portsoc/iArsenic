@@ -1,9 +1,10 @@
-import { MessageCode, ModelData } from '../../types'
+import { ModelData } from '../../types'
+import { ModelMessageCode } from 'shared'
 import { Well } from 'shared'
 import path from 'path'
 import fs from 'fs'
 
-export default function produceEstimate(well: Well): MessageCode {
+export default function produceEstimate(well: Well): ModelMessageCode {
     if (!well.regionKey) throw new Error('region key not found in well data');
 
     const div = well.regionKey.division;

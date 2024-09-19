@@ -60,11 +60,24 @@ export const WellSchema = z.object({
     flooding: z.boolean().optional(),
     staining: StainingSchema.optional(),
     utensilStaining: UtensilStainingSchema.optional(),
-    geolocation: z.union([z.tuple([z.number(), z.number()]), z.literal('N/A')]).optional(),
+    geolocation: z.tuple([z.number(), z.number()]).optional(),
     prediction: PredictionSchema.optional(),
 });
 
 export type Well = z.infer<typeof WellSchema>;
+
+export const CompleteWellSchema = WellSchema.extend({
+    drinkingWaterSource: z.boolean(),
+    regionKey: RegionKeySchema,
+    depth: z.number(),
+    flooding: z.boolean(),
+    staining: StainingSchema,
+    utensilStaining: UtensilStainingSchema.optional(),
+    geolocation: z.union([z.number(), z.number()]).optional(),
+    prediction: PredictionSchema,
+});
+
+export type CompleteWell = z.infer<typeof CompleteWellSchema>;
 
 export const PredictorsSchema = z.object({
     regionKey: RegionKeySchema,

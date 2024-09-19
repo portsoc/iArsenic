@@ -56,7 +56,7 @@ export default function Result(): JSX.Element {
                 const token = await AccessToken.get();
 
                 const headers: HeadersInit = {};
-                if (token) {
+                if (token && token.type === 'access') {
                     headers['authorization'] = `Bearer ${token.id}`;
                 }
 

@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "rm -rf dist && tsc && ../client/ run build && cp -r ../client/static/ dist/static/",
-    "build:firebase": "npm --prefix ../client/ run build && rm -rf dist && tsc && rm -rf ../../firebase-functions/dist && cp -r dist/* ../../firebase-functions"
+    "build:firebase": "npm --prefix ../shared run build && npm --prefix ../client/ run build && rm -rf dist && tsc && rm -rf ../../firebase-functions/dist && cp -r dist/* ../../firebase-functions"
   },
   "keywords": [],
   "author": "",
