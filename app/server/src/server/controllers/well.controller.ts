@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { TokenSchema, Well, WellSchema, validateModel } from '../models'
+import { TokenSchema, Well, WellSchema, validateModel } from 'shared'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
 

@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { Token, TokenSchema } from '../models/token.model';
+import { Token, TokenSchema } from 'shared';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 

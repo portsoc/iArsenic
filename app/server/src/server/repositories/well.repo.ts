@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { Well, WellSchema } from '../models/well.model';
+import { Well, WellSchema } from 'shared';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 

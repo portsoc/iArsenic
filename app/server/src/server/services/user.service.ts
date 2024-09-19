@@ -1,8 +1,7 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { Token, User, UserSchema } from '../models';
+import { Token, User, UserSchema, validateModel } from 'shared';
 import { UserRepo, TokenRepo } from '../repositories'
-import { validateModel } from '../models';
 import bcrypt from 'bcrypt'
 
 // 7 days

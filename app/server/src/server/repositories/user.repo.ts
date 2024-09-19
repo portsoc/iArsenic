@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { User, UserSchema } from '../models/user.model';
+import { User, UserSchema } from 'shared';
 import db from '../db';
 
 export interface IUserRepo extends Repository<User> {

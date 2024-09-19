@@ -1,14 +1,16 @@
 import { MessageCode, ModelData } from '../../types'
-import { Predictors } from '../../models/well.model'
+import { Well } from 'shared'
 import path from 'path'
 import fs from 'fs'
 
-export default function produceEstimate(predictors: Predictors): MessageCode {
-    const div = predictors.regionKey.division;
-    const dis = predictors.regionKey.district;
-    const upa = predictors.regionKey.upazila;
-    const uni = predictors.regionKey.union;
-    const mou = predictors.regionKey.mouza;
+export default function produceEstimate(well: Well): MessageCode {
+    if (!well.regionKey) throw new Error('region key not found in well data');
+
+    const div = well.regionKey.division;
+    const dis = well.regionKey.district;
+    const upa = well.regionKey.upazila;
+    const uni = well.regionKey.union;
+    const mou = well.regionKey.mouza;
 
     const modelData: ModelData = JSON.parse(
         fs.readFileSync(
@@ -34,7 +36,9 @@ export default function produceEstimate(predictors: Predictors): MessageCode {
     const mouData = uniData.mouzas[mou];
     if (!mouData) throw new Error('mouza not found in model data');
 
-    const depth = predictors.depth;
+    const depth = well.depth;
+
+    if (!depth) throw new Error('depth not found in well data');
 
     const regionStrataKey = (() => {
         if (depth < 15.3) return 's15';
@@ -53,9 +57,9 @@ export default function produceEstimate(predictors: Predictors): MessageCode {
         exist in the prediction data for this region
     */
     if (regionStrataKey === 's15' && 'm2' in regionStrataModel) {
-        if (predictors.staining === 'black' && regionStrataModel.m2 !== undefined) {
+        if (well.staining === 'black' && regionStrataModel.m2 !== undefined) {
             return regionStrataModel.m2;
-        } else if (predictors.flooding && regionStrataModel.m9 !== undefined) {
+        } else if (well.flooding && regionStrataModel.m9 !== undefined) {
             return regionStrataModel.m9;
         } else if (regionStrataModel.m7 !== undefined) {
             return regionStrataModel.m7;
@@ -63,9 +67,9 @@ export default function produceEstimate(predictors: Predictors): MessageCode {
             throw new Error('model keys required for flooding model misisng');
         }
     } else {
-        if (predictors.staining === 'black' || predictors.utensilStaining === 'black') {
+        if (well.staining === 'black' || well.utensilStaining === 'black') {
             return 1;
-        } else if (predictors.staining === 'red' || predictors.utensilStaining === 'red') {
+        } else if (well.staining === 'red' || well.utensilStaining === 'red') {
             if (regionStrataModel.m !== undefined) {
                 return regionStrataModel.m;
             } else {

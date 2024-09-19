@@ -11,3 +11,6 @@ export { default as validateModel } from './validateModel';
 
 export { WellSchema } from './well.model';
 export type { Well } from './well.model';
+
+export { PredictionSchema } from './well.model';
+export type { Prediction } from './well.model';
