@@ -4,6 +4,6 @@ import { WellController } from '../../controllers';
 
 const well = new Router({ prefix: '/well' })
 
-well.get('/', adminOnly, ctx => WellController.getAllWells(ctx));
+well.get('s', adminOnly, ctx => WellController.getAllWells(ctx));
 
 export default well
