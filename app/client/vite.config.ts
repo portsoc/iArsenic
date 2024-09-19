@@ -16,7 +16,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      'shared': './node_modules/shared/dist/index.js',
+      'shared': './node_modules/shared/src/index.ts',
     }
   }
 });

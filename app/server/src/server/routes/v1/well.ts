@@ -1,6 +1,6 @@
 import Router from '@koa/router'
 import { adminOnly } from '../../middleware'
-import { WellController } from 'src/server/controllers';
+import { WellController } from '../../controllers';
 
 const well = new Router({ prefix: '/well' })
 

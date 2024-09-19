@@ -39,14 +39,15 @@ export default function Map() {
             throw new Error(`Failed to fetch well data:, ${res}`);
         }
 
-        const wells = await res.json();
-        setWells(wells.data);
+        const data = await res.json();
+        setWells(data.wells);
     }
 
     async function getRegionTranslations() {
         const translations = await RegionTranslationsFetcher();
         setRegionTranslations(translations);
     }
+
     useEffect(() => {
         async function fetchToken() {
             const token = await AccessToken.get();
@@ -58,8 +59,11 @@ export default function Map() {
         fetchToken();
         getRegionTranslations();
         getInteractiveMap();
-        getPredictionPinData();
     }, []);
+
+    useEffect(() => {
+        getPredictionPinData();
+    },  [token]);
 
     if (!interactiveMap || !wells || !regionTranslations) return (
         <Stack alignItems='center' justifyContent='center'>

@@ -11,7 +11,11 @@ export default class AccessToken {
         if (!accessToken) return null;
 
         const parsedAccessToken = JSON.parse(accessToken);
-        const tokenValidationRes = TokenSchema.safeParse(parsedAccessToken);
+        const tokenValidationRes = TokenSchema.safeParse({
+            ...parsedAccessToken,
+            createdAt: parsedAccessToken.createdAt = new Date(parsedAccessToken.createdAt),
+            expiresAt: parsedAccessToken.expiresAt = new Date(parsedAccessToken.expiresAt),
+        });
 
         if (!tokenValidationRes.success) {
             console.error('Failed to validate access token:', tokenValidationRes.error);
