@@ -2,14 +2,14 @@ import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import { IAccessToken, Well } from '../../types';
+import { Token, Well } from 'shared';
 import AccessToken from '../../utils/AccessToken';
 import { useRoute } from 'wouter';
 
 export default function Review() {
     const [, params] = useRoute('/:id/review');
     const wellId = params?.id;
-    const [token, setToken] = useState<IAccessToken>();
+    const [token, setToken] = useState<Token>();
     const [well, setWell] = useState<Well>();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function Review() {
 
             const headers: HeadersInit = {};
 
-            if (token) {
+            if (token && token.type === 'access') {
                 headers['authorization'] = `Bearer ${token.id}`;
             }
 

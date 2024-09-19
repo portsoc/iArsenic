@@ -3,13 +3,13 @@ import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { IAccessToken } from "../../types";
+import { Token } from "shared";
 import AccessToken from "../../utils/AccessToken";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/:id/flooding');
     const wellId = params?.id;
-    const [token, setToken] = useState<IAccessToken>();
+    const [token, setToken] = useState<Token>();
 
     const [flooding, setFlooding] = useState<'yes' | 'no'>();
     const [error, setError] = useState<boolean>(false);
@@ -92,7 +92,7 @@ export default function Depth(): JSX.Element {
                     const body = { flooding: floodingBool };
                     const headers: HeadersInit = {};
 
-                    if (token) {
+                    if (token && token.type === 'access') {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 

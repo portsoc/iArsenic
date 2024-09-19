@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
-import { Well } from '../../types';
+import { Well } from 'shared';
 import AccessToken from '../../utils/AccessToken';
 import { navigate } from 'wouter/use-browser-location';
 import Config from '../../config';
