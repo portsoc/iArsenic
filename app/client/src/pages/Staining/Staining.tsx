@@ -2,7 +2,7 @@ import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGrou
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { Staining, UtensilStaining, Token } from 'shared';
+import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, Token } from 'shared';
 import { useRoute } from "wouter";
 import AccessToken from "../../utils/AccessToken";
 
@@ -70,8 +70,8 @@ export default function StainingPage(): JSX.Element {
 
                 <FormControl error={errors.wellStaining} component="fieldset">
                     <RadioGroup
-                        onChange={(event) => {
-                            setWellStaining(event.target.value as Staining);
+                        onChange={event => {
+                            setWellStaining(StainingSchema.parse(event.target.value));
                             setErrors(e => ({ ...e, wellStaining: false }));
                         }}
                         name="well-staining-selector"
@@ -97,8 +97,8 @@ export default function StainingPage(): JSX.Element {
                             Is there staining on your utensil?
                         </Typography>
                         <RadioGroup
-                            onChange={(event) => {
-                                setUtensilStaining(event.target.value as UtensilStaining);
+                            onChange={event => {
+                                setUtensilStaining(UtensilStainingSchema.parse(event.target.value));
                                 setErrors(e => ({ ...e, utensilStaining: false }));
                             }}
                             name="utensil-staining-selector"
