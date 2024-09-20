@@ -29,9 +29,6 @@ export default class AccessToken {
             return null;
         }
 
-        token.createdAt = new Date(token.createdAt);
-        token.expiresAt = new Date(token.expiresAt);
-
         if (token.expiresAt < new Date()) {
             localStorage.removeItem(this.dataKey);
             navigate(`${Config.basePath}/login`);
