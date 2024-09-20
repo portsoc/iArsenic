@@ -1,5 +1,5 @@
 import { Typography, Card, Box, Button, TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import { User } from 'shared';
+import { User, Language, Units, UnitsSchema, LanguageSchema } from 'shared';
 import { useState } from 'react';
 import Config from '../../config';
 import AccessToken from '../../utils/AccessToken';
@@ -12,8 +12,8 @@ interface Props {
 
 export default function EditProfileCard({ user, setEditMode, setSaving }: Props): JSX.Element {
     const [name, setName] = useState<string>(user.name);
-    const [language, setLanguage] = useState<'english' | 'bengali'>(user.language);
-    const [units, setUnits] = useState<'meters' | 'feet'>(user.units);
+    const [language, setLanguage] = useState<Language>(user.language);
+    const [units, setUnits] = useState<Units>(user.units);
 
     async function saveChanges() {
         setSaving(true);
@@ -87,7 +87,7 @@ export default function EditProfileCard({ user, setEditMode, setSaving }: Props)
                     <InputLabel>Language</InputLabel>
                     <Select
                         value={language}
-                        onChange={(e) => setLanguage(e.target.value as 'english' | 'bengali')}
+                        onChange={(e) => setLanguage(LanguageSchema.parse(e.target.value))}
                         label="Language"
                     >
                         <MenuItem value="english">English</MenuItem>
@@ -99,7 +99,7 @@ export default function EditProfileCard({ user, setEditMode, setSaving }: Props)
                     <InputLabel>Units System</InputLabel>
                     <Select
                         value={units}
-                        onChange={(e) => setUnits(e.target.value as 'meters' | 'feet')}
+                        onChange={(e) => setUnits(UnitsSchema.parse(e.target.value))}
                         label="Units System"
                     >
                         <MenuItem value="meters">Meters</MenuItem>
