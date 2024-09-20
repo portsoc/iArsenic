@@ -13,8 +13,5 @@ const envFile = process.env.ENV_FILE || '.env';
 // Load the appropriate environment file
 dotenv.config({ path: envFile });
 
-// Print the current working directory (PWD)
-console.log(`Current working directory: ${process.cwd()}`);
-
 // Rest of your code...
 console.log(`Using environment file: ${envFile}`);
