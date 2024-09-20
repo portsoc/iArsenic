@@ -11,7 +11,7 @@ export const UserService = {
     async login(email: string, password: string): Promise<Token> {
         const user = await UserRepo.findByEmail(email)
 
-        if (user == null) {
+        if (user == null || user.password == null) {
             throw new KnownError({
                 message: 'Invalid email or password',
                 code: 401,
@@ -45,6 +45,22 @@ export const UserService = {
         })
 
         return jwt
+    },
+
+    async getById(userId: string): Promise<User> {
+        const userRes = await UserRepo.findById(userId)
+
+        if (userRes == null) {
+            throw new KnownError({
+                message: 'User not found',
+                code: 404,
+                name: 'UserNotFoundError',
+            });
+        }
+
+        const { password, ...user } = userRes
+
+        return user
     },
 
     async updateUser(userId: string, userUpdates: Partial<User>): Promise<User> {

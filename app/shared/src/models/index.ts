@@ -13,6 +13,12 @@ export type { Language } from './user.model';
 export { UnitsSchema } from './user.model';
 export type { Units } from './user.model';
 
+export { LoginRequestSchema } from './user.model';
+export type { LoginRequest } from './user.model';
+
+export { RegisterRequestSchema } from './user.model';
+export type { RegisterRequest } from './user.model';
+
 export { default as validateModel } from './validateModel';
 
 export { WellSchema } from './well.model';
