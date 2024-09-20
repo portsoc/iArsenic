@@ -65,7 +65,6 @@ export const UserRepo: IUserRepo = {
             createdAt: doc.createdAt.toDate(),
         }
 
-
         const validatedUser = UserSchema.parse(createdUser);
         return validatedUser;
     },

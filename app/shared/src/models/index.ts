@@ -7,6 +7,12 @@ export type { Token } from './token.model';
 export { UserSchema } from './user.model';
 export type { User } from './user.model';
 
+export { LanguageSchema } from './user.model';
+export type { Language } from './user.model';
+
+export { UnitsSchema } from './user.model';
+export type { Units } from './user.model';
+
 export { default as validateModel } from './validateModel';
 
 export { WellSchema } from './well.model';

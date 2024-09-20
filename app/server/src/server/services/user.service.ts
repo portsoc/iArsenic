@@ -1,6 +1,6 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { Token, User, UserSchema, validateModel } from 'shared';
+import { Token, User, UserSchema, validateModel, Language, Units } from 'shared';
 import { UserRepo, TokenRepo } from '../repositories'
 import bcrypt from 'bcrypt'
 
@@ -44,8 +44,6 @@ export const UserService = {
             type: "access",
         })
 
-        // TODO revoke user's previous tokens
-
         return jwt
     },
 
@@ -71,7 +69,13 @@ export const UserService = {
         return validatedNewUser
     },
 
-    async register(email: string, password: string, name: string): Promise<void> {
+    async register(
+        email: string,
+        password: string,
+        name: string,
+        language: Language,
+        units: Units,
+    ): Promise<void> {
         const existingUser = await UserRepo.findByEmail(email)
 
         if (existingUser != null) {
@@ -84,7 +88,7 @@ export const UserService = {
 
         const hashedPassword = bcrypt.hashSync(password, 10)
 
-        const user = await UserRepo.create({
+        const newUser = UserSchema.parse({
             id: uuid4(),
             email: email,
             emailVerified: false,
@@ -92,7 +96,11 @@ export const UserService = {
             name: name,
             type: 'user',
             createdAt: new Date(),
+            language: language,
+            units: units,
         })
+
+        const user = await UserRepo.create({ ...newUser })
 
         const result = validateModel(user, UserSchema)
 

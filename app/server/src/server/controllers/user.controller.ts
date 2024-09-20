@@ -1,4 +1,4 @@
-import { validateModel, Token, TokenSchema, UserSchema, User } from 'shared'
+import { validateModel, Token, TokenSchema, UserSchema, User, LanguageSchema, UnitsSchema} from 'shared'
 import { KnownError } from '../errors'
 import { z } from 'zod'
 import { Context } from 'koa'
@@ -16,9 +16,9 @@ const RegisterRequestSchema = z.object({
     email: z.string(),
     password: z.string(),
     name: z.string(),
+    language: LanguageSchema,
+    units: UnitsSchema,
 })
-
-type RegisterRequest = z.infer<typeof RegisterRequestSchema>
 
 export const UserController = {
     async getUserByToken(ctx: Context): Promise<void> {
@@ -98,22 +98,24 @@ export const UserController = {
     },
 
     async register(ctx: Context): Promise<void> {
-        const result = validateModel(ctx.request.body, RegisterRequestSchema)
+        const bodyParseRes = RegisterRequestSchema.safeParse(ctx.request.body)
 
-        if (!result.ok) {
+        if (!bodyParseRes.success) {
             throw new KnownError({
-                message: result.error.message,
+                message: bodyParseRes.error.message,
                 code: 400,
                 name: 'ValidationError',
             });
         }
 
-        const body = ctx.request.body as RegisterRequest
+        const body = bodyParseRes.data
 
         await UserService.register(
             body.email,
             body.password,
             body.name,
+            body.language,
+            body.units,
         )
 
         ctx.status = 201
