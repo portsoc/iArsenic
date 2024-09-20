@@ -63,10 +63,6 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
         }
     }
 
-    console.log('================================');
-    console.log(wells);
-    console.log(wells.filter);
-
     return (
         <>
             {wells.filter(
