@@ -6,11 +6,11 @@ import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
 import AccessToken from '../../utils/AccessToken';
-import { IAccessToken } from '../../types';
+import { Token } from 'shared';
 
 
 export default function SplashPage(): JSX.Element {
-    const [token, setToken] = useState<IAccessToken | null>();
+    const [token, setToken] = useState<Token | null>();
     const theme = useTheme();
 
     function handleTryAppClick() {

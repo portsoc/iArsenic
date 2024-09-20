@@ -27,14 +27,15 @@
     "koa-helmet": "^7.0.2",
     "koa-static": "^5.0.0",
     "module-alias": "^2.2.3",
+    "shared": "file:../app/shared",
     "typescript": "^5.5.4",
     "uuid4": "^2.0.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "firebase-functions-test": "^3.1.0",
     "firebase-admin": "^11.8.0",
-    "firebase-functions": "^5.0.1"
+    "firebase-functions": "^5.0.1",
+    "firebase-functions-test": "^3.1.0"
   },
   "private": true,
   "version": "1.0.0",

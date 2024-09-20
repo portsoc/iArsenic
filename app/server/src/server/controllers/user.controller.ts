@@ -1,4 +1,4 @@
-import { validateModel, Token, TokenSchema, UserSchema, User } from '../models'
+import { validateModel, Token, TokenSchema, UserSchema, User } from 'shared'
 import { KnownError } from '../errors'
 import { z } from 'zod'
 import { Context } from 'koa'

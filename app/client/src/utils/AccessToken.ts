@@ -1,21 +1,35 @@
 import { navigate } from 'wouter/use-browser-location';
-import { IAccessToken } from '../types';
+import { Token, TokenSchema } from 'shared';
 import Config from '../config';
 
 export default class AccessToken {
     static dataKey: string = 'accessToken';
 
-    static get = async (): Promise<IAccessToken | null> => {
+    static get = async (): Promise<Token | null> => {
         const accessToken = localStorage.getItem(this.dataKey) || null;
 
         if (!accessToken) return null;
 
         const parsedAccessToken = JSON.parse(accessToken);
+        const tokenValidationRes = TokenSchema.safeParse({
+            ...parsedAccessToken,
+            createdAt: parsedAccessToken.createdAt = new Date(parsedAccessToken.createdAt),
+            expiresAt: parsedAccessToken.expiresAt = new Date(parsedAccessToken.expiresAt),
+        });
 
-        parsedAccessToken.createdAt = new Date(parsedAccessToken.createdAt);
-        parsedAccessToken.expiresAt = new Date(parsedAccessToken.expiresAt);
+        if (!tokenValidationRes.success) {
+            console.error('Failed to validate access token:', tokenValidationRes.error);
+            return null;
+        }
 
-        if (parsedAccessToken.expiresAt < new Date()) {
+        const token: Token = tokenValidationRes.data;
+
+        if (token.type !== 'access') {
+            console.error('Invalid token type:', token.type);
+            return null;
+        }
+
+        if (token.expiresAt < new Date()) {
             localStorage.removeItem(this.dataKey);
             navigate(`${Config.basePath}/login`);
             return null;
@@ -23,7 +37,7 @@ export default class AccessToken {
 
         const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
             headers: {
-                authorization: `Bearer ${parsedAccessToken.id}`,
+                authorization: `Bearer ${token.id}`,
             }
         });
 
@@ -32,15 +46,14 @@ export default class AccessToken {
             return null;
         }
 
-        // TODO add zod
-        return parsedAccessToken as IAccessToken;
+        return token;
     };
 
     static delete = () => {
         localStorage.removeItem(AccessToken.dataKey);
     };
 
-    static set = (accessToken: IAccessToken) => {
+    static set = (accessToken: Token) => {
         localStorage.setItem(
             AccessToken.dataKey,
             JSON.stringify(accessToken),

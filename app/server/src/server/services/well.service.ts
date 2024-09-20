@@ -1,8 +1,7 @@
 import uuid4 from 'uuid4'
-import { Well, WellSchema } from '../models'
+import { Well, WellSchema, Prediction } from 'shared'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
-import { Prediction, Predictors, PredictorsSchema } from '../models/well.model'
 import produceEstimate from './well/produceEstimate'
 
 export const WellService = {
@@ -78,6 +77,10 @@ export const WellService = {
         return validatedWell;
     },
 
+    async getAllWells(): Promise<Well[]> {
+        return await WellRepo.findAll();
+    },
+
     async generateEstimate(userId: string, wellId: string): Promise<Well> {
         const well = await WellRepo.findById(wellId);
 
@@ -97,15 +100,7 @@ export const WellService = {
             })
         }
 
-        const predictors: Predictors = PredictorsSchema.parse({
-            regionKey: well.regionKey,
-            depth: well.depth,
-            flooding: well.flooding,
-            staining: well.staining,
-            utensilStaining: well.utensilStaining,
-        })
-
-        const modelEstimate = produceEstimate(predictors);
+        const modelEstimate = produceEstimate(well);
         const riskAssesment = (() => {
             switch (modelEstimate) {
                 case 0: // unable to make an estimate

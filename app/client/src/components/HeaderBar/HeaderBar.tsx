@@ -6,12 +6,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import AccessToken from '../../utils/AccessToken';
-import { IAccessToken, User } from '../../types';
+import { Token, User } from 'shared';
 import Config from '../../config';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
-    const [token, setToken] = useState<IAccessToken>();
+    const [token, setToken] = useState<Token>();
     const [user, setUser] = useState<User>();
 
     useEffect(() => {
@@ -28,6 +28,7 @@ export default function HeaderBar(): JSX.Element {
     useEffect(() => {
         async function fetchUser() {
             if (!token) return;
+            if (token.type !== 'access') return;
 
             const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
                 headers: {

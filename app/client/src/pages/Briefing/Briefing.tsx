@@ -1,7 +1,7 @@
 import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import Config from "../../config";
-import { Well } from "../../types";
+import { Well } from "shared";
 import AccessToken from "../../utils/AccessToken";
 
 export default function Briefing(): JSX.Element {
@@ -10,7 +10,7 @@ export default function Briefing(): JSX.Element {
 
         const headers: HeadersInit = {};
 
-        if (token) {
+        if (token && token.type === 'access') {
             headers.authorization = `Bearer ${token.id}`;
         }
 

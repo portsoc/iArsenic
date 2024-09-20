@@ -2,7 +2,7 @@ import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from 
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import { Well, IAccessToken } from '../../types';
+import { Well, Token } from 'shared';
 import { useRoute } from 'wouter';
 import AccessToken from '../../utils/AccessToken';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -11,7 +11,7 @@ export default function Review() {
     const [, params] = useRoute('/well/:id');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-    const [token, setToken] = useState<IAccessToken>();
+    const [token, setToken] = useState<Token>();
 
     function isWellComplete(well: Well): string[] {
         const missingFields = [];
@@ -42,11 +42,15 @@ export default function Review() {
         async function fetchWell() {
             if (!wellId || !token) return;
 
+            const headers: HeadersInit = {};
+
+            if (token.type === 'access') {
+                headers['authorization'] = `Bearer ${token.id}`;
+            }
+
             const result = await fetch(
                 `${config.basePath}/api/v1/self/well/${wellId}`, {
-                    headers: {
-                        'authorization': `Bearer ${token.id}`,
-                    }
+                    headers,
                 }
             );
 

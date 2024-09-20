@@ -5,16 +5,18 @@ import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
 import config from '../../config';
-import { SessionData } from '../../types';
+import { Well, Token } from 'shared';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
 import UpaMap from './upaMap';
+import AccessToken from '../../utils/AccessToken';
 
 export default function Map() {
     const position: LatLngExpression = [23.8041, 90.4152];
     const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
-    const [sessionData, setSessionData] = useState<SessionData[]>();
+    const [token, setToken] = useState<Token>();
+    const [wells, setWells] = useState<Well[]>();
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
 
     async function getInteractiveMap() {
@@ -24,9 +26,21 @@ export default function Map() {
     }
 
     async function getPredictionPinData() {
-        const res = await fetch(`${config.basePath}/api/predictions`);
-        const predictions = await res.json();
-        setSessionData(predictions.data);
+        if (!token) return;
+        if (token.type !== 'access') return;
+
+        const res = await fetch(`${config.basePath}/api/v1/well/`, {
+            headers: {
+                'authorization': `Bearer ${token.id}`
+            }
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch well data:, ${res}`);
+        }
+
+        const data = await res.json();
+        setWells(data.wells);
     }
 
     async function getRegionTranslations() {
@@ -35,12 +49,23 @@ export default function Map() {
     }
 
     useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessToken.get();
+            if (token == null) return;
+
+            setToken(token);
+        }
+
+        fetchToken();
         getRegionTranslations();
         getInteractiveMap();
-        getPredictionPinData();
     }, []);
 
-    if (!interactiveMap || !sessionData || !regionTranslations) return (
+    useEffect(() => {
+        getPredictionPinData();
+    },  [token]);
+
+    if (!interactiveMap || !wells || !regionTranslations) return (
         <Stack alignItems='center' justifyContent='center'>
             <CircularProgress />
         </Stack>
@@ -54,7 +79,7 @@ export default function Map() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <UpaMap interactiveMap={interactiveMap} regionTranslations={regionTranslations} />
-                <Markers sessionData={sessionData} regionTranslations={regionTranslations} />
+                <Markers wells={wells} regionTranslations={regionTranslations} />
             </MapContainer>
         </Stack>
     );

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import config from "../../config";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { RiskAssesment, Well } from "../../types";
+import { Well, RiskAssesment } from 'shared';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";
@@ -56,7 +56,7 @@ export default function Result(): JSX.Element {
                 const token = await AccessToken.get();
 
                 const headers: HeadersInit = {};
-                if (token) {
+                if (token && token.type === 'access') {
                     headers['authorization'] = `Bearer ${token.id}`;
                 }
 

@@ -1,28 +1,3 @@
-export type KnownServerError = {
-    error: true,
-    requestId: string,
-    knownError: true,
-    name: string,
-    message: string
-}
-
-export type IAccessToken = {
-    createdAt: Date,
-    expiresAt: Date,
-    id: string,
-    type: 'access',
-    userId: string,
-}
-
-// region name
-export type RegionKey = {
-    division: string,
-    district: string,
-    upazila: string,
-    union: string,
-    mouza: string,
-}
-
 // dropdown data typing
 export type DropdownUnion = {
     union: string;
@@ -44,97 +19,6 @@ export type DropdownDivision = {
     districts: DropdownDistrict[];
 }
 
-export interface Well {
-    id: string;
-    createdAt: Date;
-    userId: string;
-    drinkingWaterSource?: boolean;
-    regionKey?: RegionKey;
-    depth?: number;
-    flooding?: boolean;
-    staining?: 'red' | 'black' | 'not sure';
-    utensilStaining?: 'red' | 'black' | 'blackish' | 'N/A';
-    geolocation?: [number, number] | 'N/A';
-    prediction?: Prediction;
-}
-
-export interface Prediction {
-    modelOutput: ModelMessageCode;
-    riskAssesment: RiskAssesment;
-    model: string;
-}
-
-export type ModelMessageCode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type RiskAssesment = 0.5 | 1.5 | 2.5 | 3.5 | 4.5;
-
-export type Predictors = {
-    id: string,
-    regionKey: RegionKey
-    depth: {
-        unit: 'ft' | 'm'
-        value: number
-    },
-    flooding: boolean,
-    wellStaining: WellStaining,
-    utensilStaining?: UtensilStaining,
-    geolocation?: [number, number],
-    regionGeovalidated: boolean,
-}
-
-// staining types
-export type WellStaining = 'black' | 'red' | 'not sure';
-export type UtensilStaining = 'red' | 'black' | 'No colour change to slightly blackish' | 'N/A' | undefined;
-
-// prediction data
-export type MessageCode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type ModelData = {
-    [key: string]: {
-        districts: {
-            [key: string]: {
-                upazilas: {
-                    [key: string]: {
-                        unions: {
-                            [key: string]: {
-                                mouzas: {
-                                    [key: string]: {
-                                        s15: {
-                                            m: MessageCode,
-                                            l?: number,
-                                            u?: number,
-                                            m2?: MessageCode,
-                                            m7?: MessageCode,
-                                            m9?: MessageCode,
-                                        },
-                                        s45: {
-                                            m: MessageCode,
-                                        },
-                                        s65: {
-                                            m: MessageCode,
-                                        },
-                                        s90: {
-                                            m: MessageCode,
-                                        },
-                                        s150: {
-                                            m: MessageCode,
-                                            l: number,
-                                            u: number,
-                                        },
-                                        sD: {
-                                            m: MessageCode,
-                                            l: number,
-                                            u: number,
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 // key is english region name, value is bengali
 export type RegionTranslations = {
     "Divisions": {
@@ -152,25 +36,4 @@ export type RegionTranslations = {
     "Mouzas": {
         [key: string]: string
     }
-}
-
-// data stored in firebase
-export type SessionData = {
-    createdAt: Date,
-    id: string,
-    language: 'english' | 'bengali',
-    geolocation: [number, number] | 'N/A',
-    model: 'model5',
-    modelPrediction: MessageCode,
-    prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5,
-    predictors: Predictors,
-}
-
-export type User = {
-    id: string,
-    email: string,
-    emailVerified: boolean,
-    name: string,
-    type: 'admin' | 'user',
-    createdAt: Date,
 }

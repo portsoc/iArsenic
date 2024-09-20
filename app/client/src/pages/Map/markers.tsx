@@ -2,15 +2,16 @@ import { Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import config from '../../config';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import { RegionTranslations, SessionData } from '../../types';
+import { RegionTranslations } from '../../types';
+import { Well } from 'shared';
 import { Typography } from '@mui/material';
 
 type props = {
-    sessionData: SessionData[],
+    wells: Well[],
     regionTranslations: RegionTranslations,
 }
 
-export default function Markers({ sessionData, regionTranslations }: props): JSX.Element {
+export default function Markers({ wells, regionTranslations }: props): JSX.Element {
     function createCustomIcon(color: string) {
         return L.icon({
             iconUrl: `${config.basePath}/map-markers/${color}.png`,
@@ -64,112 +65,116 @@ export default function Markers({ sessionData, regionTranslations }: props): JSX
 
     return (
         <>
-            {sessionData.filter(s => s.geolocation !== 'N/A').map((p, index) =>
-                <Marker icon={getIcon(p.prediction)} key={index} position={p.geolocation as LatLngExpression}>
-                    <Popup>
-                        <Typography variant='body1'>
-                            ID: {p.id}
-                        </Typography>
+            {wells.filter(
+                s => s.geolocation != null &&
+                s.prediction != null &&
+                s.regionKey != null &&
+                s.staining != null &&
+                s.depth != null
+            ).map((p, index) => {
+                return (
+                    <Marker icon={getIcon(p.prediction!.riskAssesment)} key={index} position={p.geolocation as LatLngExpression}>
+                        <Popup>
+                            <Typography variant='body1'>
+                                ID: {p.id}
+                            </Typography>
 
-                        <Typography className='english' variant='body1'>
-                            Risk Factor: {predictionToRiskFactor(p.prediction).english}
-                        </Typography>
+                            <Typography className='english' variant='body1'>
+                                Risk Factor: {predictionToRiskFactor(p.prediction!.riskAssesment).english}
+                            </Typography>
 
-                        <Typography className='bengali' variant='body1'>
-                            BENGALI PLACEHOLDER: {predictionToRiskFactor(p.prediction).bengali}
-                        </Typography>
+                            <Typography className='bengali' variant='body1'>
+                                BENGALI PLACEHOLDER: {predictionToRiskFactor(p.prediction!.riskAssesment).bengali}
+                            </Typography>
 
-                        <Typography className='english' variant='body1'>
-                            Division: {p.predictors.regionKey.division}
-                        </Typography>
+                            <Typography className='english' variant='body1'>
+                                Division: {p.regionKey!.division}
+                            </Typography>
 
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Divisions.Division}:
-                            ${regionTranslations.Divisions[p.predictors.regionKey.division]}
-                        `}</Typography>
+                            <Typography className='bengali' variant='body1'>{`
+                                ${regionTranslations.Divisions.Division}:
+                                ${regionTranslations.Divisions[p.regionKey!.division]}
+                            `}</Typography>
 
-                        <Typography className='english' variant='body1'>
-                            District: {p.predictors.regionKey.district}
-                        </Typography>
+                            <Typography className='english' variant='body1'>
+                                District: {p.regionKey!.district}
+                            </Typography>
 
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Districts.District}:
-                            ${regionTranslations.Districts[p.predictors.regionKey.district]}
-                        `}</Typography>
+                            <Typography className='bengali' variant='body1'>{`
+                                ${regionTranslations.Districts.District}:
+                                ${regionTranslations.Districts[p.regionKey!.district]}
+                            `}</Typography>
 
-                        <Typography className='english' variant='body1'>
-                            Upazila: {p.predictors.regionKey.upazila}
-                        </Typography>
+                            <Typography className='english' variant='body1'>
+                                Upazila: {p.regionKey!.upazila}
+                            </Typography>
 
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Upazilas.Upazila}:
-                            ${regionTranslations.Upazilas[p.predictors.regionKey.upazila]}
-                        `}</Typography>
+                            <Typography className='bengali' variant='body1'>{`
+                                ${regionTranslations.Upazilas.Upazila}:
+                                ${regionTranslations.Upazilas[p.regionKey!.upazila]}
+                            `}</Typography>
 
-                        <Typography className='english' variant='body1'>
-                            Union: {p.predictors.regionKey.union}
-                        </Typography>
+                            <Typography className='english' variant='body1'>
+                                Union: {p.regionKey!.union}
+                            </Typography>
 
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Unions.Union}:
-                            ${regionTranslations.Unions[p.predictors.regionKey.union]}
-                        `}</Typography>
+                            <Typography className='bengali' variant='body1'>{`
+                                ${regionTranslations.Unions.Union}:
+                                ${regionTranslations.Unions[p.regionKey!.union]}
+                            `}</Typography>
 
-                        <Typography className='english' variant='body1'>
-                            Mouza: {p.predictors.regionKey.mouza}
-                        </Typography>
+                            <Typography className='english' variant='body1'>
+                                Mouza: {p.regionKey!.mouza}
+                            </Typography>
 
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Mouzas.Mouza}:
-                            ${regionTranslations.Mouzas[p.predictors.regionKey.mouza]}
-                        `}</Typography>
+                            <Typography className='bengali' variant='body1'>{`
+                                ${regionTranslations.Mouzas.Mouza}:
+                                ${regionTranslations.Mouzas[p.regionKey!.mouza]}
+                            `}</Typography>
 
-                        <Typography className='english' variant='body1'>
-                            Depth: {
-                                p.predictors.depth.unit === 'm' ?
-                                `${p.predictors.depth.value}m` :
-                                `${Math.floor(p.predictors.depth.value * 0.3048)}m`
+                            <Typography className='english' variant='body1'>
+                                Depth: {
+                                    `${p!.depth}m`
+                                }
+                            </Typography>
+
+                            <Typography className='bengali' variant='body1'>
+                                BENGALI PLACEHOLDER: {
+                                    `${p!.depth}m`
+                                }
+                            </Typography>
+
+                            <Typography className='english' variant='body1'>
+                                Flooding: {p.flooding ? 'Yes' : 'No'}
+                            </Typography>
+
+                            <Typography className='bengali' variant='body1'>
+                                BENGALI PLACEHOLDER: {p.flooding ? 'Yes' : 'No'}
+                            </Typography>
+
+                            <Typography className='english' variant='body1'>
+                                Well Staining: {p.staining}
+                            </Typography>
+
+                            <Typography className='english' variant='body1'>
+                                BENGALI PLACEHOLDER: {p.staining}
+                            </Typography>
+
+                            {
+                                (p.utensilStaining != null) &&
+                                <>
+                                    <Typography className='english' variant='body1'>
+                                        Utensil Staining: {p.utensilStaining}
+                                    </Typography>
+
+                                    <Typography className='bengali' variant='body1'>
+                                        BENGALI PLACEHOLDER: {p.utensilStaining}
+                                    </Typography>
+                                </>
                             }
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>
-                            BENGALI PLACEHOLDER: {
-                                p.predictors.depth.unit === 'm' ?
-                                `${p.predictors.depth.value}m` :
-                                `${Math.floor(p.predictors.depth.value * 0.3048)}m`
-                            }
-                        </Typography>
-
-                        <Typography className='english' variant='body1'>
-                            Flooding: {p.predictors.flooding ? 'Yes' : 'No'}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>
-                            BENGALI PLACEHOLDER: {p.predictors.flooding ? 'Yes' : 'No'}
-                        </Typography>
-
-                        <Typography className='english' variant='body1'>
-                            Well Staining: {p.predictors.wellStaining}
-                        </Typography>
-
-                        <Typography className='english' variant='body1'>
-                            BENGALI PLACEHOLDER: {p.predictors.wellStaining}
-                        </Typography>
-
-                        {
-                            (p.predictors.utensilStaining !== 'N/A') &&
-                            <>
-                                <Typography className='english' variant='body1'>
-                                    Utensil Staining: {p.predictors.utensilStaining}
-                                </Typography>
-
-                                <Typography className='bengali' variant='body1'>
-                                    BENGALI PLACEHOLDER: {p.predictors.utensilStaining}
-                                </Typography>
-                            </>
-                        }
-                    </Popup>
-                </Marker>
+                        </Popup>
+                    </Marker>
+                );}
             )}
         </>
     );

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build": "rm -rf dist && tsc && npm --prefix ../client/ run build && cp -r ../client/static/ dist/static/",
-    "build:firebase": "npm --prefix ../client/ run build && npm run build && rm -rf ../../firebase-functions/dist && cp -r dist/* ../../firebase-functions"
+    "build": "rm -rf dist && tsc && ../client/ run build && cp -r ../client/static/ dist/static/",
+    "build:firebase": "npm --prefix ../shared run build && npm --prefix ../client run build && rm -rf dist && tsc && rm -rf ../../firebase-functions/dist && cp -r dist/* ../../firebase-functions && cp -r ../client/static ../../firebase-functions"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,7 @@
     "koa-helmet": "^7.0.2",
     "koa-static": "^5.0.0",
     "module-alias": "^2.2.3",
+    "shared": "file:../shared",
     "typescript": "^5.5.4",
     "uuid4": "^2.0.3",
     "zod": "^3.23.8"

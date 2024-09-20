@@ -14,4 +14,9 @@ export default defineConfig({
     outDir: 'static',
     minify: true,
   },
+  resolve: {
+    alias: {
+      'shared': './node_modules/shared/src/index.ts',
+    }
+  }
 });

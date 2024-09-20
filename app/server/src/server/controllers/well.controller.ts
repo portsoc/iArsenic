@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { TokenSchema, Well, WellSchema, validateModel } from '../models'
+import { TokenSchema, Well, WellSchema, validateModel } from 'shared'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
 
@@ -12,6 +12,14 @@ export const WellController = {
 
         ctx.status = 201
         ctx.body = { well }
+    },
+
+    // todo - add pagination
+    async getAllWells(ctx: Context) {
+        const wells = await WellService.getAllWells();
+
+        ctx.status = 200
+        ctx.body = { wells }
     },
 
     async getWellsByToken(ctx: Context) {
