@@ -1,5 +1,5 @@
 import { CircularProgress, Stack } from "@mui/material";
-import { UserSchema, User } from "shared";
+import { User } from "shared";
 import { navigate } from "wouter/use-browser-location";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import Config from "../../config";
@@ -16,34 +16,12 @@ export default function ProfilePage(): JSX.Element {
         async function getUser() {
             const token = await AccessTokenRepo.get();
 
-            if (!token) {
+            if (!token || !token.user) {
                 navigate(`${Config.basePath}/login`);
                 return;
             }
 
-            const res = await fetch(
-                `${Config.basePath}/api/v1/self/user`, {
-                    headers: {
-                        'authorization': `Bearer ${token.id}`,
-                    }
-                }
-            );
-
-            if (!res.ok) {
-                throw new Error(`
-                    Failed to fetch user data
-                    Status: ${res.statusText}
-                    Code: ${res.status}
-                `);
-            }
-
-            const data = await res.json();
-            const user = UserSchema.parse({
-                ...data.user,
-                createdAt: new Date(data.user.createdAt),
-            });
-
-            setUser(user);
+            setUser(token.user);
         }
 
         if (saving) return; // dont update while saving
@@ -70,6 +48,7 @@ export default function ProfilePage(): JSX.Element {
                     user={user}
                     setEditMode={setEditMode}
                     setSaving={setSaving}
+                    setUser={setUser}
                 />
             </>
         );

@@ -1,16 +1,18 @@
 import { Typography, Card, Box, Button, TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { User, Language, Units, UnitsSchema, LanguageSchema } from 'shared';
 import { useState } from 'react';
-import Config from '../../config';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
+import LanguageSelector from '../../utils/LanguageSelector';
+import UnitsSelector from '../../utils/UnitsSelector';
 
 interface Props {
     user: User;
     setEditMode: (editMode: boolean) => void;
     setSaving: (saving: boolean) => void;
+    setUser: (user: User) => void;
 }
 
-export default function EditProfileCard({ user, setEditMode, setSaving }: Props): JSX.Element {
+export default function EditProfileCard({ user, setEditMode, setSaving, setUser }: Props): JSX.Element {
     const [name, setName] = useState<string>(user.name);
     const [language, setLanguage] = useState<Language>(user.language);
     const [units, setUnits] = useState<Units>(user.units);
@@ -30,25 +32,17 @@ export default function EditProfileCard({ user, setEditMode, setSaving }: Props)
             throw new Error('Invalid token');
         }
 
-        const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
-            method: 'PATCH',
-            headers: {
-                'authorization': `Bearer ${token.id}`,
-            },
-            body: JSON.stringify(changes),
-        });
+        if (changes.language != null) {
+            LanguageSelector.set(language);
+        }
 
-        if (!res.ok) {
-            setSaving(false);
-            throw new Error(`
-                Failed to save user data
-                Status: ${res.statusText}
-                Code: ${res.status}
-            `);
+        if (changes.units != null) {
+            UnitsSelector.set(units);
         }
 
         setSaving(false);
         setEditMode(false);
+        setUser({ ...user, ...changes });
     }
 
     return (

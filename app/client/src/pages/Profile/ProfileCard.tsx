@@ -10,7 +10,7 @@ interface Props {
 export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
     return (
         <Box width='100%'>
-            <Typography className='english' textAlign='center' variant='h4' gutterBottom>
+           <Typography className='english' textAlign='center' variant='h4' gutterBottom>
                 Profile Page
             </Typography>
 

@@ -27,9 +27,6 @@ export default class LanguageSelector {
 
     static set = async (language: 'english' | 'bengali') => {
         localStorage.setItem(LanguageSelector.dataKey, language);
-        console.log('--------------------------------');
-        console.log(language);
-        console.log(JSON.stringify({ language: language }));
 
         const token = await AccessTokenRepo.get();
 
