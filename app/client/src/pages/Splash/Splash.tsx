@@ -5,12 +5,12 @@ import CallToAction from './CallToAction';
 import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
-import AccessToken from '../../utils/AccessToken';
-import { Token } from 'shared';
+import AccessTokenRepo from '../../utils/AccessTokenRepo';
+import { AccessToken } from 'shared';
 
 
 export default function SplashPage(): JSX.Element {
-    const [token, setToken] = useState<Token | null>();
+    const [token, setToken] = useState<AccessToken | null>();
     const theme = useTheme();
 
     function handleTryAppClick() {
@@ -20,7 +20,7 @@ export default function SplashPage(): JSX.Element {
 
     useEffect(() => {
         async function fetchToken() {
-            const token = await AccessToken.get();
+            const token = await AccessTokenRepo.get();
 
             setToken(token);
         }

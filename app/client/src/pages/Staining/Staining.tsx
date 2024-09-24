@@ -2,14 +2,14 @@ import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGrou
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, Token } from 'shared';
+import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, AccessToken } from 'shared';
 import { useRoute } from "wouter";
-import AccessToken from "../../utils/AccessToken";
+import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/:id/staining');
     const wellId = params?.id;
-    const [token, setToken] = useState<Token>();
+    const [token, setToken] = useState<AccessToken>();
 
     const [wellStaining, setWellStaining] = useState<Staining>();
     const [utensilStaining, setUtensilStaining] = useState<UtensilStaining>();
@@ -34,7 +34,7 @@ export default function StainingPage(): JSX.Element {
 
     useEffect(() => {
         async function fetchToken() {
-            const token = await AccessToken.get();
+            const token = await AccessTokenRepo.get();
             if (token == null) return;
 
             setToken(token);
@@ -131,7 +131,7 @@ export default function StainingPage(): JSX.Element {
 
                     const headers: HeadersInit = {};
 
-                    if (token && token.type === 'access') {
+                    if (token) {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 

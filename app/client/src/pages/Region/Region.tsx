@@ -3,8 +3,8 @@ import Config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
-import { RegionKey, Token } from "shared";
-import AccessToken from "../../utils/AccessToken";
+import { RegionKey, AccessToken } from "shared";
+import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";
 import GeolocationButton from "./GeolocationButton";
@@ -22,7 +22,7 @@ export type RegionErrors = {
 export default function Region(): JSX.Element {
     const [, params] = useRoute('/:id/region');
     const wellId = params?.id;
-    const [token, setToken] = useState<Token>();
+    const [token, setToken] = useState<AccessToken>();
 
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
@@ -67,7 +67,7 @@ export default function Region(): JSX.Element {
 
     useEffect(() => {
         async function fetchToken() {
-            const token = await AccessToken.get();
+            const token = await AccessTokenRepo.get();
             if (token == null) return;
 
             setToken(token);
@@ -152,7 +152,7 @@ export default function Region(): JSX.Element {
                     ) return;
 
                     const headers: HeadersInit = {};
-                    if (token && token.type == 'access') {
+                    if (token) {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 

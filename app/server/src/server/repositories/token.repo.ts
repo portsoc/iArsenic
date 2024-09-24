@@ -1,10 +1,10 @@
 import { Repository } from './repo.interface';
-import { Token, TokenSchema } from 'shared';
+import { AccessToken, AccessTokenSchema } from 'shared';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export const TokenRepo: Repository<Token> = {
-    async findById(id: string): Promise<Token | null> {
+export const TokenRepo: Repository<AccessToken> = {
+    async findById(id: string): Promise<AccessToken | null> {
         const snapshot = await db.collection('token').where('id', '==', id).get();
 
         if (snapshot.empty) return null;
@@ -21,12 +21,12 @@ export const TokenRepo: Repository<Token> = {
                 docData.revokedAt.toDate() : docData.revokedAt,
         }
 
-        const jwtData = TokenSchema.parse(doc);
+        const jwtData = AccessTokenSchema.parse(doc);
 
         return jwtData;
     },
 
-    async create(jwtData: Token): Promise<Token> {
+    async create(jwtData: AccessToken): Promise<AccessToken> {
         const docRef = await db.collection('token').add(jwtData);
         const docSnapshot = await docRef.get();
         const doc = docSnapshot.data();
@@ -43,7 +43,7 @@ export const TokenRepo: Repository<Token> = {
                 doc.revokedAt.toDate() : doc.revokedAt,
         }
 
-        const validatedJwt = TokenSchema.parse(jwt);
+        const validatedJwt = AccessTokenSchema.parse(jwt);
         return validatedJwt;
     }
 }

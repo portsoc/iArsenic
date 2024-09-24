@@ -1,7 +1,8 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import Config from '../../config';
-import { IKnownError } from 'shared';
+import { IKnownError, RegisterRequestSchema } from 'shared';
+import LanguageSelector from '../../utils/LanguageSelector';
 
 export default function SignUp(): JSX.Element {
     const [name, setName] = useState<string>();
@@ -58,12 +59,23 @@ export default function SignUp(): JSX.Element {
 
         setError(null);
 
+        const language = await LanguageSelector.get();
+        const units = language == 'english' ? 'meters' : 'feet';
+
+        const registerBody = RegisterRequestSchema.parse({
+            email: email,
+            password: password,
+            name: name,
+            language,
+            units,
+        });
+
         const result = await fetch(`${Config.basePath}/api/v1/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify(registerBody),
         });
 
         const resBody = await result.json();

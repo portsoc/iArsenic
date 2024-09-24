@@ -1,11 +1,11 @@
 import { Context } from 'koa';
-import { TokenSchema, Well, WellSchema, validateModel } from 'shared'
+import { AccessTokenSchema, Well, WellSchema, validateModel } from 'shared'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
 
 export const WellController = {
     async createWellByToken(ctx: Context) {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
 
         const well: Well = await WellService.createWell(userId);
@@ -23,7 +23,7 @@ export const WellController = {
     },
 
     async getWellsByToken(ctx: Context) {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
 
         const wells = await WellService.getUserWells(userId);
@@ -34,7 +34,7 @@ export const WellController = {
     },
 
     async getWellByIdByToken(ctx: Context) {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
         const wellId = ctx.params.id;
 
@@ -53,7 +53,7 @@ export const WellController = {
     },
 
     async updateWellByIdByToken(ctx: Context) {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
         const wellId = ctx.params.id;
 
@@ -100,7 +100,7 @@ export const WellController = {
     },
 
     async predictWellByIdByToken(ctx: Context) {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
         const wellId = ctx.params.id;
 

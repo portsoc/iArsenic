@@ -2,7 +2,7 @@ import { Box, Button, Typography } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
 import { Well } from 'shared';
-import AccessToken from '../../utils/AccessToken';
+import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
 import Config from '../../config';
 
@@ -10,16 +10,11 @@ export default function MyWells(): JSX.Element {
     const [wells, setWells] = useState<Well[]>([]);
 
     async function fetchUserWells() {
-        const token = await AccessToken.get();
+        const token = await AccessTokenRepo.get();
 
-        if (!token || token.type !== 'access') {
+        if (!token) {
             navigate(`${Config.basePath}/login`);
             throw new Error('token not valid');
-        }
-
-        if (token.type !== 'access') {
-            console.error('Token is not access token');
-            return;
         }
 
         const result = await fetch(`${Config.basePath}/api/v1/self/wells`, {
@@ -49,9 +44,9 @@ export default function MyWells(): JSX.Element {
     }
 
     async function addWell(): Promise<Well> {
-        const token = await AccessToken.get();
+        const token = await AccessTokenRepo.get();
 
-        if (!token || token.type !== 'access') {
+        if (!token) {
             navigate(`${Config.basePath}/login`);
             throw new Error('token not valid');
         }

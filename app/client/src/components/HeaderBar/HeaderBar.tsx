@@ -5,18 +5,18 @@ import config from '../../config';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
-import AccessToken from '../../utils/AccessToken';
-import { Token, User } from 'shared';
+import AccessTokenRepo from '../../utils/AccessTokenRepo';
+import { AccessToken, User } from 'shared';
 import Config from '../../config';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
-    const [token, setToken] = useState<Token>();
+    const [token, setToken] = useState<AccessToken>();
     const [user, setUser] = useState<User>();
 
     useEffect(() => {
         async function fetchToken() {
-            const token = await AccessToken.get();
+            const token = await AccessTokenRepo.get();
             if (token == null) return;
 
             setToken(token);
@@ -28,7 +28,6 @@ export default function HeaderBar(): JSX.Element {
     useEffect(() => {
         async function fetchUser() {
             if (!token) return;
-            if (token.type !== 'access') return;
 
             const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
                 headers: {
@@ -92,7 +91,7 @@ export default function HeaderBar(): JSX.Element {
                             variant='outlined'
                             sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
                             onClick={async () => {
-                                await AccessToken.delete();
+                                await AccessTokenRepo.delete();
                                 navigate(`${config.basePath}`);
                             }}
                         >

@@ -65,13 +65,18 @@ export const UserRepo: IUserRepo = {
             createdAt: doc.createdAt.toDate(),
         }
 
-
         const validatedUser = UserSchema.parse(createdUser);
         return validatedUser;
     },
 
     async update(user: User): Promise<void> {
-        await db.collection('user').doc(user.id).set(user, { merge: true });
+        const snapshot = await db.collection('user').where('id', '==', user.id).get();
+
+        if (snapshot.empty) throw new Error(`User with id ${user.id} not found`);
+        const docRef = snapshot.docs[0]?.ref;
+        if (!docRef) throw new Error(`User with id ${user.id} not found`);
+
+        await docRef.set(user, { merge: true });
     },
 
     async del(id: string): Promise<void> {

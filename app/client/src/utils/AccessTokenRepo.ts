@@ -1,17 +1,17 @@
 import { navigate } from 'wouter/use-browser-location';
-import { Token, TokenSchema } from 'shared';
+import { AccessTokenSchema, AccessToken, UserSchema } from 'shared';
 import Config from '../config';
 
-export default class AccessToken {
+export default class AccessTokenRepo {
     static dataKey: string = 'accessToken';
 
-    static get = async (): Promise<Token | null> => {
+    static get = async (): Promise<AccessToken | null> => {
         const accessToken = localStorage.getItem(this.dataKey) || null;
 
         if (!accessToken) return null;
 
         const parsedAccessToken = JSON.parse(accessToken);
-        const tokenValidationRes = TokenSchema.safeParse({
+        const tokenValidationRes = AccessTokenSchema.safeParse({
             ...parsedAccessToken,
             createdAt: parsedAccessToken.createdAt = new Date(parsedAccessToken.createdAt),
             expiresAt: parsedAccessToken.expiresAt = new Date(parsedAccessToken.expiresAt),
@@ -22,12 +22,7 @@ export default class AccessToken {
             return null;
         }
 
-        const token: Token = tokenValidationRes.data;
-
-        if (token.type !== 'access') {
-            console.error('Invalid token type:', token.type);
-            return null;
-        }
+        const token: AccessToken = tokenValidationRes.data;
 
         if (token.expiresAt < new Date()) {
             localStorage.removeItem(this.dataKey);
@@ -46,16 +41,29 @@ export default class AccessToken {
             return null;
         }
 
+        const userData = await res.json();
+        const validatedUserRes = UserSchema.safeParse({
+            ...userData.user,
+            createdAt: new Date(userData.user.createdAt),
+        });
+
+        if (!validatedUserRes.success) {
+            console.error('Failed to validate user:', validatedUserRes.error);
+            return token;
+        }
+
+        token.user = validatedUserRes.data;
+
         return token;
     };
 
     static delete = () => {
-        localStorage.removeItem(AccessToken.dataKey);
+        localStorage.removeItem(AccessTokenRepo.dataKey);
     };
 
-    static set = (accessToken: Token) => {
+    static set = (accessToken: AccessToken) => {
         localStorage.setItem(
-            AccessToken.dataKey,
+            AccessTokenRepo.dataKey,
             JSON.stringify(accessToken),
         );
     };

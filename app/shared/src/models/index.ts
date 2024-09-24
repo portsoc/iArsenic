@@ -1,11 +1,26 @@
 export { ApiKeySchema } from './apiKey.model';
 export type { ApiKey } from './apiKey.model';
 
-export { TokenSchema } from './token.model';
-export type { Token } from './token.model';
+export { AccessTokenSchema } from './token.model';
+export type { AccessToken } from './token.model';
+
+export { GuestTokenSchema } from './token.model';
+export type { GuestToken } from './token.model';
 
 export { UserSchema } from './user.model';
 export type { User } from './user.model';
+
+export { LanguageSchema } from './user.model';
+export type { Language } from './user.model';
+
+export { UnitsSchema } from './user.model';
+export type { Units } from './user.model';
+
+export { LoginRequestSchema } from './user.model';
+export type { LoginRequest } from './user.model';
+
+export { RegisterRequestSchema } from './user.model';
+export type { RegisterRequest } from './user.model';
 
 export { default as validateModel } from './validateModel';
 

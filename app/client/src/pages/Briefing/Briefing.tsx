@@ -2,15 +2,15 @@ import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import Config from "../../config";
 import { Well } from "shared";
-import AccessToken from "../../utils/AccessToken";
+import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function Briefing(): JSX.Element {
     async function addWell(): Promise<Well> {
-        const token = await AccessToken.get();
+        const token = await AccessTokenRepo.get();
 
         const headers: HeadersInit = {};
 
-        if (token && token.type === 'access') {
+        if (token) {
             headers.authorization = `Bearer ${token.id}`;
         }
 

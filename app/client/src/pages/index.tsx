@@ -7,6 +7,7 @@ export { default as Login } from './Login';
 export { default as Map } from './Map';
 export { default as MyWells } from './MyWells';
 export { default as PrivacyPolicy } from './PrivacyPolicy';
+export { default as Profile } from './Profile';
 export { default as Region } from './Region';
 export { default as Result } from './Result';
 export { default as Review } from './Review';

@@ -1,72 +1,55 @@
-import { validateModel, Token, TokenSchema, UserSchema, User } from 'shared'
+import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'shared'
 import { KnownError } from '../errors'
-import { z } from 'zod'
 import { Context } from 'koa'
 import { UserService } from '../services'
-import { UserRepo } from '../repositories'
-
-const LoginRequestSchema = z.object({
-    email: z.string(),
-    password: z.string(),
-})
-
-type LoginRequest = z.infer<typeof LoginRequestSchema>
-
-const RegisterRequestSchema = z.object({
-    email: z.string(),
-    password: z.string(),
-    name: z.string(),
-})
-
-type RegisterRequest = z.infer<typeof RegisterRequestSchema>
 
 export const UserController = {
     async getUserByToken(ctx: Context): Promise<void> {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
 
-        const userRes = await UserRepo.findById(userId);
-
-        if (userRes == null) {
-            throw new KnownError({
-                message: 'UserId on JWT not found',
-                code: 404,
-                name: 'UserNotFoundError',
-            });
-        }
-
-        const { password, ...user } = userRes;
+        const user = await UserService.getById(userId);
 
         ctx.status = 200;
         ctx.body = { user };
     },
 
     async updateUserByToken(ctx: Context): Promise<void> {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
 
-        const result = validateModel(ctx.request.body, UserSchema.partial());
-
-        if (!result.ok) {
+        if (!ctx.request.body) {
             throw new KnownError({
-                message: result.error.message,
+                message: 'Request body is required',
+                code: 400,
+                name: 'ValidationError',
+            })
+        }
+
+        const userUpdateParseRes = UserSchema.partial().safeParse(
+            ctx.request.body as string
+        )
+
+        if (!userUpdateParseRes.success) {
+            throw new KnownError({
+                message: userUpdateParseRes.error.message,
                 code: 400,
                 name: 'ValidationError',
             });
         }
 
-        const body = ctx.request.body as Partial<User>
+        const userUpdates = userUpdateParseRes.data
 
         // Remove fields that should not be updated by user
-        delete body.id
-        delete body.email
-        delete body.emailVerified
-        delete body.type
-        delete body.createdAt
+        delete userUpdates.id
+        delete userUpdates.email
+        delete userUpdates.emailVerified
+        delete userUpdates.type
+        delete userUpdates.createdAt
 
         const updatedUser = await UserService.updateUser(
             userId,
-            body,
+            userUpdates,
         );
 
         const { password, ...user } = updatedUser;
@@ -76,21 +59,21 @@ export const UserController = {
     },
 
     async login(ctx: Context): Promise<void> {
-        const result = validateModel(ctx.request.body, LoginRequestSchema)
+        const loginRequestRes = LoginRequestSchema.safeParse(ctx.request.body)
 
-        if (!result.ok) {
+        if (!loginRequestRes.success) {
             throw new KnownError({
-                message: result.error.message,
+                message: loginRequestRes.error.message,
                 code: 400,
                 name: 'ValidationError',
             });
         }
 
-        const body = ctx.request.body as LoginRequest
+        const loginRequest = loginRequestRes.data
 
-        const accessToken: Token = await UserService.login(
-            body.email,
-            body.password,
+        const accessToken: AccessToken = await UserService.login(
+            loginRequest.email,
+            loginRequest.password,
         )
 
         ctx.status = 200
@@ -98,22 +81,24 @@ export const UserController = {
     },
 
     async register(ctx: Context): Promise<void> {
-        const result = validateModel(ctx.request.body, RegisterRequestSchema)
+        const bodyParseRes = RegisterRequestSchema.safeParse(ctx.request.body)
 
-        if (!result.ok) {
+        if (!bodyParseRes.success) {
             throw new KnownError({
-                message: result.error.message,
+                message: bodyParseRes.error.message,
                 code: 400,
                 name: 'ValidationError',
             });
         }
 
-        const body = ctx.request.body as RegisterRequest
+        const body = bodyParseRes.data
 
         await UserService.register(
             body.email,
             body.password,
             body.name,
+            body.language,
+            body.units,
         )
 
         ctx.status = 201

@@ -1,6 +1,6 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { Token, User, UserSchema, validateModel } from 'shared';
+import { AccessToken, User, UserSchema, validateModel, Language, Units } from 'shared';
 import { UserRepo, TokenRepo } from '../repositories'
 import bcrypt from 'bcrypt'
 
@@ -8,10 +8,10 @@ import bcrypt from 'bcrypt'
 const ACCESS_TOKEN_TTL = 1000 * 60 * 60 * 24 * 7
 
 export const UserService = {
-    async login(email: string, password: string): Promise<Token> {
+    async login(email: string, password: string): Promise<AccessToken> {
         const user = await UserRepo.findByEmail(email)
 
-        if (user == null) {
+        if (user == null || user.password == null) {
             throw new KnownError({
                 message: 'Invalid email or password',
                 code: 401,
@@ -44,9 +44,23 @@ export const UserService = {
             type: "access",
         })
 
-        // TODO revoke user's previous tokens
-
         return jwt
+    },
+
+    async getById(userId: string): Promise<User> {
+        const userRes = await UserRepo.findById(userId)
+
+        if (userRes == null) {
+            throw new KnownError({
+                message: 'User not found',
+                code: 404,
+                name: 'UserNotFoundError',
+            });
+        }
+
+        const { password, ...user } = userRes
+
+        return user
     },
 
     async updateUser(userId: string, userUpdates: Partial<User>): Promise<User> {
@@ -71,7 +85,13 @@ export const UserService = {
         return validatedNewUser
     },
 
-    async register(email: string, password: string, name: string): Promise<void> {
+    async register(
+        email: string,
+        password: string,
+        name: string,
+        language: Language,
+        units: Units,
+    ): Promise<void> {
         const existingUser = await UserRepo.findByEmail(email)
 
         if (existingUser != null) {
@@ -84,7 +104,7 @@ export const UserService = {
 
         const hashedPassword = bcrypt.hashSync(password, 10)
 
-        const user = await UserRepo.create({
+        const newUser = UserSchema.parse({
             id: uuid4(),
             email: email,
             emailVerified: false,
@@ -92,7 +112,11 @@ export const UserService = {
             name: name,
             type: 'user',
             createdAt: new Date(),
+            language: language,
+            units: units,
         })
+
+        const user = await UserRepo.create({ ...newUser })
 
         const result = validateModel(user, UserSchema)
 

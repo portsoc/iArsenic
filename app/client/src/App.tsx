@@ -11,6 +11,7 @@ import {
     Map,
     MyWells,
     PrivacyPolicy,
+    Profile,
     Region,
     Result,
     Review,
@@ -79,6 +80,7 @@ function App() {
                             <Route path='/login' component={Login} />
                             <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
+                            <Route path='/profile' component={Profile} />
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
                             <Route path='/well/:id' component={Well} />

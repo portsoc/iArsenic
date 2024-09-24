@@ -83,7 +83,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                             />
 
                             <NavListItem
-                                path='my-profile'
+                                path='profile'
                                 text='My Profile'
                                 Icon={AccountCircleIcon}
                             />
