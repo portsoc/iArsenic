@@ -2,7 +2,7 @@ import { Typography, Card, Box, Button, TextField, MenuItem, Select, FormControl
 import { User, Language, Units, UnitsSchema, LanguageSchema } from 'shared';
 import { useState } from 'react';
 import Config from '../../config';
-import AccessToken from '../../utils/AccessToken';
+import AccessTokenRepo from '../../utils/AccessTokenRepo';
 
 interface Props {
     user: User;
@@ -23,9 +23,9 @@ export default function EditProfileCard({ user, setEditMode, setSaving }: Props)
             units,
         };
 
-        const token = await AccessToken.get();
+        const token = await AccessTokenRepo.get();
 
-        if (!token || token.type !== 'access') {
+        if (!token) {
             setSaving(false);
             throw new Error('Invalid token');
         }

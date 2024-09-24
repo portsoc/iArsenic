@@ -5,17 +5,17 @@ import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
 import config from '../../config';
-import { Well, Token } from 'shared';
+import { Well, AccessToken } from 'shared';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
 import UpaMap from './upaMap';
-import AccessToken from '../../utils/AccessToken';
+import AccessTokenRepo from '../../utils/AccessTokenRepo';
 
 export default function Map() {
     const position: LatLngExpression = [23.8041, 90.4152];
     const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
-    const [token, setToken] = useState<Token>();
+    const [token, setToken] = useState<AccessToken>();
     const [wells, setWells] = useState<Well[]>();
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
 
@@ -27,7 +27,6 @@ export default function Map() {
 
     async function getPredictionPinData() {
         if (!token) return;
-        if (token.type !== 'access') return;
 
         const res = await fetch(`${config.basePath}/api/v1/well/`, {
             headers: {
@@ -50,7 +49,7 @@ export default function Map() {
 
     useEffect(() => {
         async function fetchToken() {
-            const token = await AccessToken.get();
+            const token = await AccessTokenRepo.get();
             if (token == null) return;
 
             setToken(token);

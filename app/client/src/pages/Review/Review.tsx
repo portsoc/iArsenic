@@ -2,19 +2,19 @@ import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import config from '../../config';
-import { Token, Well } from 'shared';
-import AccessToken from '../../utils/AccessToken';
+import { AccessToken, Well } from 'shared';
+import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { useRoute } from 'wouter';
 
 export default function Review() {
     const [, params] = useRoute('/:id/review');
     const wellId = params?.id;
-    const [token, setToken] = useState<Token>();
+    const [token, setToken] = useState<AccessToken>();
     const [well, setWell] = useState<Well>();
 
     useEffect(() => {
         async function fetchToken() {
-            const token = await AccessToken.get();
+            const token = await AccessTokenRepo.get();
             if (token == null) return;
 
             setToken(token);
@@ -29,7 +29,7 @@ export default function Review() {
 
             const headers: HeadersInit = {};
 
-            if (token && token.type === 'access') {
+            if (token) {
                 headers['authorization'] = `Bearer ${token.id}`;
             }
 

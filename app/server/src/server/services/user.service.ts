@@ -1,6 +1,6 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { Token, User, UserSchema, validateModel, Language, Units } from 'shared';
+import { AccessToken, User, UserSchema, validateModel, Language, Units } from 'shared';
 import { UserRepo, TokenRepo } from '../repositories'
 import bcrypt from 'bcrypt'
 
@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt'
 const ACCESS_TOKEN_TTL = 1000 * 60 * 60 * 24 * 7
 
 export const UserService = {
-    async login(email: string, password: string): Promise<Token> {
+    async login(email: string, password: string): Promise<AccessToken> {
         const user = await UserRepo.findByEmail(email)
 
         if (user == null || user.password == null) {

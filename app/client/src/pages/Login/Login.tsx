@@ -2,7 +2,8 @@ import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import Config from '../../config';
-import AccessToken from '../../utils/AccessToken';
+import AccessTokenRepo from '../../utils/AccessTokenRepo';
+import { AccessTokenSchema } from 'shared';
 
 export default function Login(): JSX.Element {
     const [email, setEmail] = useState<string>();
@@ -41,7 +42,9 @@ export default function Login(): JSX.Element {
         const data = await result.json();
 
         const token = data.accessToken;
-        AccessToken.set(token);
+        const validatedToken = AccessTokenSchema.parse(token);
+
+        AccessTokenRepo.set(validatedToken);
 
         navigate(`${Config.basePath}/my-wells`);
         window.location.reload();

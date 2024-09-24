@@ -7,7 +7,7 @@ import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";
 import estimateTexts from "./estimateTexts";
 import { useRoute } from "wouter";
-import AccessToken from "../../utils/AccessToken";
+import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 type EstimateTexts = {
     english: {
@@ -53,10 +53,10 @@ export default function Result(): JSX.Element {
             try {
                 if (!wellId) return;
 
-                const token = await AccessToken.get();
+                const token = await AccessTokenRepo.get();
 
                 const headers: HeadersInit = {};
-                if (token && token.type === 'access') {
+                if (token) {
                     headers['authorization'] = `Bearer ${token.id}`;
                 }
 

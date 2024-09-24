@@ -1,11 +1,11 @@
-import { Token, TokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'shared'
+import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'shared'
 import { KnownError } from '../errors'
 import { Context } from 'koa'
 import { UserService } from '../services'
 
 export const UserController = {
     async getUserByToken(ctx: Context): Promise<void> {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
 
         const user = await UserService.getById(userId);
@@ -15,7 +15,7 @@ export const UserController = {
     },
 
     async updateUserByToken(ctx: Context): Promise<void> {
-        const token = TokenSchema.parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
         const userId = token.userId;
 
         if (!ctx.request.body) {
@@ -71,7 +71,7 @@ export const UserController = {
 
         const loginRequest = loginRequestRes.data
 
-        const accessToken: Token = await UserService.login(
+        const accessToken: AccessToken = await UserService.login(
             loginRequest.email,
             loginRequest.password,
         )

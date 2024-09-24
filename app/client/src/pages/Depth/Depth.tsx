@@ -2,14 +2,14 @@ import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/m
 import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { Token } from "shared";
+import { AccessToken } from "shared";
 import { useRoute } from "wouter";
-import AccessToken from "../../utils/AccessToken";
+import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/:id/depth');
     const wellId = params?.id;
-    const [token, setToken] = useState<Token>();
+    const [token, setToken] = useState<AccessToken>();
 
     const [unit, setUnit] = useState<'m' | 'ft'>('ft');
     const [depth, setDepth] = useState(0);
@@ -32,7 +32,7 @@ export default function Depth(): JSX.Element {
 
     useEffect(() => {
         async function fetchToken() {
-            const token = await AccessToken.get();
+            const token = await AccessTokenRepo.get();
             if (token == null) return;
 
             setToken(token);
@@ -118,7 +118,7 @@ export default function Depth(): JSX.Element {
                 variant='contained'
                 onClick={async () => {
                     const headers: HeadersInit = {};
-                    if (token && token.type === 'access') {
+                    if (token) {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 
