@@ -27,7 +27,7 @@ export const UserController = {
         }
 
         const userUpdateParseRes = UserSchema.partial().safeParse(
-            JSON.parse(ctx.request.body as string)
+            ctx.request.body as string
         )
 
         if (!userUpdateParseRes.success) {

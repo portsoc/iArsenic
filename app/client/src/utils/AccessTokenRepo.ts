@@ -1,5 +1,5 @@
 import { navigate } from 'wouter/use-browser-location';
-import { AccessTokenSchema, AccessToken } from 'shared';
+import { AccessTokenSchema, AccessToken, UserSchema } from 'shared';
 import Config from '../config';
 
 export default class AccessTokenRepo {
@@ -40,6 +40,19 @@ export default class AccessTokenRepo {
             console.error('Failed to fetch user using access token:', res);
             return null;
         }
+
+        const userData = await res.json();
+        const validatedUserRes = UserSchema.safeParse({
+            ...userData.user,
+            createdAt: new Date(userData.user.createdAt),
+        });
+
+        if (!validatedUserRes.success) {
+            console.error('Failed to validate user:', validatedUserRes.error);
+            return token;
+        }
+
+        token.user = validatedUserRes.data;
 
         return token;
     };

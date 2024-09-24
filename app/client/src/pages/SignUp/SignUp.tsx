@@ -59,7 +59,7 @@ export default function SignUp(): JSX.Element {
 
         setError(null);
 
-        const language = LanguageSelector.get();
+        const language = await LanguageSelector.get();
         const units = language == 'english' ? 'meters' : 'feet';
 
         const registerBody = RegisterRequestSchema.parse({

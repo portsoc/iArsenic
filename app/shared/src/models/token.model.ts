@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { UserSchema } from './user.model';
 
 export const GuestTokenSchema = z.object({
     userId: z.literal('guest'),
@@ -16,6 +17,7 @@ export const AccessTokenSchema = z.object({
     expiresAt: z.date(),
     type: z.literal('access'),
     revokedAt: z.date().optional(),
+    user: UserSchema.optional(),
 })
 
 export type AccessToken = z.infer<typeof AccessTokenSchema>;

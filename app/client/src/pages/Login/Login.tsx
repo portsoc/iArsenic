@@ -42,9 +42,25 @@ export default function Login(): JSX.Element {
         const data = await result.json();
 
         const token = data.accessToken;
-        const validatedToken = AccessTokenSchema.parse(token);
+        const validatedTokenRes = AccessTokenSchema.safeParse({
+            ...token,
+            createdAt: new Date(token.createdAt),
+            expiresAt: new Date(token.expiresAt),
+            revokedAt: token.revokedAt == null ?
+                undefined :
+                new Date(token.revokedAt),
+        });
 
-        AccessTokenRepo.set(validatedToken);
+        if (!validatedTokenRes.success) {
+            console.error(
+                'Failed to validate access token:',
+                validatedTokenRes.error,
+            );
+
+            return;
+        }
+
+        AccessTokenRepo.set(validatedTokenRes.data);
 
         navigate(`${Config.basePath}/my-wells`);
         window.location.reload();
