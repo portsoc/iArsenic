@@ -3,6 +3,7 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "serve": "firebase emulators:start",
+    "serve:local": "firebase functions:config:set env.local='.env.local' && firebase emulators:start",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
@@ -27,6 +28,7 @@
     "koa-helmet": "^7.0.2",
     "koa-static": "^5.0.0",
     "module-alias": "^2.2.3",
+    "nodemailer": "^6.9.15",
     "shared": "file:../app/shared",
     "typescript": "^5.5.4",
     "uuid4": "^2.0.3",

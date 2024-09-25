@@ -1,10 +1,10 @@
 import { Repository } from './repo.interface';
-import { AccessToken, AccessTokenSchema } from 'shared';
+import { AbstractTokenSchema, AbstractToken } from 'shared';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 
-export const TokenRepo: Repository<AccessToken> = {
-    async findById(id: string): Promise<AccessToken | null> {
+export const TokenRepo: Repository<AbstractToken> = {
+    async findById(id: string): Promise<AbstractToken | null> {
         const snapshot = await db.collection('token').where('id', '==', id).get();
 
         if (snapshot.empty) return null;
@@ -21,12 +21,12 @@ export const TokenRepo: Repository<AccessToken> = {
                 docData.revokedAt.toDate() : docData.revokedAt,
         }
 
-        const jwtData = AccessTokenSchema.parse(doc);
+        const jwtData = AbstractTokenSchema.parse(doc);
 
         return jwtData;
     },
 
-    async create(jwtData: AccessToken): Promise<AccessToken> {
+    async create(jwtData: AbstractToken): Promise<AbstractToken> {
         const docRef = await db.collection('token').add(jwtData);
         const docSnapshot = await docRef.get();
         const doc = docSnapshot.data();
@@ -43,7 +43,7 @@ export const TokenRepo: Repository<AccessToken> = {
                 doc.revokedAt.toDate() : doc.revokedAt,
         }
 
-        const validatedJwt = AccessTokenSchema.parse(jwt);
+        const validatedJwt = AbstractTokenSchema.parse(jwt);
         return validatedJwt;
     }
 }

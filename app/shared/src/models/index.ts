@@ -7,6 +7,12 @@ export type { AccessToken } from './token.model';
 export { GuestTokenSchema } from './token.model';
 export type { GuestToken } from './token.model';
 
+export { VerifyEmailTokenSchema } from './token.model';
+export type { VerifyEmailToken } from './token.model';
+
+export { AbstractTokenSchema } from './token.model';
+export type { AbstractToken } from './token.model';
+
 export { UserSchema } from './user.model';
 export type { User } from './user.model';
 

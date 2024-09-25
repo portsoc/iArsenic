@@ -1,8 +1,10 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { AccessToken, User, UserSchema, validateModel, Language, Units } from 'shared';
+import { AccessToken, User, UserSchema, validateModel, Language, Units, VerifyEmailTokenSchema, AccessTokenSchema } from 'shared';
 import { UserRepo, TokenRepo } from '../repositories'
 import bcrypt from 'bcrypt'
+import sendMail from '../emails/sendMail';
+import verifyEmailTemplate from '../emails/templates/verifyEmail';
 
 // 7 days
 const ACCESS_TOKEN_TTL = 1000 * 60 * 60 * 24 * 7
@@ -44,7 +46,7 @@ export const UserService = {
             type: "access",
         })
 
-        return jwt
+        return AccessTokenSchema.parse(jwt)
     },
 
     async getById(userId: string): Promise<User> {
@@ -123,5 +125,23 @@ export const UserService = {
         if (!result.ok) throw new Error(
             `Invalid user data: ${result.error.message} for user ID: ${user.id}`
         );
+
+        const verifyEmailToken = await TokenRepo.create({
+            id: uuid4(),
+            userId: user.id,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+            type: 'verify-email',
+        })
+
+        const validatedToken = VerifyEmailTokenSchema.parse(
+            verifyEmailToken,
+        )
+
+        sendMail(
+            user.email,
+            'Verify your email',
+            verifyEmailTemplate(validatedToken, user.name),
+        )
     }
 }
