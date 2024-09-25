@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "iarsenic-staging"
+    "default": "iarsenic-staging",
+    "dev": "iarsenic-staging",
+    "prod": "iarsenic"
   }
 }
