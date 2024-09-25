@@ -7,6 +7,6 @@ export default function verifyEmailTemplate(
 ) {
     return `
         Hi ${recipientName},
-        ${Config.baseUrl}/verify-email/token=${token.id}
+        ${Config.baseUrl}/api/v1/user/verify-email/${token.id}
     `
 }

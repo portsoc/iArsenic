@@ -45,5 +45,15 @@ export const TokenRepo: Repository<AbstractToken> = {
 
         const validatedJwt = AbstractTokenSchema.parse(jwt);
         return validatedJwt;
+    },
+
+    async update(token: AbstractToken): Promise<void> {
+        const snapshot = await db.collection('token').where('id', '==', token.id).get();
+
+        if (snapshot.empty) throw new Error(`Token with id ${token.id} not found`);
+        const docRef = snapshot.docs[0]?.ref;
+        if (!docRef) throw new Error(`Token with id ${token.id} not found`);
+
+        await docRef.set(token, { merge: true });
     }
 }

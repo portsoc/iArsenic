@@ -138,10 +138,55 @@ export const UserService = {
             verifyEmailToken,
         )
 
-        sendMail(
+        await sendMail(
             user.email,
             'Verify your email',
             verifyEmailTemplate(validatedToken, user.name),
         )
+    },
+
+    async verifyEmail(tokenId: string): Promise<void> {
+        const token = await TokenRepo.findById(tokenId)
+        const validatedToken = VerifyEmailTokenSchema.parse(token)
+
+        if (validatedToken.expiresAt < new Date()) {
+            throw new KnownError({
+                message: 'Token expired',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        if (validatedToken.revokedAt != null) {
+            throw new KnownError({
+                message: 'Token already used',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        const user = await UserRepo.findById(validatedToken.userId)
+
+        if (user == null) {
+            throw new KnownError({
+                message: 'User not found',
+                code: 404,
+                name: 'UserNotFoundError',
+            });
+        }
+
+        const newUser = UserSchema.parse({
+            ...user,
+            emailVerified: true,
+        })
+
+        await UserRepo.update(newUser)
+
+        const newToken = VerifyEmailTokenSchema.parse({
+            ...validatedToken,
+            revokedAt: new Date(),
+        })
+
+        await TokenRepo.update(newToken)
     }
 }

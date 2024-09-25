@@ -108,5 +108,13 @@ export const UserController = {
     async deleteUserByToken(ctx: Context): Promise<void> {
         ctx.status = 501
         ctx.body = { error: 'Not Implemented' }
+    },
+
+    async verifyEmail(ctx: Context): Promise<void> {
+        const tokenId = ctx.params.token;
+        await UserService.verifyEmail(tokenId);
+
+        ctx.status = 200;
+        ctx.body = { message: 'Email verified successfully' };
     }
 }
