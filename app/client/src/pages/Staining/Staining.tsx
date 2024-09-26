@@ -1,5 +1,4 @@
 import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack } from "@mui/material";
-import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, AccessToken } from 'shared';
@@ -62,7 +61,7 @@ export default function StainingPage(): JSX.Element {
                     <Button
                         sx={{ width: '70%', height: '3rem' }}
                         variant='outlined'
-                        onClick={() => navigate(`${config.basePath}/staining-guide`)}
+                        onClick={() => navigate(`/staining-guide`)}
                     >
                         See Staining Guide
                     </Button>
@@ -140,7 +139,7 @@ export default function StainingPage(): JSX.Element {
                         utensilStaining,
                     };
 
-                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
@@ -154,7 +153,7 @@ export default function StainingPage(): JSX.Element {
                         return;
                     }
 
-                    navigate(`${config.basePath}/${wellId}/depth`);
+                    navigate(`/${wellId}/depth`);
                 }}
             >
                 Next Step

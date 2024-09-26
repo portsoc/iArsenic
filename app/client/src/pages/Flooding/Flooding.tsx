@@ -1,5 +1,4 @@
 import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
-import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
@@ -96,7 +95,7 @@ export default function Depth(): JSX.Element {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 
-                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
@@ -110,7 +109,7 @@ export default function Depth(): JSX.Element {
                         return;
                     }
 
-                    navigate(`${config.basePath}/${wellId}/review`);
+                    navigate(`/${wellId}/review`);
                 }}
             >
                 Review

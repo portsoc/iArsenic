@@ -12,11 +12,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
 import PublicIcon from '@mui/icons-material/Public';
 import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
-import Config from '../../config';
 import { navigate } from 'wouter/use-browser-location';
 import { SvgIconComponent } from '@mui/icons-material';
 import { Avatar, Button, Stack, Typography } from '@mui/material';
-import config from '../../config';
 import LanguageSelector from '../../utils/LanguageSelector';
 
 interface props {
@@ -35,7 +33,7 @@ function NavListItem(
     return (
         <ListItem key={path}>
             <ListItemButton
-                onClick={() => navigate(`${Config.basePath}/${path}`)}
+                onClick={() => navigate(`/${path}`)}
             >
                 <ListItemIcon>
                     <Icon />
@@ -138,7 +136,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                             startIcon={
                                 <Avatar
                                     sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
-                                    src={`${config.basePath}/british.png`}
+                                    src={`/british.png`}
                                 />
                             }
                         />
@@ -158,7 +156,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                             startIcon={
                                 <Avatar
                                     sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
-                                    src={`${config.basePath}/bangladesh.jpg`}
+                                    src={`/bangladesh.jpg`}
                                 />
                             }
                             onClick={() => LanguageSelector.set('bengali')}

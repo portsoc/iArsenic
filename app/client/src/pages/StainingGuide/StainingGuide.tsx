@@ -1,4 +1,3 @@
-import config from "../../config";
 import { Box, Button, Card, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -50,7 +49,7 @@ export default function StainingGuide(): JSX.Element {
                 </Typography>
 
                 <Box mb={1}>
-                    <img width='100%' src={`${config.basePath}/red_platform_1.jpg`}></img>
+                    <img width='100%' src={`/red_platform_1.jpg`}></img>
                 </Box>
 
                 <Typography
@@ -80,7 +79,7 @@ export default function StainingGuide(): JSX.Element {
                 </Typography>
 
                 <Box mb={1}>
-                    <img width='100%' src={`${config.basePath}/black_platform_1.jpg`}></img>
+                    <img width='100%' src={`/black_platform_1.jpg`}></img>
                 </Box>
 
                 <Typography

@@ -15,4 +15,5 @@ export { default as SignUp } from './SignUp';
 export { default as Splash } from './Splash';
 export { default as Staining } from './Staining';
 export { default as StainingGuide } from './StainingGuide';
+export { default as VerifyEmail } from './VerifyEmail';
 export { default as Well } from './Well';

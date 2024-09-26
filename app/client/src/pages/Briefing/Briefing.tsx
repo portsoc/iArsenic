@@ -1,6 +1,5 @@
 import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import Config from "../../config";
 import { Well } from "shared";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
@@ -14,7 +13,7 @@ export default function Briefing(): JSX.Element {
             headers.authorization = `Bearer ${token.id}`;
         }
 
-        const res = await fetch(`${Config.basePath}/api/v1/self/well`, {
+        const res = await fetch(`/api/v1/self/well`, {
             method: 'POST',
             headers,
         });
@@ -128,7 +127,7 @@ export default function Briefing(): JSX.Element {
                     For a detailed explanation of our data
                     practices,&nbsp;
                     <Link
-                        onClick={() => navigate(`${Config.basePath}/privacy-policy`)}
+                        onClick={() => navigate(`/privacy-policy`)}
                         sx={{ cursor: 'pointer' }}
                     >
                         click here
@@ -141,7 +140,7 @@ export default function Briefing(): JSX.Element {
                     আমাদের অনুমানের সঠিকতা উন্নত করার জন্য এই তথ্য ব্যবহার করি।
                     আমাদের ডেটা অনুশীলনগুলির বিশদ ব্যাখ্যার জন্য,
                     <Link
-                        onClick={() => navigate(`${Config.basePath}/privacy-policy`)}
+                        onClick={() => navigate(`/privacy-policy`)}
                         sx={{ cursor: 'pointer' }}
                     >
                         এখানে ক্লিক করুন।
@@ -180,7 +179,7 @@ export default function Briefing(): JSX.Element {
                 variant='contained'
                 onClick={async () => {
                     const newWell = await addWell();
-                    navigate(`${Config.basePath}/${newWell.id}/region`);
+                    navigate(`/${newWell.id}/region`);
                 }}
             >
                 <Typography className='english'>Generate Estimate</Typography>

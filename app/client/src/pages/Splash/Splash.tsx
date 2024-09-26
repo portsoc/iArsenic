@@ -1,5 +1,4 @@
 import { Button, useTheme } from '@mui/material';
-import config from '../../config';
 import Section from './Section';
 import CallToAction from './CallToAction';
 import Credits from './Credits';
@@ -14,8 +13,8 @@ export default function SplashPage(): JSX.Element {
     const theme = useTheme();
 
     function handleTryAppClick() {
-        if (token) navigate(`${config.basePath}/my-wells`);
-        else navigate(`${config.basePath}/landing`);
+        if (token) navigate(`/my-wells`);
+        else navigate(`/landing`);
     }
 
     useEffect(() => {
@@ -51,7 +50,7 @@ export default function SplashPage(): JSX.Element {
                     modelling and digital technology can help solve this issue.`
                 ]}
                 imageConfig={{
-                    imageUrl: `${config.basePath}/splashPage/well_with_chickens.jpg`,
+                    imageUrl: `/splashPage/well_with_chickens.jpg`,
                     imageSide: 'right',
                     imageAlt: 'Well With Chicken',
                 }}
@@ -77,7 +76,7 @@ export default function SplashPage(): JSX.Element {
                     reduction is sorbed back on the, yet to be reduced, iron).`,
                 ]}
                 imageConfig={{
-                    imageUrl: `${config.basePath}/splashPage/red_vs_black_staining.jpg`,
+                    imageUrl: `/splashPage/red_vs_black_staining.jpg`,
                     imageSide: 'left',
                     imageAlt: 'Image showing red and black staining on a well platform',
                 }}
@@ -104,7 +103,7 @@ export default function SplashPage(): JSX.Element {
                     level assessment to tubewell owners.`,
                 ]}
                 imageConfig={{
-                    imageUrl: `${config.basePath}/splashPage/app_screenshot.png`,
+                    imageUrl: `/splashPage/app_screenshot.png`,
                     imageSide: 'right',
                     imageAlt: 'Screenshot of iArsenic application',
                 }}
@@ -119,7 +118,7 @@ export default function SplashPage(): JSX.Element {
                     `See user data appear on an interactive map in real time.`
                 ]}
                 imageConfig={{
-                    imageUrl: `${config.basePath}/splashPage/interactive_map.png`,
+                    imageUrl: `/splashPage/interactive_map.png`,
                     imageSide: 'left',
                     imageAlt: 'Interactive map of Bangladesh',
                 }}

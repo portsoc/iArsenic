@@ -1,7 +1,6 @@
 import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import config from '../../config';
 import { Well, AccessToken } from 'shared';
 import { useRoute } from 'wouter';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
@@ -28,7 +27,7 @@ export default function Review() {
             const token = await AccessTokenRepo.get();
 
             if (token == null) {
-                navigate(`${config.basePath}/login`);
+                navigate(`/login`);
                 return;
             }
 
@@ -43,7 +42,7 @@ export default function Review() {
             if (!wellId || !token) return;
 
             const result = await fetch(
-                `${config.basePath}/api/v1/self/well/${wellId}`, {
+                `/api/v1/self/well/${wellId}`, {
                 headers: {
                     'authorization': `Bearer ${token.id}`,
                 }
@@ -78,7 +77,7 @@ export default function Review() {
                 variant='outlined'
                 startIcon={<ArrowBackIcon />}
                 sx={{ alignSelf: 'start' }}
-                onClick={() => navigate(`${config.basePath}/my-wells`)}
+                onClick={() => navigate(`/my-wells`)}
             >
                 Return to My Wells
             </Button>
@@ -164,13 +163,13 @@ export default function Review() {
                         color="primary"
                         onClick={() => {
                             if (!well?.regionKey) {
-                                navigate(`${config.basePath}/${wellId}/region`);
+                                navigate(`/${wellId}/region`);
                             } else if (!well?.depth) {
-                                navigate(`${config.basePath}/${wellId}/depth`);
+                                navigate(`/${wellId}/depth`);
                             } else if (!well?.staining) {
-                                navigate(`${config.basePath}/${wellId}/staining`);
+                                navigate(`/${wellId}/staining`);
                             } else if (!well?.flooding) {
-                                navigate(`${config.basePath}/${wellId}/flooding`);
+                                navigate(`/${wellId}/flooding`);
                             } else {
                                 console.log('Well is complete');
                             }

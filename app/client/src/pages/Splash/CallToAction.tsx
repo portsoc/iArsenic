@@ -1,5 +1,4 @@
 import { Typography, Box, useTheme, Button } from '@mui/material';
-import config from '../../config';
 
 const sectionStyle = {
     display: 'flex',
@@ -53,7 +52,7 @@ export default function CallToAction({ tryAppClick }: props): JSX.Element {
             }}
         >
             <img
-                src={`${config.basePath}/splashPage/man_pumping_well.jpg`}
+                src={`/splashPage/man_pumping_well.jpg`}
                 alt="Background"
                 style={backgroundImageStyle}
             />

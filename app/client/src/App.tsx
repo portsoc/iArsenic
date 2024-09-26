@@ -19,9 +19,9 @@ import {
     Splash,
     Staining,
     StainingGuide,
+    VerifyEmail,
     Well,
 } from './pages';
-import config from './config';
 import LanguageSelector from './utils/LanguageSelector';
 
 import { HeaderBar } from './components';
@@ -51,7 +51,7 @@ function App() {
                 href="https://fonts.googleapis.com/icon?family=Material+Icons"
             />
 
-            <Router base={config.basePath}>
+            <Router>
                 <Switch>
                     {/* Splash & Map Page */}
                     <Route path='/' component={Splash} />
@@ -84,6 +84,7 @@ function App() {
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
                             <Route path='/well/:id' component={Well} />
+                            <Route path='/verify-email/:id' component={VerifyEmail} />
                         </Stack>
                     </Route>
                 </Switch>
