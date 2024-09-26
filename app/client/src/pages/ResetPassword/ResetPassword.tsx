@@ -1,34 +1,48 @@
 import { Button, Card, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import { useRoute } from "wouter";
 
-export default function ForgotPassword(): JSX.Element {
-    const [email, setEmail] = useState<string>('');
+export default function ResetPassword(): JSX.Element {
+    const [, params] = useRoute('/reset-password/:token');
+    const resetPasswordToken = params?.token;
+
+    const [newPassword, setNewPassword] = useState<string>();
+    const [confirmPassword, setConfirmPassword] = useState<string>();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
 
-    function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setEmail(event.target.value);
+    function handleNewPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setNewPassword(event.target.value);
+    }
+
+    function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+        setConfirmPassword(event.target.value);
     }
 
     async function handlePasswordReset() {
+        if (newPassword !== confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
+
         setIsSubmitting(true);
         setError(null);
 
         try {
-            const response = await fetch('/api/v1/user/forgot-password', {
+            const response = await fetch(`/api/v1/user/reset-password/${resetPasswordToken}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ newPassword }),
             });
 
             if (response.ok) {
                 setSuccess(true);
             } else {
                 const errorMessage = await response.text();
-                setError(errorMessage || 'Failed to send reset link.');
+                setError(errorMessage || 'Failed to reset password.');
             }
         } catch (error) {
             setError('An error occurred. Please try again later.');
@@ -53,21 +67,29 @@ export default function ForgotPassword(): JSX.Element {
                 }}
             >
                 <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                    Forgot Password
+                    Reset Password
                 </Typography>
 
                 {success ? (
                     <Typography>
-                        If a account exists with this email,
-                        a password reset link has been sent to it.
+                        Your password has been reset successfully.
                     </Typography>
                 ) : (
                     <>
                         <TextField
-                            label="Email"
-                            type="email"
-                            value={email}
-                            onChange={handleEmailChange}
+                            label="New Password"
+                            type="password"
+                            value={newPassword}
+                            onChange={handleNewPasswordChange}
+                            sx={{ width: '85%' }}
+                            disabled={isSubmitting}
+                        />
+
+                        <TextField
+                            label="Confirm Password"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={handleConfirmPasswordChange}
                             sx={{ width: '85%' }}
                             disabled={isSubmitting}
                         />
@@ -76,9 +98,9 @@ export default function ForgotPassword(): JSX.Element {
                             sx={{ width: '90%', height: '3rem' }}
                             variant='contained'
                             onClick={handlePasswordReset}
-                            disabled={isSubmitting || !email}
+                            disabled={isSubmitting || !newPassword || !confirmPassword}
                         >
-                            {isSubmitting ? 'Sending...' : 'Send Reset Link'}
+                            {isSubmitting ? 'Resetting...' : 'Reset Password'}
                         </Button>
 
                         {error && (

@@ -13,6 +13,7 @@ import {
     PrivacyPolicy,
     Profile,
     Region,
+    ResetPassword,
     Result,
     Review,
     SignUp,
@@ -70,21 +71,22 @@ function App() {
                         >
                             <Route path='/:id/depth' component={Depth} />
                             <Route path='/:id/flooding' component={Flooding} />
-                            <Route path='/:id/forgot-password' component={ForgotPassword} />
                             <Route path='/:id/region' component={Region} />
                             <Route path='/:id/result' component={Result} />
                             <Route path='/:id/review' component={Review} />
                             <Route path='/:id/staining' component={Staining} />
                             <Route path='/briefing' component={Briefing} />
+                            <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
                             <Route path='/login' component={Login} />
                             <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
                             <Route path='/profile' component={Profile} />
+                            <Route path='/reset-password/:id' component={ResetPassword} />
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
-                            <Route path='/well/:id' component={Well} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
+                            <Route path='/well/:id' component={Well} />
                         </Stack>
                     </Route>
                 </Switch>

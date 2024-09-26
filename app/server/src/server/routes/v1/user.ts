@@ -15,5 +15,7 @@ user.get('/', (ctx) => {
 user.post('/login', ctx => UserController.login(ctx));
 user.post('/register', ctx => UserController.register(ctx));
 user.get('/verify-email/:token', ctx => UserController.verifyEmail(ctx));
+user.post('/forgot-password', ctx => UserController.forgotPassword(ctx));
+user.post('/reset-password/:token', ctx => UserController.resetPassword(ctx));
 
 export default user

@@ -7,6 +7,9 @@ export type { AccessToken } from './token.model';
 export { GuestTokenSchema } from './token.model';
 export type { GuestToken } from './token.model';
 
+export { ResetPasswordTokenSchema } from './token.model';
+export type { ResetPasswordToken } from './token.model';
+
 export { VerifyEmailTokenSchema } from './token.model';
 export type { VerifyEmailToken } from './token.model';
 

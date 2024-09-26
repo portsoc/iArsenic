@@ -13,7 +13,11 @@ export const AbstractTokenSchema = z.object({
     userId: z.string(),
     createdAt: z.date(),
     expiresAt: z.date(),
-    type: z.union([z.literal('access'), z.literal('verify-email')]),
+    type: z.union([
+        z.literal('access'),
+        z.literal('verify-email'),
+        z.literal('reset-password'),
+    ]),
     revokedAt: z.date().optional(),
 })
 
@@ -41,3 +45,14 @@ export const VerifyEmailTokenSchema = z.object({
 })
 
 export type VerifyEmailToken = z.infer<typeof VerifyEmailTokenSchema>;
+
+export const ResetPasswordTokenSchema = z.object({
+    id: z.string(),
+    userId: z.string(),
+    createdAt: z.date(),
+    expiresAt: z.date(),
+    type: z.literal('reset-password'),
+    revokedAt: z.date().optional(),
+});
+
+export type ResetPasswordToken = z.infer<typeof ResetPasswordTokenSchema>;
