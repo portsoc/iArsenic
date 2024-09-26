@@ -6,7 +6,22 @@ export default function verifyEmailTemplate(
     recipientName: string,
 ) {
     return `
-        Hi ${recipientName},
-        ${Config.baseUrl}/api/v1/user/verify-email/${token.id}
-    `
+        <html>
+            <body style="font-family: Arial, sans-serif; color: #333;">
+                <h2 style="color: #444;">Hi ${recipientName},</h2>
+                <p>
+                    Welcome to <strong>iArsenic</strong>! Please verify your email address by clicking the link below:
+                </p>
+                <p>
+                    <a href="${Config.baseUrl}/verify-email/${token.id}"
+                       style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                        Verify Email Address
+                    </a>
+                </p>
+                <p>
+                    If you did not request this, please ignore this email.
+                </p>
+            </body>
+        </html>
+    `;
 }

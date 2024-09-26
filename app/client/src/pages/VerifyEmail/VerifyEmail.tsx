@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useRoute } from "wouter";
 
 export default function Review() {
-    const [, params] = useRoute('/verifyEmail/:id');
+    const [, params] = useRoute('/verify-email/:id');
     const verifyEmailTokenId = params?.id;
 
     useEffect(() => {
@@ -21,7 +21,10 @@ export default function Review() {
             console.log(data);
         }
 
-        if (verifyEmailTokenId) verifyEmail(verifyEmailTokenId);
+        if (verifyEmailTokenId) {
+            verifyEmail(verifyEmailTokenId);
+            console.log('Verifying email...');
+        } else console.log('No token provided');
     }, [verifyEmailTokenId]);
 
     return (

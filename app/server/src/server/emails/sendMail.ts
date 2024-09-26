@@ -34,15 +34,14 @@ export default async function sendMail(
         from: config.emailFrom,
         to,
         subject,
-        text: body,
+        html: body,
         bcc: bcc ? bcc.join(',') : undefined,
     };
 
     try {
-        const info = await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
         console.log('Email Sent Successfully');
-        console.log(info);
-        return info;
+        return
     } catch (error) {
         console.error('Error sending mail:', error);
         throw error;

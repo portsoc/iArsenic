@@ -147,7 +147,17 @@ export const UserService = {
 
     async verifyEmail(tokenId: string): Promise<void> {
         const token = await TokenRepo.findById(tokenId)
-        const validatedToken = VerifyEmailTokenSchema.parse(token)
+        const validatedTokenRes = VerifyEmailTokenSchema.safeParse(token)
+
+        if (!validatedTokenRes.success) {
+            throw new KnownError({
+                message: 'Invalid token',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        const validatedToken = validatedTokenRes.data
 
         if (validatedToken.expiresAt < new Date()) {
             throw new KnownError({
