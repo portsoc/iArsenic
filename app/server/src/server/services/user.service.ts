@@ -1,6 +1,6 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { AccessToken, User, UserSchema, validateModel, Language, Units, VerifyEmailTokenSchema, AccessTokenSchema, ResetPasswordTokenSchema } from 'shared';
+import { AccessToken, User, UserSchema, validateModel, Language, Units, VerifyEmailTokenSchema, AccessTokenSchema, ResetPasswordTokenSchema } from 'iarsenic-types';
 import { UserRepo, TokenRepo } from '../repositories'
 import bcrypt from 'bcrypt'
 import sendMail from '../emails/sendMail';

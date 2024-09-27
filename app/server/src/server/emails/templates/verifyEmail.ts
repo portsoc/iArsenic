@@ -1,5 +1,5 @@
 import Config from '../../config'
-import { VerifyEmailToken } from 'shared'
+import { VerifyEmailToken } from 'iarsenic-types'
 
 export default function verifyEmailTemplate(
     token: VerifyEmailToken,

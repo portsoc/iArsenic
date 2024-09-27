@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
-import { Well } from 'shared';
+import { Well } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
 

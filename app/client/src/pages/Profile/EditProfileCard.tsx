@@ -1,5 +1,5 @@
 import { Typography, Card, Box, Button, TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import { User, Language, Units, UnitsSchema, LanguageSchema } from 'shared';
+import { User, Language, Units, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import LanguageSelector from '../../utils/LanguageSelector';

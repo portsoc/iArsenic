@@ -2,7 +2,7 @@ import { Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { RegionTranslations } from '../../types';
-import { Well } from 'shared';
+import { Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
 
 type props = {

@@ -1,7 +1,7 @@
 import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { Well, AccessToken } from 'shared';
+import { Well, AccessToken } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';

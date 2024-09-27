@@ -1,4 +1,4 @@
-import { ModelMessageCode } from 'shared';
+import { ModelMessageCode } from 'iarsenic-types';
 
 // // prediction data
 export type ModelData = {

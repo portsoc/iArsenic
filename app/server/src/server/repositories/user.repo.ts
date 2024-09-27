@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { User, UserSchema } from 'shared';
+import { User, UserSchema } from 'iarsenic-types';
 import db from '../db';
 
 export interface IUserRepo extends Repository<User> {

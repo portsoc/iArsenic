@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
-import { Well } from 'shared';
+import { Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 
 interface props {

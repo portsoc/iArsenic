@@ -1,4 +1,4 @@
-import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'shared'
+import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'iarsenic-types'
 import { KnownError } from '../errors'
 import { Context } from 'koa'
 import { UserService } from '../services'

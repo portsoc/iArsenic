@@ -1,6 +1,6 @@
 import { ModelData } from '../../types'
-import { ModelMessageCode } from 'shared'
-import { Well } from 'shared'
+import { ModelMessageCode } from 'iarsenic-types'
+import { Well } from 'iarsenic-types'
 import path from 'path'
 import fs from 'fs'
 

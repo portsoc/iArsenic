@@ -1,5 +1,5 @@
 import { navigate } from 'wouter/use-browser-location';
-import { AccessTokenSchema, AccessToken, UserSchema } from 'shared';
+import { AccessTokenSchema, AccessToken, UserSchema } from 'iarsenic-types';
 
 export default class AccessTokenRepo {
     static dataKey: string = 'accessToken';

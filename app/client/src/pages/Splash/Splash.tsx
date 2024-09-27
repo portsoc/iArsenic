@@ -5,7 +5,7 @@ import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessToken } from 'shared';
+import { AccessToken } from 'iarsenic-types';
 
 
 export default function SplashPage(): JSX.Element {

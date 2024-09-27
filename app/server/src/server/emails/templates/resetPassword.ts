@@ -1,5 +1,5 @@
 import Config from '../../config';
-import { ResetPasswordToken } from 'shared';
+import { ResetPasswordToken } from 'iarsenic-types';
 
 export default function resetPasswordTemplate(
     token: ResetPasswordToken,

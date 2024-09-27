@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { Well, RiskAssesment } from 'shared';
+import { Well, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";

@@ -1,7 +1,7 @@
 import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, AccessToken } from 'shared';
+import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, AccessToken } from 'iarsenic-types';
 import { useRoute } from "wouter";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 

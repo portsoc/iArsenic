@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessToken, User } from 'shared';
+import { AccessToken, User } from 'iarsenic-types';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);

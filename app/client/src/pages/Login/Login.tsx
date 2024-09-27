@@ -2,7 +2,7 @@ import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessTokenSchema } from 'shared';
+import { AccessTokenSchema } from 'iarsenic-types';
 
 export default function Login(): JSX.Element {
     const [email, setEmail] = useState<string>();

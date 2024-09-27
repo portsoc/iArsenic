@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { Well, WellSchema } from 'shared';
+import { Well, WellSchema } from 'iarsenic-types';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 

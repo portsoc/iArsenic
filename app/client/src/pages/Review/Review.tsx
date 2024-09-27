@@ -1,7 +1,7 @@
 import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { AccessToken, Well } from 'shared';
+import { AccessToken, Well } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { useRoute } from 'wouter';
 

@@ -4,7 +4,7 @@ import './map.css';
 import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
-import { Well, AccessToken } from 'shared';
+import { Well, AccessToken } from 'iarsenic-types';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';

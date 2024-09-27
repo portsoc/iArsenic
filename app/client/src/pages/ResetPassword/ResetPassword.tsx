@@ -20,7 +20,29 @@ export default function ResetPassword(): JSX.Element {
         setConfirmPassword(event.target.value);
     }
 
+    // TODO create single function for this
+    function validatePassword(password: string): string | null {
+        if (password.length < 10) {
+            return "Password must be at least 10 characters long.";
+        }
+        if (!/[A-Z]/.test(password)) {
+            return "Password must contain at least one uppercase letter.";
+        }
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            return "Password must contain at least one special character.";
+        }
+        return null;
+    }
+
     async function handlePasswordReset() {
+        if (!newPassword) return;
+
+        const passwordError = validatePassword(newPassword);
+        if (passwordError) {
+            setError(passwordError);
+            return;
+        }
+
         if (newPassword !== confirmPassword) {
             setError('Passwords do not match.');
             return;
