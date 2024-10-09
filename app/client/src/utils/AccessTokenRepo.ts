@@ -3,10 +3,12 @@ import { AccessTokenSchema, AccessToken, UserSchema } from 'iarsenic-types';
 
 export default class AccessTokenRepo {
     static dataKey: string = 'accessToken';
+    static token: AccessToken | null = null;
 
     static get = async (): Promise<AccessToken | null> => {
-        const accessToken = localStorage.getItem(this.dataKey) || null;
+        if (AccessTokenRepo.token) return AccessTokenRepo.token;
 
+        const accessToken = localStorage.getItem(this.dataKey) || null;
         if (!accessToken) return null;
 
         const parsedAccessToken = JSON.parse(accessToken);
