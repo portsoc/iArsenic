@@ -61,12 +61,12 @@ export default function Review() {
         navigate(`/${wellId}/region`);
         return;
     }
-    if (well.depth == null) {
-        navigate(`/${wellId}/depth`);
-        return;
-    }
     if (well.staining == null) {
         navigate(`/${wellId}/staining`);
+        return;
+    }
+    if (well.depth == null) {
+        navigate(`/${wellId}/depth`);
         return;
     }
     if (well.flooding == null) {
