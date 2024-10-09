@@ -1,8 +1,7 @@
 import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import config from '../../config';
-import { Well, AccessToken } from 'shared';
+import { Well, AccessToken } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -13,7 +12,7 @@ export default function Review() {
     const [well, setWell] = useState<Well>();
     const [token, setToken] = useState<AccessToken>();
 
-    function isWellComplete(well: Well): string[] {
+    function missingFields(well: Well): string[] {
         const missingFields = [];
         if (well.regionKey == null) missingFields.push('region');
         if (well.depth == null) missingFields.push('depth');
@@ -28,7 +27,7 @@ export default function Review() {
             const token = await AccessTokenRepo.get();
 
             if (token == null) {
-                navigate(`${config.basePath}/login`);
+                navigate(`/login`);
                 return;
             }
 
@@ -43,7 +42,7 @@ export default function Review() {
             if (!wellId || !token) return;
 
             const result = await fetch(
-                `${config.basePath}/api/v1/self/well/${wellId}`, {
+                `/api/v1/self/well/${wellId}`, {
                 headers: {
                     'authorization': `Bearer ${token.id}`,
                 }
@@ -78,12 +77,12 @@ export default function Review() {
                 variant='outlined'
                 startIcon={<ArrowBackIcon />}
                 sx={{ alignSelf: 'start' }}
-                onClick={() => navigate(`${config.basePath}/my-wells`)}
+                onClick={() => navigate(`/my-wells`)}
             >
                 Return to My Wells
             </Button>
 
-            {isWellComplete(well).length !== 0 && (
+            {missingFields(well).length !== 0 && (
                 <Card
                     variant='outlined'
                     sx={{
@@ -110,7 +109,7 @@ export default function Review() {
                     </Typography>
 
                     <List sx={{ width: '100%' }}>
-                        {isWellComplete(well).includes('region') && (
+                        {missingFields(well).includes('region') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Region
@@ -122,7 +121,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {isWellComplete(well).includes('depth') && (
+                        {missingFields(well).includes('depth') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Well Depth
@@ -134,7 +133,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {isWellComplete(well).includes('staining') && (
+                        {missingFields(well).includes('staining') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Staining Colour
@@ -146,7 +145,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {isWellComplete(well).includes('flooding') && (
+                        {missingFields(well).includes('flooding') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Flooding
@@ -164,15 +163,13 @@ export default function Review() {
                         color="primary"
                         onClick={() => {
                             if (!well?.regionKey) {
-                                navigate(`${config.basePath}/${wellId}/region`);
-                            } else if (!well?.depth) {
-                                navigate(`${config.basePath}/${wellId}/depth`);
+                                navigate(`/${wellId}/region`);
                             } else if (!well?.staining) {
-                                navigate(`${config.basePath}/${wellId}/staining`);
+                                navigate(`/${wellId}/staining`);
+                            } else if (!well?.depth) {
+                                navigate(`/${wellId}/depth`);
                             } else if (!well?.flooding) {
-                                navigate(`${config.basePath}/${wellId}/flooding`);
-                            } else {
-                                console.log('Well is complete');
+                                navigate(`/${wellId}/flooding`);
                             }
                         }}
                     >

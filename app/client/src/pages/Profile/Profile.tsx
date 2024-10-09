@@ -2,7 +2,6 @@ import { CircularProgress, Stack } from "@mui/material";
 import { User } from "shared";
 import { navigate } from "wouter/use-browser-location";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
-import Config from "../../config";
 import { useEffect, useState } from "react";
 import ProfileCard from "./ProfileCard";
 import EditProfileCard from "./EditProfileCard";
@@ -17,7 +16,7 @@ export default function ProfilePage(): JSX.Element {
             const token = await AccessTokenRepo.get();
 
             if (!token || !token.user) {
-                navigate(`${Config.basePath}/login`);
+                navigate(`/login`);
                 return;
             }
 

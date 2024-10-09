@@ -1,13 +1,11 @@
 import { AppBar, Stack, Typography, Box, Button, IconButton } from '@mui/material';
 import { navigate } from 'wouter/use-browser-location';
-import config from '../../config';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessToken, User } from 'shared';
-import Config from '../../config';
+import { AccessToken, User } from 'iarsenic-types';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
@@ -29,7 +27,7 @@ export default function HeaderBar(): JSX.Element {
         async function fetchUser() {
             if (!token) return;
 
-            const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
+            const res = await fetch(`/api/v1/self/user`, {
                 headers: {
                     'authorization': `Bearer ${token.id}`,
                 }
@@ -79,7 +77,7 @@ export default function HeaderBar(): JSX.Element {
                     <Typography
                         sx={{ cursor: 'pointer' }}
                         variant='h6'
-                        onClick={() => navigate(`${config.basePath}/`)}
+                        onClick={() => navigate(`/`)}
                     >
                         iArsenic
                     </Typography>
@@ -92,7 +90,7 @@ export default function HeaderBar(): JSX.Element {
                             sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
                             onClick={async () => {
                                 await AccessTokenRepo.delete();
-                                navigate(`${config.basePath}`);
+                                navigate(`/`);
                             }}
                         >
                             Logout
@@ -103,7 +101,7 @@ export default function HeaderBar(): JSX.Element {
                         <Button
                             variant='outlined'
                             sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
-                            onClick={() => navigate(`${config.basePath}/login`)}
+                            onClick={() => navigate('/login')}
                         >
                             Login
                         </Button>

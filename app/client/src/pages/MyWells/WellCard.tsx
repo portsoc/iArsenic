@@ -1,7 +1,6 @@
 import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
-import { Well } from 'shared';
+import { Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
-import Config from '../../config';
 
 interface props {
     well: Well;
@@ -12,7 +11,7 @@ export default function WellCard({ well }: props): JSX.Element {
         <Card
             variant="outlined"
             sx={{ marginBottom: '1.5rem', padding: '1rem', boxShadow: 2, cursor: 'pointer' }}
-            onClick={() => navigate(`${Config.basePath}/well/${well.id}`)}
+            onClick={() => navigate(`/well/${well.id}`)}
         >
             <CardContent>
                 {/* Well ID */}

@@ -1,9 +1,8 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import Config from '../../config';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessTokenSchema } from 'shared';
+import { AccessTokenSchema } from 'iarsenic-types';
 
 export default function Login(): JSX.Element {
     const [email, setEmail] = useState<string>();
@@ -21,7 +20,7 @@ export default function Login(): JSX.Element {
     }
 
     async function handleSubmit() {
-        const result = await fetch(`${Config.basePath}/api/v1/user/login`, {
+        const result = await fetch(`/api/v1/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -62,7 +61,7 @@ export default function Login(): JSX.Element {
 
         AccessTokenRepo.set(validatedTokenRes.data);
 
-        navigate(`${Config.basePath}/my-wells`);
+        navigate(`/my-wells`);
         window.location.reload();
     }
 
@@ -107,7 +106,7 @@ export default function Login(): JSX.Element {
                 )}
 
                 <Button
-                    onClick={() => navigate(`${Config.basePath}/forgot-password`)}
+                    onClick={() => navigate(`/forgot-password`)}
                 >
                     Forgot Password?
                 </Button>
@@ -140,7 +139,7 @@ export default function Login(): JSX.Element {
                 <Button
                     sx={{ width: '90%', height: '4rem' }}
                     variant='outlined'
-                    onClick={() => navigate(`${Config.basePath}/sign-up`)}
+                    onClick={() => navigate(`/sign-up`)}
                 >
                     Sign Up
                 </Button>

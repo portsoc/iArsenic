@@ -1,8 +1,7 @@
 import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import config from '../../config';
-import { AccessToken, Well } from 'shared';
+import { AccessToken, Well } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { useRoute } from 'wouter';
 
@@ -34,7 +33,7 @@ export default function Review() {
             }
 
             const result = await fetch(
-                `${config.basePath}/api/v1/self/well/${wellId}`, {
+                `/api/v1/self/well/${wellId}`, {
                     headers,
                 }
             );
@@ -59,19 +58,19 @@ export default function Review() {
     }
 
     if (well.regionKey == null) {
-        navigate(`${config.basePath}/${wellId}/region`);
-        return;
-    }
-    if (well.depth == null) {
-        navigate(`${config.basePath}/${wellId}/depth`);
+        navigate(`/${wellId}/region`);
         return;
     }
     if (well.staining == null) {
-        navigate(`${config.basePath}/${wellId}/staining`);
+        navigate(`/${wellId}/staining`);
+        return;
+    }
+    if (well.depth == null) {
+        navigate(`/${wellId}/depth`);
         return;
     }
     if (well.flooding == null) {
-        navigate(`${config.basePath}/${wellId}/flooding`);
+        navigate(`/${wellId}/flooding`);
         return;
     }
 
@@ -147,10 +146,10 @@ export default function Review() {
 
                 onClick={() => {
                     if (token) {
-                        navigate(`${config.basePath}/well/${wellId}`);
+                        navigate(`/well/${wellId}`);
                         return;
                     }
-                    navigate(`${config.basePath}/${wellId}/result`);
+                    navigate(`/${wellId}/result`);
                 }}
             >
                 Results

@@ -4,8 +4,7 @@ import './map.css';
 import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
-import config from '../../config';
-import { Well, AccessToken } from 'shared';
+import { Well, AccessToken } from 'iarsenic-types';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
@@ -20,7 +19,7 @@ export default function Map() {
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
 
     async function getInteractiveMap() {
-        const res = await fetch(`${config.basePath}/interactive-map.geojson`);
+        const res = await fetch(`/interactive-map.geojson`);
         const mapData = await res.json();
         setInteractiveMap(mapData);
     }
@@ -28,7 +27,7 @@ export default function Map() {
     async function getPredictionPinData() {
         if (!token) return;
 
-        const res = await fetch(`${config.basePath}/api/v1/well/`, {
+        const res = await fetch(`/api/v1/well/`, {
             headers: {
                 'authorization': `Bearer ${token.id}`
             }

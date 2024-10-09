@@ -1,10 +1,9 @@
 import { Box, Button, Typography } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
-import { Well } from 'shared';
+import { Well } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
-import Config from '../../config';
 
 export default function MyWells(): JSX.Element {
     const [wells, setWells] = useState<Well[]>([]);
@@ -13,11 +12,11 @@ export default function MyWells(): JSX.Element {
         const token = await AccessTokenRepo.get();
 
         if (!token) {
-            navigate(`${Config.basePath}/login`);
+            navigate(`/login`);
             throw new Error('token not valid');
         }
 
-        const result = await fetch(`${Config.basePath}/api/v1/self/wells`, {
+        const result = await fetch(`/api/v1/self/wells`, {
             headers: {
                 authorization: `Bearer ${token.id}`,
             }
@@ -47,11 +46,11 @@ export default function MyWells(): JSX.Element {
         const token = await AccessTokenRepo.get();
 
         if (!token) {
-            navigate(`${Config.basePath}/login`);
+            navigate(`/login`);
             throw new Error('token not valid');
         }
 
-        const res = await fetch(`${Config.basePath}/api/v1/self/well`, {
+        const res = await fetch(`/api/v1/self/well`, {
             method: 'POST',
             headers: {
                 authorization: `Bearer ${token.id}`,
@@ -79,7 +78,7 @@ export default function MyWells(): JSX.Element {
             <Button
                 onClick={async () => {
                     const newWell = await addWell();
-                    navigate(`${Config.basePath}/${newWell.id}/region`);
+                    navigate(`/${newWell.id}/region`);
                 }}
                 variant='contained'
             >

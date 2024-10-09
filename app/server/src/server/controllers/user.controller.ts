@@ -1,4 +1,4 @@
-import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'shared'
+import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'iarsenic-types'
 import { KnownError } from '../errors'
 import { Context } from 'koa'
 import { UserService } from '../services'
@@ -108,5 +108,64 @@ export const UserController = {
     async deleteUserByToken(ctx: Context): Promise<void> {
         ctx.status = 501
         ctx.body = { error: 'Not Implemented' }
+    },
+
+    async verifyEmail(ctx: Context): Promise<void> {
+        const tokenId = ctx.params.token;
+        await UserService.verifyEmail(tokenId);
+
+        ctx.status = 200;
+        ctx.body = { message: 'Email verified successfully' };
+    },
+
+    async forgotPassword(ctx: Context): Promise<void> {
+        const email = (ctx.request.body as { email: string }).email;
+
+        if (!email) {
+            throw new KnownError({
+                message: 'Email is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        await UserService.forgotPassword(email);
+
+        ctx.status = 200;
+        ctx.body = {
+            message: `
+                Password reset email sent if account with email exists
+            `,
+        };
+    },
+
+    async resetPassword(ctx: Context): Promise<void> {
+        const resetTokenId: string = ctx.params.token;
+
+        if (!resetTokenId) {
+            throw new KnownError({
+                message: 'Reset token is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        const newPassword = (ctx.request.body as { newPassword: string }).newPassword;
+
+        if (!newPassword) {
+            throw new KnownError({
+                message: 'New password is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        // Validate the reset token and reset the password
+        await UserService.resetPassword(resetTokenId, newPassword);
+
+        ctx.status = 200;
+        ctx.body = {
+            message: 'Password has been successfully reset.',
+        };
     }
 }

@@ -1,6 +1,6 @@
 import { Typography, Card, Box, Button } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
-import { User } from 'shared';
+import { User } from 'iarsenic-types';
 
 interface Props {
     user: User;

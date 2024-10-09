@@ -1,9 +1,8 @@
 import { Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
-import config from '../../config';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { RegionTranslations } from '../../types';
-import { Well } from 'shared';
+import { Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
 
 type props = {
@@ -14,7 +13,7 @@ type props = {
 export default function Markers({ wells, regionTranslations }: props): JSX.Element {
     function createCustomIcon(color: string) {
         return L.icon({
-            iconUrl: `${config.basePath}/map-markers/${color}.png`,
+            iconUrl: `/map-markers/${color}.png`,
             shadowUrl: markerShadow,
             iconSize: [25, 41],
             shadowSize: [41, 41],

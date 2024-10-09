@@ -1,5 +1,5 @@
 import uuid4 from 'uuid4'
-import { Well, WellSchema, Prediction } from 'shared'
+import { Well, WellSchema, Prediction } from 'iarsenic-types'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
 import produceEstimate from './well/produceEstimate'

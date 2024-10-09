@@ -8,7 +8,7 @@ const logError = ({
     caughtError: unknown
     body: Record<string, boolean | number | string>
 }) => {
-    console.error('> errorHandler', { ...body, caughtError })
+    console.trace('> errorHandler', { ...body, caughtError })
 }
 
 export default async function errorHandler(ctx: Context, next: () => Promise<void>) {

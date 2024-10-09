@@ -1,6 +1,5 @@
 import { navigate } from 'wouter/use-browser-location';
-import { AccessTokenSchema, AccessToken, UserSchema } from 'shared';
-import Config from '../config';
+import { AccessTokenSchema, AccessToken, UserSchema } from 'iarsenic-types';
 
 export default class AccessTokenRepo {
     static dataKey: string = 'accessToken';
@@ -26,11 +25,11 @@ export default class AccessTokenRepo {
 
         if (token.expiresAt < new Date()) {
             localStorage.removeItem(this.dataKey);
-            navigate(`${Config.basePath}/login`);
+            navigate(`/login`);
             return null;
         }
 
-        const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
+        const res = await fetch(`/api/v1/self/user`, {
             headers: {
                 authorization: `Bearer ${token.id}`,
             }

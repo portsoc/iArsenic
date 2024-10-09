@@ -1,5 +1,4 @@
 import { Typography, Button, CircularProgress, Stack } from "@mui/material";
-import Config from "../../config";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
@@ -42,7 +41,7 @@ export default function Region(): JSX.Element {
     const [geolocation, setGeolocation] = useState<[number, number]>();
 
     async function fetchDropdownData() {
-        const response = await fetch(`${Config.basePath}/model5/dropdown-data.json`);
+        const response = await fetch(`/model5/dropdown-data.json`);
         const data = await response.json();
         setDropdownData(data);
     }
@@ -170,7 +169,7 @@ export default function Region(): JSX.Element {
                         body.geolocation = geolocation;
                     }
 
-                    const res = await fetch(`${Config.basePath}/api/v1/self/well/${wellId}`, {
+                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
@@ -186,7 +185,7 @@ export default function Region(): JSX.Element {
                         return;
                     }
 
-                    navigate(`${Config.basePath}/${wellId}/staining`);
+                    navigate(`/${wellId}/staining`);
                 }}
             >
                 Next Step

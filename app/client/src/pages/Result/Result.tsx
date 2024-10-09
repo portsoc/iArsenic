@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import config from "../../config";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { Well, RiskAssesment } from 'shared';
+import { Well, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "./englishSpeedo";
 import BengaliSpeedo from "./bengaliSpeedo";
@@ -60,7 +59,7 @@ export default function Result(): JSX.Element {
                     headers['authorization'] = `Bearer ${token.id}`;
                 }
 
-                const result = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                const result = await fetch(`/api/v1/self/well/${wellId}`, {
                     headers,
                 });
 
@@ -72,7 +71,7 @@ export default function Result(): JSX.Element {
                 let fetchedWell = data.well;
 
                 if (fetchedWell.prediction == null) {
-                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}/predict`, {
+                    const res = await fetch(`/api/v1/self/well/${wellId}/predict`, {
                         method: 'POST',
                         headers,
                     });
@@ -166,7 +165,7 @@ export default function Result(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
                 variant='contained'
-                onClick={() => navigate(`${config.basePath}/`)}
+                onClick={() => navigate(`/`)}
             >
                 <Typography className='english'>
                     Return To Start

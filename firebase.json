@@ -10,7 +10,7 @@
         "firebase-debug.*.log"
       ],
       "predeploy": [
-        "npm --prefix ../app/server run build:firebase"
+        "npm run build-app"
       ]
     }
   ],
@@ -33,7 +33,8 @@
       "port": 5001
     },
     "firestore": {
-      "port": 8080
+      "port": 8080,
+      "storage": "/home/kane/.firestore"
     },
     "hosting": {
       "port": 5000

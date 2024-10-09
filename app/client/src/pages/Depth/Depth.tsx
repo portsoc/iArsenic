@@ -1,5 +1,4 @@
 import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/material";
-import config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { AccessToken } from "shared";
@@ -129,7 +128,7 @@ export default function Depth(): JSX.Element {
 
                     const body = { depth: depthMeters };
 
-                    const res = await fetch(`${config.basePath}/api/v1/self/well/${wellId}`, {
+                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json',
@@ -143,7 +142,7 @@ export default function Depth(): JSX.Element {
                         return;
                     }
 
-                    navigate(`${config.basePath}/${wellId}/flooding`);
+                    navigate(`/${wellId}/flooding`);
                 }}
             >
                 Next Step

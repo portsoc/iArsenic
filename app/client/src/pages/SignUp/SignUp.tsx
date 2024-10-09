@@ -1,6 +1,5 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import Config from '../../config';
 import { IKnownError, RegisterRequestSchema } from 'shared';
 import LanguageSelector from '../../utils/LanguageSelector';
 
@@ -70,7 +69,7 @@ export default function SignUp(): JSX.Element {
             units,
         });
 
-        const result = await fetch(`${Config.basePath}/api/v1/user/register`, {
+        const result = await fetch(`/api/v1/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

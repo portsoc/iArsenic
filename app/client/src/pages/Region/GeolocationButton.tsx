@@ -4,7 +4,6 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from "../../types";
 import { RegionKey } from "shared";
-import config from "../../config";
 
 type props = {
     dropdownData: DropdownDivision[],
@@ -54,7 +53,7 @@ export default function GeolocationButton({
 
     async function setRegionFromGeolocation(geolocation: [number, number], dropdownData: DropdownDivision[]) {
         const response = await fetch(
-            `${config.basePath}/api/gps-region?lat=${geolocation[0]}&lon=${geolocation[1]}`
+            `/api/gps-region?lat=${geolocation[0]}&lon=${geolocation[1]}`
         );
 
         if (response.status === 404) {

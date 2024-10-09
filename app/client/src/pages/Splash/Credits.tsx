@@ -1,5 +1,4 @@
 import { Typography, Box, Stack } from '@mui/material';
-import config from '../../config';
 
 const sectionStyle = {
     display: 'flex',
@@ -56,7 +55,7 @@ function OrgCreditCard({ name, imageSrc }: OrgCreditCardProps): JSX.Element {
                     }}
                 >
                     <img
-                        src={`${config.basePath}${imageSrc}`}
+                        src={imageSrc}
                         alt={name}
                         style={{ width: 'auto', maxWidth: '100%', height: '100%' }}
                     />
@@ -88,7 +87,7 @@ function CreditCard({ imageSrc, name, role }: CreditCardProps): JSX.Element {
             <Box width='236px' height='236px'>
                 {imageSrc ? (
                     <img
-                        src={`${config.basePath}${imageSrc}`}
+                        src={imageSrc}
                         alt={name}
                         style={{
                             width: 'auto',

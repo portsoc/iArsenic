@@ -1,11 +1,15 @@
 import { Context } from 'koa';
-import { AccessTokenSchema, Well, WellSchema, validateModel } from 'shared'
+import { AccessTokenSchema, GuestTokenSchema, Well, WellSchema, validateModel } from 'iarsenic-types'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
+import { z } from 'zod';
 
 export const WellController = {
     async createWellByToken(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
+        const token = z.union([
+            AccessTokenSchema,
+            GuestTokenSchema,
+        ]).parse(ctx.state.token);
         const userId = token.userId;
 
         const well: Well = await WellService.createWell(userId);
@@ -34,7 +38,11 @@ export const WellController = {
     },
 
     async getWellByIdByToken(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
+        const token = z.union([
+            AccessTokenSchema,
+            GuestTokenSchema,
+        ]).parse(ctx.state.token);
+
         const userId = token.userId;
         const wellId = ctx.params.id;
 
@@ -53,7 +61,11 @@ export const WellController = {
     },
 
     async updateWellByIdByToken(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
+        const token = z.union([
+            AccessTokenSchema,
+            GuestTokenSchema,
+        ]).parse(ctx.state.token);
+
         const userId = token.userId;
         const wellId = ctx.params.id;
 
@@ -100,7 +112,10 @@ export const WellController = {
     },
 
     async predictWellByIdByToken(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
+        const token = z.union([
+            AccessTokenSchema,
+            GuestTokenSchema,
+        ]).parse(ctx.state.token);
         const userId = token.userId;
         const wellId = ctx.params.id;
 

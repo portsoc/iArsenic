@@ -1,5 +1,4 @@
 import { Button, Card, List, ListItem, Typography } from "@mui/material";
-import Config from "../../config";
 import { navigate } from "wouter/use-browser-location";
 
 export default function Landing(): JSX.Element {
@@ -74,7 +73,7 @@ export default function Landing(): JSX.Element {
                 <Button
                     sx={{ width: '90%', height: '4rem' }}
                     variant='contained'
-                    onClick={() => navigate(`${Config.basePath}/login`)}
+                    onClick={() => navigate(`/login`)}
                 >
 
                     <Typography className='english'>Login or Sign Up</Typography>
@@ -154,7 +153,7 @@ export default function Landing(): JSX.Element {
                 <Button
                     sx={{ width: '90%', height: '4rem' }}
                     variant='contained'
-                    onClick={() => navigate(`${Config.basePath}/briefing`)}
+                    onClick={() => navigate(`/briefing`)}
                 >
                     <Typography className='english'>Start Your Assesment</Typography>
                     <Typography className='bengali'>আপনার মূল্যায়ন শুরু করুন</Typography>

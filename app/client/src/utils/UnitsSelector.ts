@@ -1,5 +1,4 @@
 import AccessTokenRepo from "./AccessTokenRepo";
-import Config from "../config";
 
 export default class UnitsSelector {
     static dataKey: string = 'units';
@@ -26,7 +25,7 @@ export default class UnitsSelector {
         const token = await AccessTokenRepo.get();
 
         if (token != null && token?.user != null) {
-            const res = await fetch(`${Config.basePath}/api/v1/self/user`, {
+            const res = await fetch(`/api/v1/self/user`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

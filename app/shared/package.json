@@ -1,7 +1,7 @@
 {
-  "name": "shared",
+  "name": "iarsenic-types",
   "version": "1.0.0",
-  "description": "",
+  "description": "types used in iarsenic project",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
