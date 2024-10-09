@@ -140,9 +140,9 @@ export const UserController = {
     },
 
     async resetPassword(ctx: Context): Promise<void> {
-        const resetToken: string = ctx.params.token;
+        const resetTokenId: string = ctx.params.token;
 
-        if (!resetToken) {
+        if (!resetTokenId) {
             throw new KnownError({
                 message: 'Reset token is required',
                 code: 400,
@@ -161,7 +161,7 @@ export const UserController = {
         }
 
         // Validate the reset token and reset the password
-        await UserService.resetPassword(resetToken, newPassword);
+        await UserService.resetPassword(resetTokenId, newPassword);
 
         ctx.status = 200;
         ctx.body = {
