@@ -27,8 +27,14 @@ export default function ForgotPassword(): JSX.Element {
             if (response.ok) {
                 setSuccess(true);
             } else {
-                const errorMessage = await response.text();
-                setError(errorMessage || 'Failed to send reset link.');
+                const resBody = await response.json();
+                console.error(resBody);
+
+                if (resBody.knownError) {
+                    setError(resBody.message);
+                } else {
+                    setError('Failed to send reset link.');
+                }
             }
         } catch (error) {
             setError('An error occurred. Please try again later.');
