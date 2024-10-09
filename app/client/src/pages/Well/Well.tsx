@@ -12,7 +12,7 @@ export default function Review() {
     const [well, setWell] = useState<Well>();
     const [token, setToken] = useState<AccessToken>();
 
-    function isWellComplete(well: Well): string[] {
+    function missingFields(well: Well): string[] {
         const missingFields = [];
         if (well.regionKey == null) missingFields.push('region');
         if (well.depth == null) missingFields.push('depth');
@@ -82,7 +82,7 @@ export default function Review() {
                 Return to My Wells
             </Button>
 
-            {isWellComplete(well).length !== 0 && (
+            {missingFields(well).length !== 0 && (
                 <Card
                     variant='outlined'
                     sx={{
@@ -109,7 +109,7 @@ export default function Review() {
                     </Typography>
 
                     <List sx={{ width: '100%' }}>
-                        {isWellComplete(well).includes('region') && (
+                        {missingFields(well).includes('region') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Region
@@ -121,7 +121,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {isWellComplete(well).includes('depth') && (
+                        {missingFields(well).includes('depth') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Well Depth
@@ -133,7 +133,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {isWellComplete(well).includes('staining') && (
+                        {missingFields(well).includes('staining') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Staining Colour
@@ -145,7 +145,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {isWellComplete(well).includes('flooding') && (
+                        {missingFields(well).includes('flooding') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Flooding
@@ -164,14 +164,12 @@ export default function Review() {
                         onClick={() => {
                             if (!well?.regionKey) {
                                 navigate(`/${wellId}/region`);
-                            } else if (!well?.depth) {
-                                navigate(`/${wellId}/depth`);
                             } else if (!well?.staining) {
                                 navigate(`/${wellId}/staining`);
+                            } else if (!well?.depth) {
+                                navigate(`/${wellId}/depth`);
                             } else if (!well?.flooding) {
                                 navigate(`/${wellId}/flooding`);
-                            } else {
-                                console.log('Well is complete');
                             }
                         }}
                     >
