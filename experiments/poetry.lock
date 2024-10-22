@@ -1439,6 +1439,22 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "topojson"
+version = "1.9"
+description = "topojson - a powerful library to encode geographic data as topology in Python!🌍"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+numpy = "*"
+packaging = "*"
+shapely = "*"
+
+[package.extras]
+dev = ["geopandas", "geojson", "simplification", "pyshp", "altair", "ipywidgets"]
+
+[[package]]
 name = "tornado"
 version = "6.4.1"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
@@ -1559,7 +1575,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "4d4544a32d243b534945e77653a712bb2cd676ccab74a01422720d26385cd138"
+content-hash = "1247f4f06091ec6b234d5020d54d2f6ce90636fecc2b1b43ab6d5e4a461f5bca"
 
 [metadata.files]
 anyio = []
@@ -1666,6 +1682,7 @@ stack-data = []
 terminado = []
 tinycss2 = []
 tomli = []
+topojson = []
 tornado = []
 traitlets = []
 types-python-dateutil = []
