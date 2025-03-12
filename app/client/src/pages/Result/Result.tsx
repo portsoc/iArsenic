@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
 import { Well, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
-import EnglishSpeedo from "./englishSpeedo";
-import BengaliSpeedo from "./bengaliSpeedo";
-import estimateTexts from "./estimateTexts";
+import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
+import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
+import estimateTexts from "../../components/Speedo/estimateTexts";
 import { useRoute } from "wouter";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 

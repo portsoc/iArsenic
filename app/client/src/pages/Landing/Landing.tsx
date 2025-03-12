@@ -39,8 +39,8 @@ export default function Landing(): JSX.Element {
                 <Typography variant='body1' className='english'>
                     Powered by cutting-edge research to bring
                     safety to your doorstep.
-                    Get started today to ensure the water
-                    you and your family drink is safe.
+                    Get started today to help assess 
+                    the safety of your drinking water.
                 </Typography>
 
                 <Typography variant='body1' className='bengali'>
@@ -146,6 +146,18 @@ export default function Landing(): JSX.Element {
                         <Typography variant='body1' className='bengali'>
                             • কোনও ব্যক্তিগত তথ্য সংগ্রহ করা হয় না - সমস্ত তথ্য
                             বেনামি এবং নিরাপদ।
+                        </Typography>
+                    </ListItem>
+
+                    <ListItem>
+                        <Typography variant='body1' className='english'>
+                            Using this app is entirely voluntary. 
+                            You decide if and when to start your assessment.
+                        </Typography>
+
+                        <Typography variant='body1' className='bengali'>
+                            এই অ্যাপটি ব্যবহার আপনার ইচ্ছানির্ভর । আপনি চাইলে 
+                            আর্সেনিকের মাত্রা মূল্যায়ন শুরু করতে পারেন।
                         </Typography>
                     </ListItem>
                 </List>

@@ -22,6 +22,7 @@ import {
     StainingGuide,
     VerifyEmail,
     Well,
+    UnderstandingRisk,
 } from './pages';
 import LanguageSelector from './utils/LanguageSelector';
 
@@ -87,6 +88,7 @@ function App() {
                             <Route path='/staining-guide' component={StainingGuide} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
                             <Route path='/well/:id' component={Well} />
+                            <Route path='/understanding-risk' component={UnderstandingRisk} />
                         </Stack>
                     </Route>
                 </Switch>
