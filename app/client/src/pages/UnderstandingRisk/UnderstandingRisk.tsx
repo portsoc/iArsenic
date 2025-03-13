@@ -51,7 +51,7 @@ export default function UnderstandingRisk(): JSX.Element {
 
     return (
         <>
-            <Typography className='english' variant='h4'>
+            <Typography className='english' variant='h4' textAlign='center'>
                 Understanding Your Arsenic Risk Level 
             </Typography>
 
@@ -74,11 +74,11 @@ export default function UnderstandingRisk(): JSX.Element {
                 </Typography>
 
                 <Typography className='english' variant='body1'>
-                    In the context of our iArsenic app, "probability" 
+                    In the context of our iArsenic app, "risk" 
                     refers to our best estimate of the likelihood that 
                     your tubewell contains arsenic at levels that could 
                     be harmful. We use data about your well’s location, 
-                    depth, and visirble characteristics to estimate this 
+                    depth, and visible characteristics to estimate this 
                     risk. Remember, these are educated guesses based on 
                     available data, and not certainties. Confirming arsenic 
                     levels through laboratory testing is always recommended, 
@@ -90,9 +90,32 @@ export default function UnderstandingRisk(): JSX.Element {
                 </Typography>
             </Card>
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
-                <Stack sx={{ alignItems: 'center' }}>
-                    <Box className='english'>
+            <Card 
+                variant='outlined' 
+                sx={{ 
+                    margin: '0 1rem 1rem 1rem', 
+                    padding: '1rem',
+                }}>
+                <Typography className='english' mb={2} textAlign='center' variant='h5'>
+                    Output Demonstration
+                </Typography>
+
+                <Typography className='bengali' mb={2} textAlign='center' variant='h5'>
+                    PLACEHOLDER BENGALI
+                </Typography>
+
+                <Stack sx={{ 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                }}>
+                    <Box 
+                        className='english'
+                        sx={{
+                            height: '220px',
+                            marginTop: '32px',
+                            alignItems: 'center',
+                        }}
+                    >
                         <EnglishSpeedo value={speedoValue} />
                     </Box>
 
@@ -101,7 +124,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     </Box>
                 </Stack>
 
-                <Stack sx={{ alignItems: 'center' }}>
+                <Stack sx={{ alignItems: 'center', height: '15.625em' }}>
                     <Grid item xs={12}>
                         <Box textAlign='center'>
                             <Paper elevation={3} sx={{ padding: '20px' }}>
@@ -125,23 +148,20 @@ export default function UnderstandingRisk(): JSX.Element {
                     </Grid>
                 </Stack>
                 
-                <FormControl component="fieldset" sx={{ marginTop: '1rem' }}>
-                    <FormLabel component="legend">Select Risk Value</FormLabel>
+                <FormControl component="fieldset" sx={{ marginTop: '1rem', width: '100%' }}>
+                    <FormLabel component="legend" sx={{ width: '100%' }}>Select Risk Value</FormLabel>
                     <RadioGroup 
                         row 
-                        value={speedoValue} 
+                        value={speedoValue + 0.5} 
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             const value = (Number(event.target.value) - 0.5) as RiskAssesment
 
                             setSpeedoValue(value)
                             setOutput(value)
                         }}
+                        sx={{ justifyContent: 'center', width: '100%' }}
                     >
-                        <Stack sx={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignContent: 'center',
-                        }}>
+                        <Stack direction='row'>
                             {[1, 2, 3, 4, 5].map((num) => (
                                 <FormControlLabel 
                                     key={num} 
@@ -229,6 +249,20 @@ export default function UnderstandingRisk(): JSX.Element {
                     </ListItem>
                 </List>
             </Card>
+
+            <Button
+                sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
+                variant='contained'
+                onClick={() => window.history.back()}
+            >
+                <Typography className='english'>
+                    Return
+                </Typography>
+
+                <Typography className='bengali'>
+                    Bengali Placeholder
+                </Typography>
+            </Button>
         </>
     );
 }

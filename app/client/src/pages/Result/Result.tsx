@@ -157,6 +157,20 @@ export default function Result(): JSX.Element {
                             <Typography className='bengali' variant="body1" sx={{ marginBottom: '20px' }}>
                                 {warningTexts.bengali.body}
                             </Typography>
+
+                            <Button
+                                sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
+                                variant='outlined'
+                                onClick={() => navigate(`/understanding-risk`)}
+                            >
+                                <Typography className='english'>
+                                    What does this mean? 
+                                </Typography>
+
+                                <Typography className='bengali'>
+                                    Bengali Placeholder
+                                </Typography>
+                            </Button>
                         </Paper>
                     </Box>
                 </Grid>
