@@ -1,11 +1,7 @@
 import json
 import pandas as pd
 
-def load_training_data_df(file_path):
-    file = open(file_path, 'r')
-    raw = file.read()
-    data = json.loads(raw)
-
+def load_training_data_df(data):
     csv_arr = []
 
     for div in data:
