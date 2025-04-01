@@ -1,7 +1,7 @@
 import { ModelMessageCode } from 'iarsenic-types';
 
-// // prediction data
-export type ModelData = {
+// prediction data
+export type Model5Data = {
     [key: string]: {
         districts: {
             [key: string]: {
@@ -46,5 +46,41 @@ export type ModelData = {
                 }
             }
         }
+    }
+}
+
+export type Model6Data = {
+    s15?: {
+        m: number,
+        m2: number,
+        m7: number,
+        m9: number,
+        l: number,
+        u: number,
+    },
+    s45?: {
+        m: number,
+        l: number,
+        u: number,
+    },
+    s65?: {
+        m: number,
+        l: number,
+        u: number,
+    },
+    s90?: {
+        m: number,
+        l: number,
+        u: number,
+    },
+    s150?: {
+        m: number,
+        l: number,
+        u: number,
+    },
+    sD?: {
+        m: number,
+        l: number,
+        u: number,
     }
 }

@@ -1,35 +1,47 @@
 import geopandas as gpd
 import json
 
+def generate_dropdown_data(mouzas):
+    divisions = []
 
-def generate_dropdown_data(mou_topo):
-    region_tree = {}
-
-    for div in mouzas['div'].unique():
+    for div in sorted(mouzas['div'].unique()):
         div_mouzas = mouzas[mouzas['div'] == div]
-        div_tree = { 'districts': {} }
+        districts = []
 
-        for dis in div_mouzas['dis'].unique():
+        for dis in sorted(div_mouzas['dis'].unique()):
             dis_mouzas = div_mouzas[div_mouzas['dis'] == dis]
-            dis_tree = { 'upazilas': {} }
+            upazilas = []
 
-            for upa in dis_mouzas['upa'].unique():
+            for upa in sorted(dis_mouzas['upa'].unique()):
                 upa_mouzas = dis_mouzas[dis_mouzas['upa'] == upa]
-                upa_tree = { 'unions': {} }
+                unions = []
 
-                for uni in upa_mouzas['uni'].unique():
+                for uni in sorted(upa_mouzas['uni'].unique()):
                     uni_mouzas = upa_mouzas[upa_mouzas['uni'] == uni]
-                    uni_tree = { 'mouzas': {} }
+                    mouzas_list = sorted(uni_mouzas['mou'].unique().tolist())
 
-                    uni_tree['mouzas'] = uni_mouzas['mou'].unique().tolist()
-                    upa_tree['unions'][uni] = uni_tree
-                dis_tree['upazilas'][upa] = upa_tree
-            div_tree['districts'][dis] = dis_tree
-        region_tree[div] = div_tree
+                    unions.append({
+                        "union": uni,
+                        "mouzas": mouzas_list
+                    })
 
-    return region_tree
+                upazilas.append({
+                    "upazila": upa,
+                    "unions": unions
+                })
 
+            districts.append({
+                "district": dis,
+                "upazilas": upazilas
+            })
+
+        divisions.append({
+            "division": div,
+            "districts": districts
+        })
+
+    # Optional: save to file
     with open('output/dropdown-data.json', 'w') as f:
-        json.dump(region_tree, f)
+        json.dump(divisions, f, indent=2)
 
-    return dropdown_data
+    return divisions

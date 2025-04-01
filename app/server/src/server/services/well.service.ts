@@ -100,7 +100,7 @@ export const WellService = {
             })
         }
 
-        const modelEstimate = produceEstimate(well);
+        const modelEstimate = await produceEstimate(well);
         const riskAssesment = (() => {
             switch (modelEstimate) {
                 case 0: // unable to make an estimate
@@ -126,7 +126,7 @@ export const WellService = {
         const prediction: Prediction = {
             modelOutput: modelEstimate,
             riskAssesment: riskAssesment,
-            model: 'model5',
+            model: 'model6',
         }
 
         await WellService.updateWell(wellId, userId, { prediction });

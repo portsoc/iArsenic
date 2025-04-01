@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 .env
-static/assets
+static
