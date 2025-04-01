@@ -1,0 +1,21 @@
+meta {
+  name: update well
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{base_url}}/api/v1/self/well/{{well_id}}
+  body: json
+  auth: none
+}
+
+headers {
+  authorization: Bearer {{access_token}}
+}
+
+body:json {
+  {
+    "flooding": true
+  }
+}
