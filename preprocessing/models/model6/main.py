@@ -35,7 +35,7 @@ def main():
 
     # For each item in dropdown data, generate prediction
     print('================ GENERATE PREDICTIONS ================')
-    generate_prediction_data(dropdown_data, mou_topo, training_data_df)
+    generate_prediction_data([dropdown_data[0]], mou_topo, training_data_df)
 
 if __name__ == '__main__':
     main()
