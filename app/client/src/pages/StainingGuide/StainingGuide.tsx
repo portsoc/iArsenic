@@ -88,7 +88,7 @@ export default function StainingGuide(): JSX.Element {
                     textAlign='center'
                     fontStyle='italic'
                 >
-                    Example of a tube well platform with red staining.
+                    Example of a tube well platform with black staining.
                 </Typography>
             </Card>
         </>

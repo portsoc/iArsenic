@@ -16,7 +16,7 @@ export default function produceEstimate(well: Well): ModelMessageCode {
     const modelData: ModelData = JSON.parse(
         fs.readFileSync(
             path.join(
-                `model5/aggregate-data/${div}-${dis}.json`
+                `static/model5/aggregate-data/${div}-${dis}.json`
             ),
             'utf-8'
         )
