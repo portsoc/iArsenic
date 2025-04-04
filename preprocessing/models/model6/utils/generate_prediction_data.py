@@ -67,10 +67,15 @@ def produce_message(med, max_val):
     else:
         return 7 + chem_test_status
 
-def write_not_enough_data_error(region_key, strata):
+def write_not_enough_data_warning(region_key, strata):
     error_path = 'logs/generate_prediction_data/not_enough_data.txt'
     with open(error_path, 'a') as err_file:
         err_file.write(f"WARNING not enough data and no patch for {strata} at {region_key}\n")
+
+def write_patch_used_warning(region_key, strata):
+    error_path = 'logs/generate_prediction_data/patch_used.txt'
+    with open(error_path, 'a') as err_file:
+        err_file.write(f"WARNING patch used for {strata} at {region_key}\n")
 
 def s15_flood_stats(gd, td, region_key, centroid):
     wells_15 = td[(td['region_key'] == region_key) & (td['Depth'] < 15)]
@@ -92,7 +97,7 @@ def s15_flood_stats(gd, td, region_key, centroid):
             "m7": produce_message(p75, max_val),
             "m9": produce_message(p95, max_val),
         }
-    write_not_enough_data_error(region_key, 's15_flood')
+    write_not_enough_data_warning(region_key, 's15_flood')
 
 def s15_stats(mou, gd, td, region_key, centroid):
     wells_15 = td[(td['region_key'] == region_key) & (td['Depth'] < 15)]
@@ -128,9 +133,10 @@ def s15_stats(mou, gd, td, region_key, centroid):
         ]
 
         if not patch.empty:
+            write_patch_used_warning(region_key, 's15')
             risk = int(patch['Risk'].values[0])
             return {"m": risk}
-    write_not_enough_data_error(region_key, 's15')
+    write_not_enough_data_warning(region_key, 's15')
     return {"m": 0} 
 
 def s45_stats(mou, gd, td, region_key, centroid):
@@ -170,8 +176,8 @@ def s45_stats(mou, gd, td, region_key, centroid):
         p1, p50, p9 = np.percentile(arsenic_45, [10, 50, 90])
         return {
             "m": produce_message(p50, arsenic_45.max()),
-            "l": p1,
-            "u": p9,
+            "l": round(p1, 1),
+            "u": round(p9, 1),
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -181,9 +187,10 @@ def s45_stats(mou, gd, td, region_key, centroid):
             (PATCH_LTE_90_DF['Upazila'] == upa)
         ]
         if not match.empty:
+            write_patch_used_warning(region_key, 's45')
             risk = int(match['Risk'].values[0])
             return {"m": risk}
-    write_not_enough_data_error(region_key, 's45')
+    write_not_enough_data_warning(region_key, 's45')
     return {"m": 0}
 
 def s65_stats(mou, gd, td, region_key, centroid):
@@ -234,9 +241,10 @@ def s65_stats(mou, gd, td, region_key, centroid):
             (PATCH_LTE_90_DF['Upazila'] == upa)
         ]
         if not match.empty:
+            write_patch_used_warning(region_key, 's65')
             risk = int(match['Risk'].values[0])
             return {"m": risk}
-    write_not_enough_data_error(region_key, 's65')
+    write_not_enough_data_warning(region_key, 's65')
     return {"m": 0}
 
 def s90_stats(mou, gd, td, region_key, centroid):
@@ -286,9 +294,11 @@ def s90_stats(mou, gd, td, region_key, centroid):
             (PATCH_LTE_90_DF['Upazila'] == upa)
         ]
         if not match.empty:
+            write_patch_used_warning(region_key, 's90')
             risk = int(match['Risk'].values[0])
             return {"m": risk}
-    write_not_enough_data_error(region_key, 's90')
+
+    write_not_enough_data_warning(region_key, 's90')
     return {"m": 0}
 
 def s150_stats(mou, gd, td, region_key, centroid):
@@ -330,9 +340,11 @@ def s150_stats(mou, gd, td, region_key, centroid):
             (PATCH_GT_90_DF['Upazila'] == upa)
         ]
         if not match.empty:
+            write_patch_used_warning(region_key, 's150')
             risk = int(match['Risk'].values[0])
             return {"m": risk}
-    write_not_enough_data_error(region_key, 's150')
+
+    write_not_enough_data_warning(region_key, 's150')
     return {"m": 0}
 
 def sD_stats(mou, gd, td, region_key, centroid):
@@ -368,13 +380,15 @@ def sD_stats(mou, gd, td, region_key, centroid):
             (PATCH_GT_90_DF['Upazila'] == upa)
         ]
         if not match.empty:
+            write_patch_used_warning(region_key, 'sD')
             risk = int(match['Risk'].values[0])
             return {"m": risk}
-    write_not_enough_data_error(region_key, 'sD')
+
+    write_not_enough_data_warning(region_key, 'sD')
     return {"m": 0}
 
 def process_mouza(args):
-    mou = args
+    mou, region_key = args
 
     gd = GEODATA_IN_TRAINING_DATA
     td = TRAINING_DATA
@@ -384,9 +398,8 @@ def process_mouza(args):
     if os.path.exists(f'model/{filename}'):
         return
 
-    mou_geometry = mou.geometry
+    mou_geometry = mou['geometry']
     centroid = mou_geometry.centroid
-    region_key = mou['region_key']
 
     mou_dict = {}
 
@@ -419,8 +432,7 @@ def process_mouza(args):
             err_file.write(f"{e}\n")
             err_file.write(json.dumps(mou_dict, separators=(',', ':')) + '\n\n')
 
-
-def run_prediction_jobs(region_tree, gd, td, gd_in_td):
+def run_prediction_jobs(region_tree, gd_index, td, gd_in_td):
     total_divisions = len(region_tree)
     jobs = []
 
@@ -432,29 +444,22 @@ def run_prediction_jobs(region_tree, gd, td, gd_in_td):
         for idx_dis, dis_obj in enumerate(districts, start=1):
             dis = dis_obj['district']
             upazilas = dis_obj['upazilas']
-            print(f"  Processing District {idx_dis}/{len(districts)}: {dis} (Total Upazilas: {len(upazilas)})")
 
             for idx_upa, upa_obj in enumerate(upazilas, start=1):
                 upa = upa_obj['upazila']
                 unions = upa_obj['unions']
-                print(f"    Processing Upazila {idx_upa}/{len(upazilas)}: {upa} (Total Unions: {len(unions)})")
 
                 for idx_uni, uni_obj in enumerate(unions, start=1):
                     uni = uni_obj['union']
                     mouzas = uni_obj['mouzas']
-                    print(f"      Processing Union {idx_uni}/{len(unions)}: {uni} (Total Mouzas: {len(mouzas)})")
 
                     for idx_mou, mou in enumerate(mouzas, start=1):
-                        gd_mou = gd[
-                            (gd['div'] == div) &
-                            (gd['dis'] == dis) &
-                            (gd['upa'] == upa) &
-                            (gd['uni'] == uni) &
-                            (gd['mou'] == mou)
-                        ].iloc[0]
+                        region_key = div + dis + upa + uni + mou
+                        gd_mou = gd_index.loc[region_key]
 
                         jobs.append((
-                            gd_mou
+                            gd_mou,
+                            region_key,
                         ))
 
     print('--------------------------------')
@@ -475,8 +480,11 @@ def generate_prediction_data(dropdown_data, mou_topo, training_data):
 
     geodata = mou_topo.to_crs(epsg=32645)
 
-    geodata['region_key'] = geodata['div'] + geodata['dis'] + geodata['upa'] + geodata['uni'] + geodata['mou']
-    training_data['region_key'] = training_data['Division'] + training_data['District'] + training_data['Upazila'] + training_data['Union'] + training_data['Mouza']
+    # set region key as index for fast lookup of mouza geodata
+    geodata['region_key'] = geodata['div'] + '-' + geodata['dis'] + '-' + geodata['upa'] + '-' + geodata['uni'] + '-' + geodata['mou']
+    geodata_index = geodata.set_index('region_key')
+
+    training_data['region_key'] = training_data['Division'] + '-' + training_data['District'] + '-' + training_data['Upazila'] + '-' + training_data['Union'] + '-' + training_data['Mouza']
 
     # filter geo data with no corresponding training data
     # so we dont check these regions for training data
@@ -485,7 +493,7 @@ def generate_prediction_data(dropdown_data, mou_topo, training_data):
 
     run_prediction_jobs(
         dropdown_data,
-        geodata,
+        geodata_index,
         training_data,
         geodata_in_training_data,
     )

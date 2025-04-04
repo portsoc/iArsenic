@@ -67,7 +67,7 @@ def intersect_geometries_within_hierarchy(upper_gdf, lower_gdf):
     return intersected_gdf
 
 
-def get_region_from_parent(child_gdf, parent_gdf, buffer_distance=0):
+def get_region_from_parent(child_gdf, parent_gdf):
     """
     For each child geometry, find the parent geometry in the parent_gdf that has the
     highest overlap (largest intersection area) and assign the parent's properties to the child.

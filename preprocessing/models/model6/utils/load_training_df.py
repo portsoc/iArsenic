@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 
 def load_training_data_df(data):
