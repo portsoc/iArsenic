@@ -24,8 +24,6 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
 
     const filename = `${div}-${dis}-${upa}-${uni}-${mou}.json`;
     const modelData: Model6Data = await fetchModelDataFromGCS(filename);
-    console.log('--------------------------------')
-    console.log(modelData)
 
     const depth = well.depth;
     if (!depth && depth !== 0) throw new Error('depth not found in well data');

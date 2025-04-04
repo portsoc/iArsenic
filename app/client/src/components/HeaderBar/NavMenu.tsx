@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LocalDrinkIcon from '@mui/icons-material/LocalDrink';
 import GroupsIcon from '@mui/icons-material/Groups';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
 import PublicIcon from '@mui/icons-material/Public';
@@ -66,6 +67,12 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         path='privacy-policy'
                         text='Privacy Policy'
                         Icon={PrivacyTipIcon}
+                    />
+
+                    <NavListItem
+                        path='understanding-risk'
+                        text='Understanding Risk'
+                        Icon={HealthAndSafetyIcon}
                     />
                 </List>
 

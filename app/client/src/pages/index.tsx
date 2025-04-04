@@ -18,3 +18,4 @@ export { default as StainingGuide } from './StainingGuide';
 export { default as VerifyEmail } from './VerifyEmail';
 export { default as Well } from './Well';
 export { default as ResetPassword } from './ResetPassword';
+export { default as UnderstandingRisk } from './UnderstandingRisk';
