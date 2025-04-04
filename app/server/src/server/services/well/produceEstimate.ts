@@ -8,7 +8,7 @@ const storage = new Storage();
 const bucketName = 'iarsenic-model6';
 
 async function fetchModelDataFromGCS(filename: string): Promise<Model6Data> {
-    const file = storage.bucket(bucketName).file(`model/${filename}`);
+    const file = storage.bucket(bucketName).file(`${filename}`);
     const [contents] = await file.download();
     return JSON.parse(contents.toString());
 }
@@ -24,6 +24,8 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
 
     const filename = `${div}-${dis}-${upa}-${uni}-${mou}.json`;
     const modelData: Model6Data = await fetchModelDataFromGCS(filename);
+    console.log('--------------------------------')
+    console.log(modelData)
 
     const depth = well.depth;
     if (!depth && depth !== 0) throw new Error('depth not found in well data');
@@ -37,44 +39,33 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
         else return 'sD';
     })();
 
-    const { asValue, upperQuantile } = (() => {
-        if (regionStrataKey === 's15') {
-            if (modelData?.s15 && 'm2' in modelData.s15) {
-                if (well.staining === 'black' && modelData.s15.m2 !== undefined) {
-                    return { asValue: modelData.s15.m2, upperQuantile: modelData.s15.m9 };
-                } else if (well.flooding && modelData.s15.m9 !== undefined) {
-                    return { asValue: modelData.s15.m9, upperQuantile: modelData.s15.m9 };
-                } else if (modelData.s15.m7 !== undefined) {
-                    return { asValue: modelData.s15.m7, upperQuantile: modelData.s15.m9 };
-                } else {
-                    throw new Error('model keys required for flooding model missing');
-                }
+
+    /*
+        if depth is < 15.3 attempt to use the flooding model
+        if the flooding model is available, the key 'm2' will
+        exist in the prediction data for this region
+    */
+    if (regionStrataKey === 's15' && 'm2' in modelData && modelData.s15) {
+        if (well.staining === 'black' && modelData.s15.m2 !== undefined) {
+            return modelData.s15.m2;
+        } else if (well.flooding && modelData.s15.m9 !== undefined) {
+            return modelData.s15.m9;
+        } else if (modelData.s15.m7 !== undefined) {
+            return modelData.s15.m7;
+        } else {
+            throw new Error('model keys required for flooding model misisng');
+        }
+    } else {
+        if (well.staining === 'black' || well.utensilStaining === 'black') {
+            return 1;
+        } else if (well.staining === 'red' || well.utensilStaining === 'red') {
+            if (modelData[regionStrataKey] && modelData[regionStrataKey].m !== undefined) {
+                return modelData[regionStrataKey].m;
+            } else {
+                throw new Error('model key required for red staining missing');
             }
         } else {
-            if (well.staining === 'black' || well.utensilStaining === 'black') {
-                return { asValue: 0, upperQuantile: 0 }; // well is safe
-            } else if (well.staining === 'red' || well.utensilStaining === 'red') {
-                if (modelData?.[regionStrataKey]) {
-                    return { 
-                        asValue: modelData[regionStrataKey].m, 
-                        upperQuantile: modelData[regionStrataKey].u,
-                    };
-                }
-            } 
+            return 0;
         }
-        console.error(well)
-        console.error(modelData)
-        throw new Error('Unable to make prediction');
-    })()
-
-    const modelMessageCode: ModelMessageCode = (() => {
-        const chemTestStatus = (upperQuantile <= 100) ? 0 : 1;
-
-        if (asValue <= 20) return (1);
-        else if (asValue <= 50) return (3 + chemTestStatus) as ModelMessageCode;
-        else if (asValue <= 200) return (5 + chemTestStatus) as ModelMessageCode;
-        else return (7 + chemTestStatus) as ModelMessageCode;
-    })()
-
-    return modelMessageCode
+    }
 }

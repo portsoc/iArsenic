@@ -51,35 +51,35 @@ export type Model5Data = {
 
 export type Model6Data = {
     s15?: {
-        m: number,
-        m2: number,
-        m7: number,
-        m9: number,
+        m: ModelMessageCode,
+        m2: ModelMessageCode,
+        m7: ModelMessageCode,
+        m9: ModelMessageCode,
         l: number,
         u: number,
     },
     s45?: {
-        m: number,
+        m: ModelMessageCode,
         l: number,
         u: number,
     },
     s65?: {
-        m: number,
+        m: ModelMessageCode,
         l: number,
         u: number,
     },
     s90?: {
-        m: number,
+        m: ModelMessageCode,
         l: number,
         u: number,
     },
     s150?: {
-        m: number,
+        m: ModelMessageCode,
         l: number,
         u: number,
     },
     sD?: {
-        m: number,
+        m: ModelMessageCode,
         l: number,
         u: number,
     }
