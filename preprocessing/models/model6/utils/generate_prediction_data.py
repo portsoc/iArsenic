@@ -408,7 +408,7 @@ def process_mouza(args):
     mou_dict["s15"] = s15_stats(mou, gd, td, region_key, centroid)
 
     # s45: 15m <= depth < 45m
-    mou_dict["45"] = s45_stats(mou, gd, td, region_key, centroid)
+    mou_dict["s45"] = s45_stats(mou, gd, td, region_key, centroid)
 
     # s65: 45m <= depth < 65m
     mou_dict["s65"] = s65_stats(mou, gd, td, region_key, centroid)
@@ -454,7 +454,7 @@ def run_prediction_jobs(region_tree, gd_index, td, gd_in_td):
                     mouzas = uni_obj['mouzas']
 
                     for idx_mou, mou in enumerate(mouzas, start=1):
-                        region_key = div + dis + upa + uni + mou
+                        region_key = f"{div}-{dis}-{upa}-{uni}-{mou}"
                         gd_mou = gd_index.loc[region_key]
 
                         jobs.append((
