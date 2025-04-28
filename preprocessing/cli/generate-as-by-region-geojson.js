@@ -3,7 +3,7 @@ const cli = require('../lib/cli-common');
 const fs = require('fs');
 const path = require('path');
 
-REGION_LEVEL = 'upa';
+const REGION_LEVEL = 'upa';
 
 function forEachFeature(geojson, data) {
   // deep copy input json
@@ -41,7 +41,7 @@ function forEachFeature(geojson, data) {
     const meanAs = (() => {
       if (!upaData) return null;
       return upaData.wells.reduce((acc, well) => acc + well.arsenic, 0) / upaData.wells.length;
-    })()
+    })();
 
     feat.properties.as = meanAs;
   }
@@ -55,15 +55,15 @@ function main(options) {
   const geodata = JSON.parse(
     fs.readFileSync(
       path.join(
-          __dirname,
-          `../geodata/maps/dist/${REGION_LEVEL}/${REGION_LEVEL}-c005-s010-vw-pr.geojson`
-        ),
+        __dirname,
+        `../geodata/maps/dist/${REGION_LEVEL}/${REGION_LEVEL}-c005-s010-vw-pr.geojson`,
+      ),
       'utf8',
-    )
+    ),
   );
 
   const output = forEachFeature(geodata, data);
   console.log(JSON.stringify(output));
 }
 
-main(cli.getParameters())
+main(cli.getParameters());
