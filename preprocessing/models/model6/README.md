@@ -5,6 +5,7 @@
 - dropdown data generated from geodata
 - geodata cookie-cutter modification applied
 - model patch used
+- switch to python
 
 ## How to produce model estimates
 
