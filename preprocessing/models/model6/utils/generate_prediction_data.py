@@ -1,13 +1,10 @@
 import json
-import geopandas as gpd
 import pandas as pd
 import os
-import concurrent.futures
 import multiprocessing as mp
 import numpy as np
 from utils.load_training_df import load_training_data_df
 from utils.find_regions_within_radius import find_regions_within_radius
-from pathlib import Path
 
 
 #  s15: {
@@ -70,12 +67,12 @@ def produce_message(med, max_val):
 def write_not_enough_data_warning(region_key, strata):
     error_path = 'logs/generate_prediction_data/not_enough_data.txt'
     with open(error_path, 'a') as err_file:
-        err_file.write(f"WARNING not enough data and no patch for {strata} at {region_key}\n")
+        err_file.write(f"{strata},{region_key}\n")
 
 def write_patch_used_warning(region_key, strata):
     error_path = 'logs/generate_prediction_data/patch_used.txt'
     with open(error_path, 'a') as err_file:
-        err_file.write(f"WARNING patch used for {strata} at {region_key}\n")
+        err_file.write(f"{strata},{region_key}\n")
 
 def s15_flood_stats(gd, td, region_key, centroid):
     wells_15 = td[(td['region_key'] == region_key) & (td['Depth'] < 15)]
@@ -369,8 +366,8 @@ def sD_stats(mou, gd, td, region_key, centroid):
         p10, p50, p90 = np.percentile(arsenic_d, [10, 50, 90])
         return {
             "m": produce_message(p50, arsenic_d.max()),
-            "l": p10,
-            "u": p90,
+            "l": round(p10, 1),
+            "u": round(p90, 1),
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -428,9 +425,7 @@ def process_mouza(args):
     except Exception as e:
         error_path = 'logs/generate_prediction_data/failed_to_write_model.txt'
         with open(error_path, 'a') as err_file:
-            err_file.write(f"ERROR writing {filename}\n")
-            err_file.write(f"{e}\n")
-            err_file.write(json.dumps(mou_dict, separators=(',', ':')) + '\n\n')
+            err_file.write(f"{filename},{json.dumps(mou_dict)}\n")
 
 def run_prediction_jobs(region_tree, gd_index, td, gd_in_td):
     total_divisions = len(region_tree)
