@@ -28,6 +28,11 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
     const depth = well.depth;
     if (!depth && depth !== 0) throw new Error('depth not found in well data');
 
+    console.log('---------------- PREDICTORS ----------------')
+    console.log(well)
+    console.log('---------------- MODEL DATA ----------------')
+    console.log(modelData)
+
     const regionStrataKey = (() => {
         if (depth < 15.3) return 's15';
         else if (depth < 45) return 's45';
@@ -36,7 +41,6 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
         else if (depth < 150) return 's150';
         else return 'sD';
     })();
-
 
     /*
         if depth is < 15.3 attempt to use the flooding model
