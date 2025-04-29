@@ -39,8 +39,11 @@ export type { Well } from './well.model';
 export { CompleteWellSchema } from './well.model';
 export type { CompleteWell } from './well.model';
 
-export { PredictionSchema } from './well.model';
-export type { Prediction } from './well.model';
+export { PredictionSchema } from './prediction.model';
+export type { Prediction } from './prediction.model';
+
+export { CreatePredictionSchema } from './prediction.model';
+export type { CreatePrediction } from './prediction.model';
 
 export { KnownErrorArgsSchema } from './knownError.model';
 export type { KnownErrorArgs } from './knownError.model';
@@ -48,17 +51,17 @@ export type { KnownErrorArgs } from './knownError.model';
 export { KnownErrorSchema } from './knownError.model';
 export type { IKnownError } from './knownError.model';
 
-export { RegionKeySchema } from './well.model';
-export type { RegionKey } from './well.model';
+export { RegionKeySchema } from './regionKey';
+export type { RegionKey } from './regionKey';
 
-export { RiskAssesmentSchema } from './well.model';
-export type { RiskAssesment } from './well.model';
+export { RiskAssesmentSchema } from './riskAssesment';
+export type { RiskAssesment } from './riskAssesment';
 
-export { ModelMessageCodeSchema } from './well.model';
-export type { ModelMessageCode } from './well.model';
+export { ModelMessageCodeSchema } from './modelMessageCode';
+export type { ModelMessageCode } from './modelMessageCode';
 
-export { StainingSchema } from './well.model';
-export type { Staining } from './well.model';
+export { StainingSchema } from './wellStaining';
+export type { Staining } from './wellStaining';
 
-export { UtensilStainingSchema } from './well.model';
-export type { UtensilStaining } from './well.model';
+export { UtensilStainingSchema } from './utensilStaining';
+export type { UtensilStaining } from './utensilStaining';

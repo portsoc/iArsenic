@@ -4,6 +4,7 @@ import Router from '@koa/router'
 import self from './self'
 import user from './user'
 import well from './well'
+import prediction from './prediction'
 
 const routes = new Router({ prefix: '/api/v1' })
 
@@ -15,5 +16,6 @@ routes.use(healthcheck.routes())
 routes.use(user.routes())
 routes.use(self.routes())
 routes.use(well.routes())
+routes.use(prediction.routes())
 
 export default routes

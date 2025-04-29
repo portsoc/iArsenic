@@ -1,8 +1,7 @@
 import uuid4 from 'uuid4'
-import { Well, WellSchema, Prediction } from 'iarsenic-types'
+import { Well, WellSchema } from 'iarsenic-types'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
-import produceEstimate from './well/produceEstimate'
 
 export const WellService = {
     async createWell(userId: string): Promise<Well> {
@@ -80,58 +79,4 @@ export const WellService = {
     async getAllWells(): Promise<Well[]> {
         return await WellRepo.findAll();
     },
-
-    async generateEstimate(userId: string, wellId: string): Promise<Well> {
-        const well = await WellRepo.findById(wellId);
-
-        if (!well) {
-            throw new KnownError({
-                message: 'Well not found',
-                code: 404,
-                name: 'WellNotFoundError',
-            })
-        }
-
-        if (well.userId !== userId) {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            })
-        }
-
-        const modelEstimate = await produceEstimate(well);
-        const riskAssesment = (() => {
-            switch (modelEstimate) {
-                case 0: // unable to make an estimate
-                    return 2.5;
-                case 1:
-                    return 0.5;
-                case 2:
-                case 3:
-                    return 1.5;
-                case 4:
-                case 5:
-                    return 2.5;
-                case 6:
-                    return 3.5;
-                case 7:
-                case 8:
-                    return 4.5;
-                default:
-                    return 2.5;
-            }
-        })();
-
-        const prediction: Prediction = {
-            modelOutput: modelEstimate,
-            riskAssesment: riskAssesment,
-            model: 'model6',
-        }
-
-        await WellService.updateWell(wellId, userId, { prediction });
-
-        well.prediction = prediction;
-        return well
-    }
 }

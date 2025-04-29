@@ -2,15 +2,17 @@ import { Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { RegionTranslations } from '../../types';
-import { Well } from 'iarsenic-types';
+import { Prediction, Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
+import findWellPredictions from '../../utils/findWellPredictions';
 
 type props = {
     wells: Well[],
+    predictions: Prediction[],
     regionTranslations: RegionTranslations,
 }
 
-export default function Markers({ wells, regionTranslations }: props): JSX.Element {
+export default function Markers({ wells, predictions, regionTranslations }: props): JSX.Element {
     function createCustomIcon(color: string) {
         return L.icon({
             iconUrl: `/map-markers/${color}.png`,
@@ -66,24 +68,25 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
         <>
             {wells.filter(
                 s => s.geolocation != null &&
-                s.prediction != null &&
+                findWellPredictions(s, predictions)[0] != null &&
                 s.regionKey != null &&
                 s.staining != null &&
                 s.depth != null
             ).map((p, index) => {
+                const prediction = findWellPredictions(p, predictions)[0]
                 return (
-                    <Marker icon={getIcon(p.prediction!.riskAssesment)} key={index} position={p.geolocation as LatLngExpression}>
+                    <Marker icon={getIcon(prediction.riskAssesment)} key={index} position={p.geolocation as LatLngExpression}>
                         <Popup>
                             <Typography variant='body1'>
                                 ID: {p.id}
                             </Typography>
 
                             <Typography className='english' variant='body1'>
-                                Risk Factor: {predictionToRiskFactor(p.prediction!.riskAssesment).english}
+                                Risk Factor: {predictionToRiskFactor(prediction.riskAssesment).english}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>
-                                BENGALI PLACEHOLDER: {predictionToRiskFactor(p.prediction!.riskAssesment).bengali}
+                                BENGALI PLACEHOLDER: {predictionToRiskFactor(prediction.riskAssesment).bengali}
                             </Typography>
 
                             <Typography className='english' variant='body1'>
