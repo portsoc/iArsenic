@@ -31,7 +31,7 @@ from utils.find_regions_within_radius import find_regions_within_radius
 
 MAX_WORKERS = mp.cpu_count()
 
-# Globals for use by sub processes
+# Globals for use by sub processes (reduces memory usage)
 PATCH_LTE_90_DF = None
 PATCH_GT_90_DF = None
 GEODATA_IN_TRAINING_DATA = None
