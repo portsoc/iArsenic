@@ -7,7 +7,7 @@ import { RiskAssesmentSchema } from "./riskAssesment";
 export const PredictionSchema = z.object({
     id: z.string(),
     userId: z.string(),
-    wellId: z.string(),
+    wellId: z.string().nullable(),
     createdAt: z.date(),
     division: z.string(),
     district: z.string(),
