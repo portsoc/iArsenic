@@ -80,6 +80,40 @@ function validateWell(data: any): string[] {
         }
     }
 
+    if (data.regionKey !== undefined) {
+        const rk = data.regionKey;
+        if (typeof rk !== "object" || rk === null) {
+            errors.push("Invalid regionKey (must be object)");
+        } else {
+            for (const key of ["division", "district", "upazila", "union", "mouza"]) {
+                if (typeof rk[key] !== "string") {
+                    errors.push(`regionKey.${key} must be a string`);
+                }
+            }
+        }
+    }
+
+    if (data.prediction !== undefined) {
+        const pred = data.prediction;
+        if (typeof pred !== "object" || pred === null) {
+            errors.push("Invalid prediction (must be object)");
+        } else {
+            if (!["model6", "model5"].includes(pred.model)) {
+                errors.push(`prediction.model must be a string (e.g. 'model6'), got '${pred.model}'`);
+            }
+
+            const allowedCodes = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+            if (!allowedCodes.has(pred.modelOutput)) {
+                errors.push(`prediction.modelOutput must be one of 0–8, got '${pred.modelOutput}'`);
+            }
+
+            const allowedRisks = new Set([0.5, 1.5, 2.5, 3.5, 4.5]);
+            if (!allowedRisks.has(pred.riskAssesment)) {
+                errors.push(`prediction.riskAssesment must be one of 0.5–4.5, got '${pred.riskAssesment}'`);
+            }
+        }
+    }
+
     return errors;
 }
 
