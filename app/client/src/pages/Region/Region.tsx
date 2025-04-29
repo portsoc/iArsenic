@@ -41,7 +41,7 @@ export default function Region(): JSX.Element {
     const [geolocation, setGeolocation] = useState<[number, number]>();
 
     async function fetchDropdownData() {
-        const response = await fetch(`/model5/dropdown-data.json`);
+        const response = await fetch(`/model6/dropdown-data.json`);
         const data = await response.json();
         setDropdownData(data);
     }

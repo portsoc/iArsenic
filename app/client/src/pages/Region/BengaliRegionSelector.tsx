@@ -25,7 +25,7 @@ type props = {
     rt: RegionTranslations;
 };
 
-export default function EnglishRegionSelector({
+export default function BengaliRegionSelector({
     dropdownData,
     selectedDivision,
     setSelectedDivision,
@@ -54,7 +54,7 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, division: false }));
                 }}
-                getOptionLabel={(option) => rt.Divisions[option.division]}
+                getOptionLabel={(option) => rt.Divisions[option.division] || option.division}
                 renderInput={(params) => {
                     return (
                         <TextField
@@ -77,7 +77,7 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, district: false }));
                 }}
-                getOptionLabel={(option) => rt.Districts[option.district]}
+                getOptionLabel={(option) => rt.Districts[option.district] || option.district}
                 renderInput={(params) => {
                     return (
                         <TextField
@@ -100,7 +100,7 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, upazila: false }));
                 }}
-                getOptionLabel={(option) => rt.Upazilas[option.upazila]}
+                getOptionLabel={(option) => rt.Upazilas[option.upazila] || option.upazila}
                 renderInput={(params) => {
                     return (
                         <TextField
@@ -122,7 +122,7 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, union: false }));
                 }}
-                getOptionLabel={(option) => rt.Unions[option.union]}
+                getOptionLabel={(option) => rt.Unions[option.union] || option.union}
                 renderInput={(params) => {
                 return (
                         <TextField
@@ -143,7 +143,7 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(newValue);
                     setErrors(e => ({ ...e, mouza: false }));
                 }}
-                getOptionLabel={(mouza) => rt.Mouzas[mouza]}
+                getOptionLabel={(mouza) => rt.Mouzas[mouza] || mouza}
                 renderInput={(params) => {
                     return (
                         <TextField
