@@ -1,11 +1,11 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.ts",
   "scripts": {
     "build": "rm -rf dist && tsc && npm --prefix ../client/ run build && cp -r ../client/static/ dist/static/",
-    "build:firebase": "npm --prefix ../shared run build && npm --prefix ../client run build && rm -rf dist && tsc && rm -rf ../../firebase-functions/dist && cp -r dist/* ../../firebase-functions && cp -r ../client/static ../../firebase-functions && cp -r ../shared ../../firebase-functions"
+    "build:firebase": "npm --prefix ../shared run build && npm --prefix ../client run build && rm -rf dist && tsc && rm -rf ../../firebase-functions/dist && cp -r dist/* ../../firebase-functions && cp -r ../client/static ../../firebase-functions && cp -r ../shared ../../firebase-functions && cd ../../firebase-functions && npm i iarsenic-types@latest"
   },
   "keywords": [],
   "author": "",
@@ -17,11 +17,13 @@
     "dotenv": "^16.4.5",
     "firebase-admin": "^12.3.1",
     "firebase-functions": "^5.0.1",
-    "iarsenic-types": "^1.0.0",
+    "iarsenic-types": "^2.0.6",
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
     "koa-helmet": "^7.0.2",
     "koa-static": "^5.0.0",
+    "loadash": "^1.0.0",
+    "lodash": "^4.17.21",
     "module-alias": "^2.2.3",
     "nodemailer": "^6.9.15",
     "typescript": "^5.5.4",
@@ -35,6 +37,7 @@
     "@types/koa__router": "^12.0.4",
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa-static": "^4.0.4",
+    "@types/lodash": "^4.17.16",
     "@types/nodemailer": "^6.4.16",
     "@types/uuid4": "^2.0.3"
   }
