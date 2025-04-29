@@ -24,3 +24,17 @@ export const PredictionSchema = z.object({
 });
 
 export type Prediction = z.infer<typeof PredictionSchema>;
+
+export const CreatePredictionSchema = z.object({
+    division: z.string(),
+    district: z.string(),
+    upazila: z.string(),
+    union: z.string(),
+    mouza: z.string(),
+    depth: z.number(),
+    flooding: z.boolean(),
+    staining: StainingSchema,
+    utensilStaining: UtensilStainingSchema.nullable(),
+});
+
+export type CreatePrediction = z.infer<typeof CreatePredictionSchema>;

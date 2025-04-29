@@ -42,6 +42,9 @@ export type { CompleteWell } from './well.model';
 export { PredictionSchema } from './prediction.model';
 export type { Prediction } from './prediction.model';
 
+export { CreatePredictionSchema } from './prediction.model';
+export type { CreatePrediction } from './prediction.model';
+
 export { KnownErrorArgsSchema } from './knownError.model';
 export type { KnownErrorArgs } from './knownError.model';
 
