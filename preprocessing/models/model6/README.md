@@ -1,15 +1,23 @@
 # Model6
 
-## How to run the model and generate estimates
+## Using and deploying the model
 
+### How to run the model and generate estimates
+
+Note that poetry 1.8.2 is a system requirement.
+
+```shell
 poetry install
 poetry run python main.py
+```
 
-## How to upload model estimates to google cloud
+### How to upload model estimates to google cloud
 
-- how to login to google cloud
-- how to switch to project model6 storage
-gsutil -m rsync -r model/ gs://iarsenic-model6
+1. Login to google cloud by tying `gcloud auth login` and
+using iarsenic24@gmail.com credentials
+2. Set the google cloud project to model6-storage 
+`gcloud config set project model6-storage`
+3. Run rsync from the model6 directory `gsutil -m rsync -r model/ gs://iarsenic-model6`
 
 ## How does this model differ from model5
 
@@ -22,7 +30,15 @@ Previous models used the training data to produce dropdown data,
 this however, excluded regions not included in the training data meaning it
 was impossible to select many regions in the region selector.
 
-### Switch to python
+### Model data stored in google cloud bucket
+
+Model6 produces 497MB over 124334 files (one file for each region).
+Previously model5 has stored this in the source code but because of
+the size of model6 this is no longer feasible.
+
+The model6 storage bucket it kept in the google cloud project
+model6-storage. It is accessed by both the staging and production
+deployment to avoid duplicating resources.
 
 ## Geodata preprocessing
 
@@ -87,6 +103,51 @@ regions with duplicate names is merged into a single region.
 
 ## Generating model data
 
+Model6 follows the same logic as model5 to produce estimate data
+but adds a model patch to fall back on for region strata that do
+not have 7+ data points.
 
+![Model6 Logic](readme/model6-logic.drawio.svg)
 
 ## Producing an estimate
+
+The model produces a message code based on the
+median and maximum arsenic concentration of wells within 
+a region depth strata, the arsenic value at the lowest 10%
+of samples and the arsenic calue of the highest 90%. 
+
+For the flooding model, the 25th percentile, 75th percentile
+and 95th percentile are also calculated.
+
+Where there are not enough data points within a region depth
+strata, the model patch is used to to generate only the 
+message code.
+
+This data is used by the app to produce the risk estimate that
+is provided to the user.
+
+## Model error logs
+
+Model error logs are written to 
+`preprocessing/models/model6/logs/generate_prediction_data`
+
+During model generation, 3 files are produced:
+
+**failed_to_write_model.txt**
+
+This file contains filenames that failed to write for given regions
+
+This is usually because a region name (which 
+is included in the filename) contains a / character.
+
+**not_enough_data.txt**
+
+This file outputs regions and their strata where
+model data was unable to be produced because there
+was not enough data within the region depth strata
+or the model patch.
+
+**patch_used.txt**
+
+This file contains regions and their strata where the 
+model patch was used.

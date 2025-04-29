@@ -9,24 +9,34 @@ from utils.find_regions_within_radius import find_regions_within_radius
 
 #  s15: {
 #    m: ...,     // short for message ID using median
-#    m2: ...,    // message ID using the 25th percentile
-#    m7: ...,    // message ID using the 75th percentile
-#    m9: ...    // message ID using the 95th percentile
+#    m2: ...,    // message ID using the 25th percentile excluded when patch used
+#    m7: ...,    // message ID using the 75th percentile excluded when patch used
+#    m9: ...    // message ID using the 95th percentile excluded when patch used
 #  },
 #  s45: {
-#    m: ...
+#    m: ...,
+#    l: ...,    // exluded when patch used
+#    u: ...    // exluded when patch used
 #  },
 #  s65: {
-#    m: ...
+#    m: ...,
+#    l: ...,    // exluded when patch used
+#    u: ...    // exluded when patch used
 #  },
 #  s90: {
-#    m: ...
+#    m: ...,
+#    l: ...,    // exluded when patch used
+#    u: ...    // exluded when patch used
 #  },
 #  s150: {
-#    m: ...
+#    m: ...,
+#    l: ...,    // exluded when patch used
+#    u: ...    // exluded when patch used
 #  },
 #  sD: {
-#    m: ...
+#    m: ...,
+#    l: ...,    // exluded when patch used
+#    u: ...    // exluded when patch used
 #  }
 
 MAX_WORKERS = mp.cpu_count()
