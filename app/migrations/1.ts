@@ -79,19 +79,23 @@ async function down(): Promise<boolean> {
         const predictionData = doc.data();
 
         try {
-            // Restore the prediction data back into the Well document
-            await wellsCollection.doc(predictionData.wellId).update({
-                prediction: {
-                    model: predictionData.model,
-                    modelOutput: predictionData.modelOutput,
-                    riskAssesment: predictionData.riskAssesment,
-                }
-            });
+            if (predictionData.wellId) {
+                // Restore the prediction data back into the Well document
+                await wellsCollection.doc(predictionData.wellId).update({
+                    prediction: {
+                        model: predictionData.model,
+                        modelOutput: predictionData.modelOutput,
+                        riskAssesment: predictionData.riskAssesment,
+                    }
+                });
 
-            // Delete the prediction document
+                console.log(`Reattributed prediction back to well ${predictionData.wellId}`);
+            } else {
+                console.log(`Prediction ${doc.id} has no wellId, deleting only.`);
+            }
+
+            // Always delete the prediction document, whether reattributed or not
             await predictionsCollection.doc(doc.id).delete();
-
-            console.log(`Reattributed prediction back to well ${predictionData.wellId}`);
         } catch (error) {
             failed = true;
             console.error(`Failed to rollback prediction ${doc.id}:`, error);
