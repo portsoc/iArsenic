@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { StainingSchema, UtensilStainingSchema, ModelMessageCodeSchema, RiskAssesmentSchema } from "./well.model";
+import { StainingSchema } from "./wellStaining";
+import { UtensilStainingSchema } from "./utensilStaining";
+import { ModelMessageCodeSchema } from "./modelMessageCode";
+import { RiskAssesmentSchema } from "./riskAssesment";
 
 export const PredictionSchema = z.object({
     id: z.string(),
