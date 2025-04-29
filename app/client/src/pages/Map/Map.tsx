@@ -4,7 +4,7 @@ import './map.css';
 import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
-import { Well, AccessToken } from 'iarsenic-types';
+import { Well, AccessToken, Prediction } from 'iarsenic-types';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
@@ -16,6 +16,7 @@ export default function Map() {
     const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
     const [token, setToken] = useState<AccessToken>();
     const [wells, setWells] = useState<Well[]>();
+    const [predictions, setPredictions] = useState<Prediction[]>();
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
 
     async function getInteractiveMap() {
@@ -41,6 +42,27 @@ export default function Map() {
         setWells(data.wells);
     }
 
+    async function getWellPredictions() {
+        if (!token || !wells) return;
+    
+        // use body because query parameters might get too long
+        const res = await fetch('/api/v1/prediction', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'authorization': `Bearer ${token.id}`,
+            },
+            body: JSON.stringify({ wellIds: wells.map(w => w.id) })
+          });
+    
+        if (!res.ok) {
+            throw new Error(`Failed to fetch predictions: ${res.status}`);
+        }
+    
+        const data = await res.json();
+        setPredictions(data.predictions);
+    }
+
     async function getRegionTranslations() {
         const translations = await RegionTranslationsFetcher();
         setRegionTranslations(translations);
@@ -61,9 +83,10 @@ export default function Map() {
 
     useEffect(() => {
         getPredictionPinData();
+        getWellPredictions();
     }, [token]);
 
-    if (!interactiveMap || !wells || !regionTranslations) return (
+    if (!interactiveMap || !wells || !regionTranslations || !predictions) return (
         <Stack alignItems='center' justifyContent='center'>
             <CircularProgress />
         </Stack>
@@ -77,7 +100,7 @@ export default function Map() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <UpaMap interactiveMap={interactiveMap} regionTranslations={regionTranslations} />
-                <Markers wells={wells} regionTranslations={regionTranslations} />
+                <Markers wells={wells} predictions={predictions} regionTranslations={regionTranslations} />
             </MapContainer>
         </Stack>
     );

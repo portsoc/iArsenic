@@ -6,3 +6,5 @@ export { UserRepo } from './user.repo';
 export type { IUserRepo } from './user.repo';
 
 export { WellRepo } from './well.repo';
+
+export { PredictionRepo } from './prediction.repo'

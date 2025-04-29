@@ -1,5 +1,6 @@
 import { getFirestore, FieldValue as FirestoreFieldValue } from "firebase-admin/firestore";
 import { IMigration } from "./IMigration.js";
+import { v4 as uuidv4 } from "uuid";
 
 const db = getFirestore();
 const wellsCollection = db.collection("well");
@@ -24,7 +25,8 @@ async function up(): Promise<boolean> {
 
         try {
             const predictionData = {
-                id: doc.id, // using same id for prediction
+                id: uuidv4(), 
+                userId: wellData.userId,
                 wellId: doc.id,
                 createdAt: new Date(),
                 division: wellData.regionKey.division,
@@ -41,7 +43,7 @@ async function up(): Promise<boolean> {
                 riskAssesment: wellData.prediction.riskAssesment,
             };
 
-            await predictionsCollection.doc(predictionData.id).set(predictionData);
+            await predictionsCollection.doc().set(predictionData);
 
             await wellsCollection.doc(doc.id).update({
                 prediction: FirestoreFieldValue.delete(),

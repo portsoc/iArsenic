@@ -14,6 +14,4 @@ self.post('/well', jwtOrGuest, async ctx => WellController.createWellByToken(ctx
 self.patch('/well/:id', jwtOrGuest, async ctx => WellController.updateWellByIdByToken(ctx))
 self.delete('/well/:id', jwtRequired, async ctx => WellController.deleteWellByIdByToken(ctx))
 
-self.post('/well/:id/predict', jwtOrGuest, async ctx => WellController.predictWellByIdByToken(ctx))
-
 export default self

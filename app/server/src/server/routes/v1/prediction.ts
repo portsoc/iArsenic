@@ -1,14 +1,14 @@
-import Router from '@koa/router'
+import Router from '@koa/router';
+import { PredictionController } from '../../controllers';
+import { adminOnly } from '../../middleware'
 
-const prediction = new Router({ prefix: '/prediction' })
+const prediction = new Router({ prefix: '/prediction' });
 
-prediction.get('/', (ctx) => {
-    ctx.status = 501
-    ctx.body = {
-        message: 'Not implemented',
-    }
+prediction.post('/', ctx => PredictionController.createPrediction(ctx));
+prediction.post('/well/:id', ctx => PredictionController.createWellPrediction(ctx));
+prediction.get('/:id', ctx => PredictionController.getPredictionById(ctx));
+prediction.delete('/:id', ctx => PredictionController.deletePrediction(ctx));
+prediction.get('/', ctx => PredictionController.getPredictionsByToken(ctx));
+prediction.get('s', adminOnly, ctx => PredictionController.getAllPredictions(ctx));
 
-    return
-});
-
-export default prediction
+export default prediction;
