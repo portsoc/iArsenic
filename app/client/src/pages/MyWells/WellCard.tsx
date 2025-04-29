@@ -1,12 +1,13 @@
 import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
-import { Well } from 'iarsenic-types';
+import { Prediction, Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 
 interface props {
     well: Well;
+    predictions: Prediction[],
 }
 
-export default function WellCard({ well }: props): JSX.Element {
+export default function WellCard({ well, predictions }: props): JSX.Element {
     return (
         <Card
             variant="outlined"
@@ -65,7 +66,7 @@ export default function WellCard({ well }: props): JSX.Element {
                 </Grid>
 
                 {/* Prediction Details */}
-                {well.prediction && (
+                {predictions[0] && (
                     <Box mt={3}>
                         <Typography variant="subtitle1" color="text.primary">
                             Prediction
@@ -74,13 +75,13 @@ export default function WellCard({ well }: props): JSX.Element {
                             <Grid item xs={6}>
                                 <Typography variant="subtitle2">Risk Assessment</Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {well.prediction.riskAssesment}
+                                    {predictions[0].riskAssesment}
                                 </Typography>
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography variant="subtitle2">Model Output</Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {well.prediction.modelOutput}
+                                    {predictions[0].modelOutput}
                                 </Typography>
                             </Grid>
                         </Grid>

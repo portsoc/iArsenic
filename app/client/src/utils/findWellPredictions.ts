@@ -6,7 +6,7 @@ export default function(well: Well, predictions: Prediction[]): Prediction[] {
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()); // latest first
 
     if (matching.length === 0) {
-        throw new Error("No prediction found for any well");
+        return []
     }
 
     return matching; // return most recent one

@@ -1,4 +1,5 @@
 import uuid4 from 'uuid4';
+import { isEqual } from 'lodash';
 import { Prediction } from 'iarsenic-types';
 import { PredictionRepo, UserRepo, WellRepo } from '../repositories';
 import { KnownError } from '../errors';
@@ -30,17 +31,16 @@ export const PredictionService = {
 
     async createWellPrediction(userId: string, wellId: string): Promise<Prediction> {
         const well = await WellRepo.findById(wellId);
-
-        const user = await UserRepo.findById(userId)
-
-        if (!user) {
+        const user = await UserRepo.findById(userId);
+    
+        if (!user && userId !== 'guest') {
             throw new KnownError({
                 message: `User ${userId} not found`,
                 code: 404,
-                name: 'UserNotFoundError'
-            })
+                name: 'UserNotFoundError',
+            });
         }
-
+    
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
@@ -48,15 +48,15 @@ export const PredictionService = {
                 name: 'WellNotFoundError',
             });
         }
-
-        if (well.userId !== userId && user.type !== 'admin') {
+    
+        if (userId !== 'guest' && well.userId !== userId && user?.type !== 'admin') {
             throw new KnownError({
                 message: 'Unauthorized',
                 code: 403,
                 name: 'UnauthorizedError',
             });
         }
-
+    
         const modelEstimate = await produceEstimate(well);
         const riskAssesment = (() => {
             switch (modelEstimate) {
@@ -69,12 +69,9 @@ export const PredictionService = {
                 default: return 2.5;
             }
         })();
-
-        const prediction: Prediction = {
-            id: uuid4(),
-            createdAt: new Date(),
-            userId,
-            wellId,
+    
+        // --- define predictors ---
+        const predictors = {
             division: well.regionKey?.division!,
             district: well.regionKey?.district!,
             upazila: well.regionKey?.upazila!,
@@ -84,11 +81,47 @@ export const PredictionService = {
             flooding: well.flooding!,
             staining: well.staining!,
             utensilStaining: well.utensilStaining ?? null,
+        };
+    
+        // --- check if a prediction already exists ---
+        const existingPredictions = await PredictionRepo.getByQuery([
+            ['wellId', '==', wellId],
+        ]);
+
+        const matchingPrediction = existingPredictions.find(existing => 
+            isEqual(
+                {
+                    division: existing.division,
+                    district: existing.district,
+                    upazila: existing.upazila,
+                    union: existing.union,
+                    mouza: existing.mouza,
+                    depth: existing.depth,
+                    flooding: existing.flooding,
+                    staining: existing.staining,
+                    utensilStaining: existing.utensilStaining,
+                }, 
+                predictors
+            )
+        );
+    
+        if (matchingPrediction) {
+            console.log(`Returning existing prediction ${matchingPrediction.id}`);
+            return matchingPrediction;
+        }
+    
+        // --- if no match, create a new prediction ---
+        const prediction: Prediction = {
+            id: uuid4(),
+            createdAt: new Date(),
+            userId,
+            wellId,
+            ...predictors,
             model: 'model6',
             modelOutput: modelEstimate,
             riskAssesment,
         };
-
+    
         return await PredictionRepo.create(prediction);
     },
 

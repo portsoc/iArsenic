@@ -1,12 +1,15 @@
 import { Box, Button, Typography } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
-import { Well } from 'iarsenic-types';
+import { AccessToken, Prediction, Well } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
+import findWellPredictions from '../../utils/findWellPredictions';
 
 export default function MyWells(): JSX.Element {
+    const [token, setToken] = useState<AccessToken>();
     const [wells, setWells] = useState<Well[]>([]);
+    const [predictions, setPredictions] = useState<Prediction[]>([]);
 
     async function fetchUserWells() {
         const token = await AccessTokenRepo.get();
@@ -37,9 +40,29 @@ export default function MyWells(): JSX.Element {
                 depth: well.depth,
                 flooding: well.flooding,
                 staining: well.staining,
-                prediction: well.prediction,
             };
         }));
+    }
+
+    async function getWellPredictions() {
+        if (!token || !wells) return;
+    
+        // use body because query parameters might get too long
+        const res = await fetch('/api/v1/prediction', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'authorization': `Bearer ${token.id}`,
+            },
+            body: JSON.stringify({ wellIds: wells.map(w => w.id) })
+          });
+    
+        if (!res.ok) {
+            throw new Error(`Failed to fetch predictions: ${res.status}`);
+        }
+    
+        const data = await res.json();
+        setPredictions(data.predictions);
     }
 
     async function addWell(): Promise<Well> {
@@ -66,8 +89,23 @@ export default function MyWells(): JSX.Element {
     }
 
     useEffect(() => {
+        async function fetchToken() {
+            const token = await AccessTokenRepo.get();
+            if (token == null) return;
+
+            setToken(token);
+        }
+
+        fetchToken()
+    }, [])
+
+    useEffect(() => {
         fetchUserWells();
-    }, []);
+    }, [token]);
+
+    useEffect(() => {
+        getWellPredictions();
+    }, [wells]);
 
     return (
         <>
@@ -93,7 +131,14 @@ export default function MyWells(): JSX.Element {
             >
 
                 {wells.map(well => (
-                    <WellCard key={well.id} well={well} />
+                    <WellCard 
+                        key={well.id} 
+                        well={well} 
+                        predictions={findWellPredictions(
+                            well, 
+                            predictions,
+                        )}
+                    />
                 ))}
             </Box>
         </>

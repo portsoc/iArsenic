@@ -83,8 +83,12 @@ export default function Map() {
 
     useEffect(() => {
         getPredictionPinData();
-        getWellPredictions();
     }, [token]);
+
+    useEffect(() => {
+        if (!wells) return
+        getWellPredictions()
+    }, [wells])
 
     if (!interactiveMap || !wells || !regionTranslations || !predictions) return (
         <Stack alignItems='center' justifyContent='center'>

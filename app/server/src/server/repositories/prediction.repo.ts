@@ -106,7 +106,7 @@ export const PredictionRepo: IPredictionRepo = {
 
         for (const prediction of snapshot.docs) {
             const docData = prediction.data();
-
+            
             const predictionData = {
                 ...docData,
                 createdAt: docData.createdAt instanceof Timestamp

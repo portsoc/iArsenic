@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { Well, RiskAssesment } from 'iarsenic-types';
+import { Well, Prediction, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
@@ -23,14 +23,12 @@ export default function Result(): JSX.Element {
     const [, params] = useRoute('/:id/result');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-
+    const [prediction, setPrediction] = useState<Prediction>();
     const [speedoValue, setSpeedoValue] = useState<number>();
     const [warningTexts, setWarningTexts] = useState<EstimateTexts>();
-
     const [loading, setLoading] = useState<boolean>(true);
 
     function setOutput(riskAssesment: RiskAssesment) {
-        console.log(riskAssesment);
         setSpeedoValue(riskAssesment);
 
         const textIndex = riskAssesment - 0.5 as 0 | 1 | 2 | 3 | 4;
@@ -48,48 +46,40 @@ export default function Result(): JSX.Element {
     }
 
     useEffect(() => {
-        async function fetchTokenAndWell() {
+        async function fetchTokenAndData() {
             try {
                 if (!wellId) return;
 
                 const token = await AccessTokenRepo.get();
+                const headers: HeadersInit = token ? { 'authorization': `Bearer ${token.id}` } : {};
 
-                const headers: HeadersInit = {};
-                if (token) {
-                    headers['authorization'] = `Bearer ${token.id}`;
-                }
-
-                const result = await fetch(`/api/v1/self/well/${wellId}`, {
-                    headers,
+                // Fetch the well first
+                const wellRes = await fetch(`/api/v1/self/well/${wellId}`, { 
+                    headers
                 });
 
-                if (!result.ok) {
+                if (!wellRes.ok) {
                     throw new Error('Failed to fetch well');
                 }
 
-                const data = await result.json();
-                let fetchedWell = data.well;
+                const wellData = await wellRes.json();
+                setWell(wellData.well);
 
-                if (fetchedWell.prediction == null) {
-                    const res = await fetch(`/api/v1/self/well/${wellId}/predict`, {
-                        method: 'POST',
-                        headers,
-                    });
+                // Always generate a fresh prediction for the well
+                const predictionRes = await fetch(`/api/v1/prediction/well/${wellId}`, {
+                    method: 'POST',
+                    headers,
+                });
 
-                    if (!res.ok) {
-                        throw new Error('Failed to fetch prediction');
-                    }
-
-                    const data = await res.json();
-                    fetchedWell = data.well;
+                if (!predictionRes.ok) {
+                    throw new Error('Failed to generate prediction');
                 }
 
-                setWell(fetchedWell);
+                const predictionData = await predictionRes.json();
+                setPrediction(predictionData.prediction);
 
-                if (fetchedWell.prediction) {
-                    setOutput(fetchedWell.prediction.riskAssesment);
-                }
-
+                // Now set the UI output
+                setOutput(predictionData.prediction.riskAssesment);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -97,7 +87,7 @@ export default function Result(): JSX.Element {
             }
         }
 
-        fetchTokenAndWell();
+        fetchTokenAndData();
     }, [wellId]);
 
     if (loading) {
@@ -108,7 +98,7 @@ export default function Result(): JSX.Element {
         );
     }
 
-    if (!well || !speedoValue || !warningTexts) {
+    if (!well || !prediction || !speedoValue || !warningTexts) {
         return (
             <Typography textAlign="center" variant="h6">
                 Error loading data. Please refresh the page.
@@ -125,13 +115,10 @@ export default function Result(): JSX.Element {
             </Grid>
 
             <Grid item xs={12} style={{ height: '220px' }}>
-                <Stack sx={{
-                    alignItems: 'center',
-                }}>
+                <Stack sx={{ alignItems: 'center' }}>
                     <Box className='english'>
                         <EnglishSpeedo value={speedoValue} />
                     </Box>
-
                     <Box className='bengali'>
                         <BengaliSpeedo value={speedoValue} />
                     </Box>
@@ -142,11 +129,11 @@ export default function Result(): JSX.Element {
                 <Grid item xs={12}>
                     <Box textAlign='center'>
                         <Paper elevation={3} sx={{ padding: '20px' }}>
-                            <Typography className='english'variant="h6" gutterBottom>
+                            <Typography className='english' variant="h6" gutterBottom>
                                 {warningTexts.english.title}
                             </Typography>
 
-                            <Typography className='bengali'variant="h6" gutterBottom>
+                            <Typography className='bengali' variant="h6" gutterBottom>
                                 {warningTexts.bengali.title}
                             </Typography>
 
@@ -166,7 +153,6 @@ export default function Result(): JSX.Element {
                                 <Typography className='english'>
                                     What does this mean? 
                                 </Typography>
-
                                 <Typography className='bengali'>
                                     Bengali Placeholder
                                 </Typography>
