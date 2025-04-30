@@ -57,14 +57,3 @@ export const ResetPasswordTokenSchema = z.object({
 });
 
 export type ResetPasswordToken = z.infer<typeof ResetPasswordTokenSchema>;
-
-export const ApiKeySchema = z.object({
-    id: z.string(),
-    userId: z.string(),
-    createdAt: z.date(),
-    expiresAt: z.date(),
-    type: z.literal('api-key'),
-    revokedAt: z.date().optional(),
-});
-
-export type ApiKey = z.infer<typeof ApiKeySchema>;
