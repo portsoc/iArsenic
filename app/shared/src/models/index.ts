@@ -1,5 +1,5 @@
-export { ApiKeySchema } from './apiKey.model';
-export type { ApiKey } from './apiKey.model';
+export { ApiKeySchema } from './token.model';
+export type { ApiKey } from './token.model';
 
 export { AccessTokenSchema } from './token.model';
 export type { AccessToken } from './token.model';
