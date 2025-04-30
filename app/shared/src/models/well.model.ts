@@ -27,7 +27,7 @@ export const CompleteWellSchema = z.object({
     depth: z.number(),
     flooding: z.boolean(),
     staining: StainingSchema,
-    utensilStaining: UtensilStainingSchema,
+    utensilStaining: UtensilStainingSchema.optional(),
     geolocation: z.tuple([z.number(), z.number()]).optional(),
 });
 
