@@ -20,7 +20,7 @@
     "dotenv": "^16.4.5",
     "firebase-admin": "^12.3.1",
     "firebase-functions": "^5.0.1",
-    "iarsenic-types": "^2.0.22",
+    "iarsenic-types": "^2.0.28",
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
     "koa-helmet": "^7.0.2",
