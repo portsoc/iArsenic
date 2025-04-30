@@ -23,7 +23,7 @@ export const GeodataService = {
     } | null> {
         const pt = point([lon, lat]);
 
-        // 🔹 Step 1: find upazila directly
+        // Step 1: find upazila directly
         const upazilas = await loadGeoJSONFromGCS('intersected_upazilas.geojson');
 
         let division: string | undefined;
@@ -40,7 +40,7 @@ export const GeodataService = {
 
         if (!division || !district || !upazila) return null;
 
-        // 🔹 Step 2: load mouza file using known upazila location
+        // Step 2: load mouza file using known upazila location
         const key = `${division}-${district}-${upazila}`.replace(/\s+/g, '_');
         const mouzaFilename = `mouza-by-upazila/${key}.geojson`;
 

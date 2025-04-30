@@ -18,11 +18,11 @@ export const GeodataController = {
             throw new KnownError({
                 code: 404,
                 name: 'RegionNotFound',
-                message: `No region found near lat=${lat}, lon=${lon}`,
+                message: `Point lat=${lat}, lon=${lon} not within known region`,
             });
         }
 
         ctx.status = 200;
-        ctx.body = { region };
+        ctx.body = { ...region };
     },
 };
