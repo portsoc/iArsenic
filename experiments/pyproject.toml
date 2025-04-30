@@ -12,6 +12,8 @@ pandas = "^2.2.2"
 geopandas = "^1.0.1"
 matplotlib = "^3.9.2"
 topojson = "^1.9"
+jupyter-core = "^5.7.2"
+openpyxl = "^3.1.5"
 
 [tool.poetry.dev-dependencies]
 

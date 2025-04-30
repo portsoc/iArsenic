@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "ES2020",
         "module": "ES2020",
+        "preserveExtensions": true,
         "strict": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
