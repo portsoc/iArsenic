@@ -6,10 +6,7 @@ import { z } from 'zod';
 
 export const PredictionController = {
     async createPrediction(ctx: Context) {
-        const token = z.union([
-            AccessTokenSchema,
-            GuestTokenSchema,
-        ]).parse(ctx.state.token);
+        const token = AccessTokenSchema.parse(ctx.state.token);
 
         const userId = token.userId;
 

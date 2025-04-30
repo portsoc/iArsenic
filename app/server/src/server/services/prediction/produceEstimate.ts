@@ -1,7 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import { Model6Data } from '../../types';
-import { ModelMessageCode } from 'iarsenic-types';
-import { Well } from 'iarsenic-types';
+import { CreatePrediction, ModelMessageCode } from 'iarsenic-types';
 
 // Setup GCS client — assumes Application Default Credentials or service account key
 const storage = new Storage();
@@ -13,23 +12,21 @@ async function fetchModelDataFromGCS(filename: string): Promise<Model6Data> {
     return JSON.parse(contents.toString());
 }
 
-export default async function produceEstimate(well: Well): Promise<ModelMessageCode> {
-    if (!well.regionKey) throw new Error('region key not found in well data');
-
-    const div = well.regionKey.division;
-    const dis = well.regionKey.district;
-    const upa = well.regionKey.upazila;
-    const uni = well.regionKey.union;
-    const mou = well.regionKey.mouza;
+export default async function produceEstimate(predictors: CreatePrediction): Promise<ModelMessageCode> {
+    const div = predictors.division;
+    const dis = predictors.district;
+    const upa = predictors.upazila;
+    const uni = predictors.union;
+    const mou = predictors.mouza;
 
     const filename = `model/${div}-${dis}-${upa}-${uni}-${mou}.json`;
     const modelData: Model6Data = await fetchModelDataFromGCS(filename);
 
-    const depth = well.depth;
+    const depth = predictors.depth;
     if (!depth && depth !== 0) throw new Error('depth not found in well data');
 
     console.log('---------------- PREDICTORS ----------------')
-    console.log(well)
+    console.log(predictors)
     console.log('---------------- MODEL DATA ----------------')
     console.log(modelData)
 
@@ -48,9 +45,9 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
         exist in the prediction data for this region
     */
     if (regionStrataKey === 's15' && 'm2' in modelData && modelData.s15) {
-        if (well.staining === 'black' && modelData.s15.m2 !== undefined) {
+        if (predictors.staining === 'black' && modelData.s15.m2 !== undefined) {
             return modelData.s15.m2;
-        } else if (well.flooding && modelData.s15.m9 !== undefined) {
+        } else if (predictors.flooding && modelData.s15.m9 !== undefined) {
             return modelData.s15.m9;
         } else if (modelData.s15.m7 !== undefined) {
             return modelData.s15.m7;
@@ -58,9 +55,9 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
             throw new Error('model keys required for flooding model misisng');
         }
     } else {
-        if (well.staining === 'black' || well.utensilStaining === 'black') {
+        if (predictors.staining === 'black' || predictors.utensilStaining === 'black') {
             return 1;
-        } else if (well.staining === 'red' || well.utensilStaining === 'red') {
+        } else if (predictors.staining === 'red' || predictors.utensilStaining === 'red') {
             if (modelData[regionStrataKey] && modelData[regionStrataKey].m !== undefined) {
                 return modelData[regionStrataKey].m;
             } else {

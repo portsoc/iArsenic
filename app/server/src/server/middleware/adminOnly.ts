@@ -55,5 +55,7 @@ export default async function adminOnly(
         return
     }
 
+    ctx.state.token = token
+
     await next()
 }
