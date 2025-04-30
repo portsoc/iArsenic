@@ -27,7 +27,7 @@ async function up(): Promise<boolean> {
             const predictionData = {
                 id: uuidv4(), 
                 userId: wellData.userId,
-                wellId: doc.id,
+                wellId: wellData.id,
                 createdAt: new Date(),
                 division: wellData.regionKey.division,
                 district: wellData.regionKey.district,

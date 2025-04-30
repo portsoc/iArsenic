@@ -35,6 +35,17 @@ export const PredictionController = {
         ctx.body = { prediction };
     },
 
+    async getPredictionsByQuery(ctx: Context) {
+        const filters = ctx.query as Record<string, any>;
+
+        const predictions = await PredictionService.queryPredictions(
+            filters, 
+        );
+    
+        ctx.status = 200;
+        ctx.body = { predictions };
+    },
+
     async createWellPrediction(ctx: Context) {
         const token = z.union([
             AccessTokenSchema,
