@@ -2,7 +2,7 @@ import { Typography, Button, CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
-import { RegionKey, AccessToken } from "shared";
+import { RegionKey, AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";

@@ -1,6 +1,6 @@
 import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { Well } from "shared";
+import { Well } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function Briefing(): JSX.Element {

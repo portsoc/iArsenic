@@ -1,6 +1,6 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import { IKnownError, RegisterRequestSchema } from 'shared';
+import { IKnownError, RegisterRequestSchema } from 'iarsenic-types';
 import LanguageSelector from '../../utils/LanguageSelector';
 
 export default function SignUp(): JSX.Element {

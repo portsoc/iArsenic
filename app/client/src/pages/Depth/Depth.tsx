@@ -1,7 +1,7 @@
 import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { AccessToken } from "shared";
+import { AccessToken } from "iarsenic-types";
 import { useRoute } from "wouter";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 

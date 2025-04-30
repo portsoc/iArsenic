@@ -2,7 +2,7 @@ import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, 
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { AccessToken } from "shared";
+import { AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function Depth(): JSX.Element {
