@@ -34,14 +34,13 @@ export const PredictionService = {
             wellId: null,
         };
     
-        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         return await PredictionRepo.create(prediction);
     },
 
     async createWellPrediction(userId: string, wellId: string): Promise<Prediction> {
         const well = await WellRepo.findById(wellId);
         const user = await UserRepo.findById(userId);
-    
+
         if (!user && userId !== 'guest') {
             throw new KnownError({
                 message: `User ${userId} not found`,
@@ -69,6 +68,7 @@ export const PredictionService = {
         const completeWellRes = CompleteWellSchema.safeParse(well)
 
         if (!completeWellRes.success) {
+            console.error(completeWellRes.error)
             throw new KnownError({
                 message: 'Well data is not complete, unable to produce estimate',
                 code: 400,
@@ -83,7 +83,7 @@ export const PredictionService = {
             depth: completeWell.depth,
             flooding: completeWell.flooding,
             staining: completeWell.staining,
-            utensilStaining: completeWell.utensilStaining
+            utensilStaining: completeWell.utensilStaining || null,
         };
 
         // --- check if a prediction already exists ---

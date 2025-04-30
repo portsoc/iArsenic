@@ -1,12 +1,12 @@
 import { Context } from 'koa';
-import { AccessTokenSchema, GuestTokenSchema, Prediction, CreatePredictionSchema, validateModel, CreatePrediction } from 'iarsenic-types';
+import { AccessTokenSchema, GuestTokenSchema, Prediction, CreatePredictionSchema, validateModel, CreatePrediction, AbstractTokenSchema } from 'iarsenic-types';
 import { PredictionService } from '../services/prediction.service';
 import { KnownError } from '../errors';
 import { z } from 'zod';
 
 export const PredictionController = {
     async createPrediction(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
+        const token = AbstractTokenSchema.parse(ctx.state.token);
 
         const userId = token.userId;
 
@@ -29,7 +29,7 @@ export const PredictionController = {
         );
 
         ctx.status = 201;
-        ctx.body = { prediction };
+        ctx.body = { ...prediction };
     },
 
     async getPredictionsByQuery(ctx: Context) {
@@ -66,7 +66,7 @@ export const PredictionController = {
         );
 
         ctx.status = 201;
-        ctx.body = { prediction };
+        ctx.body = { ...prediction };
     },
 
     async getPredictionById(ctx: Context) {
@@ -92,7 +92,7 @@ export const PredictionController = {
         );
 
         ctx.status = 200;
-        ctx.body = { prediction };
+        ctx.body = { ...prediction };
     },
 
     async deletePrediction(ctx: Context) {

@@ -1,6 +1,6 @@
 import Router from '@koa/router';
 import { adminOnly } from '../../middleware'
-import { TokenController } from 'src/server/controllers';
+import { TokenController } from '../../controllers';
 
 const token = new Router();
 

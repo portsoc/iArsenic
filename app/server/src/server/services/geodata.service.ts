@@ -38,11 +38,14 @@ export const GeodataService = {
             }
         });
 
+        console.log(`division: ${division}`)
+        console.log(`district: ${district}`)
+        console.log(`upazila: ${upazila}`)
+
         if (!division || !district || !upazila) return null;
 
         // Step 2: load mouza file using known upazila location
-        const key = `${division}-${district}-${upazila}`.replace(/\s+/g, '_');
-        const mouzaFilename = `mouza-by-upazila/${key}.geojson`;
+        const mouzaFilename = `mouza-by-upazila/${division}-${district}-${upazila}.geojson`;
 
         let mouzaData: FeatureCollection;
         try {
