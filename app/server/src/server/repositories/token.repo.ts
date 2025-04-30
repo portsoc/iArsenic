@@ -1,6 +1,6 @@
 import { Repository } from './repo.interface';
-import db from '../db';
 import { AbstractTokenSchema, AbstractToken } from 'iarsenic-types';
+import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 
 export const TokenRepo: Repository<AbstractToken> = {

@@ -1,76 +1,61 @@
-import { ParameterizedContext, Next } from 'koa';
-import { TokenRepo, UserRepo } from '../repositories';
+import { ParameterizedContext, Next } from 'koa'
+import { TokenRepo, UserRepo } from '../repositories'
 
-export default async function adminOnly(ctx: ParameterizedContext, next: Next) {
-    const auth = ctx.request.headers['authorization'] as string | undefined;
-    const apiKey = ctx.request.headers['x-api-key'] as string | undefined;
+export default async function adminOnly(
+    ctx: ParameterizedContext,
+    next: Next
+) {
+    const auth = ctx.request.headers['authorization'] as string
+    const tokenId = auth?.split(' ')[1]
 
-    const bearerToken = auth?.startsWith('Bearer ') ? auth.split(' ')[1] : undefined;
-    const tokenId = bearerToken || apiKey;
-
-    if (!tokenId) {
-        ctx.status = 401;
+    if (!auth || !tokenId) {
+        ctx.status = 401
         ctx.body = {
             error: true,
-            result: 'Unauthorized: No token or API key provided',
-        };
-        return;
+            result: 'Unauthorized',
+        }
+        return
     }
 
-    const token = await TokenRepo.findById(tokenId);
+    const token = await TokenRepo.findById(tokenId)
 
-    if (!token) {
-        ctx.status = 401;
-        ctx.body = {
-            error: true,
-            result: 'Unauthorized: Invalid token',
-        };
-        return;
+    if (token == null) {
+        throw Error('token not found')
     }
 
-    if (token.type !== 'access' && token.type !== 'api-key') {
-        ctx.status = 401;
-        ctx.body = {
-            error: true,
-            result: `Unauthorized: Unexpected token type "${token.type}"`,
-        };
-        return;
+    if (token.type !== 'access') {
+        throw Error('unexpected token type')
     }
 
     if (
         token.expiresAt < new Date() ||
         token.revokedAt != null
     ) {
-        ctx.status = 401;
+        ctx.status = 401
         ctx.body = {
             error: true,
-            result: 'Unauthorized: Token expired or revoked',
-        };
-        return;
+            result: 'Unauthorized',
+        }
+        return
     }
 
-    const user = await UserRepo.findById(token.userId);
+    const user = await UserRepo.findById(token.userId)
 
     if (!user) {
-        ctx.status = 401;
-        ctx.body = {
-            error: true,
-            result: 'Unauthorized: User not found',
-        };
-        return;
+        throw Error('user not found')
     }
 
     if (user.type !== 'admin') {
-        ctx.status = 401;
+        ctx.status = 401
         ctx.body = {
             error: true,
-            result: 'Unauthorized: User is not admin',
-        };
-        return;
+            result: 'Unauthorized',
+        }
+
+        return
     }
 
-    ctx.state.token = token;
-    ctx.state.user = user;
+    ctx.state.token = token
 
-    await next();
+    await next()
 }

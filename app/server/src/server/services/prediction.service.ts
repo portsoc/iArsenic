@@ -34,6 +34,7 @@ export const PredictionService = {
             wellId: null,
         };
     
+        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         return await PredictionRepo.create(prediction);
     },
 

@@ -42,7 +42,7 @@ export const UserService = {
         const jwt = await TokenRepo.create({
             id: uuid4(),
             userId: user.id,
-            createdAt: new Date(),
+            createdAt: new Date,
             expiresAt: expiresAt,
             type: "access",
         })
