@@ -284,9 +284,3 @@ def fix_maps():
 
     return mou_topo
 
-if __name__ == '__main__':
-    print("📂 Loading intersected_mouzas.topojson...")
-    mou = gpd.read_file('output/geodata/intersected_mouzas.topojson')
-
-    print("📦 Splitting and saving TopoJSON by div-dis-upa...")
-    split_and_save_mouzas(mou)
