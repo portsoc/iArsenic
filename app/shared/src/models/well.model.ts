@@ -28,7 +28,7 @@ export const CompleteWellSchema = z.object({
     flooding: z.boolean(),
     staining: StainingSchema,
     utensilStaining: UtensilStainingSchema,
-    geolocation: z.tuple([z.number(), z.number()]),
+    geolocation: z.tuple([z.number(), z.number()]).optional(),
 });
 
 export type CompleteWell = z.infer<typeof CompleteWellSchema>;
