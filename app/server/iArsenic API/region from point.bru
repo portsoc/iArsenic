@@ -1,0 +1,20 @@
+meta {
+  name: region from point
+  type: http
+  seq: 16
+}
+
+get {
+  url: {{base_url}}/api/v1/geodata/region-from-point?lat=23.8103&lon=90.4125
+  body: none
+  auth: none
+}
+
+params:query {
+  lat: 23.8103
+  lon: 90.4125
+}
+
+headers {
+  authorization: Bearer {{access_token}}
+}

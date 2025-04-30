@@ -5,6 +5,7 @@ import self from './self'
 import user from './user'
 import well from './well'
 import prediction from './prediction'
+import geodata from './geodata'
 
 const routes = new Router({ prefix: '/api/v1' })
 
@@ -17,5 +18,6 @@ routes.use(user.routes())
 routes.use(self.routes())
 routes.use(well.routes())
 routes.use(prediction.routes())
+routes.use(geodata.routes())
 
 export default routes

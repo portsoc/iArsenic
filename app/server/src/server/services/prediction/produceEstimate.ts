@@ -22,7 +22,7 @@ export default async function produceEstimate(well: Well): Promise<ModelMessageC
     const uni = well.regionKey.union;
     const mou = well.regionKey.mouza;
 
-    const filename = `${div}-${dis}-${upa}-${uni}-${mou}.json`;
+    const filename = `model/${div}-${dis}-${upa}-${uni}-${mou}.json`;
     const modelData: Model6Data = await fetchModelDataFromGCS(filename);
 
     const depth = well.depth;
