@@ -64,12 +64,6 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
         }
     }
 
-    for (const well of wells) {
-        console.log(well)
-        console.log(findWellPredictions(well, predictions))
-        console.log('++++++++++++++++++++++++++++++++')
-    }
-
     const filteredWells = wells.filter(s =>
         s.geolocation != null &&
         findWellPredictions(s, predictions)[0] != null &&
@@ -77,9 +71,7 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
         s.staining != null &&
         s.depth != null
     );
-
-    console.log('--------------------------------')
-    console.log(filteredWells)
+    
     return (
         <>
             {filteredWells.map((p, index) => {
