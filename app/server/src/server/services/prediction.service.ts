@@ -4,6 +4,7 @@ import { Prediction } from 'iarsenic-types';
 import { PredictionRepo, UserRepo, WellRepo } from '../repositories';
 import { KnownError } from '../errors';
 import produceEstimate from './prediction/produceEstimate';
+import { QueryTuple } from '../types';
 
 export const PredictionService = {
     async createPrediction(userId: string, predictors: Partial<Prediction>): Promise<Prediction> {
@@ -156,4 +157,27 @@ export const PredictionService = {
     async getAllPredictions(): Promise<Prediction[]> {
         return await PredictionRepo.findAll();
     },
+
+    async queryPredictions(filters: Record<string, any>): Promise<Prediction[]> {
+        const queries: QueryTuple[] = [];
+    
+        for (const [key, value] of Object.entries(filters)) {
+            if (Array.isArray(value)) {
+                for (const singleValue of value) {
+                    queries.push([key, '==', singleValue]);
+                }
+            } else {
+                queries.push([key, '==', value]);
+            }
+        }
+    
+        const allPredictions: Prediction[] = [];
+    
+        for (const query of queries) {
+            const results = await PredictionRepo.getByQuery([query]);
+            allPredictions.push(...results);
+        }
+    
+        return allPredictions;
+    }
 };

@@ -9,5 +9,5 @@ export default function(well: Well, predictions: Prediction[]): Prediction[] {
         return []
     }
 
-    return matching; // return most recent one
+    return matching;
 }

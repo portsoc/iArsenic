@@ -1,5 +1,7 @@
 import { ModelMessageCode } from 'iarsenic-types';
 
+export type QueryTuple = [string, FirebaseFirestore.WhereFilterOp, any];
+
 // prediction data
 export type Model5Data = {
     [key: string]: {

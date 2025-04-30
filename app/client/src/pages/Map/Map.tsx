@@ -28,7 +28,7 @@ export default function Map() {
     async function getPredictionPinData() {
         if (!token) return;
 
-        const res = await fetch(`/api/v1/well/`, {
+        const res = await fetch(`/api/v1/wells`, {
             headers: {
                 'authorization': `Bearer ${token.id}`
             }
@@ -38,31 +38,33 @@ export default function Map() {
             throw new Error(`Failed to fetch well data:, ${res}`);
         }
 
-        const data = await res.json();
+        const data = (await res.json()) as { wells: Well[] };
+
         setWells(data.wells);
     }
 
     async function getWellPredictions() {
         if (!token || !wells) return;
+
+        const query = wells.map(w => `wellId=${encodeURIComponent(w.id)}`).join('&');
     
-        // use body because query parameters might get too long
-        const res = await fetch('/api/v1/prediction', {
+        const res = await fetch(`/api/v1/prediction/query?${query}`, {
             method: 'GET',
             headers: {
-              'Content-Type': 'application/json',
-              'authorization': `Bearer ${token.id}`,
+                authorization: `Bearer ${token.id}`,
             },
-            body: JSON.stringify({ wellIds: wells.map(w => w.id) })
-          });
+        });
     
         if (!res.ok) {
-            throw new Error(`Failed to fetch predictions: ${res.status}`);
+            console.warn(`Failed to fetch predictions: ${res.status}`);
+            return
         }
-    
+
         const data = await res.json();
+
         setPredictions(data.predictions);
     }
-
+    
     async function getRegionTranslations() {
         const translations = await RegionTranslationsFetcher();
         setRegionTranslations(translations);
@@ -90,7 +92,7 @@ export default function Map() {
         getWellPredictions()
     }, [wells])
 
-    if (!interactiveMap || !wells || !regionTranslations || !predictions) return (
+    if (!interactiveMap || !regionTranslations || !predictions || !wells) return (
         <Stack alignItems='center' justifyContent='center'>
             <CircularProgress />
         </Stack>
@@ -100,12 +102,15 @@ export default function Map() {
         <Stack direction='column' justifyContent='center' alignItems='center'>
             <MapContainer center={position} zoom={7} scrollWheelZoom={true}>
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                    crossOrigin="anonymous"
                 />
+
                 <UpaMap interactiveMap={interactiveMap} regionTranslations={regionTranslations} />
                 <Markers wells={wells} predictions={predictions} regionTranslations={regionTranslations} />
             </MapContainer>
         </Stack>
     );
+    
 }

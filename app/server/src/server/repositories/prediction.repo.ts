@@ -2,14 +2,13 @@ import { Repository } from './repo.interface';
 import { Prediction, PredictionSchema } from 'iarsenic-types';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
+import { QueryTuple } from '../types';
 
 export interface IPredictionRepo extends Repository<Prediction> {
     update: (prediction: Prediction) => Promise<void>;
     getByQuery: (queries: QueryTuple[]) => Promise<Prediction[]>;
     findAll: () => Promise<Prediction[]>;
 }
-
-type QueryTuple = [string, FirebaseFirestore.WhereFilterOp, any];
 
 export const PredictionRepo: IPredictionRepo = {
     async findById(id: string): Promise<Prediction | null> {
@@ -95,7 +94,9 @@ export const PredictionRepo: IPredictionRepo = {
     },
 
     async getByQuery(queries: QueryTuple[]): Promise<Prediction[]> {
-        let dbQuery: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db.collection('prediction');
+        let dbQuery: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = db.collection(
+            'prediction'
+        );
 
         for (const [key, operator, value] of queries) {
             dbQuery = dbQuery.where(key, operator, value);
@@ -106,7 +107,7 @@ export const PredictionRepo: IPredictionRepo = {
 
         for (const prediction of snapshot.docs) {
             const docData = prediction.data();
-            
+
             const predictionData = {
                 ...docData,
                 createdAt: docData.createdAt instanceof Timestamp
