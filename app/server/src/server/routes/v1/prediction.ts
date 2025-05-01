@@ -2,14 +2,14 @@ import Router from '@koa/router';
 import { PredictionController } from '../../controllers';
 import { adminOnly, jwtOrGuest } from '../../middleware'
 
-const prediction = new Router({ prefix: '/prediction' });
+const prediction = new Router();
 
-prediction.post('/', ctx => PredictionController.createPrediction(ctx));
-prediction.post('/well/:id', jwtOrGuest, ctx => PredictionController.createWellPrediction(ctx));
-prediction.get('/query', jwtOrGuest, ctx => PredictionController.getPredictionsByQuery(ctx));
-prediction.get('/:id', ctx => PredictionController.getPredictionById(ctx));
-prediction.delete('/:id', ctx => PredictionController.deletePrediction(ctx));
-prediction.get('/', ctx => PredictionController.getPredictionsByToken(ctx));
-prediction.get('s', adminOnly, ctx => PredictionController.getAllPredictions(ctx));
+prediction.post('/prediction', adminOnly, ctx => PredictionController.createPrediction(ctx));
+prediction.post('/prediction/well/:id', jwtOrGuest, ctx => PredictionController.createWellPrediction(ctx));
+prediction.get('/prediction/query', jwtOrGuest, ctx => PredictionController.getPredictionsByQuery(ctx));
+prediction.get('/prediction/:id', ctx => PredictionController.getPredictionById(ctx));
+prediction.delete('/prediction/:id', ctx => PredictionController.deletePrediction(ctx));
+prediction.get('/prediction', ctx => PredictionController.getPredictionsByToken(ctx));
+prediction.get('/predictions', adminOnly, ctx => PredictionController.getAllPredictions(ctx));
 
 export default prediction;

@@ -1,6 +1,6 @@
 {
   "name": "iarsenic-types",
-  "version": "2.0.7",
+  "version": "2.0.39",
   "description": "types used in iarsenic project",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

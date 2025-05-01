@@ -17,6 +17,7 @@ export const AbstractTokenSchema = z.object({
         z.literal('access'),
         z.literal('verify-email'),
         z.literal('reset-password'),
+        z.literal('api-key'),
     ]),
     revokedAt: z.date().optional(),
 })

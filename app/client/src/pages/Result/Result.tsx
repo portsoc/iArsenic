@@ -76,10 +76,10 @@ export default function Result(): JSX.Element {
                 }
 
                 const predictionData = await predictionRes.json();
-                setPrediction(predictionData.prediction);
+                setPrediction(predictionData);
 
                 // Now set the UI output
-                setOutput(predictionData.prediction.riskAssesment);
+                setOutput(predictionData.riskAssesment);
             } catch (error) {
                 console.error(error);
             } finally {

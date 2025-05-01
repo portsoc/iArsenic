@@ -22,13 +22,13 @@ export const CompleteWellSchema = z.object({
     id: z.string(),
     createdAt: z.date(),
     userId: z.string(),
-    drinkingWaterSource: z.boolean(),
+    // drinkingWaterSource: z.boolean(),
     regionKey: RegionKeySchema,
     depth: z.number(),
     flooding: z.boolean(),
     staining: StainingSchema,
-    utensilStaining: UtensilStainingSchema,
-    geolocation: z.tuple([z.number(), z.number()]),
+    utensilStaining: UtensilStainingSchema.optional(),
+    geolocation: z.tuple([z.number(), z.number()]).optional(),
 });
 
 export type CompleteWell = z.infer<typeof CompleteWellSchema>;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from "../../types";
-import { RegionKey } from "shared";
+import { RegionKey } from "iarsenic-types";
 
 type props = {
     dropdownData: DropdownDivision[],

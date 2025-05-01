@@ -1,5 +1,5 @@
 import { CircularProgress, Stack } from "@mui/material";
-import { User } from "shared";
+import { User } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import { useEffect, useState } from "react";

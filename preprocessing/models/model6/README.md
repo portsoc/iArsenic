@@ -11,13 +11,16 @@ poetry install
 poetry run python main.py
 ```
 
-### How to upload model estimates to google cloud
+### How to upload model estimates and processed geodata to google cloud
 
 1. Login to google cloud by tying `gcloud auth login` and
 using iarsenic24@gmail.com credentials
 2. Set the google cloud project to model6-storage 
 `gcloud config set project model6-storage`
-3. Run rsync from the model6 directory `gsutil -m rsync -r model/ gs://iarsenic-model6`
+3. Run rsync from the model6 directory `gsutil -m rsync -r model/ gs://iarsenic-model6/model`
+4. Upload Mouza geojson files (grouped by Upazila) `gsutil -m rsync -r output/geodata/mouza-by-upazila gs://iarsenic-model6/geodata/mouza-by-upazila`
+5. Upload generated topojson files `gsutil -m cp output/geodata/*.topojson gs://iarsenic-model6/geodata/`
+6. Upload generated geojson files (required by server for turf) `gsutil -m cp output/geodata/*.geojson gs://iarsenic-model6/geodata/`
 
 ## How does this model differ from model5
 

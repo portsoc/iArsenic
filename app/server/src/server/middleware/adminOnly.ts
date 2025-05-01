@@ -5,10 +5,14 @@ export default async function adminOnly(
     ctx: ParameterizedContext,
     next: Next
 ) {
-    const auth = ctx.request.headers['authorization'] as string
-    const tokenId = auth?.split(' ')[1]
+    const bearerAuth = ctx.request.headers['authorization'] as string
+    const apiKey = ctx.request.headers['x-api-key'] as string
 
-    if (!auth || !tokenId) {
+    let tokenId
+    if (bearerAuth) tokenId = bearerAuth?.split(' ')[1]
+    if (apiKey) tokenId = apiKey
+
+    if (!tokenId) {
         ctx.status = 401
         ctx.body = {
             error: true,
@@ -23,7 +27,7 @@ export default async function adminOnly(
         throw Error('token not found')
     }
 
-    if (token.type !== 'access') {
+    if (token.type !== 'access' && token.type !== 'api-key') {
         throw Error('unexpected token type')
     }
 
@@ -54,6 +58,8 @@ export default async function adminOnly(
 
         return
     }
+
+    ctx.state.token = token
 
     await next()
 }

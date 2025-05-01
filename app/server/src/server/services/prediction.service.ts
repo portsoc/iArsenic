@@ -1,39 +1,46 @@
 import uuid4 from 'uuid4';
 import { isEqual } from 'lodash';
-import { Prediction } from 'iarsenic-types';
+import { CompleteWellSchema, CreatePrediction, ModelMessageCode, Prediction } from 'iarsenic-types';
 import { PredictionRepo, UserRepo, WellRepo } from '../repositories';
 import { KnownError } from '../errors';
 import produceEstimate from './prediction/produceEstimate';
 import { QueryTuple } from '../types';
 
+function modelEstimateToRiskAssesment(modelEstimate: ModelMessageCode) {
+    switch (modelEstimate) {
+        case 0: return 2.5;
+        case 1: return 0.5;
+        case 2: case 3: return 1.5;
+        case 4: case 5: return 2.5;
+        case 6: return 3.5;
+        case 7: case 8: return 4.5;
+        default: return 2.5;
+    }
+}
+
 export const PredictionService = {
-    async createPrediction(userId: string, predictors: Partial<Prediction>): Promise<Prediction> {
+    async createPrediction(userId: string, predictors: CreatePrediction): Promise<Prediction> {
+        const modelMessageCode = await produceEstimate(predictors)
+        const riskAssesment = modelEstimateToRiskAssesment(modelMessageCode)
+
         const prediction: Prediction = {
+            ...predictors,
             id: uuid4(),
             createdAt: new Date(),
             userId,
-            wellId: predictors.wellId ?? null,
-            division: predictors.division!,
-            district: predictors.district!,
-            upazila: predictors.upazila!,
-            union: predictors.union!,
-            mouza: predictors.mouza!,
-            depth: predictors.depth!,
-            flooding: predictors.flooding!,
-            staining: predictors.staining!,
-            utensilStaining: predictors.utensilStaining ?? null,
-            model: predictors.model!,
-            modelOutput: predictors.modelOutput!,
-            riskAssesment: predictors.riskAssesment!,
+            model: 'model6',
+            modelOutput: modelMessageCode,
+            riskAssesment,
+            wellId: null,
         };
-
+    
         return await PredictionRepo.create(prediction);
     },
 
     async createWellPrediction(userId: string, wellId: string): Promise<Prediction> {
         const well = await WellRepo.findById(wellId);
         const user = await UserRepo.findById(userId);
-    
+
         if (!user && userId !== 'guest') {
             throw new KnownError({
                 message: `User ${userId} not found`,
@@ -57,53 +64,35 @@ export const PredictionService = {
                 name: 'UnauthorizedError',
             });
         }
-    
-        const modelEstimate = await produceEstimate(well);
-        const riskAssesment = (() => {
-            switch (modelEstimate) {
-                case 0: return 2.5;
-                case 1: return 0.5;
-                case 2: case 3: return 1.5;
-                case 4: case 5: return 2.5;
-                case 6: return 3.5;
-                case 7: case 8: return 4.5;
-                default: return 2.5;
-            }
-        })();
-    
-        // --- define predictors ---
+
+        const completeWellRes = CompleteWellSchema.safeParse(well)
+
+        if (!completeWellRes.success) {
+            console.error(completeWellRes.error)
+            throw new KnownError({
+                message: 'Well data is not complete, unable to produce estimate',
+                code: 400,
+                name: 'PredictionForIncompleteWellError'
+            })
+        }
+
+        const completeWell = completeWellRes.data
+
         const predictors = {
-            division: well.regionKey?.division!,
-            district: well.regionKey?.district!,
-            upazila: well.regionKey?.upazila!,
-            union: well.regionKey?.union!,
-            mouza: well.regionKey?.mouza!,
-            depth: well.depth!,
-            flooding: well.flooding!,
-            staining: well.staining!,
-            utensilStaining: well.utensilStaining ?? null,
+            ...completeWell.regionKey,
+            depth: completeWell.depth,
+            flooding: completeWell.flooding,
+            staining: completeWell.staining,
+            utensilStaining: completeWell.utensilStaining || null,
         };
-    
+
         // --- check if a prediction already exists ---
         const existingPredictions = await PredictionRepo.getByQuery([
             ['wellId', '==', wellId],
         ]);
 
         const matchingPrediction = existingPredictions.find(existing => 
-            isEqual(
-                {
-                    division: existing.division,
-                    district: existing.district,
-                    upazila: existing.upazila,
-                    union: existing.union,
-                    mouza: existing.mouza,
-                    depth: existing.depth,
-                    flooding: existing.flooding,
-                    staining: existing.staining,
-                    utensilStaining: existing.utensilStaining,
-                }, 
-                predictors
-            )
+            isEqual(existing, predictors)
         );
     
         if (matchingPrediction) {
@@ -112,12 +101,15 @@ export const PredictionService = {
         }
     
         // --- if no match, create a new prediction ---
+        const modelEstimate = await produceEstimate(predictors);
+        const riskAssesment = modelEstimateToRiskAssesment(modelEstimate)
+    
         const prediction: Prediction = {
+            ...predictors,
             id: uuid4(),
             createdAt: new Date(),
             userId,
             wellId,
-            ...predictors,
             model: 'model6',
             modelOutput: modelEstimate,
             riskAssesment,

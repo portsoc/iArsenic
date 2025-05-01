@@ -1,3 +1,4 @@
+import os
 import geopandas as gpd
 import pandas as pd
 from shapely.geometry import Polygon, MultiPolygon
@@ -177,6 +178,29 @@ def merge_duplicate_region_keys(gdf, region_name):
 
     return gdf
 
+def split_and_save_mouzas(mou):
+    output_dir = 'output/geodata/mouza-by-upazila'
+    os.makedirs(output_dir, exist_ok=True)
+
+    mou['group_key'] = mou['div'] + '-' + mou['dis'] + '-' + mou['upa']
+    grouped = mou.groupby('group_key')
+
+    for key, group in grouped:
+        print(f'Writing {key}.geojson with {len(group)} mouzas')
+
+        if len(group) == 0:
+            print(f"Skipping {key}: no valid geometries after filtering.")
+            continue
+
+        if group.crs is None:
+            group.set_crs("EPSG:4326", inplace=True)
+
+        try:
+            output_path = f'{output_dir}/{key}.geojson'
+            group.to_file(output_path, driver='GeoJSON')
+        except Exception as e:
+            print(f'Failed to write {key}: {e}')
+
 def fix_maps():
     divisions = gpd.read_file('../../geodata/maps/dist/div/div-c005-s020-vw-pr.geojson')
     districts = gpd.read_file('../../geodata/maps/dist/dis/dis-c005-s020-vw-pr.geojson')
@@ -252,5 +276,7 @@ def fix_maps():
 
     with open('output/geodata/intersected_mouzas.topojson', 'w') as f:
         json.dump(mou_topo, f)
+
+    split_and_save_mouzas(mou_topo)
 
     return mou_topo

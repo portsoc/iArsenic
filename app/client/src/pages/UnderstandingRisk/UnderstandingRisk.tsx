@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
 import estimateTexts from "../../components/Speedo/estimateTexts";
-import { RiskAssesment } from "shared";
+import { RiskAssesment } from "iarsenic-types";
 
 type EstimateTexts = {
     english: {
