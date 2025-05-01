@@ -188,9 +188,6 @@ def split_and_save_mouzas(mou):
     for key, group in grouped:
         print(f'Writing {key}.geojson with {len(group)} mouzas')
 
-        # group = group[group.is_valid & ~group.is_empty].copy()
-        # group = group[group.geometry.type.isin(['Polygon', 'MultiPolygon'])]
-
         if len(group) == 0:
             print(f"Skipping {key}: no valid geometries after filtering.")
             continue
