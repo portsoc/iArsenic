@@ -1,10 +1,13 @@
 from math import isnan
+import numpy as np
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 import requests
 
 INPUT_PATH = './BGD_Traverse_ESRC_As_Data_with_Mouza_Information.xlsx'
-OUTPUT_PATH = 'output/BGD_Traverse_with_regions.csv'
 
 API_URL = "http://localhost:5000/api/v1/geodata/region-from-point"
 PREDICTION_URL = "http://localhost:5000/api/v1/prediction"
@@ -44,8 +47,8 @@ def get_region_and_extend_df(df):
             print(f"Error for lat={lat}, lon={lon}: {e}")
 
     os.makedirs("output", exist_ok=True)
-    df.to_csv(OUTPUT_PATH, index=False)
-    print(f"Saved extended DataFrame to {OUTPUT_PATH}")
+    df.to_csv('output/BGD_Traverse_with_regions.csv', index=False)
+    print(f"Saved extended DataFrame to {'output/BGD_Traverse_with_regions.csv'}")
 
 VALID_STAINS = {
     "Red": "red",
@@ -109,13 +112,55 @@ def run_predictions(df):
     os.makedirs("output", exist_ok=True)
     df.to_csv('output/bgd-with-predictions.csv', index=False)
 
+    df = df.dropna(subset=["As_ppb", "risk_assessment"]).copy()
+
+def expected_risk(as_ppb):
+    if as_ppb < 10:
+        return 0
+    elif as_ppb <= 50:
+        return 1
+    elif as_ppb <= 100:
+        return 2
+    elif as_ppb <= 200:
+        return 3
+    else:
+        return 4
+
+def create_confusion_matrix(df):
+    # Drop rows with missing values
+    df = df.dropna(subset=["As_ppb", "risk_assessment"])
+
+    # Compute expected values
+    df.loc[:, "expected"] = df["As_ppb"].apply(expected_risk).astype(int)
+    df.loc[:, "predicted"] = (df["risk_assessment"] - 0.5).astype(int)
+
+    # Generate confusion matrix
+    labels = [0, 1, 2, 3, 4]
+    cm = confusion_matrix(df["expected"], df["predicted"], labels=labels)
+    cm_df = pd.DataFrame(cm, index=labels, columns=labels)
+
+    # Plot confusion matrix
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm_df, annot=True, fmt="d", cmap="Blues", cbar=False)
+    plt.title("Confusion Matrix: Expected vs Predicted Risk Assessment")
+    plt.xlabel("Predicted")
+    plt.ylabel("Expected")
+    plt.tight_layout()
+    plt.show()
+
 if __name__ == "__main__":
     df = pd.read_excel(INPUT_PATH)
-    if not os.path.exists(OUTPUT_PATH):
+    if not os.path.exists('output/BGD_Traverse_with_regions.csv'):
         get_region_and_extend_df(df)
     else:
-        print(f"{OUTPUT_PATH} already exists — skipping fetch.")
+        print(f"output/BGD_Traverse_with_regions.csv already exists — skipping fetch.")
 
-    df = pd.read_csv(OUTPUT_PATH)
+    df = pd.read_csv('output/BGD_Traverse_with_regions.csv')
 
-    run_predictions(df)
+    if not os.path.exists('output/bgd-with-predictions.csv'):
+        run_predictions(df)
+    else:
+        print(f'output/bgd-with-predictions.csv already exists, skipping')
+
+    df = pd.read_csv('output/bgd-with-predictions.csv')
+    create_confusion_matrix(df)
