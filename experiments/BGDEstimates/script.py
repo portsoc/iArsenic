@@ -6,12 +6,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 
 INPUT_PATH = './BGD_Traverse_ESRC_As_Data_with_Mouza_Information.xlsx'
 
-API_URL = "http://localhost:5000/api/v1/geodata/region-from-point"
+REGION_FROM_POINT_URL = "http://localhost:5000/api/v1/geodata/region-from-point"
 PREDICTION_URL = "http://localhost:5000/api/v1/prediction"
-HEADERS = {"x-api-key": "a4611195-de04-44f9-858f-9594a4e06652"}
+
+API_KEY = os.getenv("API_KEY")
+HEADERS = {"x-api-key": API_KEY}
 
 def get_region_and_extend_df(df):
     print("Fetching region data and adding columns...")
@@ -30,7 +34,7 @@ def get_region_and_extend_df(df):
         df.at[i, "map_url"] = map_url
 
         try:
-            response = requests.get(API_URL, params={"lat": lat, "lon": lon}, headers=HEADERS)
+            response = requests.get(REGION_FROM_POINT_URL, params={"lat": lat, "lon": lon}, headers=HEADERS)
 
             if response.status_code == 404:
                 print(f"[404] No region found for lat={lat}, lon={lon}")
