@@ -8,13 +8,23 @@ import { QueryTuple } from '../types';
 
 function modelEstimateToRiskAssesment(modelEstimate: ModelMessageCode) {
     switch (modelEstimate) {
-        case 0: return 2.5;
-        case 1: return 0.5;
-        case 2: case 3: return 1.5;
-        case 4: case 5: return 2.5;
-        case 6: return 3.5;
-        case 7: case 8: return 4.5;
-        default: return 2.5;
+        case 0: 
+            return 2.5;
+        case 1: 
+            return 0.5;
+        case 2: 
+        case 3: 
+            return 1.5;
+        case 4: 
+        case 5: 
+            return 2.5;
+        case 6: 
+            return 3.5;
+        case 7: 
+        case 8: 
+            return 4.5;
+        default: 
+            return 2.5;
     }
 }
 
