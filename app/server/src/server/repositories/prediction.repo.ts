@@ -25,8 +25,6 @@ export const PredictionRepo: IPredictionRepo = {
                 : docData.createdAt,
         };
 
-        console.log('44444444444444444444444444444444')
-        console.log(doc)
         const prediction = PredictionSchema.parse(doc);
         return prediction;
     },
