@@ -12,10 +12,5 @@ export default defineConfig({
   base: process.env.VITE_APP_BASE_PATH || '',
   build: {
     outDir: 'static',
-  },
-  resolve: {
-    alias: {
-      'shared': './node_modules/shared/src/index.ts',
-    }
   }
 });
