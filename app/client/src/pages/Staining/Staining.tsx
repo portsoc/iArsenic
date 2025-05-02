@@ -1,4 +1,4 @@
-import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack } from "@mui/material";
+import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack, Box } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, AccessToken } from 'iarsenic-types';
@@ -6,7 +6,7 @@ import { useRoute } from "wouter";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function StainingPage(): JSX.Element {
-    const [, params] = useRoute('/:id/staining');
+    const [, params] = useRoute('/well/:id/staining');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
 
@@ -67,7 +67,10 @@ export default function StainingPage(): JSX.Element {
                     </Button>
                 </Stack>
 
-                <FormControl error={errors.wellStaining} component="fieldset">
+                <FormControl 
+                    error={errors.wellStaining} 
+                    component="fieldset"
+                >
                     <RadioGroup
                         onChange={event => {
                             setWellStaining(StainingSchema.parse(event.target.value));
@@ -120,6 +123,36 @@ export default function StainingPage(): JSX.Element {
                         }
                     </FormControl>
                 </Collapse>
+
+                <Collapse in={wellStaining === 'red'}>
+                    <Box mb={1}>
+                        <img width='100%' src={`/red_platform_1.jpg`}></img>
+                    </Box>
+
+                    <Typography
+                        className='english'
+                        variant='body1'
+                        textAlign='center'
+                        fontStyle='italic'
+                    >
+                        Example of a tube well platform with red platform staining.
+                    </Typography>
+                </Collapse>
+
+                <Collapse in={wellStaining === 'black'}>
+                    <Box mb={1}>
+                        <img width='100%' src={`/black_platform_1.jpg`}></img>
+                    </Box>
+
+                    <Typography
+                        className='english'
+                        variant='body1'
+                        textAlign='center'
+                        fontStyle='italic'
+                    >
+                        Example of a tube well platform with black platform staining.
+                    </Typography>
+                </Collapse>
             </Card>
 
             <Button
@@ -134,9 +167,11 @@ export default function StainingPage(): JSX.Element {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 
-                    const body = {
+                    let body = {
                         staining: wellStaining,
-                        utensilStaining,
+                        utensilStaining: wellStaining === 'not sure' ?
+                            utensilStaining :
+                            undefined
                     };
 
                     const res = await fetch(`/api/v1/self/well/${wellId}`, {
@@ -153,7 +188,7 @@ export default function StainingPage(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/${wellId}/depth`);
+                    navigate(`/well/${wellId}/depth`);
                 }}
             >
                 Next Step

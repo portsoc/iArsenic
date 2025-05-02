@@ -53,9 +53,9 @@ export default function Review() {
                 return;
             }
 
-            const data = await result.json();
+            const well = await result.json();
 
-            setWell(data.well);
+            setWell(well);
         }
 
         fetchWell();

@@ -1,4 +1,4 @@
-import { Typography, Button, Stack, FormControl, FormControlLabel, Radio, RadioGroup, Card, Box, CircularProgress } from "@mui/material";
+import { Typography, Button, Stack, FormControl, FormControlLabel, Radio, RadioGroup, Card, Box, CircularProgress, Collapse } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { RegionKey, AccessToken, Well } from "iarsenic-types";
@@ -31,7 +31,7 @@ export default function Region(): JSX.Element {
     const [upazila, setUpazila] = useState<string | null>(null);
     const [union, setUnion] = useState<string | null>(null);
     const [mouza, setMouza] = useState<string | null>(null);
-    const [withWell, setWithWell] = useState<boolean>();
+    const [withWell, setWithWell] = useState<boolean>(false);
     const [errors, setErrors] = useState<RegionErrors>({
         division: false,
         district: false,
@@ -75,12 +75,12 @@ export default function Region(): JSX.Element {
                 return;
             }
 
-            const data = await result.json();
+            const well = await result.json();
 
-            setWell(data.well);
+            setWell(well);
 
-            if (data.well.geolocation) {
-                setGeolocation(data.well.geolocation)
+            if (well.geolocation) {
+                setGeolocation(well.geolocation)
                 setWithWell(true)
             }
         }
@@ -125,11 +125,11 @@ export default function Region(): JSX.Element {
                     }}
                 >
                     <RadioGroup
+                        name="well-staining-selector"
                         onChange={event => {
                             setWithWell(event.target.value === 'yes');
                             setErrors(e => ({ ...e, wellStaining: false }));
                         }}
-                        name="well-staining-selector"
                     >
                         <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                         <FormControlLabel value="no" control={<Radio />} label="No" />
@@ -142,13 +142,17 @@ export default function Region(): JSX.Element {
                 </FormControl>
             </Card>
 
-            {withWell === true && (
+            <Collapse 
+                in={withWell || (geolocation != null)} 
+                sx={{
+                    margin: '0 1rem 1rem 1rem',
+                    width: '100%',
+                }}
+            >
                 <Card
                     raised
                     variant='outlined'
                     sx={{
-                        width: '100%',
-                        margin: '0 1rem 1rem 1rem',
                         padding: '1rem',
                         alignItems: 'center',
                     }}
@@ -195,7 +199,7 @@ export default function Region(): JSX.Element {
                         </Box>
                     </Stack>
                 </Card>
-            )}
+            </Collapse>
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}

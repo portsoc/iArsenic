@@ -20,7 +20,7 @@ type EstimateTexts = {
 }
 
 export default function Result(): JSX.Element {
-    const [, params] = useRoute('/:id/result');
+    const [, params] = useRoute('/well/:id/result');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
     const [prediction, setPrediction] = useState<Prediction>();
@@ -51,7 +51,9 @@ export default function Result(): JSX.Element {
                 if (!wellId) return;
 
                 const token = await AccessTokenRepo.get();
-                const headers: HeadersInit = token ? { 'authorization': `Bearer ${token.id}` } : {};
+                const headers: HeadersInit = token ? 
+                    { 'authorization': `Bearer ${token.id}` } : 
+                    {};
 
                 // Fetch the well first
                 const wellRes = await fetch(`/api/v1/self/well/${wellId}`, { 
@@ -63,7 +65,7 @@ export default function Result(): JSX.Element {
                 }
 
                 const wellData = await wellRes.json();
-                setWell(wellData.well);
+                setWell(wellData);
 
                 // Always generate a fresh prediction for the well
                 const predictionRes = await fetch(`/api/v1/prediction/well/${wellId}`, {

@@ -6,7 +6,7 @@ import { useRoute } from "wouter";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function Depth(): JSX.Element {
-    const [, params] = useRoute('/:id/depth');
+    const [, params] = useRoute('/well/:id/depth');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
 
@@ -95,7 +95,7 @@ export default function Depth(): JSX.Element {
                     value={depth}
                     step={1}
                     min={0}
-                    max={unit === 'ft' ? 328 : 100}
+                    max={unit === 'ft' ? 1640 : 500}
                     valueLabelDisplay="auto"
                 />
 
@@ -142,7 +142,7 @@ export default function Depth(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/${wellId}/flooding`);
+                    navigate(`/well/${wellId}/flooding`);
                 }}
             >
                 Next Step

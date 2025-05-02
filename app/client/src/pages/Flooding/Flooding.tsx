@@ -1,4 +1,4 @@
-import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
@@ -6,7 +6,7 @@ import { AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function Depth(): JSX.Element {
-    const [, params] = useRoute('/:id/flooding');
+    const [, params] = useRoute('/well/:id/flooding');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
 
@@ -47,12 +47,13 @@ export default function Depth(): JSX.Element {
                     gap: '1rem',
                 }}
             >
-                <Typography variant='h6'>
+                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
                     Is the area prone to flooding?
                 </Typography>
 
                 <FormControl
                     error={error}
+                    component="fieldset"
                     sx={{
                         width: 'max-content',
                         padding: '1rem',
@@ -65,8 +66,10 @@ export default function Depth(): JSX.Element {
                         value={flooding}
                         onChange={handleFloodingChange}
                     >
-                        <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                        <FormControlLabel value='no' control={<Radio />} label='No' />
+                        <Stack direction='row' columnGap={3}>
+                            <FormControlLabel value='yes' control={<Radio />} label='Yes' />
+                            <FormControlLabel value='no' control={<Radio />} label='No' />
+                        </Stack>
                     </RadioGroup>
                 </FormControl>
                 {error && (
@@ -107,10 +110,10 @@ export default function Depth(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/${wellId}/review`);
+                    navigate(`/well/${wellId}/well-in-use`);
                 }}
             >
-                Review
+                Next Step
             </Button>
         </>
     );

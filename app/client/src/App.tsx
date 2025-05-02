@@ -92,7 +92,7 @@ function App() {
                             <Route path='/well/:id/result' component={Result} />
                             <Route path='/well/:id/review' component={Review} />
                             <Route path='/well/:id/staining' component={Staining} />
-                            <Route path='/welll/:id/flooding' component={Flooding} />
+                            <Route path='/well/:id/flooding' component={Flooding} />
                         </Stack>
                     </Route>
                 </Switch>

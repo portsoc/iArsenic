@@ -15,7 +15,7 @@ export const WellController = {
         const well: Well = await WellService.createWell(userId);
 
         ctx.status = 201
-        ctx.body = { well }
+        ctx.body = { ...well }
     },
 
     // todo - add pagination
@@ -23,7 +23,7 @@ export const WellController = {
         const wells = await WellService.getAllWells();
 
         ctx.status = 200
-        ctx.body = { wells }
+        ctx.body = { ...wells }
     },
 
     async getWellsByToken(ctx: Context) {
@@ -33,7 +33,7 @@ export const WellController = {
         const wells = await WellService.getUserWells(userId);
 
         ctx.status = 200
-        ctx.body = { wells }
+        ctx.body = { ...wells }
 
     },
 
@@ -57,7 +57,7 @@ export const WellController = {
         const well: Well = await WellService.getWellById(wellId, userId);
 
         ctx.status = 200
-        ctx.body = { well }
+        ctx.body = { ...well }
     },
 
     async updateWellByIdByToken(ctx: Context) {
@@ -103,7 +103,7 @@ export const WellController = {
         );
 
         ctx.status = 200
-        ctx.body = { well: updatedWell }
+        ctx.body = { ...updatedWell }
     },
 
     async deleteWellByIdByToken(ctx: Context) {

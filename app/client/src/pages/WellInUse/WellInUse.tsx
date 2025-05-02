@@ -6,15 +6,16 @@ import { AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
 export default function(): JSX.Element {
-    const [, params] = useRoute('/:id/well-in-use');
+    const [, params] = useRoute('/well/:id/well-in-use');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
 
-    const [drinking, setDrinking] = useState<'yes' | 'no'>();
+    const [wellInUse, setWellInUse] = useState<boolean>();
     const [error, setError] = useState<boolean>(false);
 
-    function handleFloodingChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setDrinking(event.target.value as 'yes' | 'no');
+    function handleWellInUseChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const newBool = event.target.value === 'yes'
+        setWellInUse(newBool);
         setError(false);
     }
 
@@ -62,8 +63,8 @@ export default function(): JSX.Element {
                 >
                     <RadioGroup
                         name="anyone-drinking-selector"
-                        value={drinking}
-                        onChange={handleFloodingChange}
+                        value={wellInUse}
+                        onChange={handleWellInUseChange}
                     >
                         <Stack direction='row' columnGap={3}>
                             <FormControlLabel value='yes' control={<Radio />} label='Yes' />
@@ -82,13 +83,12 @@ export default function(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={async () => {
-                    if (!drinking) {
+                    if (!wellInUse) {
                         setError(true);
                         return;
                     }
 
-                    const drinkingBool = drinking === 'yes';
-                    const body = { drinking: drinkingBool };
+                    const body = { wellInUse };
                     const headers: HeadersInit = {};
 
                     if (token) {
@@ -109,7 +109,7 @@ export default function(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/${wellId}/review`);
+                    navigate(`/well/${wellId}/review`);
                 }}
             >
                 Review

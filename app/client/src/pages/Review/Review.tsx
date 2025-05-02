@@ -6,7 +6,7 @@ import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { useRoute } from 'wouter';
 
 export default function Review() {
-    const [, params] = useRoute('/:id/review');
+    const [, params] = useRoute('/well/:id/review');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
     const [well, setWell] = useState<Well>();
@@ -43,9 +43,9 @@ export default function Review() {
                 return;
             }
 
-            const data = await result.json();
+            const well = await result.json();
 
-            setWell(data.well);
+            setWell(well);
         }
 
         fetchWell();
@@ -58,19 +58,19 @@ export default function Review() {
     }
 
     if (well.regionKey == null) {
-        navigate(`/${wellId}/region`);
+        navigate(`/well/${wellId}/region`);
         return;
     }
     if (well.staining == null) {
-        navigate(`/${wellId}/staining`);
+        navigate(`/well/${wellId}/staining`);
         return;
     }
     if (well.depth == null) {
-        navigate(`/${wellId}/depth`);
+        navigate(`/well/${wellId}/depth`);
         return;
     }
     if (well.flooding == null) {
-        navigate(`/${wellId}/flooding`);
+        navigate(`/well/${wellId}/flooding`);
         return;
     }
 
@@ -132,10 +132,17 @@ export default function Review() {
                     </Typography>
                 </Box>
 
-                <Box>
+                <Box mb={2}>
                     <Typography variant="h6" gutterBottom>Flooding</Typography>
                     <Typography variant="body1" component="p">
                         Flooding: {well.flooding ? 'Yes' : 'No'}
+                    </Typography>
+                </Box>
+
+                <Box>
+                    <Typography variant="h6" gutterBottom>Well in use</Typography>
+                    <Typography variant="body1" component="p">
+                        Well in use: {well.wellInUse ? 'Yes' : 'No'}
                     </Typography>
                 </Box>
             </Card>
@@ -149,7 +156,7 @@ export default function Review() {
                         navigate(`/well/${wellId}`);
                         return;
                     }
-                    navigate(`/${wellId}/result`);
+                    navigate(`/well/${wellId}/result`);
                 }}
             >
                 Results
