@@ -30,9 +30,9 @@ export default function MyWells(): JSX.Element {
             return;
         }
 
-        const data = await result.json();
+        const wells = await result.json();
 
-        setWells(data.wells.map((well: Well) => {
+        setWells(wells.map((well: Well) => {
             return {
                 id: well.id,
                 createdAt: new Date(well.createdAt),
@@ -84,8 +84,8 @@ export default function MyWells(): JSX.Element {
             throw new Error('Failed to add well');
         }
 
-        const data = await res.json();
-        return data.well as Well;
+        const well = await res.json();
+        return well as Well;
     }
 
     useEffect(() => {

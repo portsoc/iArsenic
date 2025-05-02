@@ -91,6 +91,20 @@ export default function StainingGuide(): JSX.Element {
                     Example of a tube well platform with black staining.
                 </Typography>
             </Card>
+
+            <Button
+                sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
+                variant='contained'
+                onClick={() => window.history.back()}
+            >
+                <Typography className='english'>
+                    Return
+                </Typography>
+
+                <Typography className='bengali'>
+                    Bengali Placeholder
+                </Typography>
+            </Button>
         </>
     );
 }

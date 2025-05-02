@@ -5,16 +5,17 @@ import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
-export default function Depth(): JSX.Element {
-    const [, params] = useRoute('/well/:id/flooding');
+export default function(): JSX.Element {
+    const [, params] = useRoute('/well/:id/well-in-use');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
 
-    const [flooding, setFlooding] = useState<'yes' | 'no'>();
+    const [wellInUse, setWellInUse] = useState<boolean>();
     const [error, setError] = useState<boolean>(false);
 
-    function handleFloodingChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setFlooding(event.target.value as 'yes' | 'no');
+    function handleWellInUseChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const newBool = event.target.value === 'yes'
+        setWellInUse(newBool);
         setError(false);
     }
 
@@ -32,7 +33,7 @@ export default function Depth(): JSX.Element {
     return (
         <>
             <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                Flooding
+                Well in use
             </Typography>
 
             <Card
@@ -47,13 +48,12 @@ export default function Depth(): JSX.Element {
                     gap: '1rem',
                 }}
             >
-                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
-                    Is the area prone to flooding?
+                <Typography variant='h6'>
+                    Is anyone drinking from this well?
                 </Typography>
 
                 <FormControl
                     error={error}
-                    component="fieldset"
                     sx={{
                         width: 'max-content',
                         padding: '1rem',
@@ -62,9 +62,9 @@ export default function Depth(): JSX.Element {
                     }}
                 >
                     <RadioGroup
-                        name="flooding-selector"
-                        value={flooding}
-                        onChange={handleFloodingChange}
+                        name="anyone-drinking-selector"
+                        value={wellInUse}
+                        onChange={handleWellInUseChange}
                     >
                         <Stack direction='row' columnGap={3}>
                             <FormControlLabel value='yes' control={<Radio />} label='Yes' />
@@ -83,13 +83,12 @@ export default function Depth(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={async () => {
-                    if (!flooding) {
+                    if (!wellInUse) {
                         setError(true);
                         return;
                     }
 
-                    const floodingBool = flooding === 'yes';
-                    const body = { flooding: floodingBool };
+                    const body = { wellInUse };
                     const headers: HeadersInit = {};
 
                     if (token) {
@@ -110,10 +109,10 @@ export default function Depth(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/well/${wellId}/well-in-use`);
+                    navigate(`/well/${wellId}/review`);
                 }}
             >
-                Next Step
+                Review
             </Button>
         </>
     );

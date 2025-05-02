@@ -22,8 +22,8 @@ export default function Briefing(): JSX.Element {
             throw new Error('Failed to add well');
         }
 
-        const data = await res.json();
-        return data.well as Well;
+        const well = await res.json();
+        return well as Well;
     }
 
     return (
@@ -179,7 +179,7 @@ export default function Briefing(): JSX.Element {
                 variant='contained'
                 onClick={async () => {
                     const newWell = await addWell();
-                    navigate(`/${newWell.id}/region`);
+                    navigate(`/well/${newWell.id}/region`);
                 }}
             >
                 <Typography className='english'>Generate Estimate</Typography>

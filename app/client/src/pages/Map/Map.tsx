@@ -38,9 +38,9 @@ export default function Map() {
             throw new Error(`Failed to fetch well data:, ${res}`);
         }
 
-        const data = (await res.json()) as { wells: Well[] };
+        const wells = (await res.json());
 
-        setWells(data.wells);
+        setWells(wells);
     }
 
     async function getWellPredictions() {
