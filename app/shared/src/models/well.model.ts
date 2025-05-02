@@ -7,7 +7,7 @@ export const WellSchema = z.object({
     id: z.string(),
     createdAt: z.date(),
     userId: z.string(),
-    drinkingWaterSource: z.boolean().optional(),
+    wellInUse: z.boolean().optional(),
     regionKey: RegionKeySchema.optional(),
     depth: z.number().optional(),
     flooding: z.boolean().optional(),
