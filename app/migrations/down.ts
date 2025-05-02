@@ -15,6 +15,7 @@ const lockDocRef = db.collection(migrationsCollection).doc('lock');
 const migrations = [
     () => import("./0.js"),
     () => import("./1.js"),
+    () => import("./2.js"),
     // add new migrations as you add them
 ];
 
