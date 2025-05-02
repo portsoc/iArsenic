@@ -4,8 +4,9 @@ import {
     DropdownDistrict,
     DropdownUpazila,
     DropdownUnion,
+    RegionTranslations,
 } from "../../types";
-import { RegionErrors } from "./Region";
+import { RegionErrors } from "./RegionSelector";
 
 type props = {
     dropdownData: DropdownDivision[];
@@ -21,9 +22,10 @@ type props = {
     setSelectedMouza: (newValue: string | null) => void;
     errors: RegionErrors;
     setErrors: (value: React.SetStateAction<RegionErrors>) => void
+    rt: RegionTranslations;
 };
 
-export default function EnglishRegionSelector({
+export default function BengaliRegionSelector({
     dropdownData,
     selectedDivision,
     setSelectedDivision,
@@ -37,9 +39,10 @@ export default function EnglishRegionSelector({
     setSelectedMouza,
     errors,
     setErrors,
+    rt,
 }: props) {
     return (
-        <Stack className='english' width='90%' spacing={2}>
+        <Stack className='bengali' width='90%' spacing={2}>
             <Autocomplete
                 options={dropdownData}
                 value={selectedDivision}
@@ -51,12 +54,12 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, division: false }));
                 }}
-                getOptionLabel={(option) => option.division}
+                getOptionLabel={(option) => rt.Divisions[option.division] || option.division}
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label="Division"
+                            label={rt.Divisions.Division}
                             error={errors.division}
                             helperText={errors.division ? 'Please select a division' : ''}
                         />
@@ -74,12 +77,12 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, district: false }));
                 }}
-                getOptionLabel={(option) => option.district}
+                getOptionLabel={(option) => rt.Districts[option.district] || option.district}
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label="District"
+                            label={rt.Districts.District}
                             error={errors.district}
                             helperText={errors.district ? 'Please select a district' : ''}
                             disabled={!selectedDivision}
@@ -97,12 +100,12 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, upazila: false }));
                 }}
-                getOptionLabel={(option) => option.upazila}
+                getOptionLabel={(option) => rt.Upazilas[option.upazila] || option.upazila}
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label="Upazila"
+                            label={rt.Upazilas.Upazila}
                             error={errors.upazila}
                             helperText={errors.upazila ? 'Please select an upazila' : ''}
                             disabled={!selectedDistrict}
@@ -119,12 +122,12 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, union: false }));
                 }}
-                getOptionLabel={(option) => option.union}
+                getOptionLabel={(option) => rt.Unions[option.union] || option.union}
                 renderInput={(params) => {
                 return (
                         <TextField
                             {...params}
-                            label="Union"
+                            label={rt.Unions.Union}
                             error={errors.union}
                             helperText={errors.union ? 'Please select a union' : ''}
                             disabled={!selectedUpazila}
@@ -140,12 +143,12 @@ export default function EnglishRegionSelector({
                     setSelectedMouza(newValue);
                     setErrors(e => ({ ...e, mouza: false }));
                 }}
-                getOptionLabel={(mouza) => mouza}
+                getOptionLabel={(mouza) => rt.Mouzas[mouza] || mouza}
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label="Mouza"
+                            label={rt.Mouzas.Mouza}
                             error={errors.mouza}
                             helperText={errors.mouza ? 'Please select a mouza' : ''}
                             disabled={!selectedUnion}

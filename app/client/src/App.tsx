@@ -20,9 +20,11 @@ import {
     Splash,
     Staining,
     StainingGuide,
+    SelectRegion,
+    UnderstandingRisk,
     VerifyEmail,
     Well,
-    UnderstandingRisk,
+    WellInUse,
 } from './pages';
 import LanguageSelector from './utils/LanguageSelector';
 
@@ -70,12 +72,6 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
-                            <Route path='/:id/depth' component={Depth} />
-                            <Route path='/:id/flooding' component={Flooding} />
-                            <Route path='/:id/region' component={Region} />
-                            <Route path='/:id/result' component={Result} />
-                            <Route path='/:id/review' component={Review} />
-                            <Route path='/:id/staining' component={Staining} />
                             <Route path='/briefing' component={Briefing} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
@@ -86,9 +82,17 @@ function App() {
                             <Route path='/reset-password/:id' component={ResetPassword} />
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
+                            <Route path='/understanding-risk' component={UnderstandingRisk} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
                             <Route path='/well/:id' component={Well} />
-                            <Route path='/understanding-risk' component={UnderstandingRisk} />
+                            <Route path='/well/:id/select-region' component={SelectRegion} />
+                            <Route path='/well/:id/well-in-use' component={WellInUse} />
+                            <Route path='/well/:id/depth' component={Depth} />
+                            <Route path='/well/:id/region' component={Region} />
+                            <Route path='/well/:id/result' component={Result} />
+                            <Route path='/well/:id/review' component={Review} />
+                            <Route path='/well/:id/staining' component={Staining} />
+                            <Route path='/welll/:id/flooding' component={Flooding} />
                         </Stack>
                     </Route>
                 </Switch>

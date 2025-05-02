@@ -2,43 +2,44 @@ import { Button, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from "../../types";
-import { RegionKey } from "iarsenic-types";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 type props = {
-    dropdownData: DropdownDivision[],
     setRegionGeovalidated: (geovalidated: boolean) => void,
     geolocation: [number, number] | undefined,
     setGeolocation: (geolocation: [number, number]) => void,
-    setSelectedDivision: (selectedDivision: DropdownDivision) => void,
-    setSelectedDistrict: (selectedDistrict: DropdownDistrict) => void,
-    setSelectedUpazila: (selectedUpazila: DropdownUpazila) => void,
-    setSelectedUnion: (selectedUnion: DropdownUnion) => void,
-    setSelectedMouza: (selectedMouza: string) => void,
+    setDivision: (selectedDivision: string) => void,
+    setDistrict: (selectedDistrict: string) => void,
+    setUpazila: (selectedUpazila: string) => void,
+    setUnion: (selectedUnion: string) => void,
+    setMouza: (selectedMouza: string) => void,
 }
 
 export default function GeolocationButton({
-    dropdownData,
     setRegionGeovalidated,
     geolocation,
     setGeolocation,
-    setSelectedDivision,
-    setSelectedDistrict,
-    setSelectedUpazila,
-    setSelectedUnion,
-    setSelectedMouza,
+    setDivision,
+    setDistrict,
+    setUpazila,
+    setUnion,
+    setMouza,
 }: props): JSX.Element {
     const [geolocationFailed, setGeolocationFailed] = useState<boolean>(false);
+    const [geolocationSuccess, setGeolocationSuccess] = useState<boolean>(false);
+
     const [gettingRegionKey, setGettingRegionKey] = useState<boolean>(false);
     const [regionNotFound, setRegionNotFound] = useState<boolean>(false);
 
-    function getGeolocation() {
+    async function getGeolocation() {
         setGettingRegionKey(true);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (position) => {
+                async (position) => {
                     const { latitude, longitude } = position.coords;
                     setGeolocation([latitude, longitude]);
+                    await setRegionFromGeolocation([latitude, longitude])
+                    setGeolocationSuccess(true)
                 },
                 (error) => {
                     console.error("Error getting geolocation: ", error);
@@ -51,14 +52,15 @@ export default function GeolocationButton({
         }
     }
 
-    async function setRegionFromGeolocation(geolocation: [number, number], dropdownData: DropdownDivision[]) {
+    async function setRegionFromGeolocation(geolocation: [number, number]) {
         const response = await fetch(
-            `/api/gps-region?lat=${geolocation[0]}&lon=${geolocation[1]}`
+            `/api/v1/geodata/region-from-point?lat=${geolocation[0]}&lon=${geolocation[1]}`
         );
 
         if (response.status === 404) {
             setGettingRegionKey(false);
             setRegionNotFound(true);
+
             return;
         }
 
@@ -71,47 +73,12 @@ export default function GeolocationButton({
 
         const data = await response.json();
 
-        if (!data.regionKey) return;
+        setDistrict(data.division);
+        setDivision(data.district);
+        setUpazila(data.upazila);
+        setUnion(data.union);
+        setMouza(data.mouza);
 
-        const geoRegionKey = data.regionKey as RegionKey;
-        if (!geoRegionKey.division || !dropdownData) return;
-        const selectedDivision = dropdownData.find(d => d.division === geoRegionKey.division);
-
-        if (!selectedDivision) {
-            setGettingRegionKey(false);
-            return;
-        }
-        setSelectedDivision(selectedDivision);
-
-        const selectedDistrict = selectedDivision.districts.find(d => d.district === geoRegionKey.district);
-
-        if (!selectedDistrict) {
-            setGettingRegionKey(false);
-            return;
-        }
-        setSelectedDistrict(selectedDistrict);
-
-        const selectedUpazila = selectedDistrict.upazilas.find(u => u.upazila === geoRegionKey.upazila);
-
-        if (!selectedUpazila) {
-            setGettingRegionKey(false);
-            return;
-        }
-        setSelectedUpazila(selectedUpazila);
-
-        const selectedUnion = selectedUpazila.unions.find(u => u.union === geoRegionKey.union);
-
-        if (!selectedUnion) {
-            setGettingRegionKey(false);
-            return;
-        }
-        setSelectedUnion(selectedUnion);
-
-        if (!geoRegionKey.mouza) {
-            setGettingRegionKey(false);
-            return;
-        }
-        setSelectedMouza(geoRegionKey.mouza);
         setRegionGeovalidated(true);
         setGettingRegionKey(false);
     }
@@ -120,8 +87,21 @@ export default function GeolocationButton({
         if (!geolocation) return;
 
         setGeolocation(geolocation);
-        setRegionFromGeolocation(geolocation, dropdownData);
+        setRegionFromGeolocation(geolocation);
     }, [geolocation]);
+
+    if (geolocationSuccess) {
+        return (
+            <Button
+                sx={{ height: '3rem', color: 'green', borderColor: 'green' }}
+                variant='outlined'
+                startIcon={<CheckCircleOutlineIcon />}
+                disabled
+            >
+                Geolocation found successfully
+            </Button>
+        );
+    }
 
     if (geolocationFailed) {
         return (

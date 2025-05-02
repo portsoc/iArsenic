@@ -179,7 +179,7 @@ export default function Briefing(): JSX.Element {
                 variant='contained'
                 onClick={async () => {
                     const newWell = await addWell();
-                    navigate(`/${newWell.id}/region`);
+                    navigate(`/well/${newWell.id}/region`);
                 }}
             >
                 <Typography className='english'>Generate Estimate</Typography>

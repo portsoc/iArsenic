@@ -1,20 +1,20 @@
-import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 
-export default function Depth(): JSX.Element {
-    const [, params] = useRoute('/:id/flooding');
+export default function(): JSX.Element {
+    const [, params] = useRoute('/:id/well-in-use');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
 
-    const [flooding, setFlooding] = useState<'yes' | 'no'>();
+    const [drinking, setDrinking] = useState<'yes' | 'no'>();
     const [error, setError] = useState<boolean>(false);
 
     function handleFloodingChange(event: React.ChangeEvent<HTMLInputElement>) {
-        setFlooding(event.target.value as 'yes' | 'no');
+        setDrinking(event.target.value as 'yes' | 'no');
         setError(false);
     }
 
@@ -32,7 +32,7 @@ export default function Depth(): JSX.Element {
     return (
         <>
             <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                Flooding
+                Well in use
             </Typography>
 
             <Card
@@ -48,7 +48,7 @@ export default function Depth(): JSX.Element {
                 }}
             >
                 <Typography variant='h6'>
-                    Is the area prone to flooding?
+                    Is anyone drinking from this well?
                 </Typography>
 
                 <FormControl
@@ -61,12 +61,14 @@ export default function Depth(): JSX.Element {
                     }}
                 >
                     <RadioGroup
-                        name="flooding-selector"
-                        value={flooding}
+                        name="anyone-drinking-selector"
+                        value={drinking}
                         onChange={handleFloodingChange}
                     >
-                        <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                        <FormControlLabel value='no' control={<Radio />} label='No' />
+                        <Stack direction='row' columnGap={3}>
+                            <FormControlLabel value='yes' control={<Radio />} label='Yes' />
+                            <FormControlLabel value='no' control={<Radio />} label='No' />
+                        </Stack>
                     </RadioGroup>
                 </FormControl>
                 {error && (
@@ -80,13 +82,13 @@ export default function Depth(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={async () => {
-                    if (!flooding) {
+                    if (!drinking) {
                         setError(true);
                         return;
                     }
 
-                    const floodingBool = flooding === 'yes';
-                    const body = { flooding: floodingBool };
+                    const drinkingBool = drinking === 'yes';
+                    const body = { drinking: drinkingBool };
                     const headers: HeadersInit = {};
 
                     if (token) {

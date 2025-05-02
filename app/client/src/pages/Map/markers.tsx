@@ -1,10 +1,10 @@
 import { Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { RegionTranslations } from '../../types';
 import { Prediction, Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
 import findWellPredictions from '../../utils/findWellPredictions';
+import getMapPin from '../../utils/getMapPin';
 
 type props = {
     wells: Well[],
@@ -13,18 +13,6 @@ type props = {
 }
 
 export default function Markers({ wells, predictions, regionTranslations }: props): JSX.Element {
-    function createCustomIcon(color: string) {
-        return L.icon({
-            iconUrl: `/map-markers/${color}.png`,
-            shadowUrl: markerShadow,
-            iconSize: [25, 41],
-            shadowSize: [41, 41],
-            iconAnchor: [12, 41], // point icon corresponds to marker
-            shadowAnchor: [12, 41],  // point shadow corresponds to marker
-            popupAnchor: [1, -34], // point from which the popup should open relative to the iconAnchor
-        });
-    }
-
     function getIcon(prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5): L.Icon<L.IconOptions> {
         const iconColor = (() => {
             switch (prediction - 0.5) {
@@ -44,7 +32,7 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
             return 'blue';
         })();
 
-        return createCustomIcon(iconColor);
+        return getMapPin(iconColor);
     }
 
     function predictionToRiskFactor(prediction: number): { english: string, bengali: string } {

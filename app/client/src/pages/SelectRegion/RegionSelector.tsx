@@ -1,4 +1,4 @@
-import { Typography, Button, CircularProgress, Stack } from "@mui/material";
+import { Typography, Button, CircularProgress, Stack, Card } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
@@ -6,9 +6,9 @@ import { RegionKey, AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";
-import GeolocationButton from "./GeolocationButton";
 import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
 import { useRoute } from "wouter";
+import fetchDropdownData from "../../utils/fetchDropdownData";
 
 export type RegionErrors = {
     division: boolean;
@@ -19,7 +19,7 @@ export type RegionErrors = {
 };
 
 export default function Region(): JSX.Element {
-    const [, params] = useRoute('/:id/region');
+    const [, params] = useRoute('/well/:id/select-region');
     const wellId = params?.id;
     const [token, setToken] = useState<AccessToken>();
 
@@ -34,17 +34,9 @@ export default function Region(): JSX.Element {
         district: false,
         upazila: false,
         union: false,
-        mouza: false
+        mouza: false,
     });
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
-    const [regionGeovalidated, setRegionGeovalidated] = useState<boolean>(false);
-    const [geolocation, setGeolocation] = useState<[number, number]>();
-
-    async function fetchDropdownData() {
-        const response = await fetch(`/model6/dropdown-data.json`);
-        const data = await response.json();
-        setDropdownData(data);
-    }
 
     function handleValidation() {
         const newErrors = {
@@ -52,7 +44,7 @@ export default function Region(): JSX.Element {
             district: !selectedDistrict,
             upazila: !selectedUpazila,
             union: !selectedUnion,
-            mouza: !selectedMouza
+            mouza: !selectedMouza,
         };
         setErrors(newErrors);
 
@@ -72,7 +64,11 @@ export default function Region(): JSX.Element {
             setToken(token);
         }
 
-        fetchDropdownData();
+        async function getDropdownData() {
+            setDropdownData(await fetchDropdownData());
+        }
+
+        getDropdownData()
         fetchRegionTranslations();
         fetchToken();
     }, []);
@@ -89,50 +85,51 @@ export default function Region(): JSX.Element {
         <>
             <Typography alignSelf='center' variant="h4">Region</Typography>
 
-            <GeolocationButton
-                dropdownData={dropdownData}
-                setRegionGeovalidated={setRegionGeovalidated}
-                geolocation={geolocation}
-                setGeolocation={setGeolocation}
-                setSelectedDivision={setSelectedDivision}
-                setSelectedDistrict={setSelectedDistrict}
-                setSelectedUpazila={setSelectedUpazila}
-                setSelectedUnion={setSelectedUnion}
-                setSelectedMouza={setSelectedMouza}
-            />
+            <Card
+                raised
+                variant='outlined'
+                sx={{ 
+                    width: '100%', 
+                    margin: '0 1rem 1rem 1rem', 
+                    padding: '1rem',
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <EnglishRegionSelector
+                    dropdownData={dropdownData}
+                    selectedDivision={selectedDivision}
+                    setSelectedDivision={setSelectedDivision}
+                    selectedDistrict={selectedDistrict}
+                    setSelectedDistrict={setSelectedDistrict}
+                    selectedUpazila={selectedUpazila}
+                    setSelectedUpazila={setSelectedUpazila}
+                    selectedUnion={selectedUnion}
+                    setSelectedUnion={setSelectedUnion}
+                    selectedMouza={selectedMouza}
+                    setSelectedMouza={setSelectedMouza}
+                    errors={errors}
+                    setErrors={setErrors}
+                />
 
-            <EnglishRegionSelector
-                dropdownData={dropdownData}
-                selectedDivision={selectedDivision}
-                setSelectedDivision={setSelectedDivision}
-                selectedDistrict={selectedDistrict}
-                setSelectedDistrict={setSelectedDistrict}
-                selectedUpazila={selectedUpazila}
-                setSelectedUpazila={setSelectedUpazila}
-                selectedUnion={selectedUnion}
-                setSelectedUnion={setSelectedUnion}
-                selectedMouza={selectedMouza}
-                setSelectedMouza={setSelectedMouza}
-                errors={errors}
-                setErrors={setErrors}
-            />
-
-            <BengaliRegionSelector
-                dropdownData={dropdownData}
-                selectedDivision={selectedDivision}
-                setSelectedDivision={setSelectedDivision}
-                selectedDistrict={selectedDistrict}
-                setSelectedDistrict={setSelectedDistrict}
-                selectedUpazila={selectedUpazila}
-                setSelectedUpazila={setSelectedUpazila}
-                selectedUnion={selectedUnion}
-                setSelectedUnion={setSelectedUnion}
-                selectedMouza={selectedMouza}
-                setSelectedMouza={setSelectedMouza}
-                errors={errors}
-                setErrors={setErrors}
-                rt={regionTranslations}
-            />
+                <BengaliRegionSelector
+                    dropdownData={dropdownData}
+                    selectedDivision={selectedDivision}
+                    setSelectedDivision={setSelectedDivision}
+                    selectedDistrict={selectedDistrict}
+                    setSelectedDistrict={setSelectedDistrict}
+                    selectedUpazila={selectedUpazila}
+                    setSelectedUpazila={setSelectedUpazila}
+                    selectedUnion={selectedUnion}
+                    setSelectedUnion={setSelectedUnion}
+                    selectedMouza={selectedMouza}
+                    setSelectedMouza={setSelectedMouza}
+                    errors={errors}
+                    setErrors={setErrors}
+                    rt={regionTranslations}
+                />
+            </Card>
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}
@@ -165,10 +162,6 @@ export default function Region(): JSX.Element {
                         }
                     };
 
-                    if (regionGeovalidated) {
-                        body.geolocation = geolocation;
-                    }
-
                     const res = await fetch(`/api/v1/self/well/${wellId}`, {
                         method: 'PATCH',
                         headers: {
@@ -185,7 +178,7 @@ export default function Region(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/${wellId}/staining`);
+                    navigate(`/well/${wellId}/staining`);
                 }}
             >
                 Next Step

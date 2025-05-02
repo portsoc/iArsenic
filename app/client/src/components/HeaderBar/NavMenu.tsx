@@ -74,6 +74,12 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         text='Understanding Risk'
                         Icon={HealthAndSafetyIcon}
                     />
+                    
+                    <NavListItem
+                        path='my-wells'
+                        text='My Wells'
+                        Icon={LocalDrinkIcon}
+                    />
                 </List>
 
                 {/* logged in users */}
@@ -81,12 +87,6 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <>
                         <Divider />
                         <List>
-                            <NavListItem
-                                path='my-wells'
-                                text='My Wells'
-                                Icon={LocalDrinkIcon}
-                            />
-
                             <NavListItem
                                 path='profile'
                                 text='My Profile'
