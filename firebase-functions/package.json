@@ -34,7 +34,6 @@
     "koa-static": "^5.0.0",
     "module-alias": "^2.2.3",
     "nodemailer": "^6.9.15",
-    "typescript": "^5.5.4",
     "uuid4": "^2.0.3",
     "zod": "^3.23.8"
   },
