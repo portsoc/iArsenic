@@ -135,14 +135,69 @@ export const WellController = {
             });
         }
     
-        const signedUrl = await WellService.getImageUploadUrl({
+        const { signedUrl, path } = await WellService.getImageUploadUrl({
             wellId,
             userId,
             contentType: body.contentType,
         });
     
         ctx.status = 200;
-        ctx.body = { url: signedUrl };
-    }
+        ctx.body = { 
+            url: signedUrl,
+            path,
+        };
+    },
+
+    async confirmWellImageUpload(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema])
+            .parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
     
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const body = ctx.request.body as { path?: string };
+
+        if (!body.path || typeof body.path !== 'string') {
+            throw new KnownError({
+                message: 'Image path is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const updatedWell = await WellService.confirmImageUpload({
+            wellId,
+            userId,
+            imagePath: body.path,
+        });
+    
+        ctx.status = 200;
+        ctx.body = { ...updatedWell };
+    },
+
+    async getWellImageUrls(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema]).parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const urls = await WellService.getWellImageSignedUrls({ wellId, userId });
+    
+        ctx.status = 200;
+        ctx.body = { urls };
+    }
 }

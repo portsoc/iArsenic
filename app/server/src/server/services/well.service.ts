@@ -2,7 +2,7 @@ import uuid4 from 'uuid4'
 import { Well, WellSchema } from 'iarsenic-types'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
-import getSignedUploadUrl from '../utils/signedUploadUrl'
+import getSignedUrl from '../utils/signedUrl'
 
 export const WellService = {
     async createWell(userId: string): Promise<Well> {
@@ -89,7 +89,7 @@ export const WellService = {
         wellId: string;
         userId: string;
         contentType: string;
-    }): Promise<string> {
+    }): Promise<{ signedUrl: string, path: string }> {
         const well = await WellRepo.findById(wellId);
     
         if (!well) {
@@ -113,8 +113,79 @@ export const WellService = {
                 '.jpg';
         const destination = `wells/${wellId}/${uuid4()}${ext}`;
     
-        const signedUrl = await getSignedUploadUrl(destination, contentType);
+        const signedUrl = await getSignedUrl(
+            'write',
+            destination, 
+            contentType,
+        );
 
-        return signedUrl;
+        return { 
+            signedUrl,
+            path: destination,
+        }
+    },
+    
+    async confirmImageUpload({
+        wellId,
+        userId,
+        imagePath,
+    }: {
+        wellId: string;
+        userId: string;
+        imagePath: string;
+    }): Promise<Well> {
+        const well = await WellRepo.findById(wellId);
+    
+        if (!well) {
+            throw new KnownError({
+                message: 'Well not found',
+                code: 404,
+                name: 'WellNotFoundError',
+            });
+        }
+    
+        if (well.userId !== userId && well.userId !== 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+    
+        const updatedWell: Well = {
+            ...well,
+            imagePaths: Array.isArray(well.imagePaths)
+                ? [...well.imagePaths, imagePath]
+                : [imagePath],
+        };
+    
+        const validatedWell = WellSchema.parse(updatedWell);
+        await WellRepo.update(validatedWell);
+    
+        return validatedWell;
+    },
+
+    async getWellImageSignedUrls({ wellId, userId }: { wellId: string, userId: string }) {
+        const well = await WellRepo.findById(wellId);
+    
+        if (!well) {
+            throw new KnownError({ message: 'Well not found', code: 404, name: 'WellNotFoundError' });
+        }
+    
+        if (well.userId !== userId && well.userId !== 'guest') {
+            throw new KnownError({ message: 'Unauthorized', code: 403, name: 'UnauthorizedError' });
+        }
+    
+        const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
+    
+        const signedUrls = await Promise.all(imagePaths.map(path =>
+            getSignedUrl(
+                'read',
+                path,
+            ) 
+        ));
+    
+        return signedUrls;
     }
+
 }

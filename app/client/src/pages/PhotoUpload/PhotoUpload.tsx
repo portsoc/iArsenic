@@ -13,16 +13,64 @@ export default function WellImageUpload(): JSX.Element {
     const [uploading, setUploading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-            setToken(token);
+    async function fetchWellAndImages(wellId: string, token: AccessToken | null = null) {
+        console.log('hello?')
+        const headers: HeadersInit = {} 
+        
+        if (token != null) {
+            headers["Authorization"] = `Bearer ${token.id}`
+        };
+    
+        const wellRes = await fetch(`/api/v1/self/well/${wellId}`, { headers });
+        if (!wellRes.ok) return;
+    
+        const well = await wellRes.json();
+    
+        const paths = well.imagePaths || [];
+    
+        if (paths.length === 0) {
+            setImageUrls([]);
+            return;
         }
-        fetchToken();
-    }, []);
+    
+        const urlsRes = await fetch(`/api/v1/self/well/${wellId}/signed-image-urls`, {
+            method: "POST",
+            headers: {
+                ...headers,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ paths })
+        });
+    
+        if (!urlsRes.ok) {
+            const text = await urlsRes.text();
+            console.error("Failed to fetch signed URLs:", text);
+            return;
+        }
+
+        const { urls } = await urlsRes.json();
+        console.log(urls)
+        setImageUrls(urls);
+    }
+
+    useEffect(() => {
+        async function load() {
+            const token = await AccessTokenRepo.get();
+            if (!wellId) return;
+            if (token) {
+                setToken(token);
+                await fetchWellAndImages(wellId, token);
+            } else {
+                await fetchWellAndImages(wellId);
+            }
+        }
+
+        load();
+    }, [wellId]);
+    
 
     async function handleUpload() {
         if (!file || !wellId) {
@@ -44,10 +92,9 @@ export default function WellImageUpload(): JSX.Element {
         }
 
         try {
-            const headers: HeadersInit = {};
-            if (token) {
-                headers["Authorization"] = `Bearer ${token.id}`;
-            }
+            const headers: HeadersInit = {
+                "Authorization": `Bearer ${token?.id || ""}`
+            };
 
             const contentType = resizedBlob.type;
             const uploadUrlRes = await fetch(`/api/v1/self/well/${wellId}/upload-url`, {
@@ -93,6 +140,20 @@ export default function WellImageUpload(): JSX.Element {
             setSuccess(true);
             setFile(null);
             if (fileInputRef.current) fileInputRef.current.value = '';
+
+            // Fetch updated images
+            const newUrlsRes = await fetch(`/api/v1/self/well/${wellId}/signed-image-urls`, {
+                method: "POST",
+                headers: {
+                    ...headers,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ paths: [path] })
+            });
+
+            const { urls } = await newUrlsRes.json();
+            setImageUrls(urls);
+
         } catch (err: any) {
             setError(`Upload failed: ${err.message || err}`);
         } finally {
@@ -137,6 +198,19 @@ export default function WellImageUpload(): JSX.Element {
                 {success && <Alert severity="success">Image uploaded successfully!</Alert>}
                 {error && <Alert severity="error">{error}</Alert>}
             </Card>
+
+            {imageUrls.length > 0 && (
+                <Box mt={4}>
+                    <Typography variant="h5" gutterBottom>
+                        Uploaded Images
+                    </Typography>
+                    <Box display="flex" flexWrap="wrap" gap="1rem">
+                        {imageUrls.map((url, i) => (
+                            <img key={i} src={url} alt={`Well image ${i + 1}`} width={200} />
+                        ))}
+                    </Box>
+                </Box>
+            )}
         </Box>
     );
 }
