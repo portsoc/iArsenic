@@ -19,10 +19,8 @@ export default function WellImageUpload(): JSX.Element {
         async function fetchToken() {
             const token = await AccessTokenRepo.get();
             if (token == null) return;
-
             setToken(token);
         }
-
         fetchToken();
     }, []);
 
@@ -31,11 +29,11 @@ export default function WellImageUpload(): JSX.Element {
             setError("Missing file, or well ID");
             return;
         }
-    
+
         setUploading(true);
         setError(null);
         setSuccess(false);
-    
+
         let resizedBlob: Blob;
         try {
             resizedBlob = await resizeImage(file);
@@ -44,30 +42,61 @@ export default function WellImageUpload(): JSX.Element {
             setError(`Failed to resize image: ${String(resizeError)}`);
             return;
         }
-    
-        const formData = new FormData();
-        formData.append("image", resizedBlob, file.name);
-    
-        const headers: HeadersInit = {};
-        if (token) {
-            headers["Authorization"] = `Bearer ${token.id}`;
-        }
-    
-        const res = await fetch(`/api/v1/self/well/${wellId}/image`, {
-            method: "POST",
-            body: formData,
-            headers,
-        });
-    
-        setUploading(false);
-    
-        if (res.ok) {
+
+        try {
+            const headers: HeadersInit = {};
+            if (token) {
+                headers["Authorization"] = `Bearer ${token.id}`;
+            }
+
+            const contentType = resizedBlob.type;
+            const uploadUrlRes = await fetch(`/api/v1/self/well/${wellId}/upload-url`, {
+                method: "POST",
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ contentType })
+            });
+
+            if (!uploadUrlRes.ok) {
+                throw new Error(await uploadUrlRes.text());
+            }
+
+            const { url, path } = await uploadUrlRes.json();
+
+            const uploadRes = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': contentType
+                },
+                body: resizedBlob
+            });
+
+            if (!uploadRes.ok) {
+                throw new Error("Failed to upload image to signed URL");
+            }
+
+            const confirmRes = await fetch(`/api/v1/self/well/${wellId}/confirm-upload`, {
+                method: "POST",
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path })
+            });
+
+            if (!confirmRes.ok) {
+                throw new Error(await confirmRes.text());
+            }
+
             setSuccess(true);
             setFile(null);
             if (fileInputRef.current) fileInputRef.current.value = '';
-        } else {
-            const text = await res.text();
-            setError(`Upload failed: ${text}`);
+        } catch (err: any) {
+            setError(`Upload failed: ${err.message || err}`);
+        } finally {
+            setUploading(false);
         }
     }
 

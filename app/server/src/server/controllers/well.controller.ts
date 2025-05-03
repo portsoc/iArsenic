@@ -110,4 +110,39 @@ export const WellController = {
         ctx.status = 501
         ctx.body = { error: 'Not Implemented' }
     },
+
+    async getImageUploadSignedUrl(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema])
+            .parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const body = ctx.request.body as { contentType?: string };
+    
+        if (!body.contentType || !body.contentType.startsWith('image/')) {
+            throw new KnownError({
+                message: 'Invalid or missing content type',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const signedUrl = await WellService.getImageUploadUrl({
+            wellId,
+            userId,
+            contentType: body.contentType,
+        });
+    
+        ctx.status = 200;
+        ctx.body = { url: signedUrl };
+    }
+    
 }

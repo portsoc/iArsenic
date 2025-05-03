@@ -2,6 +2,7 @@ import uuid4 from 'uuid4'
 import { Well, WellSchema } from 'iarsenic-types'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
+import getSignedUploadUrl from '../utils/signedUploadUrl'
 
 export const WellService = {
     async createWell(userId: string): Promise<Well> {
@@ -79,4 +80,41 @@ export const WellService = {
     async getAllWells(): Promise<Well[]> {
         return await WellRepo.findAll();
     },
+
+    async getImageUploadUrl({
+        wellId,
+        userId,
+        contentType,
+    }: {
+        wellId: string;
+        userId: string;
+        contentType: string;
+    }): Promise<string> {
+        const well = await WellRepo.findById(wellId);
+    
+        if (!well) {
+            throw new KnownError({
+                message: 'Well not found',
+                code: 404,
+                name: 'WellNotFoundError',
+            });
+        }
+    
+        if (well.userId !== userId && well.userId !== 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+    
+        const ext = contentType === 'image/png' ? '.png' :
+            contentType === 'image/webp' ? '.webp' :
+                '.jpg';
+        const destination = `wells/${wellId}/${uuid4()}${ext}`;
+    
+        const signedUrl = await getSignedUploadUrl(destination, contentType);
+
+        return signedUrl;
+    }
 }
