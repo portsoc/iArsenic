@@ -1,0 +1,15 @@
+meta {
+  name: query wells
+  type: http
+  seq: 19
+}
+
+get {
+  url: {{base_url}}/api/v1/self/wells/query?regionKey.division=Chittagong
+  body: none
+  auth: inherit
+}
+
+params:query {
+  regionKey.division: Chittagong
+}

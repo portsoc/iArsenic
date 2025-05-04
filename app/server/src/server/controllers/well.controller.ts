@@ -263,6 +263,9 @@ export const WellController = {
             ...ctx.query,
             userId,
         };
+
+        console.log('================================')
+        console.log(filters)
     
         const predictions = await WellService.queryWells(filters);
     

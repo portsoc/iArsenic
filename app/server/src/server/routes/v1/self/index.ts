@@ -10,7 +10,7 @@ self.delete('/user', jwtRequired, async ctx => UserController.deleteUserByToken(
 
 self.get('/wells', jwtRequired, async ctx => WellController.getWellsByToken(ctx))
 self.post('/well', jwtOrGuest, async ctx => WellController.createWellByToken(ctx))
-self.get('/prediction/query', jwtOrGuest, ctx => WellController.getSelfWellsByQuery(ctx));
+self.get('/wells/query', jwtOrGuest, ctx => WellController.getSelfWellsByQuery(ctx));
 self.post('/wells/claim', jwtRequired, async ctx => WellController.claimWells(ctx))
 self.delete('/well/:id/image', jwtOrGuest, async ctx => WellController.deleteWellImage(ctx))
 self.post('/well/:id/upload-url', jwtOrGuest, async ctx => WellController.getImageUploadSignedUrl(ctx))

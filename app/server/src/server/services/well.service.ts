@@ -255,7 +255,24 @@ export const WellService = {
             if (Array.isArray(value)) {
                 throw new Error(`Multiple filters for '${key}' are not supported.`);
             }
-            queries.push([key, '==', value]);
+    
+            if (key.endsWith('_gte')) {
+                queries.push([key.replace('_gte', ''), '>=', Number(value)]);
+            } else if (key.endsWith('_lte')) {
+                queries.push([key.replace('_lte', ''), '<=', Number(value)]);
+            } else if (key.endsWith('_exists')) {
+                if (value === 'true') {
+                    queries.push([key.replace('_exists', ''), '!=', null]);
+                }
+            } else {
+                // Convert "true"/"false" to booleans
+                const parsedValue = value === 'true'
+                    ? true
+                    : value === 'false'
+                    ? false
+                    : value;
+                queries.push([key, '==', parsedValue]);
+            }
         }
     
         return await WellRepo.getByQuery(queries);
