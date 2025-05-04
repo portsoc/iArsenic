@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useState } from 'react';
+import RegionFilter from './RegionFilter';
 
 export default function() {
     const [open, setOpen] = useState(false);
@@ -130,55 +131,7 @@ export default function() {
                     <Divider />
 
                     <Typography variant="subtitle1">Region</Typography>
-                    <TextField
-                        label="Division"
-                        select
-                        value={filters.region.division}
-                        onChange={(e) => handleRegionChange('division', e.target.value)}
-                        fullWidth
-                    >
-                        {/* Options to be populated later */}
-                    </TextField>
-
-                    <TextField
-                        label="District"
-                        select
-                        value={filters.region.district}
-                        onChange={(e) => handleRegionChange('district', e.target.value)}
-                        fullWidth
-                    >
-                        {/* Options to be populated later */}
-                    </TextField>
-
-                    <TextField
-                        label="Upazila"
-                        select
-                        value={filters.region.upazila}
-                        onChange={(e) => handleRegionChange('upazila', e.target.value)}
-                        fullWidth
-                    >
-                        {/* Options to be populated later */}
-                    </TextField>
-
-                    <TextField
-                        label="Union"
-                        select
-                        value={filters.region.union}
-                        onChange={(e) => handleRegionChange('union', e.target.value)}
-                        fullWidth
-                    >
-                        {/* Options to be populated later */}
-                    </TextField>
-
-                    <TextField
-                        label="Mouza"
-                        select
-                        value={filters.region.mouza}
-                        onChange={(e) => handleRegionChange('mouza', e.target.value)}
-                        fullWidth
-                    >
-                        {/* Options to be populated later */}
-                    </TextField>
+                    <RegionFilter />
 
                     <Divider />
 
