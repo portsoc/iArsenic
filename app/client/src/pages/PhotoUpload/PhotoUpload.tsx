@@ -1,4 +1,4 @@
-import { Button, Card, Typography, Box, Alert } from "@mui/material";
+import { Button, Card, Typography, Box, Alert, CircularProgress } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
@@ -6,6 +6,7 @@ import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import { resizeImage } from "../../utils/resizeImage";
 import { navigate } from "wouter/use-browser-location";
 import PhotoItem from "./PhotoItem";
+import ImageIcon from '@mui/icons-material/Image';
 
 export default function WellImageUpload(): JSX.Element {
     const [, params] = useRoute('/well/:id/upload-image');
@@ -16,44 +17,48 @@ export default function WellImageUpload(): JSX.Element {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [imageUrls, setImageUrls] = useState<string[]>([]);
+    const [loadingImages, setLoadingImages] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     async function fetchWellAndImages(wellId: string, token: AccessToken | null = null) {
-        const headers: HeadersInit = {} 
-        
-        if (token != null) {
-            headers["Authorization"] = `Bearer ${token.id}`
-        };
+        setLoadingImages(true);
+        try {
+            const headers: HeadersInit = {};
+            if (token) {
+                headers["Authorization"] = `Bearer ${token.id}`;
+            }
     
-        const wellRes = await fetch(`/api/v1/self/well/${wellId}`, { headers });
-        if (!wellRes.ok) return;
+            const wellRes = await fetch(`/api/v1/self/well/${wellId}`, { headers });
+            if (!wellRes.ok) return;
     
-        const well = await wellRes.json();
+            const well = await wellRes.json();
+            const paths = well.imagePaths || [];
     
-        const paths = well.imagePaths || [];
+            if (paths.length === 0) {
+                setImageUrls([]);
+                return;
+            }
     
-        if (paths.length === 0) {
-            setImageUrls([]);
-            return;
+            const urlsRes = await fetch(`/api/v1/self/well/${wellId}/signed-image-urls`, {
+                method: "POST",
+                headers: {
+                    ...headers,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ paths })
+            });
+    
+            if (!urlsRes.ok) {
+                const text = await urlsRes.text();
+                console.error("Failed to fetch signed URLs:", text);
+                return;
+            }
+    
+            const { urls } = await urlsRes.json();
+            setImageUrls(urls);
+        } finally {
+            setLoadingImages(false);
         }
-    
-        const urlsRes = await fetch(`/api/v1/self/well/${wellId}/signed-image-urls`, {
-            method: "POST",
-            headers: {
-                ...headers,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ paths })
-        });
-    
-        if (!urlsRes.ok) {
-            const text = await urlsRes.text();
-            console.error("Failed to fetch signed URLs:", text);
-            return;
-        }
-
-        const { urls } = await urlsRes.json();
-        setImageUrls(urls);
     }
 
     async function onImageDelete(path: string) {
@@ -198,28 +203,70 @@ export default function WellImageUpload(): JSX.Element {
                 variant="outlined"
                 sx={{
                     width: '100%',
-                    padding: '16px',
+                    padding: '24px',
                     marginBottom: '16px',
+                    borderWidth: 2,
                 }}
             >
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setFile(e.target.files?.[0] || null)}
-                    ref={fileInputRef}
-                />
-
-                <Button
-                    variant="contained"
-                    onClick={handleUpload}
-                    disabled={!file || uploading}
-                    sx={{ width: "100%", height: "3rem" }}
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    gap={2}
                 >
-                    {uploading ? "Uploading..." : "Upload"}
-                </Button>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setFile(e.target.files?.[0] || null)}
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        id="image-upload"
+                    />
 
-                {success && <Alert severity="success">Image uploaded successfully!</Alert>}
-                {error && <Alert severity="error">{error}</Alert>}
+                    <label htmlFor="image-upload">
+                        <Button
+                            variant="outlined"
+                            component="span"
+                            startIcon={<ImageIcon />}
+                            sx={{
+                                borderColor: "#4caf50",
+                                color: "#4caf50",
+                                fontWeight: 'bold',
+                                padding: "12px 24px",
+                                '&:hover': {
+                                    borderColor: "#388e3c",
+                                    backgroundColor: "#e8f5e9",
+                                },
+                            }}
+                        >
+                            Select Image
+                        </Button>
+                    </label>
+
+                    <Button
+                        variant="contained"
+                        onClick={handleUpload}
+                        disabled={!file || uploading || imageUrls.length >= 5}
+                        sx={{
+                            width: "100%",
+                            height: "3.5rem",
+                            fontWeight: 'bold',
+                            backgroundColor: "#4caf50",
+                            '&:hover': {
+                                backgroundColor: "#388e3c",
+                            }
+                        }}
+                    >
+                        {imageUrls.length >= 5
+                            ? "Max images reached"
+                            : uploading
+                                ? "Uploading..."
+                                : "Upload"}
+                    </Button>
+
+                    {success && <Alert severity="success" sx={{ width: '100%' }}>Image uploaded successfully!</Alert>}
+                    {error && <Alert severity="error" sx={{ width: '100%' }}>{error}</Alert>}
+                </Box>
             </Card>
 
             <Card
@@ -230,26 +277,24 @@ export default function WellImageUpload(): JSX.Element {
                     marginBottom: '16px',
                 }}
             >
+                <Box 
+                    width="100%" 
+                    display="flex" 
+                    alignItems="center"
+                    flexDirection="column"
+                >
+                    <Typography variant="h5" mb={2}>
+                        Uploaded Images
+                    </Typography>
 
-                {imageUrls.length > 0 && (
-                    <Box 
-                        width='100%' 
-                        mt={2}
-                        display="flex" 
-                        alignItems='center'
-                        flexDirection='column'
-                    >
-                        <Typography 
-                            variant="h5" 
-                            justifyContent='center' 
-                            mb={2}
-                        >
-                            Uploaded Images
+                    {loadingImages ? (
+                        <CircularProgress />
+                    ) : imageUrls.length === 0 ? (
+                        <Typography color="text.secondary">
+                            No images uploaded.
                         </Typography>
-                        <Box 
-                            flexWrap="wrap" 
-                            gap="1rem"
-                        >
+                    ) : (
+                        <Box flexWrap="wrap" gap="1rem" display="flex" justifyContent="center">
                             {imageUrls.map((url, i) => (
                                 <PhotoItem 
                                     key={url} 
@@ -259,10 +304,10 @@ export default function WellImageUpload(): JSX.Element {
                                 />
                             ))}
                         </Box>
-                    </Box>
-                )}
+                    )}
+                </Box>
             </Card>
-
+            
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
@@ -272,7 +317,7 @@ export default function WellImageUpload(): JSX.Element {
                         navigate(`/well/${wellId}`);
                         return;
                     }
-                    navigate(`/well/${wellId}/result`);
+                    navigate(`/well/${wellId}/review`);
                 }}
             >
                 Next Step

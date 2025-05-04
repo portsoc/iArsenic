@@ -225,7 +225,7 @@ export const WellService = {
             ...well,
             imagePaths: updatedPaths,
         }
-        
+
         await WellRepo.update(updatedWell);
     
         return { message: `Image deleted: ${imagePath}` };
