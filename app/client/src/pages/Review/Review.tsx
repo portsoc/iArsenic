@@ -63,7 +63,7 @@ export default function Review() {
         );
     }
 
-    if (well.regionKey == null) {
+    if (well.division == null) {
         navigate(`/well/${wellId}/region`);
         return;
     }

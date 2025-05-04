@@ -29,14 +29,7 @@ export default function MyWells(): JSX.Element {
         const data = await result.json();
         const wells = data.wells
 
-        setWells(wells.map((well: Well) => ({
-            id: well.id,
-            createdAt: new Date(well.createdAt),
-            regionKey: well.regionKey,
-            depth: well.depth,
-            flooding: well.flooding,
-            staining: well.staining,
-        })));
+        setWells(wells)
     }
 
     async function fetchUnclaimedWells() {

@@ -55,7 +55,11 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
     const filteredWells = wells.filter(s =>
         s.geolocation != null &&
         findWellPredictions(s, predictions)[0] != null &&
-        s.regionKey != null &&
+        s.division != null &&
+        s.district != null &&
+        s.upazila != null &&
+        s.union != null &&
+        s.mouza != null &&
         s.staining != null &&
         s.depth != null
     );
@@ -80,48 +84,48 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
                             </Typography>
 
                             <Typography className='english' variant='body1'>
-                                Division: {p.regionKey!.division}
+                                Division: {p.division}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Divisions.Division}:
-                                ${regionTranslations.Divisions[p.regionKey!.division]}
+                                ${regionTranslations.Divisions[p.division!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                District: {p.regionKey!.district}
+                                District: {p.district}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Districts.District}:
-                                ${regionTranslations.Districts[p.regionKey!.district]}
+                                ${regionTranslations.Districts[p.district!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                Upazila: {p.regionKey!.upazila}
+                                Upazila: {p.upazila!}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Upazilas.Upazila}:
-                                ${regionTranslations.Upazilas[p.regionKey!.upazila]}
+                                ${regionTranslations.Upazilas[p.upazila!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                Union: {p.regionKey!.union}
+                                Union: {p.union!}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Unions.Union}:
-                                ${regionTranslations.Unions[p.regionKey!.union]}
+                                ${regionTranslations.Unions[p.union!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                Mouza: {p.regionKey!.mouza}
+                                Mouza: {p.mouza}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Mouzas.Mouza}:
-                                ${regionTranslations.Mouzas[p.regionKey!.mouza]}
+                                ${regionTranslations.Mouzas[p.mouza!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
