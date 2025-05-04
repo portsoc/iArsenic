@@ -6,7 +6,7 @@ import {
     DropdownUnion,
     RegionTranslations,
 } from "../../types";
-import { RegionErrors } from "./RegionSelector";
+import { RegionErrors } from "../../pages/SelectRegion/RegionSelector";
 
 type props = {
     dropdownData: DropdownDivision[];

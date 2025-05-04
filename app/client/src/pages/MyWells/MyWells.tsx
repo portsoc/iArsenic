@@ -1,7 +1,7 @@
 import { Box, Button, Typography, Alert, CircularProgress } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
-import { AccessToken, Prediction, Well } from 'iarsenic-types';
+import { AccessToken, Prediction, Well, WellSchema } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
 import findWellPredictions from '../../utils/findWellPredictions';
@@ -30,7 +30,17 @@ export default function MyWells(): JSX.Element {
         const data = await result.json();
         const wells = data.wells
 
-        setWells(wells)
+        const parsedWells: Well[] = []
+        for (const well of wells) {
+            parsedWells.push(
+                WellSchema.parse({
+                    ...well,
+                    createdAt: new Date(well.createdAt),
+                })
+            )
+        }
+
+        setWells(parsedWells)
     }
 
     async function fetchUnclaimedWells() {
@@ -46,7 +56,11 @@ export default function MyWells(): JSX.Element {
         for (const res of responses) {
             if (res.ok) {
                 const well = await res.json();
-                wells.push(well);
+                const parsedWell = WellSchema.parse({
+                    ...well,
+                    createdAt: new Date(well.createdAt),
+                })
+                wells.push(parsedWell);
             }
         }
 
