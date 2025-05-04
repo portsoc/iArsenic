@@ -7,7 +7,7 @@ interface props {
 }
 
 export default function({ well }: props) {
-    if (!well?.regionKey) {
+    if (!well?.division) {
         throw new Error('Missing reion')
     }
 
@@ -23,23 +23,23 @@ export default function({ well }: props) {
             <Typography variant="h6" gutterBottom>Region</Typography>
 
             <Typography variant="body1" component="p" gutterBottom>
-                Division: {well.regionKey.division}
+                Division: {well.division}
             </Typography>
 
             <Typography variant="body1" component="p" gutterBottom>
-                District: {well.regionKey.district}
+                District: {well.district}
             </Typography>
 
             <Typography variant="body1" component="p" gutterBottom>
-                Upazila: {well.regionKey.upazila}
+                Upazila: {well.upazila}
             </Typography>
 
             <Typography variant="body1" component="p" gutterBottom>
-                Union: {well.regionKey.union}
+                Union: {well.union}
             </Typography>
 
             <Typography variant="body1" component="p" gutterBottom>
-                Mouza: {well.regionKey.mouza}
+                Mouza: {well.mouza}
             </Typography>
 
             <Box display="flex" justifyContent="center" mt={2}>

@@ -26,13 +26,13 @@ export default function WellCard({ well, predictions }: props): JSX.Element {
                 </Typography>
 
                 {/* Region Details */}
-                {well.regionKey && (
+                {well.division && (
                     <Box mt={2}>
                         <Typography variant="subtitle1" color="text.primary">
                             Region
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {well.regionKey.division}, {well.regionKey.district}, {well.regionKey.upazila}, {well.regionKey.union}, {well.regionKey.mouza}
+                            {well.division}, {well.district}, {well.upazila}, {well.union}, {well.mouza}
                         </Typography>
                     </Box>
                 )}

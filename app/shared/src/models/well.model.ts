@@ -1,4 +1,3 @@
-import { RegionKeySchema } from './regionKey';
 import { StainingSchema } from './wellStaining';
 import { UtensilStainingSchema } from './utensilStaining';
 import { z } from 'zod';
@@ -8,7 +7,11 @@ export const WellSchema = z.object({
     createdAt: z.date(),
     userId: z.string(),
     wellInUse: z.boolean().optional(),
-    regionKey: RegionKeySchema.optional(),
+    division: z.string().optional(),
+    district: z.string().optional(),
+    upazila: z.string().optional(),
+    union: z.string().optional(),
+    mouza: z.string().optional(),
     depth: z.number().optional(),
     flooding: z.boolean().optional(),
     staining: StainingSchema.optional(),
@@ -17,6 +20,7 @@ export const WellSchema = z.object({
     imagePaths: z.array(z.string()).optional(),
 });
 
+
 export type Well = z.infer<typeof WellSchema>;
 
 export const CompleteWellSchema = z.object({
@@ -24,7 +28,11 @@ export const CompleteWellSchema = z.object({
     createdAt: z.date(),
     userId: z.string(),
     wellInUse: z.boolean(),
-    regionKey: RegionKeySchema,
+    division: z.string(),
+    district: z.string(),
+    upazila: z.string(),
+    union: z.string(),
+    mouza: z.string(),
     depth: z.number(),
     flooding: z.boolean(),
     staining: StainingSchema,

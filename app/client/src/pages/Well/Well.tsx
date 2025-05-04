@@ -14,7 +14,7 @@ export default function Review() {
 
     function missingFields(well: Well): string[] {
         const missingFields = [];
-        if (well.regionKey == null) missingFields.push('region');
+        if (well.division == null) missingFields.push('region');
         if (well.depth == null) missingFields.push('depth');
         if (well.staining == null) missingFields.push('staining');
         if (well.flooding == null) missingFields.push('flooding');
@@ -162,7 +162,7 @@ export default function Review() {
                         variant="contained"
                         color="primary"
                         onClick={() => {
-                            if (!well?.regionKey) {
+                            if (!well?.division) {
                                 navigate(`/${wellId}/region`);
                             } else if (!well?.staining) {
                                 navigate(`/${wellId}/staining`);
@@ -186,28 +186,34 @@ export default function Review() {
                     marginBottom: '16px',
                 }}
             >
-                {well.regionKey && (
+                {(
+                    well.division &&
+                    well.district &&
+                    well.upazila &&
+                    well.union &&
+                    well.mouza
+                ) && (
                     <Box mb={2}>
                         <Typography variant="h6" gutterBottom>Region</Typography>
 
                         <Typography variant="body1" component="p" gutterBottom>
-                            Division: {well.regionKey.division}
+                            Division: {well.division}
                         </Typography>
 
                         <Typography variant="body1" component="p" gutterBottom>
-                            District: {well.regionKey.district}
+                            District: {well.district}
                         </Typography>
 
                         <Typography variant="body1" component="p" gutterBottom>
-                            Upazila: {well.regionKey.upazila}
+                            Upazila: {well.upazila}
                         </Typography>
 
                         <Typography variant="body1" component="p" gutterBottom>
-                            Union: {well.regionKey.union}
+                            Union: {well.union}
                         </Typography>
 
                         <Typography variant="body1" component="p" gutterBottom>
-                            Mouza: {well.regionKey.mouza}
+                            Mouza: {well.mouza}
                         </Typography>
                     </Box>
                 )}
