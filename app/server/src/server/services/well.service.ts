@@ -1,5 +1,5 @@
 import uuid4 from 'uuid4'
-import { Well, WellSchema } from 'iarsenic-types'
+import { AbstractToken, User, Well, WellSchema } from 'iarsenic-types'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
 import getSignedUrl from '../utils/signedUrl'
@@ -21,7 +21,10 @@ export const WellService = {
         return await WellRepo.getByQuery([['userId', '==', userId]]);
     },
 
-    async getWellById(wellId: string, userId: string): Promise<Well> {
+    async getWellById(
+        auth: { user: User, token: AbstractToken },
+        wellId: string
+    ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
 
         if (!well) {
@@ -32,22 +35,24 @@ export const WellService = {
             })
         }
 
-        const validatedWell = WellSchema.parse(well);
-
-        if (validatedWell.userId !== userId) {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            })
+        if (well.userId !== 'guest') {
+            if (well.userId !== auth.user.id) {
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
         }
 
-        return validatedWell;
+        return WellSchema.parse(well);
     },
 
     async updateWell(
+        auth: { user: User, token: AbstractToken },
         wellId: string,
-        userId: string,
         wellUpdates: Partial<Well>,
     ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
@@ -60,12 +65,16 @@ export const WellService = {
             })
         }
 
-        if (well.userId !== userId) {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            })
+        if (well.userId !== 'guest') {
+            if (well.userId !== auth.user.id) {
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
         }
 
         const updatedWell = {
@@ -83,15 +92,11 @@ export const WellService = {
         return await WellRepo.findAll();
     },
 
-    async getImageUploadUrl({
-        wellId,
-        userId,
-        contentType,
-    }: {
-        wellId: string;
-        userId: string;
-        contentType: string;
-    }): Promise<{ signedUrl: string, path: string }> {
+    async getImageUploadUrl(
+        auth: { user: User, token: AbstractToken },
+        wellId: string,
+        contentType: string,
+    ): Promise<{ signedUrl: string, path: string }> {
         const well = await WellRepo.findById(wellId);
     
         if (!well) {
@@ -101,18 +106,26 @@ export const WellService = {
                 name: 'WellNotFoundError',
             });
         }
-    
-        if (well.userId !== userId && well.userId !== 'guest') {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
+
+        // anyone with the well ID can upload guest well images
+        if (well.userId !== 'guest') {
+            // users can upload images to their own well
+            if (well.userId !== auth.user.id) {
+                // only admins can upload images of wells that aren't theirs
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
         }
     
         const ext = contentType === 'image/png' ? '.png' :
             contentType === 'image/webp' ? '.webp' :
                 '.jpg';
+
         const destination = `wells/${wellId}/${uuid4()}${ext}`;
     
         const signedUrl = await getSignedUrl(
@@ -127,15 +140,11 @@ export const WellService = {
         }
     },
     
-    async confirmImageUpload({
-        wellId,
-        userId,
-        imagePath,
-    }: {
-        wellId: string;
-        userId: string;
-        imagePath: string;
-    }): Promise<Well> {
+    async confirmImageUpload(
+        auth: { user: User, token: AbstractToken },
+        wellId: string,
+        imagePath: string,
+    ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
     
         if (!well) {
@@ -145,13 +154,17 @@ export const WellService = {
                 name: 'WellNotFoundError',
             });
         }
-    
-        if (well.userId !== userId && well.userId !== 'guest') {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
+
+        if (well.userId !== 'guest') {
+            if (well.userId !== auth.user.id) {
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
         }
     
         const updatedWell: Well = {
@@ -167,15 +180,26 @@ export const WellService = {
         return validatedWell;
     },
 
-    async getWellImageSignedUrls(wellId: string, userId: string) {
+    async getWellImageSignedUrls(
+        auth: { user: User, token: AbstractToken },
+        wellId: string, 
+    ) {
         const well = await WellRepo.findById(wellId);
     
         if (!well) {
             throw new KnownError({ message: 'Well not found', code: 404, name: 'WellNotFoundError' });
         }
-    
-        if (well.userId !== userId && well.userId !== 'guest') {
-            throw new KnownError({ message: 'Unauthorized', code: 403, name: 'UnauthorizedError' });
+
+        if (well.userId !== 'guest') {
+            if (well.userId !== auth.user.id) {
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
         }
     
         const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
@@ -190,7 +214,11 @@ export const WellService = {
         return signedUrls;
     },
 
-    async deleteWellImage(wellId: string, userId: string, imagePath: string) {
+    async deleteWellImage(
+        auth: { user: User, token: AbstractToken },
+        wellId: string, 
+        imagePath: string,
+    ) {
         const well = await WellRepo.findById(wellId);
     
         if (!well) {
@@ -200,15 +228,22 @@ export const WellService = {
                 name: 'WellNotFoundError',
             });
         }
-    
-        if (well.userId !== userId && well.userId !== 'guest') {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
+
+        // anyone with the well ID can delete guest well images
+        if (well.userId !== 'guest') {
+            // users can delete their own well
+            if (well.userId !== auth.user.id) {
+                // only admins can delete images of wells that aren't theirs
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
         }
-    
+   
         const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
     
         if (!imagePaths.includes(imagePath)) {

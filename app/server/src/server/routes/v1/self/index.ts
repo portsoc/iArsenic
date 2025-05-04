@@ -8,16 +8,16 @@ self.get('/user', useAuth, async ctx => UserController.getUserByToken(ctx))
 self.patch('/user', useAuth, async ctx => UserController.updateUserByToken(ctx))
 self.delete('/user', useAuth, async ctx => UserController.deleteUserByToken(ctx))
 
-self.get('/wells', jwtRequired, async ctx => WellController.getWellsByToken(ctx))
-self.post('/well', jwtOrGuest, async ctx => WellController.createWellByToken(ctx))
-self.get('/wells/query', jwtOrGuest, ctx => WellController.getSelfWellsByQuery(ctx));
-self.post('/wells/claim', jwtRequired, async ctx => WellController.claimWells(ctx))
-self.delete('/well/:id/image', jwtOrGuest, async ctx => WellController.deleteWellImage(ctx))
-self.post('/well/:id/upload-url', jwtOrGuest, async ctx => WellController.getImageUploadSignedUrl(ctx))
-self.post('/well/:id/confirm-upload', jwtOrGuest, async ctx => WellController.confirmWellImageUpload(ctx))
-self.post('/well/:id/signed-image-urls', jwtOrGuest, async ctx => WellController.getWellImageUrls(ctx))
-self.get('/well/:id', jwtOrGuest, async ctx => WellController.getWellByIdByToken(ctx))
-self.patch('/well/:id', jwtOrGuest, async ctx => WellController.updateWellByIdByToken(ctx))
-self.delete('/well/:id', jwtRequired, async ctx => WellController.deleteWellByIdByToken(ctx))
+self.get('/wells', useAuth, async ctx => WellController.getWellsByToken(ctx))
+self.post('/well', useAuth, async ctx => WellController.createWellByToken(ctx))
+self.get('/wells/query', useAuth, ctx => WellController.getSelfWellsByQuery(ctx));
+self.post('/wells/claim', useAuth, async ctx => WellController.claimWells(ctx))
+self.delete('/well/:id/image', useAuth, async ctx => WellController.deleteWellImage(ctx))
+self.post('/well/:id/upload-url', useAuth, async ctx => WellController.getImageUploadSignedUrl(ctx))
+self.post('/well/:id/confirm-upload', useAuth, async ctx => WellController.confirmWellImageUpload(ctx))
+self.post('/well/:id/signed-image-urls', useAuth, async ctx => WellController.getWellImageUrls(ctx))
+self.get('/well/:id', useAuth, async ctx => WellController.getWellById(ctx))
+self.patch('/well/:id', useAuth, async ctx => WellController.updateWellByIdByToken(ctx))
+self.delete('/well/:id', useAuth, async ctx => WellController.deleteWellByIdByToken(ctx))
 
 export default self

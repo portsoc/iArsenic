@@ -1,18 +1,36 @@
 import { Context } from 'koa';
-import { AccessTokenSchema, GuestTokenSchema, Well, WellSchema, validateModel } from 'iarsenic-types'
+import { AbstractTokenSchema, AccessTokenSchema, GuestTokenSchema, UserSchema, Well, WellSchema, validateModel } from 'iarsenic-types'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
 import { z } from 'zod';
 
 export const WellController = {
     async createWellByToken(ctx: Context) {
-        const token = z.union([
-            AccessTokenSchema,
-            GuestTokenSchema,
-        ]).parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
 
-        const well: Well = await WellService.createWell(userId);
+        if (auth.user.type === 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const token = AbstractTokenSchema.parse(auth.token);
+
+        if (token.type !== 'api-key' && token.type !== 'access') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const user = UserSchema.parse(auth.user)
+
+        const well: Well = await WellService.createWell(
+            user.id,
+        );
 
         ctx.status = 201
         ctx.body = { ...well }
@@ -20,6 +38,16 @@ export const WellController = {
 
     // todo - add pagination
     async getAllWells(ctx: Context) {
+        const auth = ctx.state.auth
+
+        if (auth.user.type === 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
         const wells = await WellService.getAllWells();
 
         ctx.status = 200
@@ -27,9 +55,28 @@ export const WellController = {
     },
 
     async getWellsByToken(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
 
+        if (auth.user.type === 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const token = AbstractTokenSchema.parse(auth.token);
+
+        if (token.type !== 'api-key' && token.type !== 'access') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+
+        }
+
+        const userId = token.userId;
         const wells = await WellService.getUserWells(userId);
 
         ctx.status = 200
@@ -37,13 +84,8 @@ export const WellController = {
 
     },
 
-    async getWellByIdByToken(ctx: Context) {
-        const token = z.union([
-            AccessTokenSchema,
-            GuestTokenSchema,
-        ]).parse(ctx.state.token);
-
-        const userId = token.userId;
+    async getWellById(ctx: Context) {
+        const auth = ctx.state.auth
         const wellId = ctx.params.id;
 
         if (!wellId) {
@@ -54,19 +96,17 @@ export const WellController = {
             })
         }
 
-        const well: Well = await WellService.getWellById(wellId, userId);
+        const well: Well = await WellService.getWellById(
+            auth,
+            wellId, 
+        );
 
         ctx.status = 200
         ctx.body = { ...well }
     },
 
     async updateWellByIdByToken(ctx: Context) {
-        const token = z.union([
-            AccessTokenSchema,
-            GuestTokenSchema,
-        ]).parse(ctx.state.token);
-
-        const userId = token.userId;
+        const auth = ctx.state.auth
         const wellId = ctx.params.id;
 
         if (!wellId) {
@@ -97,8 +137,8 @@ export const WellController = {
         delete wellData.userId
 
         const updatedWell = await WellService.updateWell(
+            auth,
             wellId,
-            userId,
             wellData,
         );
 
@@ -112,9 +152,8 @@ export const WellController = {
     },
 
     async getImageUploadSignedUrl(ctx: Context) {
-        const token = z.union([AccessTokenSchema, GuestTokenSchema])
-            .parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
+
         const wellId = ctx.params.id;
     
         if (!wellId) {
@@ -135,11 +174,11 @@ export const WellController = {
             });
         }
     
-        const { signedUrl, path } = await WellService.getImageUploadUrl({
+        const { signedUrl, path } = await WellService.getImageUploadUrl(
+            auth,
             wellId,
-            userId,
-            contentType: body.contentType,
-        });
+            body.contentType,
+        );
     
         ctx.status = 200;
         ctx.body = { 
@@ -149,9 +188,7 @@ export const WellController = {
     },
 
     async confirmWellImageUpload(ctx: Context) {
-        const token = z.union([AccessTokenSchema, GuestTokenSchema])
-            .parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
         const wellId = ctx.params.id;
     
         if (!wellId) {
@@ -172,19 +209,19 @@ export const WellController = {
             });
         }
     
-        const updatedWell = await WellService.confirmImageUpload({
+        const updatedWell = await WellService.confirmImageUpload(
+            auth,
             wellId,
-            userId,
-            imagePath: body.path,
-        });
+            body.path,
+        );
     
         ctx.status = 200;
         ctx.body = { ...updatedWell };
     },
 
     async getWellImageUrls(ctx: Context) {
-        const token = z.union([AccessTokenSchema, GuestTokenSchema]).parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
+
         const wellId = ctx.params.id;
     
         if (!wellId) {
@@ -195,25 +232,18 @@ export const WellController = {
             });
         }
     
-        const urls = await WellService.getWellImageSignedUrls(wellId, userId);
+        const urls = await WellService.getWellImageSignedUrls(
+            auth,
+            wellId, 
+        );
     
         ctx.status = 200;
         ctx.body = { urls };
     },
 
     async deleteWellImage(ctx: Context) {
-        const token = z.union([AccessTokenSchema, GuestTokenSchema]).parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
         const wellId = ctx.params.id;
-    
-        if (!wellId) {
-            throw new KnownError({
-                message: 'Well ID is required',
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-    
         const { path } = ctx.request.body as { path?: string };
     
         if (!path || typeof path !== 'string') {
@@ -223,16 +253,48 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
+
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
     
-        await WellService.deleteWellImage(wellId, userId, path);
+        await WellService.deleteWellImage(
+            auth,
+            wellId, 
+            path,
+        );
     
         ctx.status = 200;
         ctx.body = { success: true };
     },
 
     async claimWells(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
+
+        if (auth.user.type === 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const token = AbstractTokenSchema.parse(auth.token);
+
+        if (token.type !== 'api-key' && token.type !== 'access') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const user = UserSchema.parse(auth.user)
+        const userId = user.id;
     
         const { guestWellIds } = ctx.request.body as { guestWellIds?: string[] };
 
@@ -254,19 +316,33 @@ export const WellController = {
     },
 
     async getSelfWellsByQuery(ctx: Context) {
-        const token = z.union(
-            [AccessTokenSchema, GuestTokenSchema]
-        ).parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
+
+        if (auth.user.type === 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const token = AbstractTokenSchema.parse(auth.token);
+
+        if (token.type !== 'api-key' && token.type !== 'access') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const user = UserSchema.parse(auth.user)
     
         const filters = {
             ...ctx.query,
-            userId,
+            userId: user.id,
         };
 
-        console.log('================================')
-        console.log(filters)
-    
         const predictions = await WellService.queryWells(filters);
     
         ctx.status = 200;
