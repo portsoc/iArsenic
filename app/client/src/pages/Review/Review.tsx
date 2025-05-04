@@ -62,6 +62,8 @@ export default function Review() {
             <CircularProgress />
         );
     }
+    
+    console.log(well)
 
     if (well.division == null) {
         navigate(`/well/${wellId}/region`);

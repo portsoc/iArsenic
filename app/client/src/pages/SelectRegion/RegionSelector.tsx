@@ -2,7 +2,7 @@ import { Typography, Button, CircularProgress, Stack, Card } from "@mui/material
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
-import { RegionKey, AccessToken } from "iarsenic-types";
+import { AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";
@@ -152,14 +152,19 @@ export default function Region(): JSX.Element {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 
-                    const body: { regionKey: RegionKey, geolocation?: [number, number] } = {
-                        regionKey: {
-                            division: selectedDivision.division,
-                            district: selectedDistrict.district,
-                            upazila: selectedUpazila.upazila,
-                            union: selectedUnion.union,
-                            mouza: selectedMouza,
-                        }
+                    const body: { 
+                        division: string,
+                        district: string,
+                        upazila: string,
+                        union: string,
+                        mouza: string,
+                        geolocation?: [number, number],
+                    } = {
+                        division: selectedDivision.division,
+                        district: selectedDistrict.district,
+                        upazila: selectedUpazila.upazila,
+                        union: selectedUnion.union,
+                        mouza: selectedMouza,
                     };
 
                     const res = await fetch(`/api/v1/self/well/${wellId}`, {
