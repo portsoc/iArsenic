@@ -28,7 +28,6 @@ export default function MyWells(): JSX.Element {
 
         const data = await result.json();
         const wells = data.wells
-        console.log(wells)
 
         setWells(wells.map((well: Well) => ({
             id: well.id,
@@ -113,7 +112,6 @@ export default function MyWells(): JSX.Element {
     useEffect(() => {
         async function load() {
             const token = await AccessTokenRepo.get();
-            console.log(token)
 
             if (token) {
                 setToken(token);
