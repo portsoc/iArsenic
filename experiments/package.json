@@ -1,0 +1,16 @@
+{
+  "name": "experiments",
+  "version": "1.0.0",
+  "description": "This directory is to hold ad-hoc experiments required to answer development and research questions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@turf/boolean-point-in-polygon": "^7.1.0"
+  }
+}

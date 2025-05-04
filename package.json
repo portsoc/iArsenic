@@ -22,6 +22,7 @@
   },
   "scripts": {
     "test": "jest preprocessing/tests/",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build-app": "npm --prefix app/server run build:firebase"
   }
 }

@@ -1,0 +1,10 @@
+node_modules
+dist
+index.js
+server
+static
+ui-debug.log
+geodata
+model5
+.firestore
+shared

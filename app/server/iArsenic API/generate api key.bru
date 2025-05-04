@@ -1,0 +1,15 @@
+meta {
+  name: generate api key
+  type: http
+  seq: 18
+}
+
+post {
+  url: {{base_url}}/api/v1/token/api-key
+  body: none
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{api_key}}
+}

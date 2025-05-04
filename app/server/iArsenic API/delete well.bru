@@ -1,0 +1,15 @@
+meta {
+  name: delete well
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{base_url}}/api/v1/self/well/{{well_id}}
+  body: none
+  auth: none
+}
+
+headers {
+  authorization: Bearer {{access_token}}
+}
