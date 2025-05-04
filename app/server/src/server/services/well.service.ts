@@ -274,6 +274,8 @@ export const WellService = {
                 queries.push([key, '==', parsedValue]);
             }
         }
+
+        console.log(queries)
     
         return await WellRepo.getByQuery(queries);
     }

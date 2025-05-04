@@ -4,7 +4,7 @@ import './map.css';
 import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
-import { Well, AccessToken, Prediction } from 'iarsenic-types';
+import { Well, AccessToken, Prediction, WellSchema, PredictionSchema } from 'iarsenic-types';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
@@ -38,9 +38,20 @@ export default function Map() {
             throw new Error(`Failed to fetch well data:, ${res}`);
         }
 
-        const wells = (await res.json());
+        const data = (await res.json());
+        const wells = data.wells
 
-        setWells(wells);
+        const parsedWells = []
+        for (const well of wells) {
+            parsedWells.push(
+                WellSchema.parse({
+                    ...well,
+                    createdAt: new Date(well.createdAt),
+                })
+            )
+        }
+
+        setWells(parsedWells);
     }
 
     async function getWellPredictions() {
@@ -62,7 +73,17 @@ export default function Map() {
 
         const data = await res.json();
 
-        setPredictions(data.predictions);
+        const parsedPredictions = []
+        for (const p of data.predictions) {
+            parsedPredictions.push(
+                PredictionSchema.parse({
+                    ...p,
+                    createdAt: new Date(p.createdAt),
+                })
+            )
+        }
+
+        setPredictions(parsedPredictions);
     }
     
     async function getRegionTranslations() {

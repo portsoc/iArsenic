@@ -23,7 +23,7 @@ export const WellController = {
         const wells = await WellService.getAllWells();
 
         ctx.status = 200
-        ctx.body = { ...wells }
+        ctx.body = { wells }
     },
 
     async getWellsByToken(ctx: Context) {

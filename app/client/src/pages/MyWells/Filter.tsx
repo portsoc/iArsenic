@@ -57,9 +57,6 @@ export default function({ dropdownData, setQueryParams }: props) {
         if (filters.flooding) params.append("flooding", filters.flooding);
         if (filters.staining) params.append("staining", filters.staining);
     
-        if (filters.aboveDepth) params.append("depth_gte", filters.aboveDepth);
-        if (filters.belowDepth) params.append("depth_lte", filters.belowDepth);
-    
         const region = filters.region || {};
         if (region.division) params.append("regionKey.division", region.division);
         if (region.district) params.append("regionKey.district", region.district);
@@ -195,22 +192,6 @@ export default function({ dropdownData, setQueryParams }: props) {
 
 
                     <Divider />
-
-                    <TextField
-                        label="Above Depth"
-                        type="number"
-                        value={filters.aboveDepth}
-                        onChange={(e) => handleTextChange('aboveDepth', e.target.value)}
-                        fullWidth
-                    />
-
-                    <TextField
-                        label="Below Depth"
-                        type="number"
-                        value={filters.belowDepth}
-                        onChange={(e) => handleTextChange('belowDepth', e.target.value)}
-                        fullWidth
-                    />
 
                     <TextField
                         label="Flooding"
