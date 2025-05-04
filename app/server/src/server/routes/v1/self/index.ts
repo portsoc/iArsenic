@@ -10,6 +10,7 @@ self.delete('/user', jwtRequired, async ctx => UserController.deleteUserByToken(
 
 self.get('/wells', jwtRequired, async ctx => WellController.getWellsByToken(ctx))
 self.post('/well', jwtOrGuest, async ctx => WellController.createWellByToken(ctx))
+self.post('/wells/claim', jwtRequired, async ctx => WellController.claimWells(ctx))
 self.delete('/well/:id/image', jwtOrGuest, async ctx => WellController.deleteWellImage(ctx))
 self.post('/well/:id/upload-url', jwtOrGuest, async ctx => WellController.getImageUploadSignedUrl(ctx))
 self.post('/well/:id/confirm-upload', jwtOrGuest, async ctx => WellController.confirmWellImageUpload(ctx))
