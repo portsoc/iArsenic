@@ -14,10 +14,21 @@ import {
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useState } from 'react';
-import RegionFilter from './RegionFilter';
+import RegionFilter from './filter/RegionFilter';
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from '../../types';
 
-export default function() {
+interface props {
+    dropdownData: DropdownDivision[];
+}
+
+export default function({ dropdownData }: props) {
     const [open, setOpen] = useState(false);
+    const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
+    const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
+    const [selectedUpazila, setSelectedUpazila] = useState<DropdownUpazila | null>(null);
+    const [selectedUnion, setSelectedUnion] = useState<DropdownUnion | null>(null);
+    const [selectedMouza, setSelectedMouza] = useState<string | null>(null);
+
     const [filters, setFilters] = useState({
         wellInUse: false,
         flooding: '',
@@ -46,16 +57,6 @@ export default function() {
         setFilters({
             ...filters,
             [field]: value,
-        });
-    }
-
-    function handleRegionChange(field: keyof typeof filters.region, value: string) {
-        setFilters({
-            ...filters,
-            region: {
-                ...filters.region,
-                [field]: value,
-            },
         });
     }
 
@@ -131,7 +132,20 @@ export default function() {
                     <Divider />
 
                     <Typography variant="subtitle1">Region</Typography>
-                    <RegionFilter />
+                    <RegionFilter
+                        dropdownData={dropdownData}
+                        selectedDivision={selectedDivision}
+                        setSelectedDivision={setSelectedDivision}
+                        selectedDistrict={selectedDistrict}
+                        setSelectedDistrict={setSelectedDistrict}
+                        selectedUpazila={selectedUpazila}
+                        setSelectedUpazila={setSelectedUpazila}
+                        selectedUnion={selectedUnion}
+                        setSelectedUnion={setSelectedUnion}
+                        selectedMouza={selectedMouza}
+                        setSelectedMouza={setSelectedMouza}
+                    />
+
 
                     <Divider />
 

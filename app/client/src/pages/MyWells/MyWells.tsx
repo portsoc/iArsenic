@@ -6,10 +6,13 @@ import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
 import findWellPredictions from '../../utils/findWellPredictions';
 import Filter from './Filter';
+import { DropdownDivision } from '../../types';
+import fetchDropdownData from '../../utils/fetchDropdownData';
 
 export default function MyWells(): JSX.Element {
     const [token, setToken] = useState<AccessToken>();
     const [wells, setWells] = useState<Well[]>();
+    const [dropdownData, setDropdownData] = useState<DropdownDivision[]>();
     const [predictions, setPredictions] = useState<Prediction[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -130,6 +133,7 @@ export default function MyWells(): JSX.Element {
                 await fetchUnclaimedWells();
             }
 
+            setDropdownData(await fetchDropdownData())
             setLoading(false);
         }
 
@@ -140,7 +144,7 @@ export default function MyWells(): JSX.Element {
         getWellPredictions();
     }, [wells]);
 
-    if (wells === undefined) {
+    if (wells === undefined || dropdownData === undefined) {
         return (
             <CircularProgress />
         )
@@ -169,7 +173,9 @@ export default function MyWells(): JSX.Element {
                 Add Well
             </Button>
 
-            <Filter></Filter>
+            <Filter 
+                dropdownData={dropdownData} 
+            />
 
             <Box 
                 sx={{ 
