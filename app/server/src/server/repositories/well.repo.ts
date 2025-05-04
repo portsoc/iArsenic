@@ -81,6 +81,41 @@ export const WellRepo: IWellRepo = {
         await doc.ref.set(well, { merge: true });
     },
 
+    // WIP update function pending migrations
+    // this will allow querying derivable fields
+    // that would otherwise require a firestore index
+    // async update(well: Well): Promise<void> {
+    //     const wellRef = db.collection('well');
+    
+    //     const querySnapshot = await wellRef.where('id', '==', well.id).get();
+    //     if (querySnapshot.empty) {
+    //         throw new Error('Well not found');
+    //     }
+    
+    //     const doc = querySnapshot.docs[0];
+    //     if (!doc) throw new Error('Well not found');
+    
+    //     const geolocated =
+    //         Array.isArray(well.geolocation) &&
+    //         well.geolocation.length === 2 &&
+    //         typeof well.geolocation[0] === 'number' &&
+    //         typeof well.geolocation[1] === 'number';
+    
+    //     const hasImages =
+    //         Array.isArray(well.imagePaths) && well.imagePaths.length > 0;
+    
+    //     const complete = CompleteWellSchema.safeParse(well).success;
+    
+    //     const updateData = {
+    //         ...well,
+    //         geolocated,
+    //         hasImages,
+    //         complete,
+    //     };
+    
+    //     await doc.ref.set(updateData, { merge: true });
+    // },
+
     async del(id: string): Promise<void> {
         await db.collection('well').doc(id).delete();
     },
