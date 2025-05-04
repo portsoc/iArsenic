@@ -14,6 +14,7 @@ export const WellSchema = z.object({
     staining: StainingSchema.optional(),
     utensilStaining: UtensilStainingSchema.optional(),
     geolocation: z.tuple([z.number(), z.number()]).optional(),
+    imagePaths: z.array(z.string()).optional(),
 });
 
 export type Well = z.infer<typeof WellSchema>;
@@ -29,6 +30,7 @@ export const CompleteWellSchema = z.object({
     staining: StainingSchema,
     utensilStaining: UtensilStainingSchema.optional(),
     geolocation: z.tuple([z.number(), z.number()]).optional(),
+    imagePaths: z.array(z.string()).optional(),
 });
 
 export type CompleteWell = z.infer<typeof CompleteWellSchema>;

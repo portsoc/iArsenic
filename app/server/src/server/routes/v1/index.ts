@@ -22,4 +22,9 @@ routes.use(prediction.routes())
 routes.use(geodata.routes())
 routes.use(token.routes())
 
+routes.all('(.*)', ctx => {
+    ctx.status = 404;
+    ctx.body = { message: 'Path not found' }
+})
+
 export default routes

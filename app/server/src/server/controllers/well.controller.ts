@@ -110,4 +110,123 @@ export const WellController = {
         ctx.status = 501
         ctx.body = { error: 'Not Implemented' }
     },
+
+    async getImageUploadSignedUrl(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema])
+            .parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const body = ctx.request.body as { contentType?: string };
+    
+        if (!body.contentType || !body.contentType.startsWith('image/')) {
+            throw new KnownError({
+                message: 'Invalid or missing content type',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const { signedUrl, path } = await WellService.getImageUploadUrl({
+            wellId,
+            userId,
+            contentType: body.contentType,
+        });
+    
+        ctx.status = 200;
+        ctx.body = { 
+            url: signedUrl,
+            path,
+        };
+    },
+
+    async confirmWellImageUpload(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema])
+            .parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const body = ctx.request.body as { path?: string };
+
+        if (!body.path || typeof body.path !== 'string') {
+            throw new KnownError({
+                message: 'Image path is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const updatedWell = await WellService.confirmImageUpload({
+            wellId,
+            userId,
+            imagePath: body.path,
+        });
+    
+        ctx.status = 200;
+        ctx.body = { ...updatedWell };
+    },
+
+    async getWellImageUrls(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema]).parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const urls = await WellService.getWellImageSignedUrls(wellId, userId);
+    
+        ctx.status = 200;
+        ctx.body = { urls };
+    },
+
+    async deleteWellImage(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema]).parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const { path } = ctx.request.body as { path?: string };
+    
+        if (!path || typeof path !== 'string') {
+            throw new KnownError({
+                message: 'Image path is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        await WellService.deleteWellImage(wellId, userId, path);
+    
+        ctx.status = 200;
+        ctx.body = { success: true };
+    }
 }

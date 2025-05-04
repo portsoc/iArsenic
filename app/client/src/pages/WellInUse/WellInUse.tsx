@@ -109,10 +109,10 @@ export default function(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/well/${wellId}/review`);
+                    navigate(`/well/${wellId}/upload-image`);
                 }}
             >
-                Review
+                Next Steps
             </Button>
         </>
     );

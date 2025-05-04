@@ -16,6 +16,7 @@ const migrations = [
     () => import("./0.js"),
     () => import("./1.js"),
     () => import("./2.js"),
+    () => import("./3.js"),
     // add new migrations as you add them
 ];
 

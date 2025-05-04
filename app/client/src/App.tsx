@@ -10,17 +10,18 @@ import {
     Login,
     Map,
     MyWells,
+    PhotoUpload,
     PrivacyPolicy,
     Profile,
     Region,
     ResetPassword,
     Result,
     Review,
+    SelectRegion,
     SignUp,
     Splash,
     Staining,
     StainingGuide,
-    SelectRegion,
     UnderstandingRisk,
     VerifyEmail,
     Well,
@@ -85,14 +86,15 @@ function App() {
                             <Route path='/understanding-risk' component={UnderstandingRisk} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
                             <Route path='/well/:id' component={Well} />
-                            <Route path='/well/:id/select-region' component={SelectRegion} />
-                            <Route path='/well/:id/well-in-use' component={WellInUse} />
                             <Route path='/well/:id/depth' component={Depth} />
+                            <Route path='/well/:id/flooding' component={Flooding} />
+                            <Route path='/well/:id/upload-image' component={PhotoUpload} />
                             <Route path='/well/:id/region' component={Region} />
                             <Route path='/well/:id/result' component={Result} />
                             <Route path='/well/:id/review' component={Review} />
+                            <Route path='/well/:id/select-region' component={SelectRegion} />
                             <Route path='/well/:id/staining' component={Staining} />
-                            <Route path='/well/:id/flooding' component={Flooding} />
+                            <Route path='/well/:id/well-in-use' component={WellInUse} />
                         </Stack>
                     </Route>
                 </Switch>
