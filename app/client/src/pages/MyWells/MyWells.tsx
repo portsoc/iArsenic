@@ -21,7 +21,14 @@ export default function MyWells(): JSX.Element {
         if (!token) return;
         console.log(queryParams)
 
-        const result = await fetch(`/api/v1/self/wells`, {
+        let url
+        if (queryParams) {
+            url = `/api/v1/self/wells/query?${queryParams}`
+        } else {
+            url = '/api/v1/self/wells/query'
+        }
+
+        const result = await fetch(url, {
             headers: {
                 authorization: `Bearer ${token.id}`,
             }
@@ -33,6 +40,8 @@ export default function MyWells(): JSX.Element {
         }
 
         const data = await result.json();
+        console.log('================================')
+        console.log(data)
         const wells = data.wells
 
         const parsedWells: Well[] = []

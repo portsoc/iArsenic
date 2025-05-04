@@ -322,9 +322,9 @@ export const WellController = {
             userId: user.id,
         };
 
-        const predictions = await WellService.queryWells(filters);
+        const wells = await WellService.queryWells(filters);
     
         ctx.status = 200;
-        ctx.body = { predictions };
+        ctx.body = { wells };
     }
 }
