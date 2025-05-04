@@ -13,15 +13,16 @@ import {
     Button
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RegionFilter from './filter/RegionFilter';
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from '../../types';
 
 interface props {
     dropdownData: DropdownDivision[];
+    setQueryParams: (queryString: string) => void;
 }
 
-export default function({ dropdownData }: props) {
+export default function({ dropdownData, setQueryParams }: props) {
     const [open, setOpen] = useState(false);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
     const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
@@ -46,6 +47,30 @@ export default function({ dropdownData }: props) {
         },
     });
 
+    function buildQueryParams(): void {
+        const params = new URLSearchParams();
+    
+        if (filters.wellInUse) params.append("wellInUse", "true");
+        if (filters.geoLocated) params.append("geolocation_exists", "true");
+        if (filters.hasImages) params.append("hasImages", "true");
+    
+        if (filters.flooding) params.append("flooding", filters.flooding);
+        if (filters.staining) params.append("staining", filters.staining);
+    
+        if (filters.aboveDepth) params.append("depth_gte", filters.aboveDepth);
+        if (filters.belowDepth) params.append("depth_lte", filters.belowDepth);
+    
+        const region = filters.region || {};
+        if (region.division) params.append("regionKey.division", region.division);
+        if (region.district) params.append("regionKey.district", region.district);
+        if (region.upazila) params.append("regionKey.upazila", region.upazila);
+        if (region.union) params.append("regionKey.union", region.union);
+        if (region.mouza) params.append("regionKey.mouza", region.mouza);
+    
+        setQueryParams(params.toString())
+    }
+
+
     function handleCheckboxChange(field: keyof typeof filters) {
         setFilters({
             ...filters,
@@ -59,6 +84,25 @@ export default function({ dropdownData }: props) {
             [field]: value,
         });
     }
+
+    useEffect(() => {
+        setFilters((prev) => ({
+            ...prev,
+            region: {
+                division: selectedDivision?.division || '',
+                district: selectedDistrict?.district || '',
+                upazila: selectedUpazila?.upazila || '',
+                union: selectedUnion?.union || '',
+                mouza: selectedMouza || '',
+            },
+        }));
+    }, [
+        selectedDivision,
+        selectedDistrict,
+        selectedUpazila,
+        selectedUnion,
+        selectedMouza
+    ]);
 
     return (
         <Card
@@ -92,7 +136,10 @@ export default function({ dropdownData }: props) {
                     </IconButton>
                     <Typography variant="h6">Filters</Typography>
                 </Box>
-                <Button variant='outlined'>
+                <Button 
+                    variant='outlined'
+                    onClick={() => buildQueryParams()}
+                >
                     Apply
                 </Button>
             </Box>

@@ -12,9 +12,6 @@ interface Props {
 
 function isWellComplete(well: Well): boolean {
     const res = CompleteWellSchema.safeParse(well)
-    console.log('--------------------------------')
-    console.log(well)
-    console.log(res.error)
     return res.success
 }
 

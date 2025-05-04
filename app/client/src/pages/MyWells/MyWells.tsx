@@ -15,9 +15,11 @@ export default function MyWells(): JSX.Element {
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>();
     const [predictions, setPredictions] = useState<Prediction[]>([]);
     const [loading, setLoading] = useState(true);
+    const [queryParams, setQueryParams] = useState<string>()
 
     async function fetchUserWells(token?: AccessToken) {
         if (!token) return;
+        console.log(queryParams)
 
         const result = await fetch(`/api/v1/self/wells`, {
             headers: {
@@ -144,6 +146,14 @@ export default function MyWells(): JSX.Element {
         getWellPredictions();
     }, [wells]);
 
+    useEffect(() => {
+        if (token) {
+            fetchUserWells(token);
+        } else {
+            fetchUserWells();
+        }
+    }, [queryParams]);
+
     if (wells === undefined || dropdownData === undefined) {
         return (
             <CircularProgress />
@@ -175,6 +185,7 @@ export default function MyWells(): JSX.Element {
 
             <Filter 
                 dropdownData={dropdownData} 
+                setQueryParams={setQueryParams}
             />
 
             <Box 
