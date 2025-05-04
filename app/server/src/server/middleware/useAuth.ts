@@ -1,7 +1,7 @@
 import { ParameterizedContext, Next } from 'koa'
 import { TokenRepo, UserRepo } from '../repositories'
 
-export default async function adminOnly(
+export default async function useAuth(
     ctx: ParameterizedContext,
     next: Next
 ) {
@@ -13,6 +13,7 @@ export default async function adminOnly(
     if (apiKey) tokenId = apiKey
 
     if (!tokenId) {
+        console.log(tokenId)
         ctx.state.auth = { user: { type: 'guest' } }
 
         await next()

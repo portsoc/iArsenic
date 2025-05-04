@@ -1,7 +1,7 @@
 import uuid4 from 'uuid4';
 import { isEqual } from 'lodash';
-import { CompleteWellSchema, CreatePrediction, ModelMessageCode, Prediction } from 'iarsenic-types';
-import { PredictionRepo, UserRepo, WellRepo } from '../repositories';
+import { AbstractToken, CompleteWellSchema, CreatePrediction, ModelMessageCode, Prediction, User } from 'iarsenic-types';
+import { PredictionRepo, WellRepo } from '../repositories';
 import { KnownError } from '../errors';
 import produceEstimate from './prediction/produceEstimate';
 import { QueryTuple } from '../types';
@@ -29,7 +29,18 @@ function modelEstimateToRiskAssesment(modelEstimate: ModelMessageCode) {
 }
 
 export const PredictionService = {
-    async createPrediction(userId: string, predictors: CreatePrediction): Promise<Prediction> {
+    async createPrediction(
+        auth: { user: User, token: AbstractToken },
+        predictors: CreatePrediction
+    ): Promise<Prediction> {
+        if (auth.user.type !== 'admin') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
         const modelMessageCode = await produceEstimate(predictors)
         const riskAssesment = modelEstimateToRiskAssesment(modelMessageCode)
 
@@ -37,7 +48,7 @@ export const PredictionService = {
             ...predictors,
             id: uuid4(),
             createdAt: new Date(),
-            userId,
+            userId: auth.user.id,
             model: 'model6',
             modelOutput: modelMessageCode,
             riskAssesment,
@@ -47,18 +58,12 @@ export const PredictionService = {
         return await PredictionRepo.create(prediction);
     },
 
-    async createWellPrediction(userId: string, wellId: string): Promise<Prediction> {
+    async createWellPrediction(
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        wellId: string
+    ): Promise<Prediction> {
         const well = await WellRepo.findById(wellId);
-        const user = await UserRepo.findById(userId);
 
-        if (!user && userId !== 'guest') {
-            throw new KnownError({
-                message: `User ${userId} not found`,
-                code: 404,
-                name: 'UserNotFoundError',
-            });
-        }
-    
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
@@ -66,15 +71,19 @@ export const PredictionService = {
                 name: 'WellNotFoundError',
             });
         }
-    
-        if (userId !== 'guest' && well.userId !== userId && user?.type !== 'admin') {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
-        }
 
+        if (well.userId !== 'guest') {
+            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
+        }
+    
         const completeWellRes = CompleteWellSchema.safeParse(well)
 
         if (!completeWellRes.success) {
@@ -117,6 +126,10 @@ export const PredictionService = {
         // --- if no match, create a new prediction ---
         const modelEstimate = await produceEstimate(predictors);
         const riskAssesment = modelEstimateToRiskAssesment(modelEstimate)
+        
+        const userId = auth.user.type === 'guest' ?
+            'guest' :
+            auth.user.id
     
         const prediction: Prediction = {
             ...predictors,
@@ -132,7 +145,10 @@ export const PredictionService = {
         return await PredictionRepo.create(prediction);
     },
 
-    async getPredictionById(predictionId: string, userId: string): Promise<Prediction> {
+    async getPredictionById(
+        auth: { user: User, token: AbstractToken },
+        predictionId: string, 
+    ): Promise<Prediction> {
         const prediction = await PredictionRepo.findById(predictionId);
 
         if (!prediction) {
@@ -143,7 +159,28 @@ export const PredictionService = {
             });
         }
 
-        if (prediction.userId !== userId) {
+        // anyone with the well ID can delete guest well images
+        if (prediction.userId !== 'guest') {
+            // users can delete their own well
+            if (prediction.userId !== auth.user.id) {
+                // only admins can delete images of wells that aren't theirs
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
+        }
+
+        return prediction;
+    },
+
+    async getUserPredictions(
+        auth: { user: User, token: AbstractToken },
+    ): Promise<Prediction[]> {
+        if (auth.user.type !== 'user' && auth.user.type !== 'admin') {
             throw new KnownError({
                 message: 'Unauthorized',
                 code: 403,
@@ -151,20 +188,26 @@ export const PredictionService = {
             });
         }
 
-        return prediction;
-    },
-
-    async getUserPredictions(userId: string): Promise<Prediction[]> {
         return await PredictionRepo.getByQuery([
-            ['userId', '==', userId],
+            ['userId', '==', auth.user.id],
         ]);
     },
 
-    async getAllPredictions(): Promise<Prediction[]> {
+    async getAllPredictions(auth: { user: User, token: AbstractToken }): Promise<Prediction[]> {
+        if (auth.user.type !== 'admin') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
         return await PredictionRepo.findAll();
     },
 
-    async queryPredictions(filters: Record<string, any>): Promise<Prediction[]> {
+    async queryPredictions(
+        filters: Record<string, any>
+    ): Promise<Prediction[]> {
         const queries: QueryTuple[] = [];
     
         for (const [key, value] of Object.entries(filters)) {

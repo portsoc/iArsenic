@@ -7,7 +7,7 @@ export const UserController = {
     async getUserByToken(ctx: Context): Promise<void> {
         const auth = ctx.state.auth
 
-        if (auth?.token) {
+        if (!auth.token) {
             throw new KnownError({
                 message: 'Unauthorized',
                 code: 403,

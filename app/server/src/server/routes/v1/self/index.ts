@@ -9,7 +9,7 @@ self.patch('/user', useAuth, async ctx => UserController.updateUserByToken(ctx))
 self.delete('/user', useAuth, async ctx => UserController.deleteUserByToken(ctx))
 
 self.get('/wells', useAuth, async ctx => WellController.getWellsByToken(ctx))
-self.post('/well', useAuth, async ctx => WellController.createWellByToken(ctx))
+self.post('/well', useAuth, async ctx => WellController.createWell(ctx))
 self.get('/wells/query', useAuth, ctx => WellController.getSelfWellsByQuery(ctx));
 self.post('/wells/claim', useAuth, async ctx => WellController.claimWells(ctx))
 self.delete('/well/:id/image', useAuth, async ctx => WellController.deleteWellImage(ctx))

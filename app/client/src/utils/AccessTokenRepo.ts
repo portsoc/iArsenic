@@ -44,8 +44,8 @@ export default class AccessTokenRepo {
 
         const userData = await res.json();
         const validatedUserRes = UserSchema.safeParse({
-            ...userData.user,
-            createdAt: new Date(userData.user.createdAt),
+            ...userData,
+            createdAt: new Date(userData.createdAt),
         });
 
         if (!validatedUserRes.success) {

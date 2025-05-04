@@ -1,14 +1,11 @@
 import { Context } from 'koa';
-import { AccessTokenSchema, GuestTokenSchema, Prediction, CreatePredictionSchema, validateModel, CreatePrediction, AbstractTokenSchema } from 'iarsenic-types';
+import { Prediction, CreatePredictionSchema, validateModel, CreatePrediction } from 'iarsenic-types';
 import { PredictionService } from '../services/prediction.service';
 import { KnownError } from '../errors';
-import { z } from 'zod';
 
 export const PredictionController = {
     async createPrediction(ctx: Context) {
-        const token = AbstractTokenSchema.parse(ctx.state.token);
-
-        const userId = token.userId;
+        const auth = ctx.state.auth
 
         const result = validateModel(
             ctx.request.body,
@@ -24,7 +21,7 @@ export const PredictionController = {
         }
 
         const prediction: Prediction = await PredictionService.createPrediction(
-            userId, 
+            auth,
             ctx.request.body as CreatePrediction,
         );
 
@@ -44,12 +41,8 @@ export const PredictionController = {
     },
 
     async createWellPrediction(ctx: Context) {
-        const token = z.union([
-            AccessTokenSchema,
-            GuestTokenSchema,
-        ]).parse(ctx.state.token);
+        const auth = ctx.state.auth
 
-        const userId = token.userId;
         const wellId = ctx.params.id;
 
         if (!wellId) {
@@ -61,7 +54,7 @@ export const PredictionController = {
         }
 
         const prediction = await PredictionService.createWellPrediction(
-            userId, 
+            auth, 
             wellId,
         );
 
@@ -70,12 +63,7 @@ export const PredictionController = {
     },
 
     async getPredictionById(ctx: Context) {
-        const token = z.union([
-            AccessTokenSchema,
-            GuestTokenSchema,
-        ]).parse(ctx.state.token);
-
-        const userId = token.userId;
+        const auth = ctx.state.auth
         const predictionId = ctx.params.id;
 
         if (!predictionId) {
@@ -87,8 +75,8 @@ export const PredictionController = {
         }
 
         const prediction = await PredictionService.getPredictionById(
+            auth,
             predictionId, 
-            userId,
         );
 
         ctx.status = 200;
@@ -100,18 +88,20 @@ export const PredictionController = {
         ctx.body = { error: 'Not Implemented' };
     },
 
-    async getPredictionsByToken(ctx: Context) {
-        const token = AccessTokenSchema.parse(ctx.state.token);
-        const userId = token.userId;
+    async getUserPredictions(ctx: Context) {
+        const auth = ctx.state.auth
 
-        const predictions = await PredictionService.getUserPredictions(userId);
+        const predictions = await PredictionService.getUserPredictions(
+            auth,
+        );
 
         ctx.status = 200;
         ctx.body = { predictions };
     },
 
     async getAllPredictions(ctx: Context) {
-        const predictions = await PredictionService.getAllPredictions();
+        const auth = ctx.state.auth
+        const predictions = await PredictionService.getAllPredictions(auth);
 
         ctx.status = 200;
         ctx.body = { predictions };

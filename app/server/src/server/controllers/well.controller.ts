@@ -1,35 +1,14 @@
 import { Context } from 'koa';
-import { AbstractTokenSchema, AccessTokenSchema, GuestTokenSchema, UserSchema, Well, WellSchema, validateModel } from 'iarsenic-types'
+import { AbstractTokenSchema, UserSchema, Well, WellSchema, validateModel } from 'iarsenic-types'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
-import { z } from 'zod';
 
 export const WellController = {
-    async createWellByToken(ctx: Context) {
+    async createWell(ctx: Context) {
         const auth = ctx.state.auth
 
-        if (auth.user.type === 'guest') {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
-        }
-
-        const token = AbstractTokenSchema.parse(auth.token);
-
-        if (token.type !== 'api-key' && token.type !== 'access') {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
-        }
-
-        const user = UserSchema.parse(auth.user)
-
         const well: Well = await WellService.createWell(
-            user.id,
+            auth,
         );
 
         ctx.status = 201
@@ -40,7 +19,7 @@ export const WellController = {
     async getAllWells(ctx: Context) {
         const auth = ctx.state.auth
 
-        if (auth.user.type === 'guest') {
+        if (auth.user.type !== 'admin') {
             throw new KnownError({
                 message: 'Unauthorized',
                 code: 403,

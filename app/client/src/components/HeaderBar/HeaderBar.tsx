@@ -5,7 +5,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessToken, User } from 'iarsenic-types';
+import { AccessToken, User, UserSchema } from 'iarsenic-types';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
@@ -38,8 +38,14 @@ export default function HeaderBar(): JSX.Element {
                 return;
             }
 
-            const data = await res.json();
-            setUser(data.user as User);
+            const user = await res.json();
+
+            const parsedUser = UserSchema.parse({
+                ...user,
+                createdAt: new Date(user.createdAt),
+            })
+
+            setUser(parsedUser);
         }
 
         fetchUser();

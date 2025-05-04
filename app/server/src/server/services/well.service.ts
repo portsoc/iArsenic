@@ -7,7 +7,12 @@ import { deleteFileFromBucket } from '../utils/deleteFileFromBucket'
 import { QueryTuple } from '../types'
 
 export const WellService = {
-    async createWell(userId: string): Promise<Well> {
+    async createWell(
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+    ): Promise<Well> {
+        const userId = auth.user.type === 'guest' ? 
+            'guest' :
+            auth.user.id
         const well = {
             id: uuid4(),
             createdAt: new Date(),
@@ -51,7 +56,7 @@ export const WellService = {
     },
 
     async updateWell(
-        auth: { user: User, token: AbstractToken },
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
         wellId: string,
         wellUpdates: Partial<Well>,
     ): Promise<Well> {
@@ -66,7 +71,7 @@ export const WellService = {
         }
 
         if (well.userId !== 'guest') {
-            if (well.userId !== auth.user.id) {
+            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 if (auth.user.type !== 'admin') {
                     throw new KnownError({
                         message: 'Unauthorized',
@@ -93,7 +98,7 @@ export const WellService = {
     },
 
     async getImageUploadUrl(
-        auth: { user: User, token: AbstractToken },
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
         wellId: string,
         contentType: string,
     ): Promise<{ signedUrl: string, path: string }> {
@@ -110,7 +115,7 @@ export const WellService = {
         // anyone with the well ID can upload guest well images
         if (well.userId !== 'guest') {
             // users can upload images to their own well
-            if (well.userId !== auth.user.id) {
+            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 // only admins can upload images of wells that aren't theirs
                 if (auth.user.type !== 'admin') {
                     throw new KnownError({
@@ -141,7 +146,7 @@ export const WellService = {
     },
     
     async confirmImageUpload(
-        auth: { user: User, token: AbstractToken },
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
         wellId: string,
         imagePath: string,
     ): Promise<Well> {
@@ -156,7 +161,7 @@ export const WellService = {
         }
 
         if (well.userId !== 'guest') {
-            if (well.userId !== auth.user.id) {
+            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 if (auth.user.type !== 'admin') {
                     throw new KnownError({
                         message: 'Unauthorized',
@@ -181,7 +186,7 @@ export const WellService = {
     },
 
     async getWellImageSignedUrls(
-        auth: { user: User, token: AbstractToken },
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
         wellId: string, 
     ) {
         const well = await WellRepo.findById(wellId);
@@ -191,7 +196,7 @@ export const WellService = {
         }
 
         if (well.userId !== 'guest') {
-            if (well.userId !== auth.user.id) {
+            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 if (auth.user.type !== 'admin') {
                     throw new KnownError({
                         message: 'Unauthorized',
@@ -215,7 +220,7 @@ export const WellService = {
     },
 
     async deleteWellImage(
-        auth: { user: User, token: AbstractToken },
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
         wellId: string, 
         imagePath: string,
     ) {
@@ -232,7 +237,7 @@ export const WellService = {
         // anyone with the well ID can delete guest well images
         if (well.userId !== 'guest') {
             // users can delete their own well
-            if (well.userId !== auth.user.id) {
+            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 // only admins can delete images of wells that aren't theirs
                 if (auth.user.type !== 'admin') {
                     throw new KnownError({

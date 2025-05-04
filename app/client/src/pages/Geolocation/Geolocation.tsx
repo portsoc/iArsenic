@@ -64,11 +64,9 @@ export default function Region(): JSX.Element {
                 headers['authorization'] = `Bearer ${token.id}`;
             }
 
-            const result = await fetch(
-                `/api/v1/self/well/${wellId}`, {
-                    headers,
-                }
-            );
+            const result = await fetch(`/api/v1/self/well/${wellId}`, {
+                headers,
+            });
 
             if (!result.ok) {
                 console.error('Failed to fetch well:', result);

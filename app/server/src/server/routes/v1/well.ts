@@ -1,9 +1,9 @@
 import Router from '@koa/router'
-import { adminOnly } from '../../middleware'
 import { WellController } from '../../controllers';
+import { useAuth } from '../../middleware'
 
 const well = new Router({ prefix: '/well' })
 
-well.get('s', adminOnly, ctx => WellController.getAllWells(ctx));
+well.get('s', useAuth, ctx => WellController.getAllWells(ctx));
 
 export default well

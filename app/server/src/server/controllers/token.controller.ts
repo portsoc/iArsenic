@@ -1,13 +1,13 @@
 import { Context } from 'koa';
-import { AbstractToken, AbstractTokenSchema } from 'iarsenic-types';
+import { AbstractToken } from 'iarsenic-types';
 import { TokenService } from '../services/token.service';
 
 export const TokenController = {
     async createApiKey(ctx: Context) {
-        const token = AbstractTokenSchema.parse(ctx.state.token);
+        const auth = ctx.state.auth
 
         const newApiKey: AbstractToken = await TokenService.createApiKey(
-            token, 
+            auth,
         );
 
         ctx.status = 201;

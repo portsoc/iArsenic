@@ -1,7 +1,7 @@
 import { Box, Button, Typography, Alert, CircularProgress } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
-import { AccessToken, Prediction, Well, WellSchema } from 'iarsenic-types';
+import { AccessToken, Prediction, PredictionSchema, Well, WellSchema } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
 import findWellPredictions from '../../utils/findWellPredictions';
@@ -92,7 +92,18 @@ export default function MyWells(): JSX.Element {
         }
 
         const data = await res.json();
-        setPredictions(data.predictions);
+        const parsedPredictions = []
+
+        for (const p of data.predictions) {
+            parsedPredictions.push(
+                PredictionSchema.parse({
+                    ...p,
+                    createdAt: new Date(p.createdAt),
+                })
+            )
+        }
+
+        setPredictions(parsedPredictions);
     }
 
     async function addWell(): Promise<Well> {
