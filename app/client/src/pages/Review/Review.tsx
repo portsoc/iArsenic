@@ -102,10 +102,6 @@ export default function Review() {
                 variant='contained'
 
                 onClick={() => {
-                    if (token) {
-                        navigate(`/well/${wellId}`);
-                        return;
-                    }
                     navigate(`/well/${wellId}/result`);
                 }}
             >

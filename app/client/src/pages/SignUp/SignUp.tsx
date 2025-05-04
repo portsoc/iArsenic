@@ -92,6 +92,20 @@ export default function SignUp(): JSX.Element {
             setError(`Failed to sign up, request id: ${resBody.requestId}`);
             return;
         }
+        const unclaimedWellIds = JSON.parse(localStorage.getItem("unclaimedWellIds") || "[]");
+
+        if (Array.isArray(unclaimedWellIds) && unclaimedWellIds.length > 0) {
+            await fetch(`/api/v1/self/wells/claim`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${resBody.token.id}`,
+                },
+                body: JSON.stringify({ guestWellIds: unclaimedWellIds }),
+            });
+
+            localStorage.removeItem("unclaimedWellIds");
+        }
 
         alert('Sign up successful!');
     }

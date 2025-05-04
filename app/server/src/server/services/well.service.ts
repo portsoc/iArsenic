@@ -229,5 +229,21 @@ export const WellService = {
         await WellRepo.update(updatedWell);
     
         return { message: `Image deleted: ${imagePath}` };
+    },
+    
+    async claimGuestWells(userId: string, guestWellIds: string[]) {
+        const updatedWells: Well[] = [];
+    
+        for (const id of guestWellIds) {
+            const well = await WellRepo.findById(id);
+    
+            if (!well || well.userId !== 'guest') continue;
+    
+            const updated = { ...well, userId };
+            await WellRepo.update(updated);
+            updatedWells.push(updated);
+        }
+    
+        return updatedWells;
     }
 }

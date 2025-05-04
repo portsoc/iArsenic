@@ -33,7 +33,7 @@ export const WellController = {
         const wells = await WellService.getUserWells(userId);
 
         ctx.status = 200
-        ctx.body = { ...wells }
+        ctx.body = { wells }
 
     },
 
@@ -228,5 +228,29 @@ export const WellController = {
     
         ctx.status = 200;
         ctx.body = { success: true };
+    },
+
+    async claimWells(ctx: Context) {
+        const token = AccessTokenSchema.parse(ctx.state.token);
+        const userId = token.userId;
+    
+        const { guestWellIds } = ctx.request.body as { guestWellIds?: string[] };
+
+        if (!guestWellIds || !Array.isArray(guestWellIds)) {
+            throw new KnownError({
+                message: 'guestWellIds must be an array of well IDs',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const claimed = await WellService.claimGuestWells(
+            userId, 
+            guestWellIds,
+        );
+    
+        ctx.status = 200;
+        ctx.body = { ...claimed };
     }
+
 }

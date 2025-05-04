@@ -94,9 +94,9 @@ export const UserService = {
         name: string,
         language: Language,
         units: Units,
-    ): Promise<void> {
-        const existingUser = await UserRepo.findByEmail(email)
-
+    ): Promise<{ user: User; token: AccessToken }> {
+        const existingUser = await UserRepo.findByEmail(email);
+    
         if (existingUser != null) {
             throw new KnownError({
                 message: 'User with this email already exists',
@@ -104,47 +104,60 @@ export const UserService = {
                 name: 'ValidationError',
             });
         }
-
-        const hashedPassword = bcrypt.hashSync(password, 10)
-
+    
+        const hashedPassword = bcrypt.hashSync(password, 10);
+    
         const newUser = UserSchema.parse({
             id: uuid4(),
-            email: email,
+            email,
             emailVerified: false,
             password: hashedPassword,
-            name: name,
+            name,
             type: 'user',
             createdAt: new Date(),
-            language: language,
-            units: units,
-        })
-
-        const user = await UserRepo.create({ ...newUser })
-
-        const result = validateModel(user, UserSchema)
-
+            language,
+            units,
+        });
+    
+        const user = await UserRepo.create({ ...newUser });
+    
+        const result = validateModel(user, UserSchema);
         if (!result.ok) throw new Error(
             `Invalid user data: ${result.error.message} for user ID: ${user.id}`
         );
-
+    
         const verifyEmailToken = await TokenRepo.create({
             id: uuid4(),
             userId: user.id,
             createdAt: new Date(),
             expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
             type: 'verify-email',
-        })
-
-        const validatedToken = VerifyEmailTokenSchema.parse(
-            verifyEmailToken,
-        )
-
+        });
+    
+        const validatedToken = VerifyEmailTokenSchema.parse(verifyEmailToken);
+    
         await sendMail(
             user.email,
             'Verify your email',
             verifyEmailTemplate(validatedToken, user.name),
-        )
+        );
+    
+        // Issue access token immediately after registration
+        const accessTokenRecord = await TokenRepo.create({
+            id: uuid4(),
+            userId: user.id,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + ACCESS_TOKEN_TTL),
+            type: 'access',
+        });
+    
+        const token = AccessTokenSchema.parse(accessTokenRecord);
+    
+        delete user.password;
+    
+        return { user, token };
     },
+    
 
     async verifyEmail(tokenId: string): Promise<void> {
         const token = await TokenRepo.findById(tokenId)

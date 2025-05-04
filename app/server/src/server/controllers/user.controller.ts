@@ -81,8 +81,8 @@ export const UserController = {
     },
 
     async register(ctx: Context): Promise<void> {
-        const bodyParseRes = RegisterRequestSchema.safeParse(ctx.request.body)
-
+        const bodyParseRes = RegisterRequestSchema.safeParse(ctx.request.body);
+    
         if (!bodyParseRes.success) {
             throw new KnownError({
                 message: bodyParseRes.error.message,
@@ -90,19 +90,19 @@ export const UserController = {
                 name: 'ValidationError',
             });
         }
-
-        const body = bodyParseRes.data
-
-        await UserService.register(
+    
+        const body = bodyParseRes.data;
+    
+        const { user, token } = await UserService.register(
             body.email,
             body.password,
             body.name,
             body.language,
             body.units,
-        )
-
-        ctx.status = 201
-        ctx.body = { message: 'User created' }
+        );
+    
+        ctx.status = 201;
+        ctx.body = { user, token };
     },
 
     async deleteUserByToken(ctx: Context): Promise<void> {

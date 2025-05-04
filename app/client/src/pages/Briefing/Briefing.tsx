@@ -23,6 +23,13 @@ export default function Briefing(): JSX.Element {
         }
 
         const well = await res.json();
+
+        if (!token) {
+            const stored = localStorage.getItem("unclaimedWellIds");
+            const unclaimed: string[] = stored ? JSON.parse(stored) : [];
+            localStorage.setItem("unclaimedWellIds", JSON.stringify([...unclaimed, well.id]));
+        }
+
         return well as Well;
     }
 
