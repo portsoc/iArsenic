@@ -5,18 +5,27 @@ import { UserService } from '../services'
 
 export const UserController = {
     async getUserByToken(ctx: Context): Promise<void> {
-        const token = AccessTokenSchema.parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
 
-        const user = await UserService.getById(userId);
+        if (auth?.token) {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const user = auth.user
 
         ctx.status = 200;
-        ctx.body = { user };
+        ctx.body = { ...user };
     },
 
     async updateUserByToken(ctx: Context): Promise<void> {
-        const token = AccessTokenSchema.parse(ctx.state.token);
-        const userId = token.userId;
+        const auth = ctx.state.auth
+
+        const token = AccessTokenSchema.parse(auth.token);
+        const user = UserSchema.parse(auth.user)
 
         if (!ctx.request.body) {
             throw new KnownError({
@@ -26,8 +35,16 @@ export const UserController = {
             })
         }
 
+        if (token.userId !== user.id) {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
         const userUpdateParseRes = UserSchema.partial().safeParse(
-            ctx.request.body as string
+            ctx.request.body
         )
 
         if (!userUpdateParseRes.success) {
@@ -48,14 +65,14 @@ export const UserController = {
         delete userUpdates.createdAt
 
         const updatedUser = await UserService.updateUser(
-            userId,
+            user.id,
             userUpdates,
         );
 
-        const { password, ...user } = updatedUser;
+        delete updatedUser.password
 
         ctx.status = 200;
-        ctx.body = { user };
+        ctx.body = { updatedUser };
     },
 
     async login(ctx: Context): Promise<void> {

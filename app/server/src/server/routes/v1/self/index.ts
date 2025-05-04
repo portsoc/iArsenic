@@ -1,12 +1,12 @@
 import Router from '@koa/router'
-import { jwtRequired, jwtOrGuest } from '../../../middleware'
+import { useAuth } from '../../../middleware'
 import { UserController, WellController } from '../../../controllers'
 
 const self = new Router({ prefix: '/self' })
 
-self.get('/user', jwtRequired, async ctx => UserController.getUserByToken(ctx))
-self.patch('/user', jwtRequired, async ctx => UserController.updateUserByToken(ctx))
-self.delete('/user', jwtRequired, async ctx => UserController.deleteUserByToken(ctx))
+self.get('/user', useAuth, async ctx => UserController.getUserByToken(ctx))
+self.patch('/user', useAuth, async ctx => UserController.updateUserByToken(ctx))
+self.delete('/user', useAuth, async ctx => UserController.deleteUserByToken(ctx))
 
 self.get('/wells', jwtRequired, async ctx => WellController.getWellsByToken(ctx))
 self.post('/well', jwtOrGuest, async ctx => WellController.createWellByToken(ctx))

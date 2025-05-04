@@ -13,11 +13,9 @@ export default async function adminOnly(
     if (apiKey) tokenId = apiKey
 
     if (!tokenId) {
-        ctx.status = 401
-        ctx.body = {
-            error: true,
-            result: 'Unauthorized',
-        }
+        ctx.state.auth = { user: { type: 'guest' } }
+
+        await next()
         return
     }
 
@@ -49,17 +47,7 @@ export default async function adminOnly(
         throw Error('user not found')
     }
 
-    if (user.type !== 'admin') {
-        ctx.status = 401
-        ctx.body = {
-            error: true,
-            result: 'Unauthorized',
-        }
-
-        return
-    }
-
-    ctx.state.token = token
+    ctx.state.auth = { token, user }
 
     await next()
 }
