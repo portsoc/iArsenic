@@ -1,0 +1,45 @@
+#log {
+  margin-top: 1rem;
+}
+
+td,th {
+  border: 1px solid black;
+  padding: .2rem .5rem;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td.message {
+  white-space: nowrap;
+  max-width: 10rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+td.message abbr {
+  text-decoration: none;
+}
+
+th[data-active-sort='asc']::after {
+  content: "△";
+}
+
+th[data-active-sort='desc']::after {
+  content: "▽";
+}
+
+th[data-active-sort]::after {
+  padding-left: .5rem;
+  display: block;
+  position: absolute;
+  right: .2rem;
+  top: calc(50% - .5em);
+  font: normal normal normal 1rem/1 monospace;
+}
+
+th[data-active-sort] {
+  position: relative;
+}
