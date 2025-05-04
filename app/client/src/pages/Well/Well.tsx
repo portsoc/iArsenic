@@ -12,14 +12,26 @@ export default function Review() {
     const [well, setWell] = useState<Well>();
     const [token, setToken] = useState<AccessToken>();
 
-    function missingFields(well: Well): string[] {
-        const missingFields = [];
-        if (well.regionKey == null) missingFields.push('region');
-        if (well.depth == null) missingFields.push('depth');
-        if (well.staining == null) missingFields.push('staining');
-        if (well.flooding == null) missingFields.push('flooding');
+    function getMissingFields(well: Well): { missingFields: string[], allFieldsMissing: boolean } {
+        const requiredFields: (keyof Well)[] = [
+            'regionKey',
+            'depth',
+            'staining',
+            'wellInUse',
+            'flooding',
+        ];
 
-        return missingFields;
+        let allFieldsMissing = true
+        const missingFields = []
+        for (const f of requiredFields) {
+            if (well[f] == null) {
+                missingFields.push(f)
+            } else {
+                allFieldsMissing = false
+            }
+        }
+
+        return { missingFields, allFieldsMissing };
     }
 
     useEffect(() => {
@@ -67,6 +79,8 @@ export default function Review() {
         );
     }
 
+    const { missingFields, allFieldsMissing } = getMissingFields(well)
+
     return (
         <>
             <Typography variant="h4" gutterBottom textAlign="center">
@@ -82,7 +96,7 @@ export default function Review() {
                 Return to My Wells
             </Button>
 
-            {missingFields(well).length !== 0 && (
+            {missingFields.length !== 0 && (
                 <Card
                     variant='outlined'
                     sx={{
@@ -109,7 +123,7 @@ export default function Review() {
                     </Typography>
 
                     <List sx={{ width: '100%' }}>
-                        {missingFields(well).includes('region') && (
+                        {missingFields.includes('regionKey') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Region
@@ -121,7 +135,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {missingFields(well).includes('depth') && (
+                        {missingFields.includes('depth') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Well Depth
@@ -133,7 +147,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {missingFields(well).includes('staining') && (
+                        {missingFields.includes('staining') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Staining Colour
@@ -145,7 +159,7 @@ export default function Review() {
                             </ListItem>
                         )}
 
-                        {missingFields(well).includes('flooding') && (
+                        {missingFields.includes('flooding') && (
                             <ListItem>
                                 <Typography className='english' variant='body1'>
                                     • Flooding
@@ -156,6 +170,18 @@ export default function Review() {
                                 </Typography>
                             </ListItem>
                         )}
+
+                        {missingFields.includes('wellInUse') && (
+                            <ListItem>
+                                <Typography className='english' variant='body1'>
+                                    • Well In Use
+                                </Typography>
+
+                                <Typography className='bengali' variant='body1'>
+                                    • BENGALI PLACEHOLDER
+                                </Typography>
+                            </ListItem>
+                        )}
                     </List>
 
                     <Button
@@ -163,13 +189,15 @@ export default function Review() {
                         color="primary"
                         onClick={() => {
                             if (!well?.regionKey) {
-                                navigate(`/${wellId}/region`);
+                                navigate(`/well/${wellId}/region`);
                             } else if (!well?.staining) {
-                                navigate(`/${wellId}/staining`);
+                                navigate(`/well/${wellId}/staining`);
                             } else if (!well?.depth) {
-                                navigate(`/${wellId}/depth`);
+                                navigate(`/well/${wellId}/depth`);
                             } else if (!well?.flooding) {
-                                navigate(`/${wellId}/flooding`);
+                                navigate(`/well/${wellId}/flooding`);
+                            } else if (!well?.wellInUse) {
+                                navigate(`/well/${wellId}/well-in-use`)
                             }
                         }}
                     >
@@ -178,73 +206,84 @@ export default function Review() {
                 </Card>
             )}
 
-            <Card
-                variant="outlined"
-                sx={{
-                    width: '100%',
-                    padding: '16px',
-                    marginBottom: '16px',
-                }}
-            >
-                {well.regionKey && (
-                    <Box mb={2}>
-                        <Typography variant="h6" gutterBottom>Region</Typography>
+            {!allFieldsMissing && (
+                <Card
+                    variant="outlined"
+                    sx={{
+                        width: '100%',
+                        padding: '16px',
+                        marginBottom: '16px',
+                    }}
+                >
+                    {well.regionKey && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Region</Typography>
 
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Division: {well.regionKey.division}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            District: {well.regionKey.district}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Upazila: {well.regionKey.upazila}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Union: {well.regionKey.union}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Mouza: {well.regionKey.mouza}
-                        </Typography>
-                    </Box>
-                )}
-
-                {well.staining && (
-                    <Box mb={2}>
-                        <Typography variant="h6" gutterBottom>Staining</Typography>
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Staining: {well.staining}
-                        </Typography>
-
-                        {well.utensilStaining && (
                             <Typography variant="body1" component="p" gutterBottom>
-                                Utensil Staining: {well.utensilStaining}
+                                Division: {well.regionKey.division}
                             </Typography>
-                        )}
-                    </Box>
-                )}
 
-                {well.depth && (
-                    <Box mb={2}>
-                        <Typography variant="h6" gutterBottom>Depth</Typography>
-                        <Typography variant="body1" component="p">
-                            Depth: {well.depth} meters
-                        </Typography>
-                    </Box>
-                )}
+                            <Typography variant="body1" component="p" gutterBottom>
+                                District: {well.regionKey.district}
+                            </Typography>
 
-                {well.flooding && (
-                    <Box>
-                        <Typography variant="h6" gutterBottom>Flooding</Typography>
-                        <Typography variant="body1" component="p">
-                            Flooding: {well.flooding ? 'Yes' : 'No'}
-                        </Typography>
-                    </Box>
-                )}
-            </Card>
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Upazila: {well.regionKey.upazila}
+                            </Typography>
+
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Union: {well.regionKey.union}
+                            </Typography>
+
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Mouza: {well.regionKey.mouza}
+                            </Typography>
+                        </Box>
+                    )}
+
+                    {well.staining && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Staining</Typography>
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Staining: {well.staining}
+                            </Typography>
+
+                            {well.utensilStaining && (
+                                <Typography variant="body1" component="p" gutterBottom>
+                                    Utensil Staining: {well.utensilStaining}
+                                </Typography>
+                            )}
+                        </Box>
+                    )}
+
+                    {well.depth && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Depth</Typography>
+                            <Typography variant="body1" component="p">
+                                Depth: {well.depth} meters
+                            </Typography>
+                        </Box>
+                    )}
+
+                    {well.flooding && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Flooding</Typography>
+                            <Typography variant="body1" component="p">
+                                Flooding: {well.flooding ? 'Yes' : 'No'}
+                            </Typography>
+                        </Box>
+                    )}
+
+                    {well.wellInUse && (
+                        <Box>
+                            <Typography variant="h6" gutterBottom>Well In use</Typography>
+                            <Typography variant="body1" component="p">
+                                Well In Use: {well.wellInUse ? 'Yes' : 'No'}
+                            </Typography>
+                        </Box>
+                    )}
+                </Card>
+            )}
         </>
     );
 }

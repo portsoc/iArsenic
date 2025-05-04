@@ -4,6 +4,7 @@ import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
 import getSignedUrl from '../utils/signedUrl'
 import { deleteFileFromBucket } from '../utils/deleteFileFromBucket'
+import { QueryTuple } from '../types'
 
 export const WellService = {
     async createWell(userId: string): Promise<Well> {
@@ -245,5 +246,18 @@ export const WellService = {
         }
     
         return updatedWells;
+    },
+
+    async queryWells(filters: Record<string, any>): Promise<Well[]> {
+        const queries: QueryTuple[] = [];
+    
+        for (const [key, value] of Object.entries(filters)) {
+            if (Array.isArray(value)) {
+                throw new Error(`Multiple filters for '${key}' are not supported.`);
+            }
+            queries.push([key, '==', value]);
+        }
+    
+        return await WellRepo.getByQuery(queries);
     }
 }

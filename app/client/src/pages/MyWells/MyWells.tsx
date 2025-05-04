@@ -1,14 +1,15 @@
-import { Box, Button, Typography, Alert } from '@mui/material';
+import { Box, Button, Typography, Alert, CircularProgress } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
 import { AccessToken, Prediction, Well } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
 import findWellPredictions from '../../utils/findWellPredictions';
+import Filter from './Filter';
 
 export default function MyWells(): JSX.Element {
     const [token, setToken] = useState<AccessToken>();
-    const [wells, setWells] = useState<Well[]>([]);
+    const [wells, setWells] = useState<Well[]>();
     const [predictions, setPredictions] = useState<Prediction[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -29,14 +30,7 @@ export default function MyWells(): JSX.Element {
         const data = await result.json();
         const wells = data.wells
 
-        setWells(wells.map((well: Well) => ({
-            id: well.id,
-            createdAt: new Date(well.createdAt),
-            regionKey: well.regionKey,
-            depth: well.depth,
-            flooding: well.flooding,
-            staining: well.staining,
-        })));
+        setWells(wells)
     }
 
     async function fetchUnclaimedWells() {
@@ -60,6 +54,8 @@ export default function MyWells(): JSX.Element {
     }
 
     async function getWellPredictions() {
+        if (wells === undefined) return
+
         if (!token || wells.length === 0) return;
 
         const query = wells.map(w => `wellId=${encodeURIComponent(w.id)}`).join('&');
@@ -130,6 +126,12 @@ export default function MyWells(): JSX.Element {
         getWellPredictions();
     }, [wells]);
 
+    if (wells === undefined) {
+        return (
+            <CircularProgress />
+        )
+    }
+
     return (
         <>
             <Typography alignSelf="center" variant="h4">
@@ -138,7 +140,8 @@ export default function MyWells(): JSX.Element {
 
             {!token && (
                 <Alert severity="warning" sx={{ margin: "1rem" }}>
-                    You are not logged in. Wells you create will not be saved to your account until you sign in.
+                    You are not logged in. Wells you create will not 
+                    be saved to your account until you sign in.
                 </Alert>
             )}
 
@@ -152,7 +155,14 @@ export default function MyWells(): JSX.Element {
                 Add Well
             </Button>
 
-            <Box sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem' }}>
+            <Filter></Filter>
+
+            <Box 
+                sx={{ 
+                    margin: '0 1rem 1rem 1rem', 
+                    padding: '1rem',
+                    width: '100%',
+                }}>
                 {loading ? (
                     <Typography>Loading...</Typography>
                 ) : wells.length === 0 ? (

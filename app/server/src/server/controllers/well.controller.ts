@@ -251,6 +251,22 @@ export const WellController = {
     
         ctx.status = 200;
         ctx.body = { ...claimed };
-    }
+    },
 
+    async getSelfWellsByQuery(ctx: Context) {
+        const token = z.union(
+            [AccessTokenSchema, GuestTokenSchema]
+        ).parse(ctx.state.token);
+        const userId = token.userId;
+    
+        const filters = {
+            ...ctx.query,
+            userId,
+        };
+    
+        const predictions = await WellService.queryWells(filters);
+    
+        ctx.status = 200;
+        ctx.body = { predictions };
+    }
 }
