@@ -1,9 +1,15 @@
-import { Box, Typography, Card, Button, CircularProgress } from '@mui/material';
+import { Typography, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import { AccessToken, Well } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { useRoute } from 'wouter';
+import Depth from './Depth';
+import Flooding from './Flooding';
+import Region from './Region';
+import Staining from './Staining';
+import Drinking from './Drinking';
+import Images from './Images';
 
 export default function Review() {
     const [, params] = useRoute('/well/:id/review');
@@ -73,6 +79,10 @@ export default function Review() {
         navigate(`/well/${wellId}/flooding`);
         return;
     }
+    if (well.wellInUse == null) {
+        navigate(`/well/${wellId}/well-in-use`);
+        return;
+    }
 
     return (
         <>
@@ -80,72 +90,12 @@ export default function Review() {
                 Review
             </Typography>
 
-            <Card
-                variant="outlined"
-                sx={{
-                    width: '100%',
-                    padding: '16px',
-                    marginBottom: '16px',
-                }}
-            >
-                <Box mb={2}>
-                    <Typography variant="h6" gutterBottom>Region</Typography>
-
-                    <Typography variant="body1" component="p" gutterBottom>
-                        Division: {well.regionKey.division}
-                    </Typography>
-
-                    <Typography variant="body1" component="p" gutterBottom>
-                        District: {well.regionKey.district}
-                    </Typography>
-
-                    <Typography variant="body1" component="p" gutterBottom>
-                        Upazila: {well.regionKey.upazila}
-                    </Typography>
-
-                    <Typography variant="body1" component="p" gutterBottom>
-                        Union: {well.regionKey.union}
-                    </Typography>
-
-                    <Typography variant="body1" component="p" gutterBottom>
-                        Mouza: {well.regionKey.mouza}
-                    </Typography>
-                </Box>
-
-                <Box mb={2}>
-                    <Typography variant="h6" gutterBottom>Staining</Typography>
-                    <Typography variant="body1" component="p" gutterBottom>
-                        Staining: {well.staining}
-                    </Typography>
-
-                    {well.utensilStaining && (
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Utensil Staining: {well.utensilStaining}
-                        </Typography>
-                    )}
-                </Box>
-
-                <Box mb={2}>
-                    <Typography variant="h6" gutterBottom>Depth</Typography>
-                    <Typography variant="body1" component="p">
-                        Depth: {well.depth} meters
-                    </Typography>
-                </Box>
-
-                <Box mb={2}>
-                    <Typography variant="h6" gutterBottom>Flooding</Typography>
-                    <Typography variant="body1" component="p">
-                        Flooding: {well.flooding ? 'Yes' : 'No'}
-                    </Typography>
-                </Box>
-
-                <Box>
-                    <Typography variant="h6" gutterBottom>Well in use</Typography>
-                    <Typography variant="body1" component="p">
-                        Well in use: {well.wellInUse ? 'Yes' : 'No'}
-                    </Typography>
-                </Box>
-            </Card>
+            <Region well={well} />
+            <Staining well={well} />
+            <Depth well={well} />
+            <Flooding well={well} />
+            <Drinking well={well} />
+            <Images well={well} />
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}
