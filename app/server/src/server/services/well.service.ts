@@ -209,9 +209,6 @@ export const WellService = {
         }
     
         const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
-        console.log('================================')
-        console.log(well)
-        console.log(imagePath)
     
         if (!imagePaths.includes(imagePath)) {
             throw new KnownError({
@@ -228,8 +225,7 @@ export const WellService = {
             ...well,
             imagePaths: updatedPaths,
         }
-        console.log('--------------------------------')
-        console.log(updatedWell)
+        
         await WellRepo.update(updatedWell);
     
         return { message: `Image deleted: ${imagePath}` };
