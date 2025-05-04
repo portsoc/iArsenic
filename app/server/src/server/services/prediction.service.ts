@@ -89,7 +89,11 @@ export const PredictionService = {
         const completeWell = completeWellRes.data
 
         const predictors = {
-            ...completeWell.regionKey,
+            division: completeWell.division,
+            district: completeWell.district,
+            upazila: completeWell.upazila,
+            union: completeWell.union,
+            mouza: completeWell.mouza,
             depth: completeWell.depth,
             flooding: completeWell.flooding,
             staining: completeWell.staining,

@@ -1,7 +1,7 @@
 import { Typography, Button, Stack, FormControl, FormControlLabel, Radio, RadioGroup, Card, Box, CircularProgress, Collapse } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { RegionKey, AccessToken, Well } from "iarsenic-types";
+import { AccessToken, Well } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import GeolocationButton from "./GeolocationButton";
 import { useRoute } from "wouter";
@@ -222,14 +222,19 @@ export default function Region(): JSX.Element {
                         return;
                     }
                 
-                    const body: { regionKey: RegionKey, geolocation?: [number, number] } = {
-                        regionKey: {
-                            division: division,
-                            district: district,
-                            upazila: upazila,
-                            union: union,
-                            mouza: mouza,
-                        }
+                    const body: { 
+                        division: string,
+                        district: string,
+                        upazila: string,
+                        union: string,
+                        mouza: string,
+                        geolocation?: [number, number] 
+                    } = {
+                        division: division,
+                        district: district,
+                        upazila: upazila,
+                        union: union,
+                        mouza: mouza,
                     };
 
                     if (regionGeovalidated && geolocation) {
