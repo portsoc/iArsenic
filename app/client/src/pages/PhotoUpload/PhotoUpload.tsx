@@ -4,6 +4,8 @@ import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
 import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import { resizeImage } from "../../utils/resizeImage";
+import { navigate } from "wouter/use-browser-location";
+import PhotoItem from "./PhotoItem";
 
 export default function WellImageUpload(): JSX.Element {
     const [, params] = useRoute('/well/:id/upload-image');
@@ -17,7 +19,6 @@ export default function WellImageUpload(): JSX.Element {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     async function fetchWellAndImages(wellId: string, token: AccessToken | null = null) {
-        console.log('hello?')
         const headers: HeadersInit = {} 
         
         if (token != null) {
@@ -52,8 +53,34 @@ export default function WellImageUpload(): JSX.Element {
         }
 
         const { urls } = await urlsRes.json();
-        console.log(urls)
         setImageUrls(urls);
+    }
+
+    async function onImageDelete(path: string) {
+        if (!wellId) return;
+    
+        const headers: HeadersInit = {
+            "Content-Type": "application/json"
+        };
+
+        if (token) {
+            headers["Authorization"] = `Bearer ${token.id}`
+        }
+    
+        const res = await fetch(`/api/v1/self/well/${wellId}/image`, {
+            method: "DELETE",
+            headers,
+            body: JSON.stringify({ path }),
+        });
+    
+        if (!res.ok) {
+            const text = await res.text();
+            console.error("Failed to delete image:", text);
+            return;
+        }
+    
+        // Refresh well and image URLs after deletion
+        await fetchWellAndImages(wellId, token);
     }
 
     useEffect(() => {
@@ -162,7 +189,7 @@ export default function WellImageUpload(): JSX.Element {
     }
 
     return (
-        <Box m={2}>
+        <>
             <Typography textAlign="center" variant="h4" gutterBottom>
                 Upload Well Image
             </Typography>
@@ -170,13 +197,9 @@ export default function WellImageUpload(): JSX.Element {
             <Card
                 variant="outlined"
                 sx={{
-                    padding: "1.5rem",
-                    margin: "0 auto",
-                    maxWidth: "600px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "1rem",
+                    width: '100%',
+                    padding: '16px',
+                    marginBottom: '16px',
                 }}
             >
                 <input
@@ -199,18 +222,61 @@ export default function WellImageUpload(): JSX.Element {
                 {error && <Alert severity="error">{error}</Alert>}
             </Card>
 
-            {imageUrls.length > 0 && (
-                <Box mt={4}>
-                    <Typography variant="h5" gutterBottom>
-                        Uploaded Images
-                    </Typography>
-                    <Box display="flex" flexWrap="wrap" gap="1rem">
-                        {imageUrls.map((url, i) => (
-                            <img key={i} src={url} alt={`Well image ${i + 1}`} width={200} />
-                        ))}
+            <Card
+                variant="outlined"
+                sx={{
+                    width: '100%',
+                    padding: '16px',
+                    marginBottom: '16px',
+                }}
+            >
+
+                {imageUrls.length > 0 && (
+                    <Box 
+                        width='100%' 
+                        mt={2}
+                        display="flex" 
+                        alignItems='center'
+                        flexDirection='column'
+                    >
+                        <Typography 
+                            variant="h5" 
+                            justifyContent='center' 
+                            mb={2}
+                        >
+                            Uploaded Images
+                        </Typography>
+                        <Box 
+                            flexWrap="wrap" 
+                            gap="1rem"
+                        >
+                            {imageUrls.map((url, i) => (
+                                <PhotoItem 
+                                    key={url} 
+                                    url={url} 
+                                    index={i} 
+                                    onDelete={onImageDelete}
+                                />
+                            ))}
+                        </Box>
                     </Box>
-                </Box>
-            )}
-        </Box>
+                )}
+            </Card>
+
+            <Button
+                sx={{ width: '90%', height: '4rem' }}
+                variant='contained'
+
+                onClick={() => {
+                    if (token) {
+                        navigate(`/well/${wellId}`);
+                        return;
+                    }
+                    navigate(`/well/${wellId}/result`);
+                }}
+            >
+                Next Step
+            </Button>
+        </>
     );
 }

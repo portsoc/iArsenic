@@ -195,9 +195,38 @@ export const WellController = {
             });
         }
     
-        const urls = await WellService.getWellImageSignedUrls({ wellId, userId });
+        const urls = await WellService.getWellImageSignedUrls(wellId, userId);
     
         ctx.status = 200;
         ctx.body = { urls };
+    },
+
+    async deleteWellImage(ctx: Context) {
+        const token = z.union([AccessTokenSchema, GuestTokenSchema]).parse(ctx.state.token);
+        const userId = token.userId;
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        const { path } = ctx.request.body as { path?: string };
+    
+        if (!path || typeof path !== 'string') {
+            throw new KnownError({
+                message: 'Image path is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+    
+        await WellService.deleteWellImage(wellId, userId, path);
+    
+        ctx.status = 200;
+        ctx.body = { success: true };
     }
 }

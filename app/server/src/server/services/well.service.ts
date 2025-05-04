@@ -3,6 +3,7 @@ import { Well, WellSchema } from 'iarsenic-types'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
 import getSignedUrl from '../utils/signedUrl'
+import { deleteFileFromBucket } from '../utils/deleteFileFromBucket'
 
 export const WellService = {
     async createWell(userId: string): Promise<Well> {
@@ -165,7 +166,7 @@ export const WellService = {
         return validatedWell;
     },
 
-    async getWellImageSignedUrls({ wellId, userId }: { wellId: string, userId: string }) {
+    async getWellImageSignedUrls(wellId: string, userId: string) {
         const well = await WellRepo.findById(wellId);
     
         if (!well) {
@@ -186,6 +187,51 @@ export const WellService = {
         ));
     
         return signedUrls;
-    }
+    },
 
+    async deleteWellImage(wellId: string, userId: string, imagePath: string) {
+        const well = await WellRepo.findById(wellId);
+    
+        if (!well) {
+            throw new KnownError({
+                message: 'Well not found',
+                code: 404,
+                name: 'WellNotFoundError',
+            });
+        }
+    
+        if (well.userId !== userId && well.userId !== 'guest') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+    
+        const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
+        console.log('================================')
+        console.log(well)
+        console.log(imagePath)
+    
+        if (!imagePaths.includes(imagePath)) {
+            throw new KnownError({
+                message: 'Image not associated with this well',
+                code: 400,
+                name: 'ImageNotLinkedError',
+            });
+        }
+    
+        await deleteFileFromBucket(imagePath);
+
+        const updatedPaths = imagePaths.filter(p => p !== imagePath);
+        const updatedWell = {
+            ...well,
+            imagePaths: updatedPaths,
+        }
+        console.log('--------------------------------')
+        console.log(updatedWell)
+        await WellRepo.update(updatedWell);
+    
+        return { message: `Image deleted: ${imagePath}` };
+    }
 }
