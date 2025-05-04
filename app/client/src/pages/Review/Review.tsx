@@ -63,8 +63,6 @@ export default function Review() {
         );
     }
     
-    console.log(well)
-
     if (well.division == null) {
         navigate(`/well/${wellId}/region`);
         return;
