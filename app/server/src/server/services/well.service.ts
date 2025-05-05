@@ -302,7 +302,7 @@ export const WellService = {
                 queries.push([key.replace('_lte', ''), '<=', Number(value)]);
             } else if (key.endsWith('_exists')) {
                 if (value === 'true') {
-                    queries.push([key.replace('_exists', ''), '!=', null]);
+                    queries.push([key.replace('_exists', ''), '==', true]);
                 }
             } else {
                 // Convert "true"/"false" to booleans

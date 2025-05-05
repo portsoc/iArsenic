@@ -40,8 +40,6 @@ export default function MyWells(): JSX.Element {
         }
 
         const data = await result.json();
-        console.log('================================')
-        console.log(data)
         const wells = data.wells
 
         const parsedWells: Well[] = []

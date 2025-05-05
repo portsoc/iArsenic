@@ -34,8 +34,9 @@ export default function({ dropdownData, setQueryParams }: props) {
         wellInUse: false,
         flooding: '',
         staining: '',
-        geoLocated: false,
+        geolocated: false,
         hasImages: false,
+        complete: false,
         aboveDepth: '',
         belowDepth: '',
         region: {
@@ -51,21 +52,26 @@ export default function({ dropdownData, setQueryParams }: props) {
         const params = new URLSearchParams();
     
         if (filters.wellInUse) params.append("wellInUse", "true");
-        if (filters.geoLocated) params.append("geolocation_exists", "true");
+        if (filters.geolocated) params.append("geolocated", "true");
         if (filters.hasImages) params.append("hasImages", "true");
+        if (filters.complete) params.append("complete", "true");
     
         if (filters.flooding) params.append("flooding", filters.flooding);
         if (filters.staining) params.append("staining", filters.staining);
     
-        const region = filters.region || {};
-        if (region.division) params.append("regionKey.division", region.division);
-        if (region.district) params.append("regionKey.district", region.district);
-        if (region.upazila) params.append("regionKey.upazila", region.upazila);
-        if (region.union) params.append("regionKey.union", region.union);
-        if (region.mouza) params.append("regionKey.mouza", region.mouza);
+        if (filters.aboveDepth) params.append("depth_gte", filters.aboveDepth);
+        if (filters.belowDepth) params.append("depth_lte", filters.belowDepth);
     
-        setQueryParams(params.toString())
+        const region = filters.region || {};
+        if (region.division) params.append("division", region.division);
+        if (region.district) params.append("district", region.district);
+        if (region.upazila) params.append("upazila", region.upazila);
+        if (region.union) params.append("union", region.union);
+        if (region.mouza) params.append("mouza", region.mouza);
+    
+        setQueryParams(params.toString());
     }
+    
 
 
     function handleCheckboxChange(field: keyof typeof filters) {
@@ -146,18 +152,8 @@ export default function({ dropdownData, setQueryParams }: props) {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={filters.wellInUse}
-                                onChange={() => handleCheckboxChange('wellInUse')}
-                            />
-                        }
-                        label="Well in Use"
-                    />
-
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={filters.geoLocated}
-                                onChange={() => handleCheckboxChange('geoLocated')}
+                                checked={filters.geolocated}
+                                onChange={() => handleCheckboxChange('geolocated')}
                             />
                         }
                         label="Geolocated"
@@ -171,6 +167,16 @@ export default function({ dropdownData, setQueryParams }: props) {
                             />
                         }
                         label="Includes Images"
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={filters.complete}
+                                onChange={() => handleCheckboxChange('complete')}
+                            />
+                        }
+                        label="Complete Well"
                     />
 
                     <Divider />
