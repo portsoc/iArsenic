@@ -1,14 +1,15 @@
 import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack, Box } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { useEffect, useState } from "react";
-import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema, AccessToken } from 'iarsenic-types';
+import { useState } from "react";
+import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema } from 'iarsenic-types';
 import { useRoute } from "wouter";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/well/:id/staining');
     const wellId = params?.id;
-    const [token, setToken] = useState<AccessToken>();
+
+    const { data: token } = useAccessToken()
 
     const [wellStaining, setWellStaining] = useState<Staining>();
     const [utensilStaining, setUtensilStaining] = useState<UtensilStaining>();
@@ -30,17 +31,6 @@ export default function StainingPage(): JSX.Element {
         // Return false if any field is in error
         return !Object.values(newErrors).some(Boolean);
     }
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
 
     return (
         <>
@@ -167,7 +157,7 @@ export default function StainingPage(): JSX.Element {
                         headers['authorization'] = `Bearer ${token.id}`;
                     }
 
-                    let body = {
+                    const body = {
                         staining: wellStaining,
                         utensilStaining: wellStaining === 'not sure' ?
                             utensilStaining :

@@ -1,14 +1,13 @@
 import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRoute } from "wouter";
-import { AccessToken } from "iarsenic-types";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/flooding');
     const wellId = params?.id;
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken();
 
     const [flooding, setFlooding] = useState<'yes' | 'no'>();
     const [error, setError] = useState<boolean>(false);
@@ -17,17 +16,6 @@ export default function Depth(): JSX.Element {
         setFlooding(event.target.value as 'yes' | 'no');
         setError(false);
     }
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
 
     return (
         <>

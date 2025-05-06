@@ -4,17 +4,17 @@ import './map.css';
 import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
-import { Well, AccessToken, Prediction, WellSchema, PredictionSchema } from 'iarsenic-types';
+import { Well, Prediction, WellSchema, PredictionSchema } from 'iarsenic-types';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
 import UpaMap from './upaMap';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
+import { useAccessToken } from '../../utils/useAccessToken';
 
 export default function Map() {
     const position: LatLngExpression = [23.8041, 90.4152];
     const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken()
     const [wells, setWells] = useState<Well[]>();
     const [predictions, setPredictions] = useState<Prediction[]>();
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
@@ -39,16 +39,16 @@ export default function Map() {
         }
 
         const data = (await res.json());
-        const wells = data.wells
+        const wells = data.wells;
 
-        const parsedWells = []
+        const parsedWells = [];
         for (const well of wells) {
             parsedWells.push(
                 WellSchema.parse({
                     ...well,
                     createdAt: new Date(well.createdAt),
                 })
-            )
+            );
         }
 
         setWells(parsedWells);
@@ -60,7 +60,7 @@ export default function Map() {
         const BATCH_SIZE = 25;
         const parsedPredictions = [];
 
-        const geoWells = wells.filter(w => Array.isArray(w.geolocation))
+        const geoWells = wells.filter(w => Array.isArray(w.geolocation));
     
         for (let i = 0; i < geoWells.length; i += BATCH_SIZE) {
             const batch = wells.slice(i, i + BATCH_SIZE);
@@ -92,21 +92,14 @@ export default function Map() {
     
         setPredictions(parsedPredictions);
     }
-    
+
     async function getRegionTranslations() {
         const translations = await RegionTranslationsFetcher();
         setRegionTranslations(translations);
     }
 
     useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
 
-            setToken(token);
-        }
-
-        fetchToken();
         getRegionTranslations();
         getInteractiveMap();
     }, []);
@@ -116,9 +109,9 @@ export default function Map() {
     }, [token]);
 
     useEffect(() => {
-        if (!wells) return
-        getWellPredictions()
-    }, [wells])
+        if (!wells) return;
+        getWellPredictions();
+    }, [wells]);
 
     if (!interactiveMap || !regionTranslations || !predictions || !wells) return (
         <Stack alignItems='center' justifyContent='center'>

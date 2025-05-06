@@ -40,10 +40,8 @@ export default function RegionFilter({
                 select
                 value={selectedDivision?.division || ''}
                 onChange={(e) => {
-                    const newDivision = dropdownData.find(d => d.division === e.target.value)
-                    console.log('2a2a2a')
-                    console.log(newDivision)
-                    if (!newDivision) throw Error()
+                    const newDivision = dropdownData.find(d => d.division === e.target.value);
+                    if (!newDivision) throw Error();
                     setSelectedDivision(newDivision);
                     setSelectedDistrict(null);
                     setSelectedUpazila(null);

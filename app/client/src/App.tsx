@@ -27,9 +27,10 @@ import {
     Well,
     WellInUse,
 } from './pages';
-import LanguageSelector from './utils/LanguageSelector';
 
 import { HeaderBar } from './components';
+import { useEffect } from 'react';
+import { useLanguage } from './utils/useLanguage';
 
 const Theme = {
     theme: createTheme({
@@ -46,9 +47,13 @@ const Theme = {
     })
 };
 
-LanguageSelector.init();
-
 function App() {
+    const { init } = useLanguage();
+
+    useEffect(() => {
+        init();
+    }, [init]);
+
     return (
         <ThemeProvider theme={Theme.theme}>
             <link

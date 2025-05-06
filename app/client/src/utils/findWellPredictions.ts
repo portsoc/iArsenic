@@ -6,7 +6,7 @@ export default function(well: Well, predictions: Prediction[]): Prediction[] {
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()); // latest first
 
     if (matching.length === 0) {
-        return []
+        return [];
     }
 
     return matching;

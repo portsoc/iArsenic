@@ -1,16 +1,16 @@
 import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { Well, AccessToken } from 'iarsenic-types';
+import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useAccessToken } from '../../utils/useAccessToken';
 
 export default function Review() {
     const [, params] = useRoute('/well/:id');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken()
 
     function getMissingFields(well: Well): { missingFields: string[], allFieldsMissing: boolean } {
         const requiredFields: (keyof Well)[] = [
@@ -21,33 +21,18 @@ export default function Review() {
             'flooding',
         ];
 
-        let allFieldsMissing = true
-        const missingFields = []
+        let allFieldsMissing = true;
+        const missingFields = [];
         for (const f of requiredFields) {
             if (well[f] == null) {
-                missingFields.push(f)
+                missingFields.push(f);
             } else {
-                allFieldsMissing = false
+                allFieldsMissing = false;
             }
         }
 
         return { missingFields, allFieldsMissing };
     }
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-
-            if (token == null) {
-                navigate(`/login`);
-                return;
-            }
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
 
     useEffect(() => {
         async function fetchWell() {
@@ -79,7 +64,7 @@ export default function Review() {
         );
     }
 
-    const { missingFields, allFieldsMissing } = getMissingFields(well)
+    const { missingFields, allFieldsMissing } = getMissingFields(well);
 
     return (
         <>
@@ -197,7 +182,7 @@ export default function Review() {
                             } else if (!well?.flooding) {
                                 navigate(`/well/${wellId}/flooding`);
                             } else if (!well?.wellInUse) {
-                                navigate(`/well/${wellId}/well-in-use`)
+                                navigate(`/well/${wellId}/well-in-use`);
                             }
                         }}
                     >

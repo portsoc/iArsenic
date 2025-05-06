@@ -1,31 +1,14 @@
-import { CircularProgress, Stack } from "@mui/material";
-import { User } from "iarsenic-types";
-import { navigate } from "wouter/use-browser-location";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
-import { useEffect, useState } from "react";
-import ProfileCard from "./ProfileCard";
+import { Stack, CircularProgress } from "@mui/material";
+import { useState } from "react";
+import { useAccessToken } from "../../utils/useAccessToken";
 import EditProfileCard from "./EditProfileCard";
+import ProfileCard from "./ProfileCard";
 
 export default function ProfilePage(): JSX.Element {
-    const [user, setUser] = useState<User>();
     const [editMode, setEditMode] = useState(false);
     const [saving, setSaving] = useState(false);
-
-    useEffect(() => {
-        async function getUser() {
-            const token = await AccessTokenRepo.get();
-
-            if (!token || !token.user) {
-                navigate(`/login`);
-                return;
-            }
-
-            setUser(token.user);
-        }
-
-        if (saving) return; // dont update while saving
-        getUser();
-    }, [saving]);
+    const { data: token } = useAccessToken();
+    const [user, setUser] = useState(token?.user);
 
     if (!user) {
         return (

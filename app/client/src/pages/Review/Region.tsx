@@ -8,7 +8,7 @@ interface props {
 
 export default function({ well }: props) {
     if (!well?.division) {
-        throw new Error('Missing reion')
+        throw new Error('Missing reion');
     }
 
     return (
@@ -54,5 +54,5 @@ export default function({ well }: props) {
                 </Button>
             </Box>
         </Card>
-    )
+    );
 }

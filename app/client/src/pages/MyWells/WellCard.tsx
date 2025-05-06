@@ -3,7 +3,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import { Prediction, Well, CompleteWellSchema } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
+import { useAccessToken } from '../../utils/useAccessToken';
 
 interface Props {
     well: Well;
@@ -11,17 +11,17 @@ interface Props {
 }
 
 function isWellComplete(well: Well): boolean {
-    const res = CompleteWellSchema.safeParse(well)
-    return res.success
+    const res = CompleteWellSchema.safeParse(well);
+    return res.success;
 }
 
 export default function WellCard({ well }: Props): JSX.Element {
-    const [thumbnailUrl, setThumbnailUrl] = useState<string>()
+    const [thumbnailUrl, setThumbnailUrl] = useState<string>();
+    const { data: token } = useAccessToken()
     
     useEffect(() => {
         async function fetchSignedUrl() {
             try {
-                const token = await AccessTokenRepo.get();
                 const headers: HeadersInit = {};
 
                 if (token) {
@@ -52,8 +52,8 @@ export default function WellCard({ well }: Props): JSX.Element {
                 const { urls } = await res.json();
                 setThumbnailUrl(urls[0]);
             } catch (error) {
-                console.error(error)
-                console.error('error fetching thumbnail url')
+                console.error(error);
+                console.error('error fetching thumbnail url');
             }
         }
 

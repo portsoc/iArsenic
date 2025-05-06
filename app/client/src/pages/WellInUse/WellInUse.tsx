@@ -1,34 +1,22 @@
 import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRoute } from "wouter";
-import { AccessToken } from "iarsenic-types";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 export default function(): JSX.Element {
     const [, params] = useRoute('/well/:id/well-in-use');
     const wellId = params?.id;
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken()
 
     const [wellInUse, setWellInUse] = useState<boolean>();
     const [error, setError] = useState<boolean>(false);
 
     function handleWellInUseChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const newBool = event.target.value === 'yes'
+        const newBool = event.target.value === 'yes';
         setWellInUse(newBool);
         setError(false);
     }
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
 
     return (
         <>

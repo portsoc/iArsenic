@@ -2,13 +2,12 @@ import { Typography, Button, CircularProgress, Stack, Card } from "@mui/material
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
-import { AccessToken } from "iarsenic-types";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import EnglishRegionSelector from "./EnglishRegionSelector";
 import BengaliRegionSelector from "./BengaliRegionSelector";
 import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
 import { useRoute } from "wouter";
 import fetchDropdownData from "../../utils/fetchDropdownData";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 export type RegionErrors = {
     division: boolean;
@@ -21,7 +20,7 @@ export type RegionErrors = {
 export default function Region(): JSX.Element {
     const [, params] = useRoute('/well/:id/select-region');
     const wellId = params?.id;
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken()
 
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
@@ -57,20 +56,12 @@ export default function Region(): JSX.Element {
     }
 
     useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
         async function getDropdownData() {
             setDropdownData(await fetchDropdownData());
         }
 
-        getDropdownData()
+        getDropdownData();
         fetchRegionTranslations();
-        fetchToken();
     }, []);
 
     if (!regionTranslations) {

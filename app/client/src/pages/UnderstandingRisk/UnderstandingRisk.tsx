@@ -154,10 +154,10 @@ export default function UnderstandingRisk(): JSX.Element {
                         row 
                         value={speedoValue + 0.5} 
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                            const value = (Number(event.target.value) - 0.5) as RiskAssesment
+                            const value = (Number(event.target.value) - 0.5) as RiskAssesment;
 
-                            setSpeedoValue(value)
-                            setOutput(value)
+                            setSpeedoValue(value);
+                            setOutput(value);
                         }}
                         sx={{ justifyContent: 'center', width: '100%' }}
                     >

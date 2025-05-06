@@ -1,8 +1,7 @@
 import { Typography, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { AccessToken, Well } from 'iarsenic-types';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
+import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import Depth from './Depth';
 import Flooding from './Flooding';
@@ -10,23 +9,13 @@ import Region from './Region';
 import Staining from './Staining';
 import Drinking from './Drinking';
 import Images from './Images';
+import { useAccessToken } from '../../utils/useAccessToken';
 
 export default function Review() {
     const [, params] = useRoute('/well/:id/review');
     const wellId = params?.id;
-    const [token, setToken] = useState<AccessToken>();
     const [well, setWell] = useState<Well>();
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
+    const { data: token } = useAccessToken()
 
     useEffect(() => {
         async function fetchWell() {

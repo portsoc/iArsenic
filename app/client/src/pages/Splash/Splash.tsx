@@ -3,29 +3,16 @@ import Section from './Section';
 import CallToAction from './CallToAction';
 import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
-import { useEffect, useState } from 'react';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessToken } from 'iarsenic-types';
-
+import { useAccessToken } from '../../utils/useAccessToken';
 
 export default function SplashPage(): JSX.Element {
-    const [token, setToken] = useState<AccessToken | null>();
+    const { data: token } = useAccessToken()
     const theme = useTheme();
 
     function handleTryAppClick() {
         if (token) navigate(`/my-wells`);
         else navigate(`/landing`);
     }
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
 
     return (
         <>

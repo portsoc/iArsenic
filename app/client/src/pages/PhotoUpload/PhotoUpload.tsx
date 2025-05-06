@@ -1,8 +1,8 @@
 import { Button, Card, Typography, Box, Alert, CircularProgress } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { useAccessToken } from "../../utils/useAccessToken";
 import { resizeImage } from "../../utils/resizeImage";
 import { navigate } from "wouter/use-browser-location";
 import PhotoItem from "./PhotoItem";
@@ -11,7 +11,7 @@ import ImageIcon from '@mui/icons-material/Image';
 export default function WellImageUpload(): JSX.Element {
     const [, params] = useRoute('/well/:id/upload-image');
     const wellId = params?.id;
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken()
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -69,7 +69,7 @@ export default function WellImageUpload(): JSX.Element {
         };
 
         if (token) {
-            headers["Authorization"] = `Bearer ${token.id}`
+            headers["Authorization"] = `Bearer ${token.id}`;
         }
     
         const res = await fetch(`/api/v1/self/well/${wellId}/image`, {
@@ -87,22 +87,6 @@ export default function WellImageUpload(): JSX.Element {
         // Refresh well and image URLs after deletion
         await fetchWellAndImages(wellId, token);
     }
-
-    useEffect(() => {
-        async function load() {
-            const token = await AccessTokenRepo.get();
-            if (!wellId) return;
-            if (token) {
-                setToken(token);
-                await fetchWellAndImages(wellId, token);
-            } else {
-                await fetchWellAndImages(wellId);
-            }
-        }
-
-        load();
-    }, [wellId]);
-    
 
     async function handleUpload() {
         if (!file || !wellId) {

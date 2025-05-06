@@ -1,9 +1,10 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { IKnownError, RegisterRequestSchema } from 'iarsenic-types';
-import LanguageSelector from '../../utils/LanguageSelector';
+import { useLanguage } from '../../utils/useLanguage';
 
 export default function SignUp(): JSX.Element {
+    const { language } = useLanguage()
     const [name, setName] = useState<string>();
     const [email, setEmail] = useState<string>();
     const [password, setPassword] = useState<string>();
@@ -58,7 +59,6 @@ export default function SignUp(): JSX.Element {
 
         setError(null);
 
-        const language = await LanguageSelector.get();
         const units = language == 'english' ? 'meters' : 'feet';
 
         const registerBody = RegisterRequestSchema.parse({

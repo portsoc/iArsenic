@@ -16,7 +16,7 @@ import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
 import { navigate } from 'wouter/use-browser-location';
 import { SvgIconComponent } from '@mui/icons-material';
 import { Avatar, Button, Stack, Typography } from '@mui/material';
-import LanguageSelector from '../../utils/LanguageSelector';
+import { useLanguage } from '../../utils/useLanguage';
 
 interface props {
     open: boolean;
@@ -33,9 +33,7 @@ function NavListItem(
 ): JSX.Element {
     return (
         <ListItem key={path}>
-            <ListItemButton
-                onClick={() => navigate(`/${path}`)}
-            >
+            <ListItemButton onClick={() => navigate(`/${path}`)}>
                 <ListItemIcon>
                     <Icon />
                 </ListItemIcon>
@@ -46,57 +44,28 @@ function NavListItem(
 }
 
 export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
+    const { setLanguage } = useLanguage();
+
     return (
         <Drawer open={open} onClose={() => setOpen(false)}>
             <Box sx={{ width: 250 }} onClick={() => setOpen(false)}>
-                {/* all users */}
                 <List>
-                    <NavListItem
-                        path='landing'
-                        text='Landing'
-                        Icon={AccountCircleIcon}
-                    />
-
-                    <NavListItem
-                        path='briefing'
-                        text='Briefing'
-                        Icon={InfoIcon}
-                    />
-
-                    <NavListItem
-                        path='privacy-policy'
-                        text='Privacy Policy'
-                        Icon={PrivacyTipIcon}
-                    />
-
-                    <NavListItem
-                        path='understanding-risk'
-                        text='Understanding Risk'
-                        Icon={HealthAndSafetyIcon}
-                    />
-                    
-                    <NavListItem
-                        path='my-wells'
-                        text='My Wells'
-                        Icon={LocalDrinkIcon}
-                    />
+                    <NavListItem path='landing' text='Landing' Icon={AccountCircleIcon} />
+                    <NavListItem path='briefing' text='Briefing' Icon={InfoIcon} />
+                    <NavListItem path='privacy-policy' text='Privacy Policy' Icon={PrivacyTipIcon} />
+                    <NavListItem path='understanding-risk' text='Understanding Risk' Icon={HealthAndSafetyIcon} />
+                    <NavListItem path='my-wells' text='My Wells' Icon={LocalDrinkIcon} />
                 </List>
 
-                {/* logged in users */}
                 {role && (
                     <>
                         <Divider />
                         <List>
-                            <NavListItem
-                                path='profile'
-                                text='My Profile'
-                                Icon={AccountCircleIcon}
-                            />
+                            <NavListItem path='profile' text='My Profile' Icon={AccountCircleIcon} />
                         </List>
                     </>
                 )}
 
-                {/* logged in admins */}
                 {role === 'admin' && (
                     <>
                         <Divider />
@@ -104,23 +73,9 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                             Admins Only
                         </Typography>
                         <List>
-                            <NavListItem
-                                path='all-users'
-                                text='All Users'
-                                Icon={GroupsIcon}
-                            />
-
-                            <NavListItem
-                                path='all-wells'
-                                text='All Wells'
-                                Icon={PublicIcon}
-                            />
-
-                            <NavListItem
-                                path='map'
-                                text='Maps'
-                                Icon={LocalDrinkIcon}
-                            />
+                            <NavListItem path='all-users' text='All Users' Icon={GroupsIcon} />
+                            <NavListItem path='all-wells' text='All Wells' Icon={PublicIcon} />
+                            <NavListItem path='map' text='Maps' Icon={LocalDrinkIcon} />
                         </List>
                     </>
                 )}
@@ -136,13 +91,13 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         alignItems='center'
                         ml={2}
                         columnGap={3}
-                        onClick={() => LanguageSelector.set('english')}
+                        onClick={() => setLanguage('english')}
                         sx={{ cursor: 'pointer' }}
                     >
                         <Button
                             startIcon={
                                 <Avatar
-                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
+                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
                                     src={`/british.png`}
                                 />
                             }
@@ -150,23 +105,21 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         <Typography>English</Typography>
                     </Stack>
 
-
                     <Stack
                         direction='row'
                         alignItems='center'
                         ml={2}
                         columnGap={3}
-                        onClick={() => LanguageSelector.set('bengali')}
+                        onClick={() => setLanguage('bengali')}
                         sx={{ cursor: 'pointer' }}
                     >
                         <Button
                             startIcon={
                                 <Avatar
-                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px'}}
+                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
                                     src={`/bangladesh.jpg`}
                                 />
                             }
-                            onClick={() => LanguageSelector.set('bengali')}
                         />
                         <Typography>বাংলা</Typography>
                     </Stack>

@@ -3,8 +3,8 @@ import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Well } from "iarsenic-types";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
 import { navigate } from "wouter/use-browser-location";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 interface Props {
     well: Well;
@@ -13,13 +13,13 @@ interface Props {
 export default function WellImageDisplay({ well }: Props) {
     const [imageUrls, setImageUrls] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const { data: token } = useAccessToken()
 
     useEffect(() => {
         async function fetchSignedUrls() {
             setLoading(true);
 
             try {
-                const token = await AccessTokenRepo.get();
                 const headers: HeadersInit = {};
 
                 if (token) {

@@ -1,9 +1,20 @@
-import { Typography, Card, Box, Button, TextField, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import {
+    Typography,
+    Card,
+    Box,
+    Button,
+    TextField,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel
+} from '@mui/material';
 import { User, Language, Units, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import LanguageSelector from '../../utils/LanguageSelector';
-import UnitsSelector from '../../utils/UnitsSelector';
+import { useAccessToken } from '../../utils/useAccessToken';
+import { useLanguage } from '../../utils/useLanguage';
+import { useUnits } from '../../utils/useUnits';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
     user: User;
@@ -13,37 +24,43 @@ interface Props {
 }
 
 export default function EditProfileCard({ user, setEditMode, setSaving, setUser }: Props): JSX.Element {
+    const queryClient = useQueryClient()
+
     const [name, setName] = useState<string>(user.name);
     const [language, setLanguage] = useState<Language>(user.language);
     const [units, setUnits] = useState<Units>(user.units);
+    const { data: token } = useAccessToken();
+
+    const { setLanguage: applyLanguage } = useLanguage();
+    const { setUnits: applyUnits } = useUnits();
+
 
     async function saveChanges() {
         setSaving(true);
-        const changes: Partial<User> = {
-            name,
-            language,
-            units,
-        };
-
-        const token = await AccessTokenRepo.get();
-
+    
         if (!token) {
             setSaving(false);
             throw new Error('Invalid token');
         }
-
-        if (changes.language != null) {
-            LanguageSelector.set(language);
-        }
-
-        if (changes.units != null) {
-            UnitsSelector.set(units);
-        }
-
+    
+        if (language) await applyLanguage(language);
+        if (units) await applyUnits(units);
+    
+        const updatedUser = { ...user, name, language, units };
+    
+        queryClient.setQueryData(['accessToken'], (prev: typeof token) => {
+            if (!prev) return prev;
+            return {
+                ...prev,
+                user: updatedUser,
+            };
+        });
+    
         setSaving(false);
         setEditMode(false);
-        setUser({ ...user, ...changes });
+        setUser(updatedUser);
     }
+    
 
     return (
         <Box width='100%'>

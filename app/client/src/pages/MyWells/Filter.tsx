@@ -13,16 +13,16 @@ import {
     Button
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import RegionFilter from './filter/RegionFilter';
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from '../../types';
 
 interface props {
     dropdownData: DropdownDivision[];
-    setQueryParams: (queryString: string) => void;
+    setQueryParams: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function({ dropdownData, setQueryParams }: props) {
+export default function Filter({ dropdownData, setQueryParams }: props) {
     const [open, setOpen] = useState(false);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
     const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
@@ -62,17 +62,19 @@ export default function({ dropdownData, setQueryParams }: props) {
         if (filters.aboveDepth) params.append("depth_gte", filters.aboveDepth);
         if (filters.belowDepth) params.append("depth_lte", filters.belowDepth);
     
-        const region = filters.region || {};
-        if (region.division) params.append("division", region.division);
-        if (region.district) params.append("district", region.district);
-        if (region.upazila) params.append("upazila", region.upazila);
-        if (region.union) params.append("union", region.union);
-        if (region.mouza) params.append("mouza", region.mouza);
+        // Read region selections directly
+        if (selectedDivision?.division) params.append("division", selectedDivision.division);
+        if (selectedDistrict?.district) params.append("district", selectedDistrict.district);
+        if (selectedUpazila?.upazila) params.append("upazila", selectedUpazila.upazila);
+        if (selectedUnion?.union) params.append("union", selectedUnion.union);
+        if (selectedMouza) params.append("mouza", selectedMouza);
     
-        setQueryParams(params.toString());
+        const newQuery = params.toString();
+        setQueryParams((prev: string | undefined) => {
+            if (prev === newQuery) return prev; // No actual change — do nothing
+            return newQuery;
+        });
     }
-    
-
 
     function handleCheckboxChange(field: keyof typeof filters) {
         setFilters({
@@ -87,25 +89,6 @@ export default function({ dropdownData, setQueryParams }: props) {
             [field]: value,
         });
     }
-
-    useEffect(() => {
-        setFilters((prev) => ({
-            ...prev,
-            region: {
-                division: selectedDivision?.division || '',
-                district: selectedDistrict?.district || '',
-                upazila: selectedUpazila?.upazila || '',
-                union: selectedUnion?.union || '',
-                mouza: selectedMouza || '',
-            },
-        }));
-    }, [
-        selectedDivision,
-        selectedDistrict,
-        selectedUpazila,
-        selectedUnion,
-        selectedMouza
-    ]);
 
     return (
         <Card
@@ -195,7 +178,6 @@ export default function({ dropdownData, setQueryParams }: props) {
                         selectedMouza={selectedMouza}
                         setSelectedMouza={setSelectedMouza}
                     />
-
 
                     <Divider />
 

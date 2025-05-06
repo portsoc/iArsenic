@@ -38,8 +38,8 @@ export default function GeolocationButton({
                 async (position) => {
                     const { latitude, longitude } = position.coords;
                     setGeolocation([latitude, longitude]);
-                    await setRegionFromGeolocation([latitude, longitude])
-                    setGeolocationSuccess(true)
+                    await setRegionFromGeolocation([latitude, longitude]);
+                    setGeolocationSuccess(true);
                 },
                 (error) => {
                     console.error("Error getting geolocation: ", error);

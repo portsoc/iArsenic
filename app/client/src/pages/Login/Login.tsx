@@ -1,13 +1,14 @@
 import { Button, Card, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessTokenSchema } from 'iarsenic-types';
+import { useLogin } from '../../utils/useLogin';
 
 export default function Login(): JSX.Element {
-    const [email, setEmail] = useState<string>();
-    const [password, setPassword] = useState<string>();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [err, setErr] = useState<string | null>(null);
+
+    const loginMutation = useLogin();
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
         setErr(null);
@@ -20,49 +21,11 @@ export default function Login(): JSX.Element {
     }
 
     async function handleSubmit() {
-        const result = await fetch(`/api/v1/user/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
-
-        if (!result.ok) {
-            if (result.status === 401) {
-                setErr('Invalid email or password');
-                return;
-            }
-
-            console.error('Failed to login:', result);
-            return;
+        try {
+            await loginMutation.mutateAsync({ email, password });
+        } catch (error: any) {
+            setErr(error.message ?? 'Something went wrong');
         }
-
-        const data = await result.json();
-
-        const token = data.accessToken;
-        const validatedTokenRes = AccessTokenSchema.safeParse({
-            ...token,
-            createdAt: new Date(token.createdAt),
-            expiresAt: new Date(token.expiresAt),
-            revokedAt: token.revokedAt == null ?
-                undefined :
-                new Date(token.revokedAt),
-        });
-
-        if (!validatedTokenRes.success) {
-            console.error(
-                'Failed to validate access token:',
-                validatedTokenRes.error,
-            );
-
-            return;
-        }
-
-        AccessTokenRepo.set(validatedTokenRes.data);
-
-        navigate(`/my-wells`);
-        window.location.reload();
     }
 
     return (
@@ -100,14 +63,10 @@ export default function Login(): JSX.Element {
                 />
 
                 {err && (
-                    <Typography color='error'>
-                        {err}
-                    </Typography>
+                    <Typography color='error'>{err}</Typography>
                 )}
 
-                <Button
-                    onClick={() => navigate(`/forgot-password`)}
-                >
+                <Button onClick={() => navigate(`/forgot-password`)}>
                     Forgot Password?
                 </Button>
 
@@ -115,8 +74,9 @@ export default function Login(): JSX.Element {
                     sx={{ width: '90%', height: '4rem' }}
                     variant='contained'
                     onClick={handleSubmit}
+                    disabled={loginMutation.isPending}
                 >
-                    Login
+                    {loginMutation.isPending ? 'Logging in...' : 'Login'}
                 </Button>
             </Card>
 

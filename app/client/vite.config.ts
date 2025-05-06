@@ -12,5 +12,6 @@ export default defineConfig({
   base: process.env.VITE_APP_BASE_PATH || '',
   build: {
     outDir: 'static',
+    // minify: false,
   }
 });

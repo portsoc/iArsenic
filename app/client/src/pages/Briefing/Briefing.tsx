@@ -1,12 +1,12 @@
 import { Button, Card, Link, List, ListItem, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { Well } from "iarsenic-types";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 export default function Briefing(): JSX.Element {
-    async function addWell(): Promise<Well> {
-        const token = await AccessTokenRepo.get();
+    const { data: token } = useAccessToken();
 
+    async function addWell(): Promise<Well> {
         const headers: HeadersInit = {};
 
         if (token) {

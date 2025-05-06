@@ -67,7 +67,7 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
     return (
         <>
             {filteredWells.map((p, index) => {
-                const prediction = findWellPredictions(p, predictions)[0]
+                const prediction = findWellPredictions(p, predictions)[0];
                 return (
                     <Marker icon={getIcon(prediction.riskAssesment)} key={index} position={p.geolocation as LatLngExpression}>
                         <Popup>

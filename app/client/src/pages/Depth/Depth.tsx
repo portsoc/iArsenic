@@ -1,14 +1,13 @@
 import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { useEffect, useState } from "react";
-import { AccessToken } from "iarsenic-types";
+import { useState } from "react";
 import { useRoute } from "wouter";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
     const wellId = params?.id;
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken();
 
     const [unit, setUnit] = useState<'m' | 'ft'>('ft');
     const [depth, setDepth] = useState(0);
@@ -28,17 +27,6 @@ export default function Depth(): JSX.Element {
         if (unit === 'ft') setDepth(Math.floor(depth * 0.3048));
         if (unit === 'm') setDepth(Math.floor(depth / 0.3048));
     }
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
 
     return (
         <>

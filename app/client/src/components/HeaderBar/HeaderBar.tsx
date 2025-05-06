@@ -1,55 +1,15 @@
 import { AppBar, Stack, Typography, Box, Button, IconButton } from '@mui/material';
 import { navigate } from 'wouter/use-browser-location';
-
 import MenuIcon from '@mui/icons-material/Menu';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
 import NavMenu from './NavMenu';
-import AccessTokenRepo from '../../utils/AccessTokenRepo';
-import { AccessToken, User, UserSchema } from 'iarsenic-types';
+import { useAccessToken, deleteAccessToken } from '../../utils/useAccessToken';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
-    const [token, setToken] = useState<AccessToken>();
-    const [user, setUser] = useState<User>();
-
-    useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
-
-    useEffect(() => {
-        async function fetchUser() {
-            if (!token) return;
-
-            const res = await fetch(`/api/v1/self/user`, {
-                headers: {
-                    'authorization': `Bearer ${token.id}`,
-                }
-            });
-
-            if (!res.ok) {
-                console.error('Failed to fetch user:', res);
-                return;
-            }
-
-            const user = await res.json();
-
-            const parsedUser = UserSchema.parse({
-                ...user,
-                createdAt: new Date(user.createdAt),
-            })
-
-            setUser(parsedUser);
-        }
-
-        fetchUser();
-    }, [token]);
+    const { data: token } = useAccessToken();
+    const user = token?.user;
 
     return (
         <AppBar sx={{ marginBottom: '2rem', height: '3rem' }} position='static'>
@@ -90,20 +50,19 @@ export default function HeaderBar(): JSX.Element {
                 </Stack>
 
                 <Box>
-                    {user && (
+                    {user ? (
                         <Button
                             variant='outlined'
                             sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
-                            onClick={async () => {
-                                await AccessTokenRepo.delete();
+                            onClick={() => {
+                                deleteAccessToken();
                                 navigate(`/`);
+                                window.location.reload(); // optional if you want to reset app state
                             }}
                         >
                             Logout
                         </Button>
-                    )}
-
-                    {!user && (
+                    ) : (
                         <Button
                             variant='outlined'
                             sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}

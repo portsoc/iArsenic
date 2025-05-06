@@ -39,5 +39,5 @@ export default function({ well }: props) {
                 </Button>
             </Box>
         </Card>
-    )
+    );
 }

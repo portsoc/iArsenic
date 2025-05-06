@@ -6,7 +6,7 @@ import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
 import estimateTexts from "../../components/Speedo/estimateTexts";
 import { useRoute } from "wouter";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { useAccessToken } from "../../utils/useAccessToken";
 
 type EstimateTexts = {
     english: {
@@ -27,6 +27,7 @@ export default function Result(): JSX.Element {
     const [speedoValue, setSpeedoValue] = useState<number>();
     const [warningTexts, setWarningTexts] = useState<EstimateTexts>();
     const [loading, setLoading] = useState<boolean>(true);
+    const { data: token } = useAccessToken()
 
     function setOutput(riskAssesment: RiskAssesment) {
         setSpeedoValue(riskAssesment);
@@ -50,7 +51,6 @@ export default function Result(): JSX.Element {
             try {
                 if (!wellId) return;
 
-                const token = await AccessTokenRepo.get();
                 const headers: HeadersInit = token ? 
                     { 'authorization': `Bearer ${token.id}` } : 
                     {};

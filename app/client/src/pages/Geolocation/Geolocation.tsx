@@ -1,8 +1,8 @@
 import { Typography, Button, Stack, FormControl, FormControlLabel, Radio, RadioGroup, Card, Box, CircularProgress, Collapse } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { AccessToken, Well } from "iarsenic-types";
-import AccessTokenRepo from "../../utils/AccessTokenRepo";
+import { Well } from "iarsenic-types";
+import { useAccessToken } from "../../utils/useAccessToken";
 import GeolocationButton from "./GeolocationButton";
 import { useRoute } from "wouter";
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
@@ -24,7 +24,7 @@ export default function Region(): JSX.Element {
     const [, params] = useRoute('/well/:id/region');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-    const [token, setToken] = useState<AccessToken>();
+    const { data: token } = useAccessToken()
 
     const [division, setDivision] = useState<string | null>(null);
     const [district, setDistrict] = useState<string | null>(null);
@@ -44,18 +44,8 @@ export default function Region(): JSX.Element {
     const [geolocation, setGeolocation] = useState<[number, number]>();
 
     useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
-
-    useEffect(() => {
         async function fetchWell() {
+            if (token == null) return
             if (!wellId) return;
 
             const headers: HeadersInit = {};
@@ -78,8 +68,8 @@ export default function Region(): JSX.Element {
             setWell(well);
 
             if (well.geolocation) {
-                setGeolocation(well.geolocation)
-                setWithWell(true)
+                setGeolocation(well.geolocation);
+                setWithWell(true);
             }
         }
 
@@ -215,7 +205,7 @@ export default function Region(): JSX.Element {
                     }
                 
                     if (!regionKeyValid) {
-                        console.log('regionKey not valid')
+                        console.log('regionKey not valid');
                         navigate(`/well/${wellId}/select-region`);
                         return;
                     }
