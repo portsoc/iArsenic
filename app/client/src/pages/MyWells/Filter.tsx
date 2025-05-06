@@ -10,71 +10,33 @@ import {
     Stack,
     Divider,
     Card,
-    Button
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useState } from 'react';
 import RegionFilter from './filter/RegionFilter';
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from '../../types';
+import { FiltersType } from './FiltersType';
 
 interface props {
     dropdownData: DropdownDivision[];
-    setQueryParams: React.Dispatch<React.SetStateAction<string>>;
+    filters: FiltersType;
+    setFilters: React.Dispatch<React.SetStateAction<FiltersType>>;
+    filterOpen: boolean;
+    setFilterOpen: (open: boolean) => void
 }
 
-export default function Filter({ dropdownData, setQueryParams }: props) {
-    const [open, setOpen] = useState(false);
+export default function Filter({ 
+    dropdownData, 
+    filters,
+    setFilters,
+    filterOpen,
+    setFilterOpen,
+}: props) {
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
     const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
     const [selectedUpazila, setSelectedUpazila] = useState<DropdownUpazila | null>(null);
     const [selectedUnion, setSelectedUnion] = useState<DropdownUnion | null>(null);
     const [selectedMouza, setSelectedMouza] = useState<string | null>(null);
-
-    const [filters, setFilters] = useState({
-        wellInUse: false,
-        flooding: '',
-        staining: '',
-        geolocated: false,
-        hasImages: false,
-        complete: false,
-        aboveDepth: '',
-        belowDepth: '',
-        region: {
-            division: '',
-            district: '',
-            upazila: '',
-            union: '',
-            mouza: '',
-        },
-    });
-
-    function buildQueryParams(): void {
-        const params = new URLSearchParams();
-    
-        if (filters.wellInUse) params.append("wellInUse", "true");
-        if (filters.geolocated) params.append("geolocated", "true");
-        if (filters.hasImages) params.append("hasImages", "true");
-        if (filters.complete) params.append("complete", "true");
-    
-        if (filters.flooding) params.append("flooding", filters.flooding);
-        if (filters.staining) params.append("staining", filters.staining);
-    
-        if (filters.aboveDepth) params.append("depth_gte", filters.aboveDepth);
-        if (filters.belowDepth) params.append("depth_lte", filters.belowDepth);
-    
-        // Read region selections directly
-        if (selectedDivision?.division) params.append("division", selectedDivision.division);
-        if (selectedDistrict?.district) params.append("district", selectedDistrict.district);
-        if (selectedUpazila?.upazila) params.append("upazila", selectedUpazila.upazila);
-        if (selectedUnion?.union) params.append("union", selectedUnion.union);
-        if (selectedMouza) params.append("mouza", selectedMouza);
-    
-        const newQuery = params.toString();
-        setQueryParams((prev: string | undefined) => {
-            if (prev === newQuery) return prev; // No actual change — do nothing
-            return newQuery;
-        });
-    }
 
     function handleCheckboxChange(field: keyof typeof filters) {
         setFilters({
@@ -112,7 +74,7 @@ export default function Filter({ dropdownData, setQueryParams }: props) {
                 <Box 
                     display='flex' 
                     flexDirection='row'
-                    onClick={() => setOpen(!open)}
+                    onClick={() => setFilterOpen(!filterOpen)}
                     sx={{
                         cursor: 'pointer',
                     }}
@@ -122,15 +84,15 @@ export default function Filter({ dropdownData, setQueryParams }: props) {
                     </IconButton>
                     <Typography variant="h6">Filters</Typography>
                 </Box>
-                <Button 
+                {/* <Button 
                     variant='outlined'
                     onClick={() => buildQueryParams()}
                 >
                     Apply
-                </Button>
+                </Button> */}
             </Box>
 
-            <Collapse in={open}>
+            <Collapse in={filterOpen}>
                 <Stack spacing={2}>
                     <FormControlLabel
                         control={
@@ -168,15 +130,70 @@ export default function Filter({ dropdownData, setQueryParams }: props) {
                     <RegionFilter
                         dropdownData={dropdownData}
                         selectedDivision={selectedDivision}
-                        setSelectedDivision={setSelectedDivision}
+                        setSelectedDivision={(division) => {
+                            setSelectedDivision(division)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    division: division?.division || '',
+                                    district: '',
+                                    upazila: '',
+                                    union: '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
                         selectedDistrict={selectedDistrict}
-                        setSelectedDistrict={setSelectedDistrict}
+                        setSelectedDistrict={(district) => {
+                            setSelectedDistrict(district)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    district: district?.district || '',
+                                    upazila: '',
+                                    union: '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
                         selectedUpazila={selectedUpazila}
-                        setSelectedUpazila={setSelectedUpazila}
+                        setSelectedUpazila={(upazila) => {
+                            setSelectedUpazila(upazila)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    upazila: upazila?.upazila || '',
+                                    union: '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
                         selectedUnion={selectedUnion}
-                        setSelectedUnion={setSelectedUnion}
+                        setSelectedUnion={(union) => {
+                            setSelectedUnion(union)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    union: union?.union || '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
                         selectedMouza={selectedMouza}
-                        setSelectedMouza={setSelectedMouza}
+                        setSelectedMouza={(mouza) => {
+                            setSelectedMouza(mouza)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    mouza: mouza || '',
+                                },
+                            }));
+                        }}
                     />
 
                     <Divider />

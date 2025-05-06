@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -10,14 +10,33 @@ import { useQuery } from '@tanstack/react-query';
 import { navigate } from 'wouter/use-browser-location';
 
 import WellCard from './WellCard';
-// import Filter from './Filter';
 import findWellPredictions from '../../utils/findWellPredictions';
 import fetchDropdownData from '../../utils/fetchDropdownData';
 import { Prediction, Well, WellSchema, PredictionSchema } from 'iarsenic-types';
 import { useAccessToken } from '../../utils/useAccessToken';
+import Filter from './Filter';
 
 export default function MyWells(): JSX.Element {
-    const [queryParams] = useState<string>('');
+    const [filterOpen, setFilterOpen] = useState<boolean>(false)
+    const [queryParams, setQueryParams] = useState<Record<string, string>>({});
+    const [filters, setFilters] = useState({
+        wellInUse: false,
+        flooding: '',
+        staining: '',
+        geolocated: false,
+        hasImages: false,
+        complete: false,
+        aboveDepth: '',
+        belowDepth: '',
+        region: {
+            division: '',
+            district: '',
+            upazila: '',
+            union: '',
+            mouza: '',
+        },
+    });
+
     const { data: token } = useAccessToken()
 
     const dropdownQuery = useQuery({
@@ -29,13 +48,15 @@ export default function MyWells(): JSX.Element {
         queryKey: ['wells', token?.id, queryParams],
         enabled: !!token,
         queryFn: async () => {
-            const url = queryParams
-                ? `/api/v1/self/wells/query?${queryParams}`
+            const urlParams = new URLSearchParams(queryParams).toString();
+            const url = urlParams
+                ? `/api/v1/self/wells/query?${urlParams}`
                 : '/api/v1/self/wells/query';
-
+    
             const res = await fetch(url, {
                 headers: { authorization: `Bearer ${token!.id}` },
             });
+    
             const data = await res.json();
             return data.wells.map((w: any) =>
                 WellSchema.parse({ ...w, createdAt: new Date(w.createdAt) })
@@ -94,7 +115,31 @@ export default function MyWells(): JSX.Element {
         navigate(`/well/${well.id}/region`);
     }
 
-    if (wellsQuery.isLoading || dropdownQuery.isLoading) {
+    useEffect(() => {
+        const params = new URLSearchParams();
+    
+        if (filters.wellInUse) params.append("wellInUse", "true");
+        if (filters.geolocated) params.append("geolocated", "true");
+        if (filters.hasImages) params.append("hasImages", "true");
+        if (filters.complete) params.append("complete", "true");
+    
+        if (filters.flooding) params.append("flooding", filters.flooding);
+        if (filters.staining) params.append("staining", filters.staining);
+    
+        if (filters.aboveDepth) params.append("depth_gte", filters.aboveDepth);
+        if (filters.belowDepth) params.append("depth_lte", filters.belowDepth);
+    
+        const region = filters.region;
+        if (region.division) params.append("division", region.division);
+        if (region.district) params.append("district", region.district);
+        if (region.upazila) params.append("upazila", region.upazila);
+        if (region.union) params.append("union", region.union);
+        if (region.mouza) params.append("mouza", region.mouza);
+    
+        setQueryParams(Object.fromEntries(params.entries()));
+    }, [filters]);
+
+    if (dropdownQuery.isLoading) {
         return <CircularProgress />;
     }
 
@@ -114,12 +159,22 @@ export default function MyWells(): JSX.Element {
                 Add Well
             </Button>
 
-            {/* {token && dropdownQuery.data && (
-                <Filter dropdownData={dropdownQuery.data} setQueryParams={setQueryParams} />
-            )} */}
+            {token && dropdownQuery.data && (
+                <Filter
+                    dropdownData={dropdownQuery.data}
+                    filters={filters}
+                    setFilters={setFilters}
+                    filterOpen={filterOpen}
+                    setFilterOpen={setFilterOpen}
+                />
+            )}
+
 
             <Box sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem', width: '100%' }}>
-                {wellsQuery.data?.length === 0 ? (
+                {(
+                    wellsQuery.data?.length === 0 &&
+                    !wellsQuery.isLoading
+                ) ? (
                     <Typography>No wells found.</Typography>
                 ) : (
                     wellsQuery.data?.map(well => (

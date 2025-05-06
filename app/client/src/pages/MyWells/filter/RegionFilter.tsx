@@ -1,4 +1,4 @@
-import { MenuItem, Stack, TextField } from '@mui/material';
+import { MenuItem, Stack, TextField, Button } from '@mui/material';
 import {
     DropdownDivision,
     DropdownDistrict,
@@ -33,8 +33,20 @@ export default function RegionFilter({
     selectedMouza,
     setSelectedMouza,
 }: Props) {
+    function clearRegion() {
+        setSelectedDivision(null);
+        setSelectedDistrict(null);
+        setSelectedUpazila(null);
+        setSelectedUnion(null);
+        setSelectedMouza(null);
+    }
+
     return (
         <Stack spacing={2}>
+            <Button variant="outlined" onClick={clearRegion}>
+                Clear Region Filter
+            </Button>
+
             <TextField
                 label="Division"
                 select
