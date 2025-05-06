@@ -1,0 +1,15 @@
+meta {
+  name: generate well prediction
+  type: http
+  seq: 20
+}
+
+post {
+  url: {{base_url}}/api/v1/prediction/well/:wellId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  wellId: d9af560c-948d-4b89-b2db-52713228a3c9
+}

@@ -12,7 +12,8 @@ load_dotenv()
 INPUT_PATH = './BGD_Traverse_ESRC_As_Data_with_Mouza_Information.xlsx'
 
 REGION_FROM_POINT_URL = "http://localhost:5000/api/v1/geodata/region-from-point"
-PREDICTION_URL = "http://localhost:5000/api/v1/prediction"
+WELL_URL = "http://localhost:5000/api/v1/self/well"
+PREDICTION_URL = "http://localhost:5000/api/v1/prediction/well"
 
 API_KEY = os.getenv("API_KEY")
 HEADERS = {"x-api-key": API_KEY}
@@ -61,13 +62,22 @@ VALID_STAINS = {
     "Black?": "black"
 }
 
-def make_prediction(payload):
+def create_well(payload):
     try:
-        response = requests.post(PREDICTION_URL, json=payload, headers=HEADERS)
+        response = requests.post(WELL_URL, json=payload, headers=HEADERS)
+        response.raise_for_status()
+        return response.json().get("id")
+    except Exception as e:
+        print(f"Failed to create well for {payload}: {e}")
+        return None
+
+def create_prediction(well_id):
+    try:
+        response = requests.post(f"{PREDICTION_URL}/{well_id}", headers=HEADERS)
         response.raise_for_status()
         return response.json()
     except Exception as e:
-        print(f"Prediction error for {payload}: {e}")
+        print(f"Prediction error for well {well_id}: {e}")
         return None
 
 def is_missing(*values):
@@ -91,6 +101,8 @@ def run_predictions(df):
         union = row.get("coord-uni") or row.get("N_UNION")
         mouza = row.get("coord-mou") or row.get("N_MAUZA")
         depth = row.get("Depth_m")
+        lat = row.get("lat")
+        lon = row.get("lon")
 
         if is_missing(division, district, upazila, union, mouza, depth):
             print(f"Skipping row {i}: missing location/depth")
@@ -105,17 +117,21 @@ def run_predictions(df):
             "depth": float(depth),
             "staining": stain,
             "flooding": False,
-            "utensilStaining": None
+            "geolocation": [lat, lon],
         }
 
-        prediction = make_prediction(payload)
+        well_id = create_well(payload)
+        if not well_id:
+            print(f"Skipping row {i}: well creation failed")
+            continue
+
+        prediction = create_prediction(well_id)
         if prediction:
             df.at[i, "model_output"] = prediction.get("modelOutput")
             df.at[i, "risk_assessment"] = prediction.get("riskAssesment")
 
     os.makedirs("output", exist_ok=True)
     df.to_csv('output/bgd-with-predictions.csv', index=False)
-
     df = df.dropna(subset=["As_ppb", "risk_assessment"]).copy()
 
 def expected_risk(as_ppb):

@@ -201,10 +201,12 @@ export default function MyWells(): JSX.Element {
                 Add Well
             </Button>
 
-            <Filter 
-                dropdownData={dropdownData} 
-                setQueryParams={setQueryParams}
-            />
+            {token && (
+                <Filter 
+                    dropdownData={dropdownData} 
+                    setQueryParams={setQueryParams}
+                />
+            )}
 
             <Box 
                 sx={{ 

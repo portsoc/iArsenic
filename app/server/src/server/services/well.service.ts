@@ -9,16 +9,17 @@ import { QueryTuple } from '../types'
 export const WellService = {
     async createWell(
         auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        data: Partial<Well> = {}
     ): Promise<Well> {
-        const userId = auth.user.type === 'guest' ? 
-            'guest' :
-            auth.user.id
-        const well = {
+        const userId = auth.user.type === 'guest' ? 'guest' : auth.user.id;
+    
+        const well: Well = {
             id: uuid4(),
             createdAt: new Date(),
-            userId: userId,
-        }
-
+            userId,
+            ...data,
+        };
+    
         return await WellRepo.create(well);
     },
 

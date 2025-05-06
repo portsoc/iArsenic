@@ -5,14 +5,26 @@ import { KnownError } from '../errors';
 
 export const WellController = {
     async createWell(ctx: Context) {
-        const auth = ctx.state.auth
+        const auth = ctx.state.auth;
+    
+        const parsed = WellSchema.partial().safeParse(ctx.request.body);
 
-        const well: Well = await WellService.createWell(
-            auth,
-        );
-
-        ctx.status = 201
-        ctx.body = { ...well }
+        let well: Well
+        if (parsed.success) {
+            well = await WellService.createWell(
+                auth,
+                parsed.data,
+            )
+        } else {
+            console.log('================================')
+            console.log(parsed.error)
+            well = await WellService.createWell(
+                auth, 
+            );
+        }
+    
+        ctx.status = 201;
+        ctx.body = { ...well };
     },
 
     // todo - add pagination

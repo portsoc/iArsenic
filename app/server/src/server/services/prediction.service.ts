@@ -1,6 +1,6 @@
 import uuid4 from 'uuid4';
 import { isEqual } from 'lodash';
-import { AbstractToken, CompleteWellSchema, CreatePrediction, ModelMessageCode, Prediction, User } from 'iarsenic-types';
+import { AbstractToken, CreatePrediction, CreatePredictionSchema, ModelMessageCode, Prediction, User } from 'iarsenic-types';
 import { PredictionRepo, WellRepo } from '../repositories';
 import { KnownError } from '../errors';
 import produceEstimate from './prediction/produceEstimate';
@@ -84,7 +84,12 @@ export const PredictionService = {
             }
         }
     
-        const completeWellRes = CompleteWellSchema.safeParse(well)
+        const completeWellRes = CreatePredictionSchema.safeParse({
+            ...well,
+            utensilStaining: well.utensilStaining ?
+                well.utensilStaining :
+                null
+        })
 
         if (!completeWellRes.success) {
             console.error(completeWellRes.error)

@@ -13,7 +13,6 @@ export default async function useAuth(
     if (apiKey) tokenId = apiKey
 
     if (!tokenId) {
-        console.log(tokenId)
         ctx.state.auth = { user: { type: 'guest' } }
 
         await next()

@@ -6,10 +6,24 @@ meta {
 
 post {
   url: {{base_url}}/api/v1/self/well
-  body: none
+  body: json
   auth: none
 }
 
 headers {
-  ~authorization: Bearer {{access_token}}
+  x-api-key: {{api_key}}
+}
+
+body:json {
+  {
+    "wellInUse": true,
+    "division": "Dhaka",
+    "district": "Gazipur",
+    "upazila": "Kaliakair",
+    "union": "Mouchak",
+    "mouza": "Mouza123",
+    "depth": 45,
+    "staining": "red",
+    "flooding": false
+  }
 }

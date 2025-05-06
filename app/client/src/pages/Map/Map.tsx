@@ -56,33 +56,40 @@ export default function Map() {
 
     async function getWellPredictions() {
         if (!token || !wells) return;
-
-        const query = wells.map(w => `wellId=${encodeURIComponent(w.id)}`).join('&');
     
-        const res = await fetch(`/api/v1/prediction/query?${query}`, {
-            method: 'GET',
-            headers: {
-                authorization: `Bearer ${token.id}`,
-            },
-        });
+        const BATCH_SIZE = 25;
+        const parsedPredictions = [];
+
+        const geoWells = wells.filter(w => Array.isArray(w.geolocation))
     
-        if (!res.ok) {
-            console.warn(`Failed to fetch predictions: ${res.status}`);
-            return
+        for (let i = 0; i < geoWells.length; i += BATCH_SIZE) {
+            const batch = wells.slice(i, i + BATCH_SIZE);
+            const query = batch.map(w => `wellId=${encodeURIComponent(w.id)}`).join('&');
+    
+            const res = await fetch(`/api/v1/prediction/query?${query}`, {
+                method: 'GET',
+                headers: {
+                    authorization: `Bearer ${token.id}`,
+                },
+            });
+    
+            if (!res.ok) {
+                console.warn(`Failed to fetch predictions: ${res.status}`);
+                continue;
+            }
+    
+            const data = await res.json();
+    
+            for (const p of data.predictions) {
+                parsedPredictions.push(
+                    PredictionSchema.parse({
+                        ...p,
+                        createdAt: new Date(p.createdAt),
+                    })
+                );
+            }
         }
-
-        const data = await res.json();
-
-        const parsedPredictions = []
-        for (const p of data.predictions) {
-            parsedPredictions.push(
-                PredictionSchema.parse({
-                    ...p,
-                    createdAt: new Date(p.createdAt),
-                })
-            )
-        }
-
+    
         setPredictions(parsedPredictions);
     }
     

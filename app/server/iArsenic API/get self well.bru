@@ -5,11 +5,15 @@ meta {
 }
 
 get {
-  url: {{base_url}}/api/v1/self/well/{{well_id}}
+  url: {{base_url}}/api/v1/self/well/:wellId
   body: none
   auth: none
 }
 
+params:path {
+  wellId: 39ae53a2-e625-4292-bb86-9707e567a170
+}
+
 headers {
-  ~authorization: Bearer {{access_token}}
+  ~x-api-key: {{api_key}}
 }
