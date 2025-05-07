@@ -84,7 +84,10 @@ export default function Review() {
             <Depth well={well} />
             <Flooding well={well} />
             <Drinking well={well} />
-            <Images well={well} />
+
+            {token && (
+                <Images well={well} />
+            )}
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}

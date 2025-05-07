@@ -100,6 +100,24 @@ export default function MyWells(): JSX.Element {
         },
     });
 
+    const guestWellsQuery = useQuery<Well[]>({
+        queryKey: ['guestWells'],
+        enabled: !token,
+        queryFn: async () => {
+            const stored = localStorage.getItem('unclaimedWellIds');
+            if (!stored) return [];
+    
+            const ids: string[] = JSON.parse(stored);
+            const responses = await Promise.all(ids.map(id =>
+                fetch(`/api/v1/self/well/${id}`).then(res => res.json())
+            ));
+    
+            return responses.map(w =>
+                WellSchema.parse({ ...w, createdAt: new Date(w.createdAt) })
+            );
+        },
+    });
+
     async function addWell(): Promise<void> {
         const headers: HeadersInit = token ? { authorization: `Bearer ${token.id}` } : {};
 
@@ -143,6 +161,8 @@ export default function MyWells(): JSX.Element {
         return <CircularProgress />;
     }
 
+    const wells = token ? wellsQuery.data : guestWellsQuery.data;
+
     return (
         <>
             <Typography alignSelf="center" variant="h4">
@@ -172,12 +192,11 @@ export default function MyWells(): JSX.Element {
 
             <Box sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem', width: '100%' }}>
                 {(
-                    wellsQuery.data?.length === 0 &&
-                    !wellsQuery.isLoading
+                    wells?.length === 0 && !(token ? wellsQuery.isLoading : guestWellsQuery.isLoading)
                 ) ? (
                     <Typography>No wells found.</Typography>
                 ) : (
-                    wellsQuery.data?.map(well => (
+                    wells?.map(well => (
                         <WellCard
                             key={well.id}
                             well={well}

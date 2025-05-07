@@ -36,13 +36,17 @@ export default function Review() {
 
     useEffect(() => {
         async function fetchWell() {
-            if (!wellId || !token) return;
+            if (!wellId) return;
+
+            const headers: HeadersInit = {}
+
+            if (token) {
+                headers['authorization'] = `Bearer ${token.id}`
+            }
 
             const result = await fetch(
                 `/api/v1/self/well/${wellId}`, {
-                headers: {
-                    'authorization': `Bearer ${token.id}`,
-                }
+                headers,
             });
 
             if (!result.ok) {

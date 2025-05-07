@@ -1,6 +1,5 @@
 // src/utils/useLanguage.ts
 import { useAccessToken } from './useAccessToken';
-import { useQueryClient } from '@tanstack/react-query';
 
 const LANGUAGE_KEY = 'language';
 
@@ -17,7 +16,6 @@ export function useLanguage() {
     }
 
     async function setLanguage(language: 'english' | 'bengali') {
-        const queryClient = useQueryClient();
         localStorage.setItem(LANGUAGE_KEY, language);
         document.body.className = language;
 
@@ -33,9 +31,7 @@ export function useLanguage() {
 
             if (!res.ok) {
                 console.error('Failed to update user language:', res);
-            } else {
-                queryClient.invalidateQueries({ queryKey: ['accessToken'] });
-            }
+            } 
         }
     }
 

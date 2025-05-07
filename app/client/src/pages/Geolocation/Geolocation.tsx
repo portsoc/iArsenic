@@ -45,7 +45,6 @@ export default function Region(): JSX.Element {
 
     useEffect(() => {
         async function fetchWell() {
-            if (token == null) return
             if (!wellId) return;
 
             const headers: HeadersInit = {};

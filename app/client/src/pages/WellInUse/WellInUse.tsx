@@ -97,7 +97,11 @@ export default function(): JSX.Element {
                         return;
                     }
 
-                    navigate(`/well/${wellId}/upload-image`);
+                    if (token) {
+                        navigate(`/well/${wellId}/upload-image`);
+                    } else {
+                        navigate(`/well/${wellId}/review`);
+                    }
                 }}
             >
                 Next Steps
