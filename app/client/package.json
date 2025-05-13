@@ -18,6 +18,7 @@
     "@mui/material": "^5.15.14",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@tanstack/react-query": "^5.75.4",
+    "@turf/centroid": "^7.2.0",
     "dotenv": "^16.4.5",
     "iarsenic-types": "^2.0.44",
     "leaflet": "^1.9.4",

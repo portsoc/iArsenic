@@ -68,7 +68,14 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
         <>
             {filteredWells.map((w, index) => {
                 return (
-                    <Marker icon={getIcon(w.riskAssesment)} key={index} position={w.geolocation as LatLngExpression}>
+                    <Marker 
+                        icon={getIcon(w.riskAssesment)} 
+                        key={index} 
+                        position={
+                            w.geolocation as LatLngExpression ||
+                            w.mouzaGeolocation as LatLngExpression
+                        }
+                    >
                         <Popup>
                             <Typography variant='body1'>
                                 ID: {w.id}
