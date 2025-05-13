@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LocalDrinkIcon from '@mui/icons-material/LocalDrink';
 import GroupsIcon from '@mui/icons-material/Groups';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
@@ -55,7 +56,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <NavListItem path='privacy-policy' text='Privacy Policy' Icon={PrivacyTipIcon} />
                     <NavListItem path='understanding-risk' text='Understanding Risk' Icon={HealthAndSafetyIcon} />
                     <NavListItem path='my-wells' text='My Wells' Icon={LocalDrinkIcon} />
-                    <NavListItem path='map' text='Maps' Icon={LocalDrinkIcon} />
+                    <NavListItem path='map' text='Maps' Icon={FmdGoodIcon} />
                 </List>
 
                 {role && (

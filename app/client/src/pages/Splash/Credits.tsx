@@ -47,10 +47,8 @@ function OrgCreditCard({ name, imageSrc }: OrgCreditCardProps): JSX.Element {
             {imageSrc && (
                 <Box
                     sx={{
-                        height: '150px',
                         borderRadius: '8px',
                         overflow: 'hidden',
-                        marginRight: '1rem',
                         padding: '1rem',
                     }}
                 >
@@ -190,12 +188,17 @@ export default function Credits(): JSX.Element {
                     role: 'Department of Geology, University of Dhaka, Bangladesh',
                     imageSrc: '/contributors/Kazi_Matin_Ahmed.jpg',
                 })}
+                {CreditCard({
+                    name: 'Dr Ashraf Dewan',
+                    role: 'School of Earth and Planetary Sciences (EPS), Curtin University, Australia',
+                    imageSrc: '/contributors/Ashraf_Dewan.png',
+                })}
             </Stack>
 
             <Typography variant='h3'>Former Contributors</Typography>
             <Stack
                 direction={{
-                    md: 'column-reverse',
+                    md: 'column',
                     lg: 'row',
                 }}
                 alignItems='center'
@@ -261,6 +264,16 @@ export default function Credits(): JSX.Element {
                 {OrgCreditCard({
                     name: 'University of Dhaka',
                     imageSrc: '/contributors/university_of_dhaka.png',
+                })}
+
+                {OrgCreditCard({
+                    name: 'Department of Public Health Engineering',
+                    imageSrc: '/contributors/dphe.png',
+                })}
+
+                {OrgCreditCard({
+                    name: 'Curtin University',
+                    imageSrc: '/contributors/curtin_university.png',
                 })}
             </Stack>
         </Box>
