@@ -17,6 +17,7 @@ const migrations = [
     () => import("./3.js"),
     () => import("./4.js"),
     () => import("./5.js"),
+    () => import("./6.js"),
 ];
 
 async function fileExists(docRef: FirebaseFirestore.DocumentReference): Promise<boolean> {
