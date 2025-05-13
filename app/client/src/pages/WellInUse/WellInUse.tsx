@@ -71,7 +71,7 @@ export default function(): JSX.Element {
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
                 onClick={async () => {
-                    if (!wellInUse) {
+                    if (wellInUse === undefined) {
                         setError(true);
                         return;
                     }

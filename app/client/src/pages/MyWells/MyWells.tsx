@@ -10,9 +10,8 @@ import { useQuery } from '@tanstack/react-query';
 import { navigate } from 'wouter/use-browser-location';
 
 import WellCard from './WellCard';
-import findWellPredictions from '../../utils/findWellPredictions';
 import fetchDropdownData from '../../utils/fetchDropdownData';
-import { Prediction, Well, WellSchema, PredictionSchema } from 'iarsenic-types';
+import { Well, WellSchema } from 'iarsenic-types';
 import { useAccessToken } from '../../utils/useAccessToken';
 import Filter from './Filter';
 
@@ -61,42 +60,6 @@ export default function MyWells(): JSX.Element {
             return data.wells.map((w: any) =>
                 WellSchema.parse({ ...w, createdAt: new Date(w.createdAt) })
             );
-        },
-    });
-
-    const predictionsQuery = useQuery<Prediction[]>({
-        queryKey: ['predictions', token?.id, wellsQuery.data?.map(w => w.id).join(',')],
-        enabled: !!token && !!wellsQuery.data?.length,
-        queryFn: async () => {
-            const wells = wellsQuery.data!;
-            const batchSize = 25;
-            const batches = [];
-
-            for (let i = 0; i < wells.length; i += batchSize) {
-                const batch = wells.slice(i, i + batchSize);
-                const query = batch.map(w => `wellId=${encodeURIComponent(w.id)}`).join('&');
-
-                batches.push(
-                    fetch(`/api/v1/prediction/query?${query}`, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            authorization: `Bearer ${token!.id}`,
-                        },
-                    })
-                        .then(res => res.json())
-                        .then(data =>
-                            data.predictions.map((p: any) =>
-                                PredictionSchema.parse({
-                                    ...p,
-                                    createdAt: new Date(p.createdAt),
-                                })
-                            )
-                        )
-                );
-            }
-
-            const results = await Promise.all(batches);
-            return results.flat();
         },
     });
 
@@ -200,7 +163,6 @@ export default function MyWells(): JSX.Element {
                         <WellCard
                             key={well.id}
                             well={well}
-                            predictions={findWellPredictions(well, predictionsQuery.data || [])}
                         />
                     ))
                 )}

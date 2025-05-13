@@ -1,30 +1,28 @@
 import { Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import { RegionTranslations } from '../../types';
-import { Prediction, Well } from 'iarsenic-types';
+import { Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
-import findWellPredictions from '../../utils/findWellPredictions';
 import getMapPin from '../../utils/getMapPin';
 
 type props = {
     wells: Well[],
-    predictions: Prediction[],
     regionTranslations: RegionTranslations,
 }
 
-export default function Markers({ wells, predictions, regionTranslations }: props): JSX.Element {
-    function getIcon(prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5): L.Icon<L.IconOptions> {
+export default function Markers({ wells, regionTranslations }: props): JSX.Element {
+    function getIcon(prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5 | undefined): L.Icon<L.IconOptions> {
         const iconColor = (() => {
-            switch (prediction - 0.5) {
-                case 0:
+            switch (prediction) {
+                case 0.5:
                     return 'green';
-                case 1:
+                case 1.5:
                     return 'lime';
-                case 2:
+                case 2.5:
                     return 'yellow';
-                case 3:
+                case 3.5:
                     return 'orange';
-                case 4:
+                case 4.5:
                     return 'red';
                 default:
                     'blue';
@@ -35,7 +33,9 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
         return getMapPin(iconColor);
     }
 
-    function predictionToRiskFactor(prediction: number): { english: string, bengali: string } {
+    function predictionToRiskFactor(
+        prediction: number | undefined
+    ): { english: string, bengali: string } {
         switch (prediction) {
             case 0.5:
                 return { english: 'Rare', bengali: 'বিরল' };
@@ -52,119 +52,118 @@ export default function Markers({ wells, predictions, regionTranslations }: prop
         }
     }
 
-    const filteredWells = wells.filter(s =>
-        s.geolocation != null &&
-        findWellPredictions(s, predictions)[0] != null &&
-        s.division != null &&
-        s.district != null &&
-        s.upazila != null &&
-        s.union != null &&
-        s.mouza != null &&
-        s.staining != null &&
-        s.depth != null
+    const filteredWells = wells.filter(w =>
+        w.geolocation != null &&
+        w.riskAssesment != null &&
+        w.division != null &&
+        w.district != null &&
+        w.upazila != null &&
+        w.union != null &&
+        w.mouza != null &&
+        w.staining != null &&
+        w.depth != null
     );
-    
+
     return (
         <>
-            {filteredWells.map((p, index) => {
-                const prediction = findWellPredictions(p, predictions)[0];
+            {filteredWells.map((w, index) => {
                 return (
-                    <Marker icon={getIcon(prediction.riskAssesment)} key={index} position={p.geolocation as LatLngExpression}>
+                    <Marker icon={getIcon(w.riskAssesment)} key={index} position={w.geolocation as LatLngExpression}>
                         <Popup>
                             <Typography variant='body1'>
-                                ID: {p.id}
+                                ID: {w.id}
                             </Typography>
 
                             <Typography className='english' variant='body1'>
-                                Risk Factor: {predictionToRiskFactor(prediction.riskAssesment).english}
+                                Risk Factor: {predictionToRiskFactor(w.riskAssesment).english}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>
-                                BENGALI PLACEHOLDER: {predictionToRiskFactor(prediction.riskAssesment).bengali}
+                                BENGALI PLACEHOLDER: {predictionToRiskFactor(w.riskAssesment).bengali}
                             </Typography>
 
                             <Typography className='english' variant='body1'>
-                                Division: {p.division}
+                                Division: {w.division}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Divisions.Division}:
-                                ${regionTranslations.Divisions[p.division!]}
+                                ${regionTranslations.Divisions[w.division!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                District: {p.district}
+                                District: {w.district}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Districts.District}:
-                                ${regionTranslations.Districts[p.district!]}
+                                ${regionTranslations.Districts[w.district!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                Upazila: {p.upazila!}
+                                Upazila: {w.upazila!}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Upazilas.Upazila}:
-                                ${regionTranslations.Upazilas[p.upazila!]}
+                                ${regionTranslations.Upazilas[w.upazila!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                Union: {p.union!}
+                                Union: {w.union!}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Unions.Union}:
-                                ${regionTranslations.Unions[p.union!]}
+                                ${regionTranslations.Unions[w.union!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
-                                Mouza: {p.mouza}
+                                Mouza: {w.mouza}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>{`
                                 ${regionTranslations.Mouzas.Mouza}:
-                                ${regionTranslations.Mouzas[p.mouza!]}
+                                ${regionTranslations.Mouzas[w.mouza!]}
                             `}</Typography>
 
                             <Typography className='english' variant='body1'>
                                 Depth: {
-                                    `${p!.depth}m`
+                                    `${w!.depth}m`
                                 }
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>
                                 BENGALI PLACEHOLDER: {
-                                    `${p!.depth}m`
+                                    `${w!.depth}m`
                                 }
                             </Typography>
 
                             <Typography className='english' variant='body1'>
-                                Flooding: {p.flooding ? 'Yes' : 'No'}
+                                Flooding: {w.flooding ? 'Yes' : 'No'}
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>
-                                BENGALI PLACEHOLDER: {p.flooding ? 'Yes' : 'No'}
+                                BENGALI PLACEHOLDER: {w.flooding ? 'Yes' : 'No'}
                             </Typography>
 
                             <Typography className='english' variant='body1'>
-                                Well Staining: {p.staining}
+                                Well Staining: {w.staining}
                             </Typography>
 
                             <Typography className='english' variant='body1'>
-                                BENGALI PLACEHOLDER: {p.staining}
+                                BENGALI PLACEHOLDER: {w.staining}
                             </Typography>
 
                             {
-                                (p.utensilStaining != null) &&
+                                (w.utensilStaining != null) &&
                                 <>
                                     <Typography className='english' variant='body1'>
-                                        Utensil Staining: {p.utensilStaining}
+                                        Utensil Staining: {w.utensilStaining}
                                     </Typography>
 
                                     <Typography className='bengali' variant='body1'>
-                                        BENGALI PLACEHOLDER: {p.utensilStaining}
+                                        BENGALI PLACEHOLDER: {w.utensilStaining}
                                     </Typography>
                                 </>
                             }

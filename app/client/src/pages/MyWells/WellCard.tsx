@@ -1,18 +1,12 @@
 import { Card, Typography, Box } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
-import { Prediction, Well, CompleteWellSchema } from 'iarsenic-types';
+import { Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
 import { useAccessToken } from '../../utils/useAccessToken';
 
 interface Props {
     well: Well;
-    predictions: Prediction[];
-}
-
-function isWellComplete(well: Well): boolean {
-    const res = CompleteWellSchema.safeParse(well);
-    return res.success;
 }
 
 export default function WellCard({ well }: Props): JSX.Element {
@@ -78,9 +72,6 @@ export default function WellCard({ well }: Props): JSX.Element {
             <Box>
                 <Typography variant="body1" fontWeight="bold">
                     Well {well.id.slice(0, 6)}...
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {isWellComplete(well) ? 'Complete' : 'Incomplete'}
                 </Typography>
             </Box>
 

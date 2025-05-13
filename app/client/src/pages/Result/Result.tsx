@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
-import { Well, Prediction, RiskAssesment } from 'iarsenic-types';
+import { Well, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
@@ -23,7 +23,6 @@ export default function Result(): JSX.Element {
     const [, params] = useRoute('/well/:id/result');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-    const [prediction, setPrediction] = useState<Prediction>();
     const [speedoValue, setSpeedoValue] = useState<number>();
     const [warningTexts, setWarningTexts] = useState<EstimateTexts>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -67,21 +66,8 @@ export default function Result(): JSX.Element {
                 const wellData = await wellRes.json();
                 setWell(wellData);
 
-                // Always generate a fresh prediction for the well
-                const predictionRes = await fetch(`/api/v1/prediction/well/${wellId}`, {
-                    method: 'POST',
-                    headers,
-                });
-
-                if (!predictionRes.ok) {
-                    throw new Error('Failed to generate prediction');
-                }
-
-                const predictionData = await predictionRes.json();
-                setPrediction(predictionData);
-
                 // Now set the UI output
-                setOutput(predictionData.riskAssesment);
+                setOutput(wellData.riskAssesment);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -100,7 +86,7 @@ export default function Result(): JSX.Element {
         );
     }
 
-    if (!well || !prediction || !speedoValue || !warningTexts) {
+    if (!well || !speedoValue || !warningTexts) {
         return (
             <Typography textAlign="center" variant="h6">
                 Error loading data. Please refresh the page.

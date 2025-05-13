@@ -4,7 +4,7 @@ import './map.css';
 import { CircularProgress, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { LatLngExpression, GeoJSON } from 'leaflet';
-import { Well, Prediction, WellSchema, PredictionSchema } from 'iarsenic-types';
+import { Well, WellSchema } from 'iarsenic-types';
 import { RegionTranslations } from '../../types';
 import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
@@ -16,7 +16,6 @@ export default function Map() {
     const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
     const { data: token } = useAccessToken()
     const [wells, setWells] = useState<Well[]>();
-    const [predictions, setPredictions] = useState<Prediction[]>();
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
 
     async function getInteractiveMap() {
@@ -54,45 +53,6 @@ export default function Map() {
         setWells(parsedWells);
     }
 
-    async function getWellPredictions() {
-        if (!token || !wells) return;
-    
-        const BATCH_SIZE = 25;
-        const parsedPredictions = [];
-
-        const geoWells = wells.filter(w => Array.isArray(w.geolocation));
-    
-        for (let i = 0; i < geoWells.length; i += BATCH_SIZE) {
-            const batch = wells.slice(i, i + BATCH_SIZE);
-            const query = batch.map(w => `wellId=${encodeURIComponent(w.id)}`).join('&');
-    
-            const res = await fetch(`/api/v1/prediction/query?${query}`, {
-                method: 'GET',
-                headers: {
-                    authorization: `Bearer ${token.id}`,
-                },
-            });
-    
-            if (!res.ok) {
-                console.warn(`Failed to fetch predictions: ${res.status}`);
-                continue;
-            }
-    
-            const data = await res.json();
-    
-            for (const p of data.predictions) {
-                parsedPredictions.push(
-                    PredictionSchema.parse({
-                        ...p,
-                        createdAt: new Date(p.createdAt),
-                    })
-                );
-            }
-        }
-    
-        setPredictions(parsedPredictions);
-    }
-
     async function getRegionTranslations() {
         const translations = await RegionTranslationsFetcher();
         setRegionTranslations(translations);
@@ -108,12 +68,7 @@ export default function Map() {
         getPredictionPinData();
     }, [token]);
 
-    useEffect(() => {
-        if (!wells) return;
-        getWellPredictions();
-    }, [wells]);
-
-    if (!interactiveMap || !regionTranslations || !predictions || !wells) return (
+    if (!interactiveMap || !regionTranslations || !wells) return (
         <Stack alignItems='center' justifyContent='center'>
             <CircularProgress />
         </Stack>
@@ -129,7 +84,7 @@ export default function Map() {
                 />
 
                 <UpaMap interactiveMap={interactiveMap} regionTranslations={regionTranslations} />
-                <Markers wells={wells} predictions={predictions} regionTranslations={regionTranslations} />
+                <Markers wells={wells} regionTranslations={regionTranslations} />
             </MapContainer>
         </Stack>
     );
