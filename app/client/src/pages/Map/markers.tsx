@@ -52,8 +52,8 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
         }
     }
 
+    console.log(wells)
     const filteredWells = wells.filter(w =>
-        w.geolocation != null &&
         w.riskAssesment != null &&
         w.division != null &&
         w.district != null &&
@@ -64,6 +64,8 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
         w.depth != null
     );
 
+    console.log(filteredWells)
+
     return (
         <>
             {filteredWells.map((w, index) => {
@@ -72,8 +74,7 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                         icon={getIcon(w.riskAssesment)} 
                         key={index} 
                         position={
-                            w.geolocation as LatLngExpression ||
-                            w.mouzaGeolocation as LatLngExpression
+                            (w.geolocation ?? w.mouzaGeolocation) as LatLngExpression
                         }
                     >
                         <Popup>

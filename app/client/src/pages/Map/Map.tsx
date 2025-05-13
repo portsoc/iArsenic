@@ -25,19 +25,19 @@ export default function Map() {
     }
 
     async function getPredictionPinData() {
-        if (!token) return;
+        const headers: HeadersInit = {}
+
+        if (token) headers['authorization'] = `Bearer ${token.id}`
 
         const res = await fetch(`/api/v1/wells`, {
-            headers: {
-                'authorization': `Bearer ${token.id}`
-            }
+            headers
         });
 
         if (!res.ok) {
             throw new Error(`Failed to fetch well data:, ${res}`);
         }
 
-        const data = (await res.json());
+        const data = await res.json();
         const wells = data.wells;
 
         const parsedWells = [];
@@ -66,7 +66,7 @@ export default function Map() {
 
     useEffect(() => {
         getPredictionPinData();
-    }, [token]);
+    }, []);
 
     if (!interactiveMap || !regionTranslations || !wells) return (
         <Stack alignItems='center' justifyContent='center'>

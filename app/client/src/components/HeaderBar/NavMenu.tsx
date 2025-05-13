@@ -55,6 +55,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <NavListItem path='privacy-policy' text='Privacy Policy' Icon={PrivacyTipIcon} />
                     <NavListItem path='understanding-risk' text='Understanding Risk' Icon={HealthAndSafetyIcon} />
                     <NavListItem path='my-wells' text='My Wells' Icon={LocalDrinkIcon} />
+                    <NavListItem path='map' text='Maps' Icon={LocalDrinkIcon} />
                 </List>
 
                 {role && (
@@ -75,7 +76,6 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         <List>
                             <NavListItem path='all-users' text='All Users' Icon={GroupsIcon} />
                             <NavListItem path='all-wells' text='All Wells' Icon={PublicIcon} />
-                            <NavListItem path='map' text='Maps' Icon={LocalDrinkIcon} />
                         </List>
                     </>
                 )}
