@@ -15,8 +15,9 @@ async function up(): Promise<boolean> {
 
     let failed = false;
 
-    for (const doc of predictionsSnapshot.docs) {
-        const prediction = doc.data();
+    for (const predictionDoc of predictionsSnapshot.docs) {
+        const prediction = predictionDoc.data();
+        const predictionId = predictionDoc.id;
 
         const predictionFields = {
             model: prediction.model,
@@ -26,8 +27,21 @@ async function up(): Promise<boolean> {
 
         try {
             if (prediction.wellId) {
-                await wellsCollection.doc(prediction.wellId).update(predictionFields);
-                console.log(`Updated well ${prediction.wellId} with prediction ${doc.id}`);
+                // Find the Firestore doc whose "id" field matches prediction.wellId
+                const matchingWells = await wellsCollection
+                    .where("id", "==", prediction.wellId)
+                    .limit(1)
+                    .get();
+
+                if (matchingWells.empty) {
+                    console.warn(`Well with id=${prediction.wellId} not found for prediction ${predictionId}, skipping.`);
+                    continue;
+                }
+
+                const wellDoc = matchingWells.docs[0];
+                await wellDoc.ref.update(predictionFields);
+
+                console.log(`Updated well (doc ID ${wellDoc.id}) with prediction ${predictionId}`);
             } else {
                 const newWellId = uuidv4();
 
@@ -56,13 +70,13 @@ async function up(): Promise<boolean> {
                 );
 
                 await wellsCollection.doc(newWellId).set(newWell);
-                console.log(`Created new well ${newWellId} from prediction ${doc.id}`);
+                console.log(`Created new well ${newWellId} from orphaned prediction ${predictionId}`);
             }
 
-            await predictionsCollection.doc(doc.id).delete();
+            await predictionsCollection.doc(predictionId).delete();
         } catch (err) {
             failed = true;
-            console.error(`Failed to process prediction ${doc.id}:`, err);
+            console.error(`Failed to process prediction ${predictionDoc.id}:`, err);
         }
     }
 
