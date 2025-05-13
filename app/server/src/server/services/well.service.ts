@@ -1,10 +1,33 @@
 import uuid4 from 'uuid4'
-import { AbstractToken, User, Well, WellSchema } from 'iarsenic-types'
+import { AbstractToken, ModelMessageCode, User, Well, WellSchema } from 'iarsenic-types'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
 import getSignedUrl from '../utils/signedUrl'
 import { deleteFileFromBucket } from '../utils/deleteFileFromBucket'
 import { QueryTuple } from '../types'
+import produceEstimate from './prediction/produceEstimate'
+
+function modelEstimateToRiskAssesment(modelEstimate: ModelMessageCode) {
+    switch (modelEstimate) {
+        case 0: 
+            return 2.5;
+        case 1: 
+            return 0.5;
+        case 2: 
+        case 3: 
+            return 1.5;
+        case 4: 
+        case 5: 
+            return 2.5;
+        case 6: 
+            return 3.5;
+        case 7: 
+        case 8: 
+            return 4.5;
+        default: 
+            return 2.5;
+    }
+}
 
 export const WellService = {
     async createWell(
@@ -316,8 +339,46 @@ export const WellService = {
             }
         }
 
-        console.log(queries)
-    
         return await WellRepo.getByQuery(queries);
+    },
+
+    async generatePrediction(
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        wellId: string, 
+    ): Promise<Well> {
+        const well = await WellRepo.findById(wellId);
+    
+        if (!well) {
+            throw new KnownError({
+                message: 'Well not found',
+                code: 404,
+                name: 'WellNotFoundError',
+            });
+        }
+        
+        if (well.userId !== 'guest') {
+            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
+                if (auth.user.type !== 'admin') {
+                    throw new KnownError({
+                        message: 'Unauthorized',
+                        code: 403,
+                        name: 'UnauthorizedError',
+                    });
+                }
+            }
+        }
+
+        const modelEstimate = await produceEstimate(well)
+        const riskAssesment = modelEstimateToRiskAssesment(modelEstimate)
+        const predictedWell: Well = {
+            ...well,
+            modelOutput: modelEstimate,
+            riskAssesment,
+            model: 'model6',
+        }
+
+        await WellRepo.update(predictedWell)
+
+        return predictedWell
     }
 }

@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { CompleteWellSchema, Well, WellSchema } from 'iarsenic-types';
+import { Well, WellSchema } from 'iarsenic-types';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 
@@ -77,22 +77,8 @@ export const WellRepo: IWellRepo = {
         const doc = querySnapshot.docs[0];
         if (!doc) throw new Error('Well not found');
     
-        const geolocated =
-            Array.isArray(well.geolocation) &&
-            well.geolocation.length === 2 &&
-            typeof well.geolocation[0] === 'number' &&
-            typeof well.geolocation[1] === 'number';
-    
-        const hasImages =
-            Array.isArray(well.imagePaths) && well.imagePaths.length > 0;
-    
-        const complete = CompleteWellSchema.safeParse(well).success;
-    
-        const updateData = {
+        const updateData: Well = {
             ...well,
-            geolocated,
-            hasImages,
-            complete,
         };
     
         await doc.ref.set(updateData, { merge: true });

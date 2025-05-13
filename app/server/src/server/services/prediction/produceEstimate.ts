@@ -1,6 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import { Model6Data } from '../../types';
-import { CreatePrediction, ModelMessageCode } from 'iarsenic-types';
+import { ModelMessageCode, Well } from 'iarsenic-types';
 
 // Setup GCS client — assumes Application Default Credentials or service account key
 const storage = new Storage();
@@ -12,21 +12,42 @@ async function fetchModelDataFromGCS(filename: string): Promise<Model6Data> {
     return JSON.parse(contents.toString());
 }
 
-export default async function produceEstimate(predictors: CreatePrediction): Promise<ModelMessageCode> {
-    const div = predictors.division;
-    const dis = predictors.district;
-    const upa = predictors.upazila;
-    const uni = predictors.union;
-    const mou = predictors.mouza;
+export default async function produceEstimate(completeWell: Well): Promise<ModelMessageCode> {
+    const div = completeWell.division;
+    const dis = completeWell.district;
+    const upa = completeWell.upazila;
+    const uni = completeWell.union;
+    const mou = completeWell.mouza;
+
+    if (!div || !dis || !upa || !uni || !mou) throw new Error(
+        'Region not complete in well data'
+    )
 
     const filename = `model/${div}-${dis}-${upa}-${uni}-${mou}.json`;
     const modelData: Model6Data = await fetchModelDataFromGCS(filename);
 
-    const depth = predictors.depth;
-    if (!depth && depth !== 0) throw new Error('depth not found in well data');
+    const depth = completeWell.depth;
+    if (!depth && depth !== 0) throw new Error(
+        'depth not found in well data'
+    );
+
+    const staining = completeWell.staining
+    if (!staining) throw new Error(
+        'staining not found in well data'
+    )
+
+    const utensilStaining = completeWell.utensilStaining
+    if (staining === 'not sure' && utensilStaining === undefined) {
+        throw new Error('staining not sure and utensil staining unspecified')
+    }
+
+    const flooding = completeWell.flooding
+    if (flooding === undefined) throw new Error(
+        'flooding not found in well data'
+    )
 
     console.log('---------------- PREDICTORS ----------------')
-    console.log(predictors)
+    console.log(completeWell)
     console.log('---------------- MODEL DATA ----------------')
     console.log(modelData)
 
@@ -45,9 +66,9 @@ export default async function produceEstimate(predictors: CreatePrediction): Pro
         exist in the prediction data for this region
     */
     if (regionStrataKey === 's15' && 'm2' in modelData && modelData.s15) {
-        if (predictors.staining === 'black' && modelData.s15.m2 !== undefined) {
+        if (staining === 'black' && modelData.s15.m2 !== undefined) {
             return modelData.s15.m2;
-        } else if (predictors.flooding && modelData.s15.m9 !== undefined) {
+        } else if (flooding && modelData.s15.m9 !== undefined) {
             return modelData.s15.m9;
         } else if (modelData.s15.m7 !== undefined) {
             return modelData.s15.m7;
@@ -55,9 +76,9 @@ export default async function produceEstimate(predictors: CreatePrediction): Pro
             throw new Error('model keys required for flooding model misisng');
         }
     } else {
-        if (predictors.staining === 'black' || predictors.utensilStaining === 'black') {
+        if (staining === 'black' || utensilStaining === 'black') {
             return 1;
-        } else if (predictors.staining === 'red' || predictors.utensilStaining === 'red') {
+        } else if (staining === 'red' || utensilStaining === 'red') {
             if (modelData[regionStrataKey] && modelData[regionStrataKey].m !== undefined) {
                 return modelData[regionStrataKey].m;
             } else {

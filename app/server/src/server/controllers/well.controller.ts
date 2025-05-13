@@ -16,8 +16,6 @@ export const WellController = {
                 parsed.data,
             )
         } else {
-            console.log('================================')
-            console.log(parsed.error)
             well = await WellService.createWell(
                 auth, 
             );
@@ -338,5 +336,27 @@ export const WellController = {
     
         ctx.status = 200;
         ctx.body = { wells };
-    }
+    },
+
+    async generatePrediction(ctx: Context) {
+        const auth = ctx.state.auth
+
+        const wellId = ctx.params.id;
+    
+        if (!wellId) {
+            throw new KnownError({
+                message: 'Well ID is required',
+                code: 400,
+                name: 'ValidationError',
+            });
+        }
+
+        const predictedWell = await WellService.generatePrediction(
+            auth,
+            wellId,
+        )
+
+        ctx.status = 200
+        ctx.body = { ...predictedWell }
+    },
 }
