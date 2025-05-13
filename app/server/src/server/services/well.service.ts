@@ -6,6 +6,7 @@ import getSignedUrl from '../utils/signedUrl'
 import { deleteFileFromBucket } from '../utils/deleteFileFromBucket'
 import { QueryTuple } from '../types'
 import produceEstimate from './prediction/produceEstimate'
+import { GeodataService } from './geodata.service'
 
 function modelEstimateToRiskAssesment(modelEstimate: ModelMessageCode) {
     switch (modelEstimate) {
@@ -106,9 +107,42 @@ export const WellService = {
             }
         }
 
+        let mouzaGeolocation = undefined
+        if (wellUpdates.mouza != null) {
+            const division = wellUpdates.division || well.division
+            const district = wellUpdates.district || well.district
+            const upazila = wellUpdates.upazila || well.upazila
+            const union = wellUpdates.union || well.union
+            const mouza = wellUpdates.mouza || well.mouza
+
+            if (district && division && upazila && union && mouza) {
+                mouzaGeolocation = await GeodataService.getLatLonFromRegion({
+                        division,
+                        district,
+                        upazila,
+                        union,
+                        mouza,
+                    },
+                    true,
+                )
+            }
+        }
+
+        let modelOutput
+        try {
+            modelOutput = await produceEstimate(well)
+        } catch {}
+
+        if (modelOutput) {
+            wellUpdates.modelOutput = modelOutput
+            wellUpdates.riskAssesment = modelEstimateToRiskAssesment(modelOutput)
+            wellUpdates.model = 'model6'
+        }
+
         const updatedWell = {
             ...well,
             ...wellUpdates,
+            mouzaGeolocation: well.mouzaGeolocation || mouzaGeolocation,
         }
 
         const validatedWell = WellSchema.parse(updatedWell);

@@ -1,8 +1,13 @@
 import { Storage } from '@google-cloud/storage';
-import { FeatureCollection } from 'geojson';
+import { Feature, Polygon, MultiPolygon, FeatureCollection } from 'geojson';
 import { featureEach } from '@turf/meta';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
+import centroid from '@turf/centroid';
+import bbox from '@turf/bbox'
+import { randomPoint } from '@turf/random';
+import pointsWithinPolygon from '@turf/points-within-polygon';
+
 
 const storage = new Storage();
 const bucketName = 'iarsenic-model6';
@@ -74,4 +79,75 @@ export const GeodataService = {
             mouza,
         };
     },
+
+    async getLatLonFromRegion(
+        region: {
+            division: string;
+            district: string;
+            upazila: string;
+            union: string;
+            mouza: string;
+        },
+        randomizeWithinRegion: boolean = false
+    ): Promise<[number, number] | undefined> {
+        const { division, district, upazila, union, mouza } = region;
+    
+        const mouzaFilename = `mouza-by-upazila/${division}-${district}-${upazila}.geojson`;
+    
+        let mouzaData: FeatureCollection;
+        try {
+            mouzaData = await loadGeoJSONFromGCS(mouzaFilename);
+        } catch {
+            return undefined;
+        }
+    
+        for (const feat of mouzaData.features) {
+            if (
+                feat.properties?.uni === union &&
+                feat.properties?.mou === mouza
+            ) {
+                if (randomizeWithinRegion) {
+                    const geom = feat.geometry;
+                    if (geom && (geom.type === 'Polygon' || geom.type === 'MultiPolygon')) {
+                        const [minX, minY, maxX, maxY] = bbox(feat);
+                        const maxAttempts = 10;
+    
+                        for (let i = 0; i < maxAttempts; i++) {
+                            const candidates = randomPoint(1, {
+                                bbox: [minX, minY, maxX, maxY],
+                            });
+    
+                            const within = pointsWithinPolygon(
+                                candidates,
+                                feat as Feature<Polygon | MultiPolygon>
+                            );
+    
+                            const coords = within.features[0]?.geometry?.coordinates;
+                            if (
+                                coords &&
+                                typeof coords[0] === 'number' &&
+                                typeof coords[1] === 'number'
+                            ) {
+                                return [coords[0], coords[1]];
+                            }
+                        }
+                    }
+                }
+    
+                const c = centroid(feat);
+                const coords = c.geometry?.coordinates;
+                if (
+                    coords &&
+                    typeof coords[0] === 'number' &&
+                    typeof coords[1] === 'number'
+                ) {
+                    return [coords[0], coords[1]];
+                }
+    
+                return undefined;
+            }
+        }
+    
+        return undefined;
+    }
 };
