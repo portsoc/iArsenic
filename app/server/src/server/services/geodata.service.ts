@@ -128,7 +128,7 @@ export const GeodataService = {
                                 typeof coords[0] === 'number' &&
                                 typeof coords[1] === 'number'
                             ) {
-                                return [coords[0], coords[1]];
+                                return [coords[1], coords[0]];
                             }
                         }
                     }
@@ -141,7 +141,7 @@ export const GeodataService = {
                     typeof coords[0] === 'number' &&
                     typeof coords[1] === 'number'
                 ) {
-                    return [coords[0], coords[1]];
+                    return [coords[1], coords[0]];
                 }
     
                 return undefined;

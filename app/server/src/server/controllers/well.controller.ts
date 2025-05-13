@@ -26,16 +26,17 @@ export const WellController = {
     },
 
     // todo - add pagination
+    // open to all users for map demonstration
     async getAllWells(ctx: Context) {
-        const auth = ctx.state.auth
+        // const auth = ctx.state.auth
 
-        if (auth.user.type !== 'admin') {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
-        }
+        // if (auth.user.type !== 'admin') {
+        //     throw new KnownError({
+        //         message: 'Unauthorized',
+        //         code: 403,
+        //         name: 'UnauthorizedError',
+        //     });
+        // }
 
         const wells = await WellService.getAllWells();
 
