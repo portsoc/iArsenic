@@ -12,7 +12,7 @@
     "watch-app": "nodemon --watch ../app/client/src --watch ../app/server/src --ext ts,tsx --exec \"npm --prefix ../app/server run build:firebase\""
   },
   "engines": {
-    "node": "22"
+    "node": "20"
   },
   "main": "index.js",
   "dependencies": {
@@ -28,7 +28,7 @@
     "express": "^4.18.3",
     "firebase-admin": "^11.8.0",
     "firebase-functions": "^6.0.1",
-    "iarsenic-types": "^2.0.43",
+    "iarsenic-types": "^2.0.45",
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
     "koa-helmet": "^7.0.2",
