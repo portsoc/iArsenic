@@ -11,6 +11,7 @@ export default defineConfig({
   plugins: [react()],
   base: process.env.VITE_APP_BASE_PATH || '',
   build: {
-    outDir: 'static'
+    outDir: 'static',
+    minify: false,
   }
 });

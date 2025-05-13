@@ -55,6 +55,7 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
     console.log(wells)
     const filteredWells = wells.filter(w =>
         w.riskAssesment != null &&
+        (w.mouzaGeolocation != null || w.geolocation != null) &&
         w.division != null &&
         w.district != null &&
         w.upazila != null &&
