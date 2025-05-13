@@ -20,7 +20,7 @@
     "@tanstack/react-query": "^5.75.4",
     "@turf/centroid": "^7.2.0",
     "dotenv": "^16.4.5",
-    "iarsenic-types": "^2.0.44",
+    "iarsenic-types": "^2.0.45",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-d3-speedometer": "^2.2.1",

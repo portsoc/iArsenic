@@ -37,14 +37,35 @@ export const WellService = {
     ): Promise<Well> {
         const userId = auth.user.type === 'guest' ? 'guest' : auth.user.id;
     
-        const well: Well = {
+        const well = {
             id: uuid4(),
             createdAt: new Date(),
             userId,
             ...data,
         };
     
-        return await WellRepo.create(well);
+        well.geolocated = Array.isArray(well.geolocation)
+            && well.geolocation.length === 2
+            && typeof well.geolocation[0] === 'number'
+            && typeof well.geolocation[1] === 'number';
+    
+        well.hasImages = Array.isArray(well.imagePaths)
+            && well.imagePaths.length > 0;
+    
+        well.complete = (
+            well.wellInUse !== undefined &&
+            !!well.division &&
+            !!well.district &&
+            !!well.upazila &&
+            !!well.union &&
+            !!well.mouza &&
+            typeof well.depth === 'number' &&
+            typeof well.flooding === 'boolean' &&
+            !!well.staining
+        );
+    
+        const validatedWell = WellSchema.parse(well);
+        return await WellRepo.create(validatedWell);
     },
 
     async getUserWells(userId: string): Promise<Well[]> {
@@ -86,15 +107,15 @@ export const WellService = {
         wellUpdates: Partial<Well>,
     ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
-
+    
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
                 code: 404,
                 name: 'WellNotFoundError',
-            })
+            });
         }
-
+    
         if (well.userId !== 'guest') {
             if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 if (auth.user.type !== 'admin') {
@@ -106,48 +127,66 @@ export const WellService = {
                 }
             }
         }
-
-        let mouzaGeolocation = undefined
+    
+        let mouzaGeolocation = undefined;
         if (wellUpdates.mouza != null) {
-            const division = wellUpdates.division || well.division
-            const district = wellUpdates.district || well.district
-            const upazila = wellUpdates.upazila || well.upazila
-            const union = wellUpdates.union || well.union
-            const mouza = wellUpdates.mouza || well.mouza
-
+            const division = wellUpdates.division || well.division;
+            const district = wellUpdates.district || well.district;
+            const upazila = wellUpdates.upazila || well.upazila;
+            const union = wellUpdates.union || well.union;
+            const mouza = wellUpdates.mouza || well.mouza;
+    
             if (district && division && upazila && union && mouza) {
                 mouzaGeolocation = await GeodataService.getLatLonFromRegion({
-                        division,
-                        district,
-                        upazila,
-                        union,
-                        mouza,
-                    },
-                    true,
-                )
+                    division,
+                    district,
+                    upazila,
+                    union,
+                    mouza,
+                }, true);
             }
         }
-
-        let modelOutput
+    
+        let modelOutput;
         try {
-            modelOutput = await produceEstimate(well)
+            modelOutput = await produceEstimate(well);
         } catch {}
-
+    
         if (modelOutput) {
-            wellUpdates.modelOutput = modelOutput
-            wellUpdates.riskAssesment = modelEstimateToRiskAssesment(modelOutput)
-            wellUpdates.model = 'model6'
+            wellUpdates.modelOutput = modelOutput;
+            wellUpdates.riskAssesment = modelEstimateToRiskAssesment(modelOutput);
+            wellUpdates.model = 'model6';
         }
-
+    
         const updatedWell = {
             ...well,
             ...wellUpdates,
             mouzaGeolocation: well.mouzaGeolocation || mouzaGeolocation,
-        }
-
+        };
+    
+        updatedWell.geolocated = Array.isArray(updatedWell.geolocation)
+            && updatedWell.geolocation.length === 2
+            && typeof updatedWell.geolocation[0] === 'number'
+            && typeof updatedWell.geolocation[1] === 'number';
+    
+        updatedWell.hasImages = Array.isArray(updatedWell.imagePaths)
+            && updatedWell.imagePaths.length > 0;
+    
+        updatedWell.complete = (
+            updatedWell.wellInUse !== undefined &&
+            !!updatedWell.division &&
+            !!updatedWell.district &&
+            !!updatedWell.upazila &&
+            !!updatedWell.union &&
+            !!updatedWell.mouza &&
+            typeof updatedWell.depth === 'number' &&
+            typeof updatedWell.flooding === 'boolean' &&
+            !!updatedWell.staining
+        );
+    
         const validatedWell = WellSchema.parse(updatedWell);
-
-        await WellRepo.update(updatedWell);
+    
+        await WellRepo.update(validatedWell);
         return validatedWell;
     },
 
