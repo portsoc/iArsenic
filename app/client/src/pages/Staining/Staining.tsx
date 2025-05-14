@@ -4,17 +4,17 @@ import { useState } from "react";
 import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema } from 'iarsenic-types';
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
+import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 
 export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/well/:id/staining');
     const wellId = params?.id;
 
-    const { data: token } = useAccessToken()
+    const { data: token } = useAccessToken();
 
     const [wellStaining, setWellStaining] = useState<Staining>();
     const [utensilStaining, setUtensilStaining] = useState<UtensilStaining>();
 
-    // State to manage input errors
     const [errors, setErrors] = useState({
         wellStaining: false,
         utensilStaining: false
@@ -28,16 +28,41 @@ export default function StainingPage(): JSX.Element {
 
         setErrors(newErrors);
 
-        // Return false if any field is in error
         return !Object.values(newErrors).some(Boolean);
     }
 
-    return (
-        <>
-            <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                Staining
-            </Typography>
+    async function handleNext() {
+        if (!handleValidation()) return;
 
+        const headers: HeadersInit = {};
+        if (token) {
+            headers['authorization'] = `Bearer ${token.id}`;
+        }
+
+        const body = {
+            staining: wellStaining,
+            utensilStaining: wellStaining === 'not sure' ? utensilStaining : undefined
+        };
+
+        const res = await fetch(`/api/v1/self/well/${wellId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            console.error('Failed to update well:', res);
+            return;
+        }
+
+        navigate(`/well/${wellId}/depth`);
+    }
+
+    return (
+        <WellDataEntryLayout title="Staining" onNext={handleNext}>
             <Card
                 raised
                 variant='outlined'
@@ -76,11 +101,11 @@ export default function StainingPage(): JSX.Element {
                             label="Mixed or Unsure"
                         />
                     </RadioGroup>
-                    {errors.wellStaining &&
+                    {errors.wellStaining && (
                         <Typography color="error">
                             Please select a staining type for the well platform.
                         </Typography>
-                    }
+                    )}
                 </FormControl>
 
                 <Collapse in={wellStaining === 'not sure'}>
@@ -106,19 +131,18 @@ export default function StainingPage(): JSX.Element {
                                 label="No colour change to slightly blackish"
                             />
                         </RadioGroup>
-                        {errors.utensilStaining &&
+                        {errors.utensilStaining && (
                             <Typography color="error">
                                 Please select a staining type for the utensil.
                             </Typography>
-                        }
+                        )}
                     </FormControl>
                 </Collapse>
 
                 <Collapse in={wellStaining === 'red'}>
                     <Box mb={1}>
-                        <img width='100%' src={`/red_platform_1.jpg`}></img>
+                        <img width='100%' src={`/red_platform_1.jpg`} />
                     </Box>
-
                     <Typography
                         className='english'
                         variant='body1'
@@ -131,9 +155,8 @@ export default function StainingPage(): JSX.Element {
 
                 <Collapse in={wellStaining === 'black'}>
                     <Box mb={1}>
-                        <img width='100%' src={`/black_platform_1.jpg`}></img>
+                        <img width='100%' src={`/black_platform_1.jpg`} />
                     </Box>
-
                     <Typography
                         className='english'
                         variant='body1'
@@ -144,45 +167,6 @@ export default function StainingPage(): JSX.Element {
                     </Typography>
                 </Collapse>
             </Card>
-
-            <Button
-                sx={{ width: '90%', height: '4rem' }}
-                variant='contained'
-                onClick={async () => {
-                    if (!handleValidation()) return;
-
-                    const headers: HeadersInit = {};
-
-                    if (token) {
-                        headers['authorization'] = `Bearer ${token.id}`;
-                    }
-
-                    const body = {
-                        staining: wellStaining,
-                        utensilStaining: wellStaining === 'not sure' ?
-                            utensilStaining :
-                            undefined
-                    };
-
-                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...headers,
-                        },
-                        body: JSON.stringify(body),
-                    });
-
-                    if (!res.ok) {
-                        console.error('Failed to update well:', res);
-                        return;
-                    }
-
-                    navigate(`/well/${wellId}/depth`);
-                }}
-            >
-                Next Step
-            </Button>
-        </>
+        </WellDataEntryLayout>
     );
 }

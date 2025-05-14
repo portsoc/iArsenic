@@ -1,4 +1,4 @@
-import { Typography, Button, Stack, FormControl, FormControlLabel, Radio, RadioGroup, Card, Box, CircularProgress, Collapse } from "@mui/material";
+import { Box, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { Well } from "iarsenic-types";
@@ -9,6 +9,8 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { LatLngExpression } from "leaflet";
 import getMapPin from "../../utils/getMapPin";
 import MapFocus from "./MapFocus";
+import Collapse from "@mui/material/Collapse";
+import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 
 export type RegionErrors = {
     division: boolean;
@@ -24,7 +26,7 @@ export default function Region(): JSX.Element {
     const [, params] = useRoute('/well/:id/region');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-    const { data: token } = useAccessToken()
+    const { data: token } = useAccessToken();
 
     const [division, setDivision] = useState<string | null>(null);
     const [district, setDistrict] = useState<string | null>(null);
@@ -48,14 +50,11 @@ export default function Region(): JSX.Element {
             if (!wellId) return;
 
             const headers: HeadersInit = {};
-
             if (token) {
                 headers['authorization'] = `Bearer ${token.id}`;
             }
 
-            const result = await fetch(`/api/v1/self/well/${wellId}`, {
-                headers,
-            });
+            const result = await fetch(`/api/v1/self/well/${wellId}`, { headers });
 
             if (!result.ok) {
                 console.error('Failed to fetch well:', result);
@@ -63,7 +62,6 @@ export default function Region(): JSX.Element {
             }
 
             const well = await result.json();
-
             setWell(well);
 
             if (well.geolocation) {
@@ -75,24 +73,72 @@ export default function Region(): JSX.Element {
         fetchWell();
     }, [token, wellId]);
 
+    async function handleNext() {
+        const regionKeyValid = division && district && upazila && union && mouza;
+
+        const headers: HeadersInit = {};
+        if (token) {
+            headers['authorization'] = `Bearer ${token.id}`;
+        }
+
+        if (!regionKeyValid) {
+            console.log('regionKey not valid');
+            navigate(`/well/${wellId}/select-region`);
+            return;
+        }
+
+        const body: {
+            division: string,
+            district: string,
+            upazila: string,
+            union: string,
+            mouza: string,
+            geolocation?: [number, number]
+        } = {
+            division: division!,
+            district: district!,
+            upazila: upazila!,
+            union: union!,
+            mouza: mouza!,
+        };
+
+        if (regionGeovalidated && geolocation) {
+            body.geolocation = geolocation;
+        }
+
+        const res = await fetch(`/api/v1/self/well/${wellId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            console.error('Failed to update well:', res);
+            return;
+        }
+
+        navigate(`/well/${wellId}/staining`);
+    }
+
     if (!well) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
-                <CircularProgress />
+                <Typography align='center'>Loading...</Typography>
             </Stack>
         );
     }
 
     return (
-        <>
-            <Typography alignSelf='center' variant="h4">Region</Typography>
-
+        <WellDataEntryLayout title="Region" onNext={handleNext}>
             <Card
                 raised
                 variant='outlined'
-                sx={{ 
-                    width: '100%', 
-                    margin: '0 1rem 1rem 1rem', 
+                sx={{
+                    width: '100%',
+                    margin: '0 1rem 1rem 1rem',
                     padding: '1rem',
                     alignItems: 'center',
                 }}
@@ -101,8 +147,8 @@ export default function Region(): JSX.Element {
                     Are you currently with the well?
                 </Typography>
 
-                <FormControl 
-                    error={errors.withWell} 
+                <FormControl
+                    error={errors.withWell}
                     component="fieldset"
                     sx={{
                         width: '100%',
@@ -115,7 +161,7 @@ export default function Region(): JSX.Element {
                         name="well-staining-selector"
                         onChange={event => {
                             setWithWell(event.target.value === 'yes');
-                            setErrors(e => ({ ...e, wellStaining: false }));
+                            setErrors(e => ({ ...e, withWell: false }));
                         }}
                     >
                         <FormControlLabel value="yes" control={<Radio />} label="Yes" />
@@ -129,8 +175,8 @@ export default function Region(): JSX.Element {
                 </FormControl>
             </Card>
 
-            <Collapse 
-                in={withWell || (geolocation != null)} 
+            <Collapse
+                in={withWell || (geolocation != null)}
                 sx={{
                     margin: '0 1rem 1rem 1rem',
                     width: '100%',
@@ -163,7 +209,7 @@ export default function Region(): JSX.Element {
                         </Box>
 
                         <Box width='100%' height='400px'>
-                            <MapContainer 
+                            <MapContainer
                                 center={geolocation ?? position}
                                 zoom={geolocation ? 11 : 7}
                                 style={{ width: '100%', height: '100%' }}
@@ -175,9 +221,9 @@ export default function Region(): JSX.Element {
                                 />
                                 {geolocation && (
                                     <>
-                                        <Marker 
+                                        <Marker
                                             icon={getMapPin()}
-                                            position={geolocation} 
+                                            position={geolocation}
                                         />
                                         <MapFocus position={geolocation} />
                                     </>
@@ -187,66 +233,6 @@ export default function Region(): JSX.Element {
                     </Stack>
                 </Card>
             </Collapse>
-
-            <Button
-                sx={{ width: '90%', height: '4rem' }}
-                variant='contained'
-                onClick={async () => {
-                    const regionKeyValid = division &&
-                        district &&
-                        upazila &&
-                        union &&
-                        mouza;
-
-                    const headers: HeadersInit = {};
-                    if (token) {
-                        headers['authorization'] = `Bearer ${token.id}`;
-                    }
-                
-                    if (!regionKeyValid) {
-                        console.log('regionKey not valid');
-                        navigate(`/well/${wellId}/select-region`);
-                        return;
-                    }
-                
-                    const body: { 
-                        division: string,
-                        district: string,
-                        upazila: string,
-                        union: string,
-                        mouza: string,
-                        geolocation?: [number, number] 
-                    } = {
-                        division: division,
-                        district: district,
-                        upazila: upazila,
-                        union: union,
-                        mouza: mouza,
-                    };
-
-                    if (regionGeovalidated && geolocation) {
-                        body.geolocation = geolocation;
-                    }
-
-                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...headers,
-                        },
-                        body: JSON.stringify(body),
-                    });
-                
-                    if (!res.ok) {
-                        console.error('Failed to update well:', res);
-                        return;
-                    }
-                
-                    navigate(`/well/${wellId}/staining`);
-                }}
-            >
-                Next Step
-            </Button>
-        </>
+        </WellDataEntryLayout>
     );
 }

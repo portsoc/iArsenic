@@ -1,8 +1,9 @@
-import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/material";
+import { Box, Card, Slider, Switch, TextField, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
+import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
@@ -28,12 +29,34 @@ export default function Depth(): JSX.Element {
         if (unit === 'm') setDepth(Math.floor(depth / 0.3048));
     }
 
-    return (
-        <>
-            <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                Depth
-            </Typography>
+    async function handleNext() {
+        const headers: HeadersInit = {};
+        if (token) {
+            headers['authorization'] = `Bearer ${token.id}`;
+        }
 
+        const depthMeters = unit === 'm' ? depth : Math.floor(depth * 0.3048);
+        const body = { depth: depthMeters };
+
+        const res = await fetch(`/api/v1/self/well/${wellId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            console.error('Failed to update well:', res);
+            return;
+        }
+
+        navigate(`/well/${wellId}/flooding`);
+    }
+
+    return (
+        <WellDataEntryLayout title="Depth" onNext={handleNext}>
             <Card
                 variant='outlined'
                 sx={{
@@ -99,42 +122,6 @@ export default function Depth(): JSX.Element {
                     sx={{ width: '85%' }}
                 />
             </Card>
-
-            <Button
-                sx={{ width: '90%', height: '4rem' }}
-                variant='contained'
-                onClick={async () => {
-                    const headers: HeadersInit = {};
-                    if (token) {
-                        headers['authorization'] = `Bearer ${token.id}`;
-                    }
-
-                    const depthMeters = (() => {
-                        if (unit === 'm') return depth;
-                        return Math.floor(depth * 0.3048);
-                    })();
-
-                    const body = { depth: depthMeters };
-
-                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...headers,
-                        },
-                        body: JSON.stringify(body),
-                    });
-
-                    if (!res.ok) {
-                        console.error('Failed to update well:', res);
-                        return;
-                    }
-
-                    navigate(`/well/${wellId}/flooding`);
-                }}
-            >
-                Next Step
-            </Button>
-        </>
+        </WellDataEntryLayout>
     );
 }

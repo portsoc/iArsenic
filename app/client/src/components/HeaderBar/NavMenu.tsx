@@ -18,6 +18,7 @@ import { navigate } from 'wouter/use-browser-location';
 import { SvgIconComponent } from '@mui/icons-material';
 import { Avatar, Button, Stack, Typography } from '@mui/material';
 import { useLanguage } from '../../utils/useLanguage';
+import TranslatableText from '../TranslatableText';
 
 interface props {
     open: boolean;
@@ -26,9 +27,9 @@ interface props {
 }
 
 function NavListItem(
-    { path, text, Icon }: {
+    { path, label, Icon }: {
         path: string;
-        text: string;
+        label: JSX.Element;
         Icon: SvgIconComponent;
     }
 ): JSX.Element {
@@ -38,7 +39,7 @@ function NavListItem(
                 <ListItemIcon>
                     <Icon />
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={label} />
             </ListItemButton>
         </ListItem>
     );
@@ -51,19 +52,47 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
         <Drawer open={open} onClose={() => setOpen(false)}>
             <Box sx={{ width: 250 }} onClick={() => setOpen(false)}>
                 <List>
-                    <NavListItem path='landing' text='Landing' Icon={AccountCircleIcon} />
-                    <NavListItem path='briefing' text='Briefing' Icon={InfoIcon} />
-                    <NavListItem path='privacy-policy' text='Privacy Policy' Icon={PrivacyTipIcon} />
-                    <NavListItem path='understanding-risk' text='Understanding Risk' Icon={HealthAndSafetyIcon} />
-                    <NavListItem path='my-wells' text='My Wells' Icon={LocalDrinkIcon} />
-                    <NavListItem path='map' text='Maps' Icon={FmdGoodIcon} />
+                    <NavListItem
+                        path='landing'
+                        Icon={AccountCircleIcon}
+                        label={<TranslatableText english="Landing" bengali="ল্যান্ডিং" variant="body1" />}
+                    />
+                    <NavListItem
+                        path='briefing'
+                        Icon={InfoIcon}
+                        label={<TranslatableText english="Briefing" bengali="ব্রিফিং" variant="body1" />}
+                    />
+                    <NavListItem
+                        path='privacy-policy'
+                        Icon={PrivacyTipIcon}
+                        label={<TranslatableText english="Privacy Policy" bengali="গোপনীয়তা নীতি" variant="body1" />}
+                    />
+                    <NavListItem
+                        path='understanding-risk'
+                        Icon={HealthAndSafetyIcon}
+                        label={<TranslatableText english="Understanding Risk" bengali="ঝুঁকি বোঝা" variant="body1" />}
+                    />
+                    <NavListItem
+                        path='my-wells'
+                        Icon={LocalDrinkIcon}
+                        label={<TranslatableText english="My Wells" bengali="আমার কূপসমূহ" variant="body1" />}
+                    />
+                    <NavListItem
+                        path='map'
+                        Icon={FmdGoodIcon}
+                        label={<TranslatableText english="Maps" bengali="মানচিত্র" variant="body1" />}
+                    />
                 </List>
 
                 {role && (
                     <>
                         <Divider />
                         <List>
-                            <NavListItem path='profile' text='My Profile' Icon={AccountCircleIcon} />
+                            <NavListItem 
+                                path='profile' 
+                                Icon={AccountCircleIcon} 
+                                label={<TranslatableText english='My Profile' bengali="আমার প্রোফাইল" variant='body1' />}
+                            />
                         </List>
                     </>
                 )}
@@ -71,20 +100,32 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                 {role === 'admin' && (
                     <>
                         <Divider />
-                        <Typography variant='h6' sx={{ margin: '1rem' }}>
-                            Admins Only
-                        </Typography>
+                        <TranslatableText
+                            english='Admins Only'
+                            bengali='PLACEHOLDER BENGALI'
+                            variant='h6'
+                        />
                         <List>
-                            <NavListItem path='all-users' text='All Users' Icon={GroupsIcon} />
-                            <NavListItem path='all-wells' text='All Wells' Icon={PublicIcon} />
+                            <NavListItem 
+                                path='all-users' 
+                                Icon={GroupsIcon}
+                                label={<TranslatableText english='All Users' bengali="সকল ব্যবহারকারী" variant='body1' />}
+                            />
+                            <NavListItem 
+                                path='all-wells' 
+                                Icon={PublicIcon}
+                                label={<TranslatableText english='All Wells' bengali="সকল নলকূপ" variant='body1' />}
+                            />
                         </List>
                     </>
                 )}
 
                 <Divider />
-                <Typography variant='h6' sx={{ margin: '1rem' }}>
-                    Select Language
-                </Typography>
+                <TranslatableText
+                    english='Select Language' 
+                    bengali='BENGALI PLACEHOLDER'
+                    variant='h6'
+                />
 
                 <Stack direction='column'>
                     <Stack
