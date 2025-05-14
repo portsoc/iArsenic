@@ -134,20 +134,6 @@ export default function Result(): JSX.Element {
                         </Box>
                     </Grid>
                 </Stack>
-
-                <Button
-                    sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
-                    variant='contained'
-                    onClick={() => navigate(`/`)}
-                >
-                    <Typography className='english'>
-                        Return To Start
-                    </Typography>
-
-                    <Typography className='bengali'>
-                        Bengali Placeholder
-                    </Typography>
-                </Button>
             </Grid>
         </WellDataEntryLayout>
     );

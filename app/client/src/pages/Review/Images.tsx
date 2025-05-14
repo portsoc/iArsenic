@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import { useAccessToken } from "../../utils/useAccessToken";
+import PageCard from "../../components/PageCard";
 
 interface Props {
     well: Well;
@@ -59,14 +60,7 @@ export default function WellImageDisplay({ well }: Props) {
     }, [well]);
 
     return (
-        <Card
-            variant="outlined"
-            sx={{
-                width: "100%",
-                padding: "16px",
-                marginBottom: "16px",
-            }}
-        >
+        <PageCard>
             <Typography variant="h6" gutterBottom>
                 Uploaded Images
             </Typography>
@@ -115,6 +109,6 @@ export default function WellImageDisplay({ well }: Props) {
                     Edit Images
                 </Button>
             </Box>
-        </Card>
+        </PageCard>
     );
 }

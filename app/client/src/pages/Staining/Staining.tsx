@@ -85,6 +85,12 @@ export default function StainingPage(): JSX.Element {
                 <FormControl 
                     error={errors.wellStaining} 
                     component="fieldset"
+                    sx={{
+                        width: 'max-content',
+                        padding: '1rem',
+                        borderRadius: '5px',
+                        outline: errors.wellStaining ? '1px solid red' : 'none',
+                    }}
                 >
                     <RadioGroup
                         onChange={event => {
@@ -109,7 +115,16 @@ export default function StainingPage(): JSX.Element {
                 </FormControl>
 
                 <Collapse in={wellStaining === 'not sure'}>
-                    <FormControl error={errors.utensilStaining} component="fieldset">
+                    <FormControl 
+                        error={errors.utensilStaining} 
+                        component="fieldset"
+                        sx={{
+                            width: 'max-content',
+                            padding: '1rem',
+                            borderRadius: '5px',
+                            outline: errors.utensilStaining ? '1px solid red' : 'none',
+                        }}
+                    >
                         <Typography variant="h5" textAlign='center' style={{ marginTop: '1rem' }}>
                             Is there staining on your utensil?
                         </Typography>

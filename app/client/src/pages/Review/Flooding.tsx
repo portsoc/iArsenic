@@ -1,6 +1,7 @@
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
+import PageCard from "../../components/PageCard";
 
 interface props {
     well: Well;
@@ -8,14 +9,7 @@ interface props {
 
 export default function({ well }: props) {
     return (
-        <Card
-            variant="outlined"
-            sx={{
-                width: '100%',
-                padding: '16px',
-                marginBottom: '16px',
-            }}
-        >
+        <PageCard>
             <Typography variant="h6" gutterBottom>Flooding</Typography>
             <Typography variant="body1" component="p">
                 Flooding: {well.flooding ? 'Yes' : 'No'}
@@ -32,6 +26,6 @@ export default function({ well }: props) {
                     Edit Flooding
                 </Button>
             </Box>
-        </Card>
+        </PageCard>
     );
 }

@@ -1,4 +1,4 @@
-import { Button, Card, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
 interface Props {
@@ -20,8 +20,7 @@ export default function WellAssessmentPageLayout({
                 {title}
             </Typography>
 
-            <Card
-                variant='outlined'
+            <Box
                 sx={{
                     margin: '0 1rem 1rem 1rem',
                     padding: '1rem',
@@ -30,11 +29,11 @@ export default function WellAssessmentPageLayout({
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '1rem',
-                    outline: '4px solid red',
+                    // outline: '4px solid red',
                 }}
             >
                 {children}
-            </Card>
+            </Box>
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}

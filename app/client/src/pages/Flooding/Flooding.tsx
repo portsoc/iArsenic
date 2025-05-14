@@ -4,6 +4,7 @@ import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import { navigate } from "wouter/use-browser-location";
+import PageCard from "../../components/PageCard";
 
 export default function Flooding(): JSX.Element {
     const [, params] = useRoute('/well/:id/flooding');
@@ -51,37 +52,39 @@ export default function Flooding(): JSX.Element {
 
     return (
         <WellDataEntryLayout title="Flooding" onNext={handleNext}>
-            <Typography marginBottom='1rem' textAlign='center' variant='h5'>
-                Is the area prone to flooding?
-            </Typography>
-
-            <FormControl
-                error={error}
-                component="fieldset"
-                sx={{
-                    width: 'max-content',
-                    padding: '1rem',
-                    borderRadius: '5px',
-                    outline: error ? '1px solid red' : 'none',
-                }}
-            >
-                <RadioGroup
-                    name="flooding-selector"
-                    value={flooding}
-                    onChange={handleFloodingChange}
-                >
-                    <Stack direction='row' columnGap={3}>
-                        <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                        <FormControlLabel value='no' control={<Radio />} label='No' />
-                    </Stack>
-                </RadioGroup>
-            </FormControl>
-
-            {error && (
-                <Typography color='error'>
-                    Please select an option
+            <PageCard>
+                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
+                    Is the area prone to flooding?
                 </Typography>
-            )}
+
+                <FormControl
+                    error={error}
+                    component="fieldset"
+                    sx={{
+                        width: 'max-content',
+                        padding: '1rem',
+                        borderRadius: '5px',
+                        outline: error ? '1px solid red' : 'none',
+                    }}
+                >
+                    <RadioGroup
+                        name="flooding-selector"
+                        value={flooding}
+                        onChange={handleFloodingChange}
+                    >
+                        <Stack direction='row' columnGap={3}>
+                            <FormControlLabel value='yes' control={<Radio />} label='Yes' />
+                            <FormControlLabel value='no' control={<Radio />} label='No' />
+                        </Stack>
+                    </RadioGroup>
+                </FormControl>
+
+                {error && (
+                    <Typography color='error'>
+                        Please select an option
+                    </Typography>
+                )}
+            </PageCard>
         </WellDataEntryLayout>
     );
 }
