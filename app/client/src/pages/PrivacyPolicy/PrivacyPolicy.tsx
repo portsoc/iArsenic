@@ -1,5 +1,7 @@
 import TranslatableText from "../../components/TranslatableText";
 import PageCard from "../../components/PageCard";
+import { Button } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function PrivacyPolicy(): JSX.Element {
     return (
@@ -12,6 +14,20 @@ export default function PrivacyPolicy(): JSX.Element {
                 english='Privacy Policy'
                 bengali='BENGALI PLACEHOLDER'
             />
+
+            <Button
+                variant='outlined'
+                startIcon={<ArrowBackIcon />}
+                sx={{ alignSelf: 'start' }}
+                onClick={() => window.history.back()}
+            >
+                <TranslatableText 
+                    variant='body1' 
+                    textAlign='center'
+                    english='Return'
+                    bengali='BENGALI PLACEHOLDER'
+                />
+            </Button>
 
             <PageCard gap='0'>
                 <TranslatableText 
@@ -280,6 +296,19 @@ export default function PrivacyPolicy(): JSX.Element {
                     bengali='BENGALI PLACEHOLDER'
                 />
             </PageCard>
+            
+            <Button
+                sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
+                variant='contained'
+                onClick={() => window.history.back()}
+            >
+                <TranslatableText 
+                    width='100%'
+                    variant='body1' 
+                    english='Return'
+                    bengali='BENGALI PLACEHOLDER'
+                />
+            </Button>
         </>
     );
 }

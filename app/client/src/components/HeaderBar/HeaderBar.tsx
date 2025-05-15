@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import NavMenu from './NavMenu';
 import { useAccessToken, deleteAccessToken } from '../../utils/useAccessToken';
+import TranslatableText from '../TranslatableText';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
@@ -57,10 +58,14 @@ export default function HeaderBar(): JSX.Element {
                             onClick={() => {
                                 deleteAccessToken();
                                 navigate(`/`);
-                                window.location.reload(); // optional if you want to reset app state
+                                window.location.reload();
                             }}
                         >
-                            Logout
+                            <TranslatableText
+                                variant='body1'
+                                english='Logout'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Button>
                     ) : (
                         <Button
@@ -68,7 +73,11 @@ export default function HeaderBar(): JSX.Element {
                             sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
                             onClick={() => navigate('/login')}
                         >
-                            Login
+                            <TranslatableText
+                                variant='body1'
+                                english='Login'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Button>
                     )}
                 </Box>
