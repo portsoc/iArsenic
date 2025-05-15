@@ -74,7 +74,7 @@ export default function UnderstandingRisk(): JSX.Element {
                 />
             </Button>
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <PageCard>
                 <TranslatableText
                     mb='1rem'
                     textAlign='center' 
@@ -98,7 +98,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     `}
                     bengali='BENGALI PLACEHOLDER'
                 />
-            </Card>
+            </PageCard>
 
             <Card 
                 variant='outlined' 
@@ -129,7 +129,14 @@ export default function UnderstandingRisk(): JSX.Element {
                         <EnglishSpeedo value={speedoValue} />
                     </Box>
 
-                    <Box className='bengali'>
+                    <Box 
+                        className='bengali'
+                        sx={{
+                            height: '220px',
+                            marginTop: '32px',
+                            alignItems: 'center',
+                        }}
+                    >
                         <BengaliSpeedo value={speedoValue} />
                     </Box>
                 </Stack>

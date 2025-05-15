@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { CircularProgress, Typography, Box, Alert } from "@mui/material";
+import { CircularProgress, Box, Alert } from "@mui/material";
 import { useRoute } from "wouter";
+import TranslatableText from "../../components/TranslatableText";
 
 export default function Review() {
     const [, params] = useRoute('/verify-email/:id');
@@ -45,9 +46,13 @@ export default function Review() {
 
     return (
         <>
-            <Typography variant="h4" gutterBottom textAlign="center">
-                Verify Email
-            </Typography>
+            <TranslatableText
+                variant="h4" 
+                gutterBottom 
+                textAlign="center"
+                english='Verify Email'
+                bengali='BENGALI PLACEHOLDER'
+            />
 
             <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" mt={4}>
                 {loading && (
@@ -56,19 +61,37 @@ export default function Review() {
 
                 {!loading && success === true && (
                     <Alert severity="success">
-                        Email verified successfully!
+                        <TranslatableText
+                            variant="body1" 
+                            gutterBottom 
+                            textAlign="center"
+                            english='Email verified successfully!'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Alert>
                 )}
 
                 {!loading && success === false && (
                     <Alert severity="error">
-                        Something went wrong. Failed to verify email.
+                        <TranslatableText
+                            variant="body1" 
+                            gutterBottom 
+                            textAlign="center"
+                            english='Something went wrong. Failed to verify email.'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Alert>
                 )}
 
                 {!loading && success === null && (
                     <Alert severity="warning">
-                        No token provided for email verification.
+                        <TranslatableText
+                            variant="body1" 
+                            gutterBottom 
+                            textAlign="center"
+                            english='No token provided for email verification.'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Alert>
                 )}
             </Box>

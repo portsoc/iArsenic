@@ -1,10 +1,11 @@
-import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
+import { Box, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAccessToken } from '../../utils/useAccessToken';
+import TranslatableText from '../../components/TranslatableText';
 
 export default function Review() {
     const [, params] = useRoute('/well/:id');
@@ -72,9 +73,13 @@ export default function Review() {
 
     return (
         <>
-            <Typography variant="h4" gutterBottom textAlign="center">
-                Well Details
-            </Typography>
+            <TranslatableText
+                variant="h4" 
+                gutterBottom 
+                textAlign="center"
+                english='Well Details'
+                bengali='BENGALI PLACEHOLDER'
+            />
 
             <Button
                 variant='outlined'
@@ -82,7 +87,13 @@ export default function Review() {
                 sx={{ alignSelf: 'start' }}
                 onClick={() => navigate(`/my-wells`)}
             >
-                Return to My Wells
+                <TranslatableText
+                    variant="body1" 
+                    gutterBottom 
+                    textAlign="center"
+                    english='Return to My Wells'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
 
             {missingFields.length !== 0 && (
@@ -98,77 +109,86 @@ export default function Review() {
                         gap: '1rem',
                     }}
                 >
-                    <Typography variant="h6" gutterBottom>
-                        Complete Your Well Information
-                    </Typography>
+                    <TranslatableText 
+                        variant="h6" 
+                        gutterBottom
+                        english='Complete Your Well Information'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
 
-                    <Typography variant="body1" gutterBottom>
-                        It looks like some information is missing from this well's record.
-                        Please continue where you left off to complete the assessment.
-                    </Typography>
+                    <TranslatableText
+                        variant="body1" 
+                        gutterBottom
+                        english={`
+                            It looks like some information is missing from this well's record.
+                            Please continue where you left off to complete the assessment.
+                        `}
+                        bengali='BENGALI PLACEHOLDER'
+                    />
 
-                    <Typography variant="body1" width='100%'>
-                        <b>Missing Data</b>
-                    </Typography>
+                    <TranslatableText 
+                        variant="body1" 
+                        width='100%'
+                        english={
+                            <>
+                                <b>Missing Data</b>
+                            </>
+                        }
+                        bengali={
+                            <>
+                                <b>BENGALI PLACEHOLDER</b>
+                            </>
+                        }
+                    />
 
                     <List sx={{ width: '100%' }}>
                         {missingFields.includes('division') && (
                             <ListItem>
-                                <Typography className='english' variant='body1'>
-                                    • Region
-                                </Typography>
-
-                                <Typography className='bengali' variant='body1'>
-                                    • অঞ্চল
-                                </Typography>
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='• Region'
+                                    bengali='• অঞ্চল'
+                                />
                             </ListItem>
                         )}
 
                         {missingFields.includes('depth') && (
                             <ListItem>
-                                <Typography className='english' variant='body1'>
-                                    • Well Depth
-                                </Typography>
-
-                                <Typography className='bengali' variant='body1'>
-                                    • টিউবওয়েলের গভীরতা
-                                </Typography>
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='• Well Depth'
+                                    bengali='• টিউবওয়েলের গভীরতা'
+                                />
                             </ListItem>
                         )}
 
                         {missingFields.includes('staining') && (
                             <ListItem>
-                                <Typography className='english' variant='body1'>
-                                    • Staining Colour
-                                </Typography>
-
-                                <Typography className='bengali' variant='body1'>
-                                    • দাগের রঙ
-                                </Typography>
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='• Staining Colour'
+                                    bengali='• দাগের রঙ'
+                                />
                             </ListItem>
                         )}
 
                         {missingFields.includes('flooding') && (
                             <ListItem>
-                                <Typography className='english' variant='body1'>
-                                    • Flooding
-                                </Typography>
-
-                                <Typography className='bengali' variant='body1'>
-                                    • প্রবল বা সামান্য জলবায়ু
-                                </Typography>
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='• Flooding'
+                                    bengali='• প্রবল বা সামান্য জলবায়ু'
+                                />
                             </ListItem>
                         )}
 
                         {missingFields.includes('wellInUse') && (
                             <ListItem>
-                                <Typography className='english' variant='body1'>
-                                    • Well In Use
-                                </Typography>
-
-                                <Typography className='bengali' variant='body1'>
-                                    • BENGALI PLACEHOLDER
-                                </Typography>
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='• Well In Use'
+                                    bengali='• BENGALI PLACEHOLDER'
+                                />
                             </ListItem>
                         )}
                     </List>
@@ -190,7 +210,12 @@ export default function Review() {
                             }
                         }}
                     >
-                        Complete Well Information
+                        
+                        <TranslatableText 
+                            variant='body1'
+                            english='Complete Well Information'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Button>
                 </Card>
             )}
@@ -212,69 +237,128 @@ export default function Review() {
                         well.mouza
                     ) && (
                         <Box mb={2}>
-                            <Typography variant="h6" gutterBottom>Region</Typography>
+                            <TranslatableText 
+                                variant='h6'
+                                gutterBottom
+                                english='Region'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
 
-                            <Typography variant="body1" component="p" gutterBottom>
-                                Division: {well.division}
-                            </Typography>
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Division: ${well.division}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                            
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`District: ${well.district}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
 
-                            <Typography variant="body1" component="p" gutterBottom>
-                                District: {well.district}
-                            </Typography>
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Upazila: ${well.upazila}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
 
-                            <Typography variant="body1" component="p" gutterBottom>
-                                Upazila: {well.upazila}
-                            </Typography>
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Union: ${well.union}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
 
-                            <Typography variant="body1" component="p" gutterBottom>
-                                Union: {well.union}
-                            </Typography>
-
-                            <Typography variant="body1" component="p" gutterBottom>
-                                Mouza: {well.mouza}
-                            </Typography>
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Mouza: ${well.mouza}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Box>
                     )}
 
                     {well.staining && (
                         <Box mb={2}>
-                            <Typography variant="h6" gutterBottom>Staining</Typography>
-                            <Typography variant="body1" component="p" gutterBottom>
-                                Staining: {well.staining}
-                            </Typography>
+                            <TranslatableText 
+                                variant="h6" 
+                                gutterBottom
+                                english='Staining'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Staining: ${well.staining}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
 
                             {well.utensilStaining && (
-                                <Typography variant="body1" component="p" gutterBottom>
-                                    Utensil Staining: {well.utensilStaining}
-                                </Typography>
+                                <TranslatableText 
+                                    variant='body1'
+                                    gutterBottom
+                                    english={`Utensil Staining: ${well.utensilStaining}`}
+                                    bengali='BENGALI PLACEHOLDER'
+                                />
                             )}
                         </Box>
                     )}
 
                     {well.depth && (
                         <Box mb={2}>
-                            <Typography variant="h6" gutterBottom>Depth</Typography>
-                            <Typography variant="body1" component="p">
-                                Depth: {well.depth} meters
-                            </Typography>
+                            <TranslatableText 
+                                variant="h6" 
+                                gutterBottom
+                                english='Depth'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Depth: ${well.depth} meters`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Box>
                     )}
 
                     {well.flooding && (
                         <Box mb={2}>
-                            <Typography variant="h6" gutterBottom>Flooding</Typography>
-                            <Typography variant="body1" component="p">
-                                Flooding: {well.flooding ? 'Yes' : 'No'}
-                            </Typography>
+                            <TranslatableText 
+                                variant="h6" 
+                                gutterBottom
+                                english='Flooding'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                            
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Flooding: ${well.flooding ? 'Yes' : 'No'}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Box>
                     )}
 
                     {well.wellInUse && (
                         <Box>
-                            <Typography variant="h6" gutterBottom>Well In use</Typography>
-                            <Typography variant="body1" component="p">
-                                Well In Use: {well.wellInUse ? 'Yes' : 'No'}
-                            </Typography>
+                            <TranslatableText 
+                                variant="h6" 
+                                gutterBottom
+                                english='Well In Use'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                gutterBottom
+                                english={`Well In Use: ${well.wellInUse ? 'Yes' : 'No'}`}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Box>
                     )}
                 </Card>

@@ -1,10 +1,11 @@
-import { FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
+import { FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import { useState } from "react";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import { navigate } from "wouter/use-browser-location";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 export default function WellInUse(): JSX.Element {
     const [, params] = useRoute('/well/:id/well-in-use');
@@ -57,9 +58,11 @@ export default function WellInUse(): JSX.Element {
     return (
         <WellDataEntryLayout title="Well in use" onNext={handleNext}>
             <PageCard>
-                <Typography variant='h5'>
-                    Is anyone drinking from this well?
-                </Typography>
+                <TranslatableText 
+                    variant='h5'
+                    english='Is anyone drinking from this well?'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <FormControl
                     error={error}
@@ -76,16 +79,39 @@ export default function WellInUse(): JSX.Element {
                         onChange={handleWellInUseChange}
                     >
                         <Stack direction='row' columnGap={3}>
-                            <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                            <FormControlLabel value='no' control={<Radio />} label='No' />
+                            <FormControlLabel 
+                                value='yes' 
+                                control={<Radio />} 
+                                label={
+                                    <TranslatableText 
+                                        variant='body1'
+                                        english='Yes'
+                                        bengali='BENGALI PLACEHOLDER'
+                                    />
+                                }
+                            />
+
+                            <FormControlLabel 
+                                value='no' 
+                                control={<Radio />} 
+                                label={
+                                    <TranslatableText 
+                                        variant='body1'
+                                        english='No'
+                                        bengali='BENGALI PLACEHOLDER'
+                                    />
+                                }
+                            />
                         </Stack>
                     </RadioGroup>
                 </FormControl>
 
                 {error && (
-                    <Typography color='error'>
-                        Please select an option
-                    </Typography>
+                    <TranslatableText 
+                        error={true}
+                        english='Please select an option'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 )}
             </PageCard>
         </WellDataEntryLayout>
