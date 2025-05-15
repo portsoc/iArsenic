@@ -1,6 +1,5 @@
 import {
     Box,
-    Typography,
     IconButton,
     Collapse,
     TextField,
@@ -9,13 +8,14 @@ import {
     FormControlLabel,
     Stack,
     Divider,
-    Card,
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useState } from 'react';
 import RegionFilter from './filter/RegionFilter';
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from '../../types';
 import { FiltersType } from './FiltersType';
+import TranslatableText from '../../components/TranslatableText';
+import PageCard from '../../components/PageCard';
 
 interface props {
     dropdownData: DropdownDivision[];
@@ -53,18 +53,7 @@ export default function Filter({
     }
 
     return (
-        <Card
-            variant='outlined'
-            sx={{
-                margin: '0 1rem 1rem 1rem',
-                padding: '1rem',
-                width: '100%',
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-            }}
-        >
+        <PageCard>
             <Box 
                 display="flex" 
                 flexDirection='row' 
@@ -82,7 +71,12 @@ export default function Filter({
                     <IconButton>
                         <FilterListIcon />
                     </IconButton>
-                    <Typography variant="h6">Filters</Typography>
+                    
+                    <TranslatableText 
+                        variant='h6' 
+                        english='Filters'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 </Box>
                 {/* <Button 
                     variant='outlined'
@@ -101,7 +95,13 @@ export default function Filter({
                                 onChange={() => handleCheckboxChange('geolocated')}
                             />
                         }
-                        label="Geolocated"
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Geolocated'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
                     />
 
                     <FormControlLabel
@@ -111,7 +111,13 @@ export default function Filter({
                                 onChange={() => handleCheckboxChange('hasImages')}
                             />
                         }
-                        label="Includes Images"
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Includes Images'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
                     />
 
                     <FormControlLabel
@@ -121,12 +127,22 @@ export default function Filter({
                                 onChange={() => handleCheckboxChange('complete')}
                             />
                         }
-                        label="Complete Well"
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Complete Well'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
                     />
 
                     <Divider />
 
-                    <Typography variant="subtitle1">Region</Typography>
+                    <TranslatableText 
+                        variant='h5' 
+                        english='Region'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                     <RegionFilter
                         dropdownData={dropdownData}
                         selectedDivision={selectedDivision}
@@ -199,30 +215,78 @@ export default function Filter({
                     <Divider />
 
                     <TextField
-                        label="Flooding"
                         select
                         value={filters.flooding}
                         onChange={(e) => handleTextChange('flooding', e.target.value)}
                         fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Flooding'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
                     >
-                        <MenuItem value="">Any</MenuItem>
-                        <MenuItem value="true">Yes</MenuItem>
-                        <MenuItem value="false">No</MenuItem>
+                        <MenuItem value="">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="true">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Yes'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="false">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='No'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
                     </TextField>
 
                     <TextField
-                        label="Staining"
                         select
                         value={filters.staining}
                         onChange={(e) => handleTextChange('staining', e.target.value)}
                         fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Staining'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
                     >
-                        <MenuItem value="">Any</MenuItem>
-                        <MenuItem value="red">Red</MenuItem>
-                        <MenuItem value="black">Black</MenuItem>
+                        <MenuItem value="">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="red">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Red'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="black">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Black'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
                     </TextField>
                 </Stack>
             </Collapse>
-        </Card>
+        </PageCard>
     );
 }

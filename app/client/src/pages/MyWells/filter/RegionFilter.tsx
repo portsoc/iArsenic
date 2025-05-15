@@ -1,11 +1,14 @@
-import { MenuItem, Stack, TextField, Button } from '@mui/material';
+import { MenuItem, Stack, TextField, Button, CircularProgress } from '@mui/material';
 import {
     DropdownDivision,
     DropdownDistrict,
     DropdownUpazila,
     DropdownUnion,
+    RegionTranslations,
 } from '../../../types';
 import TranslatableText from '../../../components/TranslatableText';
+import { useEffect, useState } from 'react';
+import RegionTranslationsFetcher from '../../../utils/RegionTranslationsFetcher';
 
 interface Props {
     dropdownData: DropdownDivision[];
@@ -34,12 +37,31 @@ export default function RegionFilter({
     selectedMouza,
     setSelectedMouza,
 }: Props) {
+    const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
+
     function clearRegion() {
         setSelectedDivision(null);
         setSelectedDistrict(null);
         setSelectedUpazila(null);
         setSelectedUnion(null);
         setSelectedMouza(null);
+    }
+
+    async function fetchRegionTranslations() {
+        const translations = await RegionTranslationsFetcher();
+        setRegionTranslations(translations);
+    }
+    
+    useEffect(() => {
+        fetchRegionTranslations();
+    }, []);
+
+    if (!regionTranslations) {
+        return (
+            <Stack direction='column' alignContent='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
+        );
     }
 
     return (
@@ -69,19 +91,22 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Division'
-                        bengali='BENGALI PLACEHOLDEr'
+                        bengali={regionTranslations.Divisions.Division}
                     />
                 }
             >
                 {dropdownData.map(d => (
                     <MenuItem key={d.division} value={d.division}>
-                        {d.division}
+                        <TranslatableText 
+                            variant='body1' 
+                            english={d.division}
+                            bengali={regionTranslations.Divisions[d.division]}
+                        />
                     </MenuItem>
                 ))}
             </TextField>
 
             <TextField
-                label="District"
                 select
                 value={selectedDistrict?.district || ''}
                 onChange={(e) => {
@@ -93,16 +118,26 @@ export default function RegionFilter({
                 }}
                 fullWidth
                 disabled={!selectedDivision}
+                label={
+                    <TranslatableText 
+                        variant='body1' 
+                        english='District'
+                        bengali={regionTranslations.Districts.District}
+                    />
+                }
             >
                 {selectedDivision?.districts.map(d => (
                     <MenuItem key={d.district} value={d.district}>
-                        {d.district}
+                        <TranslatableText 
+                            variant='body1' 
+                            english={d.district}
+                            bengali={regionTranslations.Districts[d.district]}
+                        />
                     </MenuItem>
                 )) || []}
             </TextField>
 
             <TextField
-                label="Upazila"
                 select
                 value={selectedUpazila?.upazila || ''}
                 onChange={(e) => {
@@ -113,16 +148,26 @@ export default function RegionFilter({
                 }}
                 fullWidth
                 disabled={!selectedDistrict}
+                label={
+                    <TranslatableText 
+                        variant='body1' 
+                        english='Upazila'
+                        bengali={regionTranslations.Upazilas.Upazila}
+                    />
+                }
             >
                 {selectedDistrict?.upazilas.map(u => (
                     <MenuItem key={u.upazila} value={u.upazila}>
-                        {u.upazila}
+                        <TranslatableText 
+                            variant='body1' 
+                            english={u.upazila}
+                            bengali={regionTranslations.Upazilas[u.upazila]}
+                        />
                     </MenuItem>
                 )) || []}
             </TextField>
 
             <TextField
-                label="Union"
                 select
                 value={selectedUnion?.union || ''}
                 onChange={(e) => {
@@ -132,16 +177,26 @@ export default function RegionFilter({
                 }}
                 fullWidth
                 disabled={!selectedUpazila}
+                label={
+                    <TranslatableText 
+                        variant='body1' 
+                        english='Union'
+                        bengali={regionTranslations.Unions.Union}
+                    />
+                }
             >
                 {selectedUpazila?.unions.map(u => (
                     <MenuItem key={u.union} value={u.union}>
-                        {u.union}
+                        <TranslatableText 
+                            variant='body1' 
+                            english={u.union}
+                            bengali={regionTranslations.Unions[u.union]}
+                        />
                     </MenuItem>
                 )) || []}
             </TextField>
 
             <TextField
-                label="Mouza"
                 select
                 value={selectedMouza || ''}
                 onChange={(e) => {
@@ -149,10 +204,21 @@ export default function RegionFilter({
                 }}
                 fullWidth
                 disabled={!selectedUnion}
+                label={
+                    <TranslatableText 
+                        variant='body1' 
+                        english='Mouza'
+                        bengali={regionTranslations.Mouzas.Mouza}
+                    />
+                }
             >
                 {selectedUnion?.mouzas.map(m => (
                     <MenuItem key={m} value={m}>
-                        {m}
+                        <TranslatableText 
+                            variant='body1' 
+                            english={m}
+                            bengali={regionTranslations.Mouzas[m]}
+                        />
                     </MenuItem>
                 )) || []}
             </TextField>
