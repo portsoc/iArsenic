@@ -5,6 +5,7 @@ import {
     DropdownUpazila,
     DropdownUnion,
 } from '../../../types';
+import TranslatableText from '../../../components/TranslatableText';
 
 interface Props {
     dropdownData: DropdownDivision[];
@@ -44,11 +45,14 @@ export default function RegionFilter({
     return (
         <Stack spacing={2}>
             <Button variant="outlined" onClick={clearRegion}>
-                Clear Region Filter
+                <TranslatableText
+                    variant='body1'
+                    english='Clear Region Filter'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
 
             <TextField
-                label="Division"
                 select
                 value={selectedDivision?.division || ''}
                 onChange={(e) => {
@@ -61,6 +65,13 @@ export default function RegionFilter({
                     setSelectedMouza(null);
                 }}
                 fullWidth
+                label={
+                    <TranslatableText 
+                        variant='body1' 
+                        english='Division'
+                        bengali='BENGALI PLACEHOLDEr'
+                    />
+                }
             >
                 {dropdownData.map(d => (
                     <MenuItem key={d.division} value={d.division}>

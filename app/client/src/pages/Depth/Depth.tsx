@@ -1,16 +1,19 @@
-import { Box, Card, Slider, Switch, TextField, Typography } from "@mui/material";
+import { Box, Slider, Switch, TextField } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import PageCard from "../../components/PageCard";
+import { useUnits } from "../../utils/useUnits";
+import TranslatableText from "../../components/TranslatableText";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
     const wellId = params?.id;
     const { data: token } = useAccessToken();
+    const { units, setUnits } = useUnits();
 
-    const [unit, setUnit] = useState<'m' | 'ft'>('ft');
     const [depth, setDepth] = useState(0);
 
     function handleSliderChange(_: Event, newValue: number | number[]) {
@@ -23,10 +26,10 @@ export default function Depth(): JSX.Element {
     }
 
     function switchUnits() {
-        setUnit(unit === 'ft' ? 'm' : 'ft');
+        setUnits(units === 'feet' ? 'meters' : 'feet');
 
-        if (unit === 'ft') setDepth(Math.floor(depth * 0.3048));
-        if (unit === 'm') setDepth(Math.floor(depth / 0.3048));
+        if (units === 'feet') setDepth(Math.floor(depth * 0.3048));
+        if (units === 'meters') setDepth(Math.floor(depth / 0.3048));
     }
 
     async function handleNext() {
@@ -35,7 +38,7 @@ export default function Depth(): JSX.Element {
             headers['authorization'] = `Bearer ${token.id}`;
         }
 
-        const depthMeters = unit === 'm' ? depth : Math.floor(depth * 0.3048);
+        const depthMeters = units === 'meters' ? depth : Math.floor(depth * 0.3048);
         const body = { depth: depthMeters };
 
         const res = await fetch(`/api/v1/self/well/${wellId}`, {
@@ -57,18 +60,7 @@ export default function Depth(): JSX.Element {
 
     return (
         <WellDataEntryLayout title="Depth" onNext={handleNext}>
-            <Card
-                variant='outlined'
-                sx={{
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                }}
-            >
+            <PageCard>
                 <Box
                     justifyItems='center'
                     alignItems='center'
@@ -77,7 +69,11 @@ export default function Depth(): JSX.Element {
                     gap={2}
                 >
                     <Box justifySelf='end' width='100%'>
-                        <Typography>feet</Typography>
+                        <TranslatableText 
+                            variant='body1' 
+                            english='feet'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Box>
 
                     <Box>
@@ -96,7 +92,11 @@ export default function Depth(): JSX.Element {
                     </Box>
 
                     <Box justifySelf='start'>
-                        <Typography>meters</Typography>
+                        <TranslatableText 
+                            variant='body1' 
+                            english='meters'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Box>
                 </Box>
 
@@ -106,13 +106,13 @@ export default function Depth(): JSX.Element {
                     value={depth}
                     step={1}
                     min={0}
-                    max={unit === 'ft' ? 1640 : 500}
+                    max={units === 'feet' ? 1640 : 500}
                     valueLabelDisplay="auto"
                 />
 
                 <TextField
                     id="outlined-number"
-                    label={unit}
+                    label={units}
                     type="number"
                     value={depth}
                     onChange={handleDepthChange}
@@ -121,7 +121,7 @@ export default function Depth(): JSX.Element {
                     }}
                     sx={{ width: '85%' }}
                 />
-            </Card>
+            </PageCard>
         </WellDataEntryLayout>
     );
 }

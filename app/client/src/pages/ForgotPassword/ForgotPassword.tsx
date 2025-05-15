@@ -1,5 +1,6 @@
-import { Button, Card, TextField, Typography } from "@mui/material";
+import { Button, Card, TextField } from "@mui/material";
 import { useState } from "react";
+import TranslatableText from "../../components/TranslatableText";
 
 export default function ForgotPassword(): JSX.Element {
     const [email, setEmail] = useState<string>('');
@@ -58,24 +59,38 @@ export default function ForgotPassword(): JSX.Element {
                     pb: '2rem',
                 }}
             >
-                <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                    Forgot Password
-                </Typography>
+                <TranslatableText 
+                    mb='1rem'
+                    textAlign="center"
+                    variant='h4'
+                    english='Forgot Password'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 {success ? (
-                    <Typography>
-                        If a account exists with this email,
-                        a password reset link has been sent to it.
-                    </Typography>
+                    <TranslatableText
+                        variant='body1'
+                        english={`
+                            If a account exists with this email,
+                            a password reset link has been sent to it.
+                        `}
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 ) : (
                     <>
                         <TextField
-                            label="Email"
                             type="email"
                             value={email}
                             onChange={handleEmailChange}
                             sx={{ width: '85%' }}
                             disabled={isSubmitting}
+                            label={
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='Email' 
+                                    bengali='BENGALI PLACEHOLDER'
+                                />
+                            }
                         />
 
                         <Button
@@ -84,11 +99,20 @@ export default function ForgotPassword(): JSX.Element {
                             onClick={handlePasswordReset}
                             disabled={isSubmitting || !email}
                         >
-                            {isSubmitting ? 'Sending...' : 'Send Reset Link'}
+                            <TranslatableText 
+                                variant='body1'
+                                english={isSubmitting ? 'Sending...' : 'Send Reset Link'}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Button>
 
                         {error && (
-                            <Typography color='red'>{error}</Typography>
+                            <TranslatableText
+                                variant='body1'
+                                error={true}
+                                english={error}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         )}
                     </>
                 )}

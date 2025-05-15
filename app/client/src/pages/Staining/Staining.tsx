@@ -1,10 +1,11 @@
-import { Collapse, Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack, Box } from "@mui/material";
+import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack, Box } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema } from 'iarsenic-types';
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import PageCard from "../../components/PageCard";
 
 export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/well/:id/staining');
@@ -63,16 +64,12 @@ export default function StainingPage(): JSX.Element {
 
     return (
         <WellDataEntryLayout title="Staining" onNext={handleNext}>
-            <Card
-                raised
-                variant='outlined'
-                sx={{ width: '100%', margin: '0 1rem 1rem 1rem', padding: '1rem'}}
-            >
+            <PageCard>
                 <Typography marginBottom='1rem' textAlign='center' variant='h5'>
                     Is There Staining On The Platform?
                 </Typography>
 
-                <Stack mb={2} alignItems='center'>
+                <Stack mb={2} alignItems='center' width='100%'>
                     <Button
                         sx={{ width: '70%', height: '3rem' }}
                         variant='outlined'
@@ -86,7 +83,7 @@ export default function StainingPage(): JSX.Element {
                     error={errors.wellStaining} 
                     component="fieldset"
                     sx={{
-                        width: 'max-content',
+                        width: '100%',
                         padding: '1rem',
                         borderRadius: '5px',
                         outline: errors.wellStaining ? '1px solid red' : 'none',
@@ -114,74 +111,76 @@ export default function StainingPage(): JSX.Element {
                     )}
                 </FormControl>
 
-                <Collapse in={wellStaining === 'not sure'}>
-                    <FormControl 
-                        error={errors.utensilStaining} 
-                        component="fieldset"
-                        sx={{
-                            width: 'max-content',
-                            padding: '1rem',
-                            borderRadius: '5px',
-                            outline: errors.utensilStaining ? '1px solid red' : 'none',
-                        }}
-                    >
-                        <Typography variant="h5" textAlign='center' style={{ marginTop: '1rem' }}>
-                            Is there staining on your utensil?
-                        </Typography>
-                        <RadioGroup
-                            onChange={event => {
-                                setUtensilStaining(UtensilStainingSchema.parse(event.target.value));
-                                setErrors(e => ({ ...e, utensilStaining: false }));
+                <Box position='relative'>
+                    <Collapse in={wellStaining === 'not sure'}>
+                        <FormControl 
+                            error={errors.utensilStaining} 
+                            component="fieldset"
+                            sx={{
+                                width: '100%',
+                                padding: '1rem',
+                                borderRadius: '5px',
+                                outline: errors.utensilStaining ? '1px solid red' : 'none',
                             }}
-                            name="utensil-staining-selector"
                         >
-                            <FormControlLabel
-                                value="red"
-                                control={<Radio />}
-                                label="Red"
-                            />
-                            <FormControlLabel
-                                value="black"
-                                control={<Radio />}
-                                label="No colour change to slightly blackish"
-                            />
-                        </RadioGroup>
-                        {errors.utensilStaining && (
-                            <Typography color="error">
-                                Please select a staining type for the utensil.
+                            <Typography variant="h5" textAlign='center' style={{ marginTop: '1rem' }}>
+                                Is there staining on your utensil?
                             </Typography>
-                        )}
-                    </FormControl>
-                </Collapse>
+                            <RadioGroup
+                                onChange={event => {
+                                    setUtensilStaining(UtensilStainingSchema.parse(event.target.value));
+                                    setErrors(e => ({ ...e, utensilStaining: false }));
+                                }}
+                                name="utensil-staining-selector"
+                            >
+                                <FormControlLabel
+                                    value="red"
+                                    control={<Radio />}
+                                    label="Red"
+                                />
+                                <FormControlLabel
+                                    value="black"
+                                    control={<Radio />}
+                                    label="No colour change to slightly blackish"
+                                />
+                            </RadioGroup>
+                            {errors.utensilStaining && (
+                                <Typography color="error">
+                                    Please select a staining type for the utensil.
+                                </Typography>
+                            )}
+                        </FormControl>
+                    </Collapse>
 
-                <Collapse in={wellStaining === 'red'}>
-                    <Box mb={1}>
-                        <img width='100%' src={`/red_platform_1.jpg`} />
-                    </Box>
-                    <Typography
-                        className='english'
-                        variant='body1'
-                        textAlign='center'
-                        fontStyle='italic'
-                    >
-                        Example of a tube well platform with red platform staining.
-                    </Typography>
-                </Collapse>
+                    <Collapse in={wellStaining === 'red'}>
+                        <Box mb={1}>
+                            <img width='100%' src={`/red_platform_1.jpg`} />
+                        </Box>
+                        <Typography
+                            className='english'
+                            variant='body1'
+                            textAlign='center'
+                            fontStyle='italic'
+                        >
+                            Example of a tube well platform with red platform staining.
+                        </Typography>
+                    </Collapse>
 
-                <Collapse in={wellStaining === 'black'}>
-                    <Box mb={1}>
-                        <img width='100%' src={`/black_platform_1.jpg`} />
-                    </Box>
-                    <Typography
-                        className='english'
-                        variant='body1'
-                        textAlign='center'
-                        fontStyle='italic'
-                    >
-                        Example of a tube well platform with black platform staining.
-                    </Typography>
-                </Collapse>
-            </Card>
+                    <Collapse in={wellStaining === 'black'}>
+                        <Box mb={1}>
+                            <img width='100%' src={`/black_platform_1.jpg`} />
+                        </Box>
+                        <Typography
+                            className='english'
+                            variant='body1'
+                            textAlign='center'
+                            fontStyle='italic'
+                        >
+                            Example of a tube well platform with black platform staining.
+                        </Typography>
+                    </Collapse>
+                </Box>
+            </PageCard>
         </WellDataEntryLayout>
     );
 }

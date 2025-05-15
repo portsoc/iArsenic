@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
@@ -14,39 +14,41 @@ export default function({ well }: props) {
 
     return (
         <PageCard>
-            <Typography variant="h6" gutterBottom>Region</Typography>
+            <Stack width='100%'>
+                <Typography variant="h6" gutterBottom>Region</Typography>
 
-            <Typography variant="body1" component="p" gutterBottom>
-                Division: {well.division}
-            </Typography>
+                <Typography variant="body1" component="p" gutterBottom>
+                    Division: {well.division}
+                </Typography>
 
-            <Typography variant="body1" component="p" gutterBottom>
-                District: {well.district}
-            </Typography>
+                <Typography variant="body1" component="p" gutterBottom>
+                    District: {well.district}
+                </Typography>
 
-            <Typography variant="body1" component="p" gutterBottom>
-                Upazila: {well.upazila}
-            </Typography>
+                <Typography variant="body1" component="p" gutterBottom>
+                    Upazila: {well.upazila}
+                </Typography>
 
-            <Typography variant="body1" component="p" gutterBottom>
-                Union: {well.union}
-            </Typography>
+                <Typography variant="body1" component="p" gutterBottom>
+                    Union: {well.union}
+                </Typography>
 
-            <Typography variant="body1" component="p" gutterBottom>
-                Mouza: {well.mouza}
-            </Typography>
+                <Typography variant="body1" component="p" gutterBottom>
+                    Mouza: {well.mouza}
+                </Typography>
 
-            <Box display="flex" justifyContent="center" mt={2}>
-                <Button
-                    sx={{ width: '80%', height: '3rem' }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate(`/well/${well.id}/region`);
-                    }}
-                >
-                    Edit Region
-                </Button>
-            </Box>
+                <Box display="flex" justifyContent="center" mt={2}>
+                    <Button
+                        sx={{ width: '80%', height: '3rem' }}
+                        variant="outlined"
+                        onClick={() => {
+                            navigate(`/well/${well.id}/region`);
+                        }}
+                    >
+                        Edit Region
+                    </Button>
+                </Box>
+            </Stack>
         </PageCard>
     );
 }

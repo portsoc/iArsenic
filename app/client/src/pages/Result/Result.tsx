@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Stack, Typography } from "@mui/material";
 import { Well, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
@@ -8,6 +8,7 @@ import estimateTexts from "../../components/Speedo/estimateTexts";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import PageCard from "../../components/PageCard";
 
 type EstimateTexts = {
     english: {
@@ -101,7 +102,7 @@ export default function Result(): JSX.Element {
                 <Stack sx={{ alignItems: 'center' }}>
                     <Grid item xs={12}>
                         <Box textAlign='center'>
-                            <Paper elevation={3} sx={{ padding: '20px' }}>
+                            <PageCard>
                                 <Typography className='english' variant="h6" gutterBottom>
                                     {warningTexts.english.title}
                                 </Typography>
@@ -119,7 +120,7 @@ export default function Result(): JSX.Element {
                                 </Typography>
 
                                 <Button
-                                    sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
+                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem'}}
                                     variant='outlined'
                                     onClick={() => navigate(`/understanding-risk`)}
                                 >
@@ -130,10 +131,11 @@ export default function Result(): JSX.Element {
                                         Bengali Placeholder
                                     </Typography>
                                 </Button>
-                            </Paper>
+                            </PageCard>
                         </Box>
                     </Grid>
                 </Stack>
+                
             </Grid>
         </WellDataEntryLayout>
     );

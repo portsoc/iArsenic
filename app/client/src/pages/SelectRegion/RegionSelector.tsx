@@ -1,4 +1,4 @@
-import { Typography, Button, CircularProgress, Stack, Card } from "@mui/material";
+import { Typography, CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
@@ -8,6 +8,8 @@ import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
 import { useRoute } from "wouter";
 import fetchDropdownData from "../../utils/fetchDropdownData";
 import { useAccessToken } from "../../utils/useAccessToken";
+import PageCard from "../../components/PageCard";
+import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 
 export type RegionErrors = {
     division: boolean;
@@ -64,6 +66,58 @@ export default function Region(): JSX.Element {
         fetchRegionTranslations();
     }, []);
 
+    async function handleNext() {
+        if (!handleValidation()) return;
+
+        // if validation returns true, we know these values are
+        // all strings, check anyway to satisfy TS
+
+        if (!selectedDivision?.division ||
+            !selectedDistrict?.district ||
+            !selectedUpazila?.upazila ||
+            !selectedUnion?.union ||
+            !selectedMouza
+        ) return;
+
+        const headers: HeadersInit = {};
+        if (token) {
+            headers['authorization'] = `Bearer ${token.id}`;
+        }
+
+        const body: { 
+            division: string,
+            district: string,
+            upazila: string,
+            union: string,
+            mouza: string,
+            geolocation?: [number, number],
+        } = {
+            division: selectedDivision.division,
+            district: selectedDistrict.district,
+            upazila: selectedUpazila.upazila,
+            union: selectedUnion.union,
+            mouza: selectedMouza,
+        };
+
+        const res = await fetch(`/api/v1/self/well/${wellId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify({
+                ...body
+            })
+        });
+
+        if (!res.ok) {
+            console.error('Failed to update well:', res);
+            return;
+        }
+
+        navigate(`/well/${wellId}/staining`);
+    }
+
     if (!regionTranslations) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
@@ -73,21 +127,12 @@ export default function Region(): JSX.Element {
     }
 
     return (
-        <>
-            <Typography alignSelf='center' variant="h4">Region</Typography>
+        <WellDataEntryLayout title='Region' onNext={handleNext}>
+            <PageCard>
+                <Typography marginBottom='1rem' textAlign='center' variant='h5' mb={4}>
+                    Enter Region Manually
+                </Typography>
 
-            <Card
-                raised
-                variant='outlined'
-                sx={{ 
-                    width: '100%', 
-                    margin: '0 1rem 1rem 1rem', 
-                    padding: '1rem',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}
-            >
                 <EnglishRegionSelector
                     dropdownData={dropdownData}
                     selectedDivision={selectedDivision}
@@ -120,65 +165,7 @@ export default function Region(): JSX.Element {
                     setErrors={setErrors}
                     rt={regionTranslations}
                 />
-            </Card>
-
-            <Button
-                sx={{ width: '90%', height: '4rem' }}
-                variant='contained'
-                onClick={async () => {
-                    if (!handleValidation()) return;
-
-                    // if validation returns true, we know these values are
-                    // all strings, check anyway to satisfy TS
-
-                    if (!selectedDivision?.division ||
-                        !selectedDistrict?.district ||
-                        !selectedUpazila?.upazila ||
-                        !selectedUnion?.union ||
-                        !selectedMouza
-                    ) return;
-
-                    const headers: HeadersInit = {};
-                    if (token) {
-                        headers['authorization'] = `Bearer ${token.id}`;
-                    }
-
-                    const body: { 
-                        division: string,
-                        district: string,
-                        upazila: string,
-                        union: string,
-                        mouza: string,
-                        geolocation?: [number, number],
-                    } = {
-                        division: selectedDivision.division,
-                        district: selectedDistrict.district,
-                        upazila: selectedUpazila.upazila,
-                        union: selectedUnion.union,
-                        mouza: selectedMouza,
-                    };
-
-                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...headers,
-                        },
-                        body: JSON.stringify({
-                            ...body
-                        })
-                    });
-
-                    if (!res.ok) {
-                        console.error('Failed to update well:', res);
-                        return;
-                    }
-
-                    navigate(`/well/${wellId}/staining`);
-                }}
-            >
-                Next Step
-            </Button>
-        </>
+            </PageCard>
+        </WellDataEntryLayout>
     );
 }

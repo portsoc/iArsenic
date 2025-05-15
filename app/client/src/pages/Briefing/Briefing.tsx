@@ -1,8 +1,9 @@
-import { Button, Card, Link, List, ListItem } from "@mui/material";
+import { Button, Link, List, ListItem } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { Well } from "iarsenic-types";
 import { useAccessToken } from "../../utils/useAccessToken";
 import TranslatableText from "../../components/TranslatableText";
+import PageCard from "../../components/PageCard";
 
 export default function Briefing(): JSX.Element {
     const { data: token } = useAccessToken();
@@ -44,7 +45,7 @@ export default function Briefing(): JSX.Element {
                 textAlign='center'
             />
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <PageCard>
                 <TranslatableText
                     english={`
                         To accurately estimate the arsenic levels in your
@@ -114,9 +115,9 @@ export default function Briefing(): JSX.Element {
                         />
                     </ListItem>
                 </List>
-            </Card>
+            </PageCard>
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <PageCard>
                 <TranslatableText 
                     variant='h5' 
                     mb='1rem'
@@ -127,7 +128,6 @@ export default function Briefing(): JSX.Element {
 
                 <TranslatableText 
                     variant='body1' 
-                    textAlign="center"
                     english={`
                         We combine the region and well depth information to assess
                         the geological conditions, and the staining color to
@@ -141,9 +141,9 @@ export default function Briefing(): JSX.Element {
                         পানির আর্সেনিক ঝুঁকি সঠিকভাবে পূর্বাভাস দিতে সাহায্য করে।
                     `}
                 />
-            </Card>
+            </PageCard>
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <PageCard>
                 <TranslatableText 
                     mb='1rem' 
                     textAlign="center"
@@ -185,9 +185,9 @@ export default function Briefing(): JSX.Element {
                         </>
                     }
                 />
-            </Card>
+            </PageCard>
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem'}}>
+            <PageCard>
                 <TranslatableText 
                     variant='h5' 
                     mb='1rem'
@@ -213,7 +213,7 @@ export default function Briefing(): JSX.Element {
                         পানিয়জল সম্পর্কে  আরও ভালভাবে প্রস্তুতি নিতে পারেন ।
                     `}
                 />
-            </Card>
+            </PageCard>
 
             <Button
                 sx={{ width: '90%', height: '4rem' }}

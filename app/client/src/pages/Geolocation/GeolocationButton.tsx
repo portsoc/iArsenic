@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import TranslatableText from "../../components/TranslatableText";
 
 type props = {
     setRegionGeovalidated: (geovalidated: boolean) => void,
@@ -98,7 +99,11 @@ export default function GeolocationButton({
                 startIcon={<CheckCircleOutlineIcon />}
                 disabled
             >
-                Geolocation found successfully
+                <TranslatableText
+                    variant='body1'
+                    english='Geolocation found successfully'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
         );
     }
@@ -112,7 +117,11 @@ export default function GeolocationButton({
                 onClick={getGeolocation}
                 disabled={true}
             >
-                Geolocation not supported
+                <TranslatableText
+                    variant='body1'
+                    english='Geolocation not supported'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
         );
     }
@@ -126,7 +135,11 @@ export default function GeolocationButton({
                 onClick={getGeolocation}
                 disabled={true}
             >
-                Getting Region
+                <TranslatableText
+                    variant='body1'
+                    english='Getting Region'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
         );
     }
@@ -140,7 +153,11 @@ export default function GeolocationButton({
                 onClick={getGeolocation}
                 disabled={true}
             >
-                Region not found
+                <TranslatableText
+                    variant='body1'
+                    english='Region not found'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
         );
     }
@@ -152,7 +169,11 @@ export default function GeolocationButton({
             startIcon={<MyLocationIcon />}
             onClick={getGeolocation}
         >
-            Use Geolocation
+            <TranslatableText
+                variant='body1'
+                english='Use Geolocation'
+                bengali='BENGALI PLACEHOLDER'
+            />
         </Button>
     );
 }

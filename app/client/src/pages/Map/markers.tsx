@@ -4,6 +4,7 @@ import { RegionTranslations } from '../../types';
 import { Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
 import getMapPin from '../../utils/getMapPin';
+import TranslatableText from '../../components/TranslatableText';
 
 type props = {
     wells: Well[],
@@ -79,101 +80,112 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                         }
                     >
                         <Popup>
-                            <Typography variant='body1'>
-                                ID: {w.id}
-                            </Typography>
+                            <TranslatableText 
+                                variant='body1'
+                                english={`ID: ${w.id}`}
+                                bengali={`BENGALI PLACEHOLDER: ${w.id}`}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`Risk Factor: ${predictionToRiskFactor(w.riskAssesment).english}`}
+                                bengali={`BENGALI PLACEHOLDER: ${predictionToRiskFactor(w.riskAssesment).bengali}`}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`Division: ${w.division}`}
+                                bengali={`
+                                    ${regionTranslations.Divisions.Division}:
+                                    ${regionTranslations.Divisions[w.division!]}
+                                `}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`District: ${w.district}`}
+                                bengali={`
+                                    ${regionTranslations.Districts.District}:
+                                    ${regionTranslations.Districts[w.district!]}
+                                `}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`Upazila: ${w.upazila!}`}
+                                bengali={`
+                                    ${regionTranslations.Upazilas.Upazila}:
+                                    ${regionTranslations.Upazilas[w.upazila!]}
+                                `}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`Union: ${w.union!}`}
+                                bengali={`
+                                    ${regionTranslations.Unions.Union}:
+                                    ${regionTranslations.Unions[w.union!]}
+                                `}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`Mouza: ${w.mouza}`}
+                                bengali={`
+                                    ${regionTranslations.Mouzas.Mouza}:
+                                    ${regionTranslations.Mouzas[w.mouza!]}
+                                `}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`
+                                    Depth: ${w!.depth}m
+                                `}
+                                bengali={`
+                                    BENGALI PLACEHOLDER: ${w!.depth}m
+                                `}
+                            />
+
+                            <TranslatableText 
+                                variant='body1'
+                                english={`
+                                    Flooding: ${w.flooding ? 'Yes' : 'No'}
+                                `}
+                                bengali={`
+                                    BENGALI PLACEHOLDER: ${w.flooding ? 'Yes' : 'No'}
+                                `}
+                            />
 
                             <Typography className='english' variant='body1'>
-                                Risk Factor: {predictionToRiskFactor(w.riskAssesment).english}
+                                
                             </Typography>
 
                             <Typography className='bengali' variant='body1'>
-                                BENGALI PLACEHOLDER: {predictionToRiskFactor(w.riskAssesment).bengali}
                             </Typography>
 
-                            <Typography className='english' variant='body1'>
-                                Division: {w.division}
-                            </Typography>
-
-                            <Typography className='bengali' variant='body1'>{`
-                                ${regionTranslations.Divisions.Division}:
-                                ${regionTranslations.Divisions[w.division!]}
-                            `}</Typography>
-
-                            <Typography className='english' variant='body1'>
-                                District: {w.district}
-                            </Typography>
-
-                            <Typography className='bengali' variant='body1'>{`
-                                ${regionTranslations.Districts.District}:
-                                ${regionTranslations.Districts[w.district!]}
-                            `}</Typography>
-
-                            <Typography className='english' variant='body1'>
-                                Upazila: {w.upazila!}
-                            </Typography>
-
-                            <Typography className='bengali' variant='body1'>{`
-                                ${regionTranslations.Upazilas.Upazila}:
-                                ${regionTranslations.Upazilas[w.upazila!]}
-                            `}</Typography>
-
-                            <Typography className='english' variant='body1'>
-                                Union: {w.union!}
-                            </Typography>
-
-                            <Typography className='bengali' variant='body1'>{`
-                                ${regionTranslations.Unions.Union}:
-                                ${regionTranslations.Unions[w.union!]}
-                            `}</Typography>
-
-                            <Typography className='english' variant='body1'>
-                                Mouza: {w.mouza}
-                            </Typography>
-
-                            <Typography className='bengali' variant='body1'>{`
-                                ${regionTranslations.Mouzas.Mouza}:
-                                ${regionTranslations.Mouzas[w.mouza!]}
-                            `}</Typography>
-
-                            <Typography className='english' variant='body1'>
-                                Depth: {
-                                    `${w!.depth}m`
-                                }
-                            </Typography>
-
-                            <Typography className='bengali' variant='body1'>
-                                BENGALI PLACEHOLDER: {
-                                    `${w!.depth}m`
-                                }
-                            </Typography>
-
-                            <Typography className='english' variant='body1'>
-                                Flooding: {w.flooding ? 'Yes' : 'No'}
-                            </Typography>
-
-                            <Typography className='bengali' variant='body1'>
-                                BENGALI PLACEHOLDER: {w.flooding ? 'Yes' : 'No'}
-                            </Typography>
-
-                            <Typography className='english' variant='body1'>
-                                Well Staining: {w.staining}
-                            </Typography>
-
-                            <Typography className='english' variant='body1'>
-                                BENGALI PLACEHOLDER: {w.staining}
-                            </Typography>
+                            <TranslatableText 
+                                variant='body1'
+                                english={`
+                                    Well Staining: ${w.staining}
+                                `}
+                                bengali={`
+                                    BENGALI PLACEHOLDER: ${w.staining}
+                                `}
+                            />
 
                             {
                                 (w.utensilStaining != null) &&
                                 <>
-                                    <Typography className='english' variant='body1'>
-                                        Utensil Staining: {w.utensilStaining}
-                                    </Typography>
-
-                                    <Typography className='bengali' variant='body1'>
-                                        BENGALI PLACEHOLDER: {w.utensilStaining}
-                                    </Typography>
+                                    <TranslatableText 
+                                        variant='body1'
+                                        english={`
+                                            Utensil Staining: ${w.utensilStaining}   
+                                        `}
+                                        bengali={`
+                                            BENGALI PLACEHOLDER: ${w.utensilStaining}
+                                        `}
+                                    />
                                 </>
                             }
                         </Popup>

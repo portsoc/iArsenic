@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Well } from "iarsenic-types";
@@ -61,54 +61,56 @@ export default function WellImageDisplay({ well }: Props) {
 
     return (
         <PageCard>
-            <Typography variant="h6" gutterBottom>
-                Uploaded Images
-            </Typography>
+            <Stack width='100%'>
+                <Typography variant="h6" gutterBottom>
+                    Uploaded Images
+                </Typography>
 
-            <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight={300}
-            >
-                {loading ? (
-                    <CircularProgress />
-                ) : imageUrls.length > 0 ? (
-                    <Carousel
-                        showThumbs={false}
-                        showStatus={false}
-                        emulateTouch
-                        dynamicHeight
-                    >
-                        {imageUrls.map((url, index) => (
-                            <div key={index}>
-                                <img
-                                    src={url}
-                                    alt={`Well image ${index + 1}`}
-                                    style={{ maxHeight: 300, objectFit: "cover" }}
-                                />
-                            </div>
-                        ))}
-                    </Carousel>
-                ) : (
-                    <Typography color="text.secondary">
-                        No images uploaded.
-                    </Typography>
-                )}
-            </Box>
-
-            <Box display="flex" justifyContent="center" mt={2}>
-                <Button
-                    sx={{ width: '80%', height: '3rem' }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate(`/well/${well.id}/upload-image`);
-                    }}
+                <Box
+                    width="100%"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    minHeight={300}
                 >
-                    Edit Images
-                </Button>
-            </Box>
+                    {loading ? (
+                        <CircularProgress />
+                    ) : imageUrls.length > 0 ? (
+                        <Carousel
+                            showThumbs={false}
+                            showStatus={false}
+                            emulateTouch
+                            dynamicHeight
+                        >
+                            {imageUrls.map((url, index) => (
+                                <div key={index}>
+                                    <img
+                                        src={url}
+                                        alt={`Well image ${index + 1}`}
+                                        style={{ maxHeight: 300, objectFit: "cover" }}
+                                    />
+                                </div>
+                            ))}
+                        </Carousel>
+                    ) : (
+                        <Typography color="text.secondary">
+                            No images uploaded.
+                        </Typography>
+                    )}
+                </Box>
+
+                <Box display="flex" justifyContent="center" mt={2}>
+                    <Button
+                        sx={{ width: '80%', height: '3rem' }}
+                        variant="outlined"
+                        onClick={() => {
+                            navigate(`/well/${well.id}/upload-image`);
+                        }}
+                    >
+                        Edit Images
+                    </Button>
+                </Box>
+            </Stack>
         </PageCard>
     );
 }

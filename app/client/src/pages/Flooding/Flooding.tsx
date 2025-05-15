@@ -1,10 +1,11 @@
-import { FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
+import { FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import { useState } from "react";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 export default function Flooding(): JSX.Element {
     const [, params] = useRoute('/well/:id/flooding');
@@ -53,9 +54,13 @@ export default function Flooding(): JSX.Element {
     return (
         <WellDataEntryLayout title="Flooding" onNext={handleNext}>
             <PageCard>
-                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
-                    Is the area prone to flooding?
-                </Typography>
+                <TranslatableText
+                    variant='h5'
+                    mb='1rem'
+                    textAlign="center"
+                    english='Is the area prone to flooding?'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <FormControl
                     error={error}
@@ -73,16 +78,39 @@ export default function Flooding(): JSX.Element {
                         onChange={handleFloodingChange}
                     >
                         <Stack direction='row' columnGap={3}>
-                            <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                            <FormControlLabel value='no' control={<Radio />} label='No' />
+                            <FormControlLabel 
+                                value='yes' 
+                                control={<Radio />} 
+                                label={
+                                    <TranslatableText
+                                        variant="body1"
+                                        english="Yes"
+                                        bengali="হ্যাঁ"
+                                    />
+                                }
+                            />
+                            <FormControlLabel 
+                                value='no' 
+                                control={<Radio />} 
+                                label={
+                                    <TranslatableText
+                                        variant="body1"
+                                        english="No"
+                                        bengali="না"
+                                    />
+                                }
+                            />
                         </Stack>
                     </RadioGroup>
                 </FormControl>
 
                 {error && (
-                    <Typography color='error'>
-                        Please select an option
-                    </Typography>
+                    <TranslatableText
+                        variant='body1'
+                        error={true}
+                        english='Please select an option'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 )}
             </PageCard>
         </WellDataEntryLayout>

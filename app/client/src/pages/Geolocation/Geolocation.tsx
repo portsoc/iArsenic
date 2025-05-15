@@ -1,4 +1,4 @@
-import { Box, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { Well } from "iarsenic-types";
@@ -11,13 +11,10 @@ import getMapPin from "../../utils/getMapPin";
 import MapFocus from "./MapFocus";
 import Collapse from "@mui/material/Collapse";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 export type RegionErrors = {
-    division: boolean;
-    district: boolean;
-    upazila: boolean;
-    union: boolean;
-    mouza: boolean;
     withWell: boolean;
 };
 
@@ -33,15 +30,8 @@ export default function Region(): JSX.Element {
     const [upazila, setUpazila] = useState<string | null>(null);
     const [union, setUnion] = useState<string | null>(null);
     const [mouza, setMouza] = useState<string | null>(null);
-    const [withWell, setWithWell] = useState<boolean>(false);
-    const [errors, setErrors] = useState<RegionErrors>({
-        division: false,
-        district: false,
-        upazila: false,
-        union: false,
-        mouza: false,
-        withWell: false,
-    });
+    const [withWell, setWithWell] = useState<boolean | null>(null);
+    const [errors, setErrors] = useState<RegionErrors>({ withWell: false });
     const [regionGeovalidated, setRegionGeovalidated] = useState<boolean>(false);
     const [geolocation, setGeolocation] = useState<[number, number]>();
 
@@ -74,17 +64,21 @@ export default function Region(): JSX.Element {
     }, [token, wellId]);
 
     async function handleNext() {
+        if (withWell == null) {
+            setErrors({ withWell: true });
+            return;
+        }
+
         const regionKeyValid = division && district && upazila && union && mouza;
+
+        if (!regionKeyValid) {
+            navigate(`/well/${wellId}/select-region`);
+            return;
+        }
 
         const headers: HeadersInit = {};
         if (token) {
             headers['authorization'] = `Bearer ${token.id}`;
-        }
-
-        if (!regionKeyValid) {
-            console.log('regionKey not valid');
-            navigate(`/well/${wellId}/select-region`);
-            return;
         }
 
         const body: {
@@ -126,26 +120,21 @@ export default function Region(): JSX.Element {
     if (!well) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
-                <Typography align='center'>Loading...</Typography>
+                <CircularProgress />
             </Stack>
         );
     }
 
     return (
         <WellDataEntryLayout title="Region" onNext={handleNext}>
-            <Card
-                raised
-                variant='outlined'
-                sx={{
-                    width: '100%',
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    alignItems: 'center',
-                }}
-            >
-                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
-                    Are you currently with the well?
-                </Typography>
+            <PageCard>
+                <TranslatableText
+                    mb='1rem'
+                    textAlign="center"
+                    variant='h5'
+                    english='Are you currently with the well?'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <FormControl
                     error={errors.withWell}
@@ -161,38 +150,58 @@ export default function Region(): JSX.Element {
                         name="well-staining-selector"
                         onChange={event => {
                             setWithWell(event.target.value === 'yes');
-                            setErrors(e => ({ ...e, withWell: false }));
+                            setErrors({ withWell: false });
                         }}
                     >
-                        <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                        <FormControlLabel value="no" control={<Radio />} label="No" />
+                        <FormControlLabel 
+                            value="yes" 
+                            control={<Radio />} 
+                            label={
+                                <TranslatableText
+                                    variant="body1"
+                                    english="Yes"
+                                    bengali="হ্যাঁ"
+                                />
+                            }
+                        />
+                        <FormControlLabel 
+                            value="no" 
+                            control={<Radio />} 
+                            label={
+                                <TranslatableText
+                                    variant="body1"
+                                    english="No"
+                                    bengali="না"
+                                />
+                            }
+                        />
                     </RadioGroup>
-                    {errors.withWell &&
-                        <Typography color="error">
-                            Please select whether you are currently near the well
-                        </Typography>
-                    }
+
+                    {errors.withWell && (
+                        <TranslatableText 
+                            variant='body1'
+                            error={true} 
+                            english='Please select whether you are currently near the well'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    )}
                 </FormControl>
-            </Card>
+            </PageCard>
 
             <Collapse
                 in={withWell || (geolocation != null)}
                 sx={{
-                    margin: '0 1rem 1rem 1rem',
                     width: '100%',
                 }}
             >
-                <Card
-                    raised
-                    variant='outlined'
-                    sx={{
-                        padding: '1rem',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Typography marginBottom='1rem' textAlign='center' variant='h5' mb={4}>
-                        Identify Region With Geolocation
-                    </Typography>
+                <PageCard sx={{ margin: '0rem 0rem 1rem '}}>
+                    <TranslatableText 
+                        variant='h5' 
+                        mb='2rem'
+                        textAlign="center"    
+                        english='Identify Region With Geolocation'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
 
                     <Stack alignItems='center' width='100%'>
                         <Box mb={4}>
@@ -231,7 +240,7 @@ export default function Region(): JSX.Element {
                             </MapContainer>
                         </Box>
                     </Stack>
-                </Card>
+                </PageCard>
             </Collapse>
         </WellDataEntryLayout>
     );

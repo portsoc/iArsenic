@@ -1,8 +1,8 @@
-import { Typography } from "@mui/material";
 import ReactDOMServer from "react-dom/server";
 import { GeoJSON as GeoJSONComponent } from 'react-leaflet';
 import { GeoJSON } from 'leaflet';
 import { RegionTranslations } from "../../types";
+import TranslatableText from "../../components/TranslatableText";
 
 type props = {
     interactiveMap: GeoJSON,
@@ -33,40 +33,38 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
             onEachFeature={(feature, layer) => { // TODO create feature typing
                 layer.bindPopup(ReactDOMServer.renderToString(
                     <>
-                        <Typography className='english' variant='body1'>
-                            Mean As: {Math.floor(feature.properties.as)}
-                        </Typography>
+                        <TranslatableText 
+                            variant='body1'
+                            english={`Mean As: ${Math.floor(feature.properties.as)}`}
+                            bengali='BENGALI PLACEHOLDER'
+                        />
 
-                        <Typography className='bengali' variant='body1'>
-                            BENGALI PLACEHOLDER
-                        </Typography>
+                        <TranslatableText 
+                            variant='body1'
+                            english={`Division: ${feature.properties.div}`}
+                            bengali={`
+                                ${regionTranslations.Divisions.Division}:
+                                ${regionTranslations.Divisions[feature.properties.div]}
+                            `}
+                        />
 
-                        <Typography className='english' variant='body1'>
-                            Division: {feature.properties.div}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Divisions.Division}:
-                            ${regionTranslations.Divisions[feature.properties.div]}
-                        `}</Typography>
-
-                        <Typography className='english' variant='body1'>
-                            District: {feature.properties.dis}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Districts.District}:
-                            ${regionTranslations.Districts[feature.properties.dis]}
-                        `}</Typography>
-
-                        <Typography className='english' variant='body1'>
-                            Upazila: {feature.properties.upa}
-                        </Typography>
-
-                        <Typography className='bengali' variant='body1'>{`
-                            ${regionTranslations.Upazilas.Upazila}:
-                            ${regionTranslations.Upazilas[feature.properties.upa]}
-                        `}</Typography>
+                        <TranslatableText 
+                            variant='body1'
+                            english={`District: ${feature.properties.dis}`}
+                            bengali={`
+                                ${regionTranslations.Districts.District}:
+                                ${regionTranslations.Districts[feature.properties.dis]}
+                            `}
+                        />
+                        
+                        <TranslatableText 
+                            variant='body1'
+                            english={`Upazila: ${feature.properties.upa}`}
+                            bengali={`
+                                ${regionTranslations.Upazilas.Upazila}:
+                                ${regionTranslations.Upazilas[feature.properties.upa]}
+                            `}
+                        />
                     </>
                 ));
             }}

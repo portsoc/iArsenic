@@ -9,6 +9,7 @@ interface props {
     gutterBottom?: boolean;
     mb?: string | number;
     textAlign?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
+    error?: boolean;
 }
 
 export default function TranslatableText({ 
@@ -19,7 +20,14 @@ export default function TranslatableText({
     gutterBottom = false, 
     mb, 
     textAlign,
+    error,
 }: props): JSX.Element {
+    const baseStyle = {
+        mb,
+        textAlign,
+        color: error ? 'error.main' : undefined,
+    };
+
     return (
         <>
             <Typography
@@ -27,7 +35,7 @@ export default function TranslatableText({
                 variant={variant}
                 align={align}
                 gutterBottom={gutterBottom}
-                sx={{ mb, textAlign }}
+                sx={baseStyle}
             >
                 {english}
             </Typography>
@@ -37,7 +45,7 @@ export default function TranslatableText({
                 variant={variant}
                 align={align}
                 gutterBottom={gutterBottom}
-                sx={{ mb, textAlign }}
+                sx={baseStyle}
             >
                 {bengali}
             </Typography>
