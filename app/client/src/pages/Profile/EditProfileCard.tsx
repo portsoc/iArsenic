@@ -1,6 +1,4 @@
 import {
-    Typography,
-    Card,
     Box,
     Button,
     TextField,
@@ -9,12 +7,14 @@ import {
     FormControl,
     InputLabel
 } from '@mui/material';
-import { User, Language, Units, UnitsSchema, LanguageSchema } from 'iarsenic-types';
+import { User, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
 import { useAccessToken } from '../../utils/useAccessToken';
 import { useLanguage } from '../../utils/useLanguage';
 import { useUnits } from '../../utils/useUnits';
 import { useQueryClient } from '@tanstack/react-query';
+import TranslatableText from '../../components/TranslatableText';
+import PageCard from '../../components/PageCard';
 
 interface Props {
     user: User;
@@ -27,13 +27,10 @@ export default function EditProfileCard({ user, setEditMode, setSaving, setUser 
     const queryClient = useQueryClient()
 
     const [name, setName] = useState<string>(user.name);
-    const [language, setLanguage] = useState<Language>(user.language);
-    const [units, setUnits] = useState<Units>(user.units);
     const { data: token } = useAccessToken();
 
-    const { setLanguage: applyLanguage } = useLanguage();
-    const { setUnits: applyUnits } = useUnits();
-
+    const { language, setLanguage } = useLanguage();
+    const { units, setUnits } = useUnits();
 
     async function saveChanges() {
         setSaving(true);
@@ -43,8 +40,8 @@ export default function EditProfileCard({ user, setEditMode, setSaving, setUser 
             throw new Error('Invalid token');
         }
     
-        if (language) await applyLanguage(language);
-        if (units) await applyUnits(units);
+        if (language) await setLanguage(language);
+        if (units) await setUnits(units);
     
         const updatedUser = { ...user, name, language, units };
     
@@ -64,69 +61,181 @@ export default function EditProfileCard({ user, setEditMode, setSaving, setUser 
 
     return (
         <Box width='100%'>
-            <Typography className='english' textAlign='center' variant='h4' gutterBottom>
-                Edit Profile
-            </Typography>
+            <TranslatableText 
+                width='100%'
+                textAlign='center' 
+                variant='h4' 
+                gutterBottom
+                english='Edit Profile'
+                bengali='BENGALI PLACEHOLDER'
+            />
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem' }}>
+            <PageCard gap='0'>
                 <TextField
                     fullWidth
-                    label="Name"
                     variant="outlined"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     sx={{ mb: 2 }}
+                    label={
+                        <TranslatableText 
+                            width='100%'
+                            variant='body1' 
+                            english='Name'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    }
                 />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Email</strong> {user.email}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    mb='1rem'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Email</strong> {user.email}
+                        </>
+                    } 
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Email Verified:</strong> {user.emailVerified ? "Yes" : "No"}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    mb='1rem'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Email Verified:</strong> {user.emailVerified ? "Yes" : "No"}
+                        </>
+                    } 
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>User Type:</strong> {user.type.charAt(0).toUpperCase() + user.type.slice(1)}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    mb='1rem'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>User Type:</strong> {user.type.charAt(0).toUpperCase() + user.type.slice(1)}
+                        </>
+                    } 
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Created At:</strong> {user.createdAt.toLocaleDateString()}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    mb='1rem'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Created At:</strong> {user.createdAt.toLocaleDateString()}
+                        </>
+                    } 
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <FormControl fullWidth sx={{ mb: 2 }}>
-                    <InputLabel>Language</InputLabel>
+                    <InputLabel>
+                        <TranslatableText 
+                            width='100%'
+                            variant='body1' 
+                            english='Language'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </InputLabel>
                     <Select
                         value={language}
                         onChange={(e) => setLanguage(LanguageSchema.parse(e.target.value))}
-                        label="Language"
+                        label={
+                            <TranslatableText 
+                                width='100%'
+                                variant='body1' 
+                                english='Language'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
                     >
-                        <MenuItem value="english">English</MenuItem>
-                        <MenuItem value="bengali">Bengali</MenuItem>
+                        <MenuItem value="english">
+                            <TranslatableText 
+                                width='100%'
+                                variant='body1' 
+                                english='English'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="bengali">
+                            <TranslatableText 
+                                width='100%'
+                                variant='body1' 
+                                english='Bengali'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
                     </Select>
                 </FormControl>
 
                 <FormControl fullWidth sx={{ mb: 2 }}>
-                    <InputLabel>Units System</InputLabel>
+                    <InputLabel>
+                        <TranslatableText 
+                            width='100%'
+                            variant='body1' 
+                            english='Units System'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </InputLabel>
                     <Select
                         value={units}
                         onChange={(e) => setUnits(UnitsSchema.parse(e.target.value))}
-                        label="Units System"
+                        label={
+                            <TranslatableText 
+                                width='100%'
+                                variant='body1' 
+                                english='Units System'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
                     >
-                        <MenuItem value="meters">Meters</MenuItem>
-                        <MenuItem value="feet">Feet</MenuItem>
+                        <MenuItem value="meters">
+                            <TranslatableText 
+                                width='100%'
+                                variant='body1' 
+                                english='Meters'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+
+                        <MenuItem value="feet">
+                            <TranslatableText 
+                                width='100%'
+                                variant='body1' 
+                                english='Feet'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
                     </Select>
                 </FormControl>
 
-                <Box display="flex" justifyContent="space-between" mt={2}>
-                    <Button variant="outlined" color="error" onClick={() => setEditMode(false)}>
-                        Cancel
-                    </Button>
+                <Box display="flex" justifyContent="space-between" mt={2} width='100%'>
                     <Button variant="contained" color="primary" onClick={saveChanges}>
-                        Save Changes
+                        <TranslatableText 
+                            width='100%'
+                            variant='body1' 
+                            english='Save Changes'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </Button>
+
+                    <Button variant="outlined" color="error" onClick={() => setEditMode(false)}>
+                        <TranslatableText 
+                            width='100%'
+                            variant='body1' 
+                            english='Cancel'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Button>
                 </Box>
-            </Card>
+            </PageCard>
         </Box>
     );
 }

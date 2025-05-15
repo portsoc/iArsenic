@@ -3,11 +3,17 @@ import { ReactNode } from "react";
 
 interface StandardCardProps {
     children: ReactNode;
+    gap?: string;
     sx?: SxProps<Theme>;
     variant?: "outlined" | "elevation";
 }
 
-export default function StandardCard({ children, sx, variant = "outlined" }: StandardCardProps) {
+export default function StandardCard({ 
+    children, 
+    sx, 
+    variant = "outlined",
+    gap = '1rem',
+}: StandardCardProps) {
     return (
         <Card
             variant={variant}
@@ -18,7 +24,7 @@ export default function StandardCard({ children, sx, variant = "outlined" }: Sta
                 alignItems: "center",
                 display: "flex",
                 flexDirection: "column",
-                gap: "1rem",
+                gap,
                 ...sx,
             }}
         >

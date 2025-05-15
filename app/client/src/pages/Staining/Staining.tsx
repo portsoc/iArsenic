@@ -1,4 +1,4 @@
-import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Typography, Stack, Box } from "@mui/material";
+import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Box } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema } from 'iarsenic-types';
@@ -6,6 +6,7 @@ import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/well/:id/staining');
@@ -65,9 +66,13 @@ export default function StainingPage(): JSX.Element {
     return (
         <WellDataEntryLayout title="Staining" onNext={handleNext}>
             <PageCard>
-                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
-                    Is There Staining On The Platform?
-                </Typography>
+                <TranslatableText 
+                    marginBottom='1rem' 
+                    textAlign='center' 
+                    variant='h5'
+                    english='Is There Staining On The Platform?'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <Stack mb={2} alignItems='center' width='100%'>
                     <Button
@@ -75,7 +80,11 @@ export default function StainingPage(): JSX.Element {
                         variant='outlined'
                         onClick={() => navigate(`/staining-guide`)}
                     >
-                        See Staining Guide
+                        <TranslatableText 
+                            variant='body1'
+                            english='See Staining Guide'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Button>
                 </Stack>
 
@@ -96,8 +105,29 @@ export default function StainingPage(): JSX.Element {
                         }}
                         name="well-staining-selector"
                     >
-                        <FormControlLabel value="red" control={<Radio />} label="Red" />
-                        <FormControlLabel value="black" control={<Radio />} label="Black" />
+                        <FormControlLabel 
+                            value="red"
+                            control={<Radio />}
+                            label={
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='Red' 
+                                    bengali='BENGALI PLACEHOLDEr'
+                                />
+                            }
+                        />
+
+                        <FormControlLabel 
+                            value="black" 
+                            control={<Radio />} 
+                            label={
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='Black' 
+                                    bengali='BENGALI PLACEHOLDEr'
+                                />
+                            }
+                        />
                         <FormControlLabel
                             value="not sure"
                             control={<Radio />}
@@ -105,14 +135,18 @@ export default function StainingPage(): JSX.Element {
                         />
                     </RadioGroup>
                     {errors.wellStaining && (
-                        <Typography color="error">
-                            Please select a staining type for the well platform.
-                        </Typography>
+                        <TranslatableText 
+                            error={true}
+                            variant='body1'
+                            english='Please select a staining type for the well platform.'
+                            bengali='BENGALI PLACEHOLDEr'
+                        />
                     )}
                 </FormControl>
 
                 <Box position='relative'>
                     <Collapse in={wellStaining === 'not sure'}>
+
                         <FormControl 
                             error={errors.utensilStaining} 
                             component="fieldset"
@@ -123,9 +157,14 @@ export default function StainingPage(): JSX.Element {
                                 outline: errors.utensilStaining ? '1px solid red' : 'none',
                             }}
                         >
-                            <Typography variant="h5" textAlign='center' style={{ marginTop: '1rem' }}>
-                                Is there staining on your utensil?
-                            </Typography>
+                            <TranslatableText
+                                variant="h5" 
+                                textAlign='center' 
+                                mt='1rem'
+                                english='Is there staining on your utensil?'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+
                             <RadioGroup
                                 onChange={event => {
                                     setUtensilStaining(UtensilStainingSchema.parse(event.target.value));
@@ -136,19 +175,39 @@ export default function StainingPage(): JSX.Element {
                                 <FormControlLabel
                                     value="red"
                                     control={<Radio />}
-                                    label="Red"
+                                    label={
+                                        <TranslatableText
+                                            variant="h5" 
+                                            textAlign='center' 
+                                            mt='1rem'
+                                            english='Red'
+                                            bengali='BENGALI PLACEHOLDER'
+                                        />
+                                    }
                                 />
                                 <FormControlLabel
                                     value="black"
                                     control={<Radio />}
-                                    label="No colour change to slightly blackish"
+                                    label={
+                                        <TranslatableText
+                                            variant="h5" 
+                                            textAlign='center' 
+                                            mt='1rem'
+                                            english="No colour change to slightly blackish"
+                                            bengali='BENGALI PLACEHOLDER'
+                                        />
+                                    }
                                 />
                             </RadioGroup>
+
                             {errors.utensilStaining && (
-                                <Typography color="error">
-                                    Please select a staining type for the utensil.
-                                </Typography>
+                                <TranslatableText
+                                    error={true} 
+                                    english='Please select a staining type for the utensil.'
+                                    bengali='BENGALI PLACEHOLDER'
+                                />
                             )}
+
                         </FormControl>
                     </Collapse>
 
@@ -156,28 +215,28 @@ export default function StainingPage(): JSX.Element {
                         <Box mb={1}>
                             <img width='100%' src={`/red_platform_1.jpg`} />
                         </Box>
-                        <Typography
+                        <TranslatableText
                             className='english'
                             variant='body1'
                             textAlign='center'
                             fontStyle='italic'
-                        >
-                            Example of a tube well platform with red platform staining.
-                        </Typography>
+                            english='Example of a tube well platform with red platform staining.'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Collapse>
 
                     <Collapse in={wellStaining === 'black'}>
                         <Box mb={1}>
                             <img width='100%' src={`/black_platform_1.jpg`} />
                         </Box>
-                        <Typography
+                        <TranslatableText
                             className='english'
                             variant='body1'
                             textAlign='center'
                             fontStyle='italic'
-                        >
-                            Example of a tube well platform with black platform staining.
-                        </Typography>
+                            english='Example of a tube well platform with black platform staining.'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Collapse>
                 </Box>
             </PageCard>

@@ -1,4 +1,5 @@
-import { Typography, Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import TranslatableText from '../../components/TranslatableText';
 
 const sectionStyle = {
     display: 'flex',
@@ -22,8 +23,8 @@ const fontStyle = {
 };
 
 type props = {
-    title: string,
-    texts: string[],
+    title: { english: string, bengali: string },
+    texts: { english: string, bengali: string }[],
     imageConfig?: {
         imageUrl: string,
         imageSide: 'left' | 'right',
@@ -48,7 +49,11 @@ export default function Section({
 }: props): JSX.Element {
     return (
         <Box sx={{ ...sectionStyle, backgroundColor }} px={{ xs: 1, sm: 1, md: 4 }}>
-            <Typography variant='h3'>{title}</Typography>
+            <TranslatableText
+                variant='h3'
+                english={title.english}
+                bengali={title.bengali}
+            />
             <Stack
                 direction={{
                     md: 'column-reverse',
@@ -59,21 +64,26 @@ export default function Section({
             >
                 <Box maxWidth={{ md: '100%', lg: maxTextWidth }}>
                     {texts.map((text, index) => (
-                        <Typography
+                        <TranslatableText
                             variant='h5'
                             key={index}
                             sx={{...fontStyle, textAlign: textAlign ? textAlign : 'justify'}}
                             mx={{ xs: 1, sm: 1, md: 4}}
-                        >
-                            {text}
-                        </Typography>
+                            english={text.english}
+                            bengali={text.bengali}
+                        />
                     ))}
                 </Box>
                 {imageConfig && (
                     <Box mx={{ xs: 1, sm: 1, md: 4 }}>
                         <img
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '50rem',
+                                height: 'auto',
+                                borderRadius: imageBorderRadius,
+                            }}
                             src={imageConfig.imageUrl}
-                            style={{ maxWidth: '100%', maxHeight: '50rem', height: 'auto', borderRadius: imageBorderRadius }}
                             alt={imageConfig.imageAlt}
                         />
                     </Box>

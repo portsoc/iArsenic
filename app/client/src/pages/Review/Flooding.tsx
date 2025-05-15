@@ -1,7 +1,8 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 interface props {
     well: Well;
@@ -11,12 +12,20 @@ export default function({ well }: props) {
     return (
         <PageCard>
             <Stack width='100%'>
-                <Typography variant="h6" gutterBottom>Flooding</Typography>
-                <Typography variant="body1" component="p">
-                    Flooding: {well.flooding ? 'Yes' : 'No'}
-                </Typography>
+                <TranslatableText 
+                    variant="h6" 
+                    mb='1rem'
+                    english='Flooding'
+                    bengali='PLACEHOLDER BENGALI'
+                />
 
-                <Box display="flex" justifyContent="center" mt={2}>
+                <TranslatableText 
+                    variant="body1" 
+                    english={`Flooding: ${well.flooding ? 'Yes' : 'No'}`}
+                    bengali='PLACEHOLDER BENGALI'
+                />
+
+                <Box display="flex" justifyContent="center" mt={4}>
                     <Button
                         sx={{ width: '80%', height: '3rem' }}
                         variant="outlined"
@@ -24,7 +33,11 @@ export default function({ well }: props) {
                             navigate(`/well/${well.id}/flooding`);
                         }}
                     >
-                        Edit Flooding
+                        <TranslatableText 
+                            variant="body1" 
+                            english='Edit Flooding'
+                            bengali='PLACEHOLDER BENGALI'
+                        />
                     </Button>
                 </Box>
             </Stack>

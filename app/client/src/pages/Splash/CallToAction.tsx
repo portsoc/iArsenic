@@ -1,4 +1,5 @@
-import { Typography, Box, useTheme, Button } from '@mui/material';
+import { Box, useTheme, Button } from '@mui/material';
+import TranslatableText from '../../components/TranslatableText';
 
 const sectionStyle = {
     display: 'flex',
@@ -56,12 +57,22 @@ export default function CallToAction({ tryAppClick }: props): JSX.Element {
                 alt="Background"
                 style={backgroundImageStyle}
             />
-            <Typography variant='h2' sx={fontStyle}>
-                iArsenic
-            </Typography>
-            <Typography variant='h5' gutterBottom sx={fontStyle}>
-                Instant arsenic screening of hand pump tubewells in Bangladesh using online technology
-            </Typography>
+
+            <TranslatableText
+                variant='h2' 
+                sx={fontStyle}
+                english='iArsenic'
+                bengali='BENGALI PLACEHOLDER'
+            />
+
+            <TranslatableText
+                variant='h5' 
+                gutterBottom 
+                sx={fontStyle}
+                english='Instant arsenic screening of hand pump tubewells in Bangladesh using online technology'
+                bengali='BENGALI PLACEHOLDER'
+            />
+
             <Button
                 variant='contained'
                 color='primary'
@@ -69,7 +80,11 @@ export default function CallToAction({ tryAppClick }: props): JSX.Element {
                 sx={{ padding: '1rem 2rem', fontSize: '1.2rem' }}
                 onClick={tryAppClick}
             >
-                Try the App
+                <TranslatableText 
+                    variant='body1' 
+                    english='Try the App'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
         </Box>
     );

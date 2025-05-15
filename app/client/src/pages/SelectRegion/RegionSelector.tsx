@@ -1,4 +1,4 @@
-import { Typography, CircularProgress, Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
 import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila, RegionTranslations } from "../../types";
@@ -10,6 +10,7 @@ import fetchDropdownData from "../../utils/fetchDropdownData";
 import { useAccessToken } from "../../utils/useAccessToken";
 import PageCard from "../../components/PageCard";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import TranslatableText from "../../components/TranslatableText";
 
 export type RegionErrors = {
     division: boolean;
@@ -129,9 +130,13 @@ export default function Region(): JSX.Element {
     return (
         <WellDataEntryLayout title='Region' onNext={handleNext}>
             <PageCard>
-                <Typography marginBottom='1rem' textAlign='center' variant='h5' mb={4}>
-                    Enter Region Manually
-                </Typography>
+                <TranslatableText 
+                    mb='1rem'
+                    textAlign='center'
+                    variant='h5'
+                    english='Enter Region Manually'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <EnglishRegionSelector
                     dropdownData={dropdownData}

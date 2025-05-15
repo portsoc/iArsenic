@@ -1,7 +1,8 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 interface props {
     well: Well;
@@ -15,29 +16,44 @@ export default function({ well }: props) {
     return (
         <PageCard>
             <Stack width='100%'>
-                <Typography variant="h6" gutterBottom>Region</Typography>
+                <TranslatableText
+                    variant="h6"
+                    mb='1rem'
+                    english='Region'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography variant="body1" component="p" gutterBottom>
-                    Division: {well.division}
-                </Typography>
+                <TranslatableText
+                    variant="body1"
+                    english={`Division: ${well.division}`}
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography variant="body1" component="p" gutterBottom>
-                    District: {well.district}
-                </Typography>
+                <TranslatableText
+                    variant="body1"
+                    english={`District: ${well.district}`}
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography variant="body1" component="p" gutterBottom>
-                    Upazila: {well.upazila}
-                </Typography>
+                <TranslatableText
+                    variant="body1"
+                    english={`Upazila: ${well.upazila}`}
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography variant="body1" component="p" gutterBottom>
-                    Union: {well.union}
-                </Typography>
+                <TranslatableText
+                    variant="body1"
+                    english={`Union: ${well.union}`}
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography variant="body1" component="p" gutterBottom>
-                    Mouza: {well.mouza}
-                </Typography>
+                <TranslatableText
+                    variant="body1"
+                    english={`Mouza: ${well.mouza}`}
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Box display="flex" justifyContent="center" mt={2}>
+                <Box display="flex" justifyContent="center" mt={4}>
                     <Button
                         sx={{ width: '80%', height: '3rem' }}
                         variant="outlined"
@@ -45,7 +61,11 @@ export default function({ well }: props) {
                             navigate(`/well/${well.id}/region`);
                         }}
                     >
-                        Edit Region
+                        <TranslatableText
+                            variant="body1"
+                            english='Edit Region'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Button>
                 </Box>
             </Stack>

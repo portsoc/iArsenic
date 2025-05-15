@@ -61,7 +61,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Divisions.Division}
                             error={errors.division}
-                            helperText={errors.division ? 'Please select a division' : ''}
+                            helperText={errors.division ? 'BENGALI PLACEHOLDER' : ''}
                         />
                     );
                 }}
@@ -84,7 +84,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Districts.District}
                             error={errors.district}
-                            helperText={errors.district ? 'Please select a district' : ''}
+                            helperText={errors.district ? 'BENGALI PLACEHOLDER' : ''}
                             disabled={!selectedDivision}
                         />
                     );
@@ -107,7 +107,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Upazilas.Upazila}
                             error={errors.upazila}
-                            helperText={errors.upazila ? 'Please select an upazila' : ''}
+                            helperText={errors.upazila ? 'BENGALI PLACEHOLER' : ''}
                             disabled={!selectedDistrict}
                         />
                     );
@@ -129,7 +129,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Unions.Union}
                             error={errors.union}
-                            helperText={errors.union ? 'Please select a union' : ''}
+                            helperText={errors.union ? 'BENGALI PLACEHOLER' : ''}
                             disabled={!selectedUpazila}
                         />
                     );
@@ -150,7 +150,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Mouzas.Mouza}
                             error={errors.mouza}
-                            helperText={errors.mouza ? 'Please select a mouza' : ''}
+                            helperText={errors.mouza ? 'BENGALI PLACEHOLER' : ''}
                             disabled={!selectedUnion}
                         />
                     );

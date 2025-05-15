@@ -29,7 +29,6 @@ export default function WellAssessmentPageLayout({
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '1rem',
-                    // outline: '4px solid red',
                 }}
             >
                 {children}

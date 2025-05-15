@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, Grid, Stack, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Stack } from "@mui/material";
 import { Well, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
@@ -9,6 +9,7 @@ import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 type EstimateTexts = {
     english: {
@@ -79,15 +80,19 @@ export default function Result(): JSX.Element {
 
     if (!well || !speedoValue || !warningTexts) {
         return (
-            <Typography textAlign="center" variant="h6">
-                Error loading data. Please refresh the page.
-            </Typography>
+            <TranslatableText 
+                textAlign="center" 
+                variant="h6"
+                english='Error loading data. Please refresh the page.'
+                bengali='BENGALI PLACEHOLDER'
+            />
         );
     }
 
     return (
         <WellDataEntryLayout title="Results" onNext={() => navigate(`/`)} nextText="Return to Start">
             <Grid container spacing={2} justifyContent="center" alignItems="center">
+
                 <Grid item xs={12} style={{ height: '220px' }}>
                     <Stack sx={{ alignItems: 'center' }}>
                         <Box className='english'>
@@ -103,33 +108,30 @@ export default function Result(): JSX.Element {
                     <Grid item xs={12}>
                         <Box textAlign='center'>
                             <PageCard>
-                                <Typography className='english' variant="h6" gutterBottom>
-                                    {warningTexts.english.title}
-                                </Typography>
+                                <TranslatableText 
+                                    variant='h6' 
+                                    mb='1rem'
+                                    english={warningTexts.english.title}
+                                    bengali={warningTexts.bengali.title}
+                                />
 
-                                <Typography className='bengali' variant="h6" gutterBottom>
-                                    {warningTexts.bengali.title}
-                                </Typography>
-
-                                <Typography className='english' variant="body1" sx={{ marginBottom: '20px' }}>
-                                    {warningTexts.english.body}
-                                </Typography>
-
-                                <Typography className='bengali' variant="body1" sx={{ marginBottom: '20px' }}>
-                                    {warningTexts.bengali.body}
-                                </Typography>
+                                <TranslatableText 
+                                    variant='body1' 
+                                    mb='1rem'
+                                    english={warningTexts.english.body}
+                                    bengali={warningTexts.bengali.body}
+                                />
 
                                 <Button
-                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem'}}
+                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
                                     variant='outlined'
                                     onClick={() => navigate(`/understanding-risk`)}
                                 >
-                                    <Typography className='english'>
-                                        What does this mean? 
-                                    </Typography>
-                                    <Typography className='bengali'>
-                                        Bengali Placeholder
-                                    </Typography>
+                                    <TranslatableText 
+                                        variant='body1' 
+                                        english='What does this mean?'
+                                        bengali='BENGALI PLACEHOLDER'
+                                    />
                                 </Button>
                             </PageCard>
                         </Box>

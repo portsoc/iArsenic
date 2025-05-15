@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Stack } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import { useAccessToken } from "../../utils/useAccessToken";
 import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 interface Props {
     well: Well;
@@ -62,9 +63,12 @@ export default function WellImageDisplay({ well }: Props) {
     return (
         <PageCard>
             <Stack width='100%'>
-                <Typography variant="h6" gutterBottom>
-                    Uploaded Images
-                </Typography>
+                <TranslatableText 
+                    variant="h6" 
+                    gutterBottom
+                    english='Uploaded Images'
+                    bengali='PLACEHOLDER BENGALI'
+                />
 
                 <Box
                     width="100%"
@@ -93,13 +97,15 @@ export default function WellImageDisplay({ well }: Props) {
                             ))}
                         </Carousel>
                     ) : (
-                        <Typography color="text.secondary">
-                            No images uploaded.
-                        </Typography>
+                        <TranslatableText 
+                            color="text.secondary"
+                            english='No images uploaded.'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     )}
                 </Box>
 
-                <Box display="flex" justifyContent="center" mt={2}>
+                <Box display="flex" justifyContent="center" mt={4}>
                     <Button
                         sx={{ width: '80%', height: '3rem' }}
                         variant="outlined"
@@ -107,7 +113,10 @@ export default function WellImageDisplay({ well }: Props) {
                             navigate(`/well/${well.id}/upload-image`);
                         }}
                     >
-                        Edit Images
+                        <TranslatableText 
+                            english='Edit Images'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     </Button>
                 </Box>
             </Stack>

@@ -1,6 +1,8 @@
-import { Button, Card, TextField, Typography } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useRoute } from "wouter";
+import TranslatableText from "../../components/TranslatableText";
+import PageCard from "../../components/PageCard";
 
 export default function ResetPassword(): JSX.Element {
     const [, params] = useRoute('/reset-password/:token');
@@ -75,45 +77,57 @@ export default function ResetPassword(): JSX.Element {
 
     return (
         <>
-            <Card
-                variant='outlined'
-                sx={{
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    pb: '2rem',
-                }}
-            >
-                <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                    Reset Password
-                </Typography>
+            <PageCard>
+                <TranslatableText 
+                    mb='1rem' 
+                    textAlign='center' 
+                    variant='h4'
+                    english='Reset Password'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 {success ? (
-                    <Typography>
-                        Your password has been reset successfully.
-                    </Typography>
+                    <TranslatableText 
+                        mb='1rem' 
+                        textAlign='center' 
+                        variant='h4'
+                        english='Your password has been reset successfully.'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 ) : (
                     <>
                         <TextField
-                            label="New Password"
                             type="password"
                             value={newPassword}
                             onChange={handleNewPasswordChange}
                             sx={{ width: '85%' }}
                             disabled={isSubmitting}
+                            label={
+                                <TranslatableText 
+                                    mb='1rem' 
+                                    textAlign='center' 
+                                    variant='body1'
+                                    english='New Password'
+                                    bengali='BENGALI PLACEHOLDER'
+                                />
+                            }
                         />
 
                         <TextField
-                            label="Confirm Password"
                             type="password"
                             value={confirmPassword}
                             onChange={handleConfirmPasswordChange}
                             sx={{ width: '85%' }}
                             disabled={isSubmitting}
+                            label={
+                                <TranslatableText 
+                                    mb='1rem' 
+                                    textAlign='center' 
+                                    variant='body1'
+                                    english='Confirm Password'
+                                    bengali='BENGALI PLACEHOLDER'
+                                />
+                            }
                         />
 
                         <Button
@@ -126,11 +140,18 @@ export default function ResetPassword(): JSX.Element {
                         </Button>
 
                         {error && (
-                            <Typography color='red'>{error}</Typography>
+                            <TranslatableText 
+                                mb='1rem' 
+                                textAlign='center' 
+                                variant='h4'
+                                error={true}
+                                english={error}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         )}
                     </>
                 )}
-            </Card>
+            </PageCard>
         </>
     );
 }
