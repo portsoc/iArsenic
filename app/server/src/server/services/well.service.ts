@@ -152,7 +152,7 @@ export const WellService = {
             modelOutput = await produceEstimate(well);
         } catch {}
     
-        if (modelOutput) {
+        if (modelOutput || modelOutput === 0) {
             wellUpdates.modelOutput = modelOutput;
             wellUpdates.riskAssesment = modelEstimateToRiskAssesment(modelOutput);
             wellUpdates.model = 'model6';

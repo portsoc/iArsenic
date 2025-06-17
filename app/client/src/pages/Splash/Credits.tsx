@@ -1,4 +1,6 @@
-import { Typography, Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import TranslatableText from '../../components/TranslatableText';
+import { ReactNode } from 'react';
 
 const sectionStyle = {
     display: 'flex',
@@ -14,11 +16,16 @@ const sectionStyle = {
     position: 'relative',
 };
 
-type CreditCardProps = {
+interface TranslatableTextContent {
+    english: ReactNode;
+    bengali: ReactNode;
+}
+
+interface CreditCardProps {
     imageSrc?: string;
-    name: string;
-    role: string;
-};
+    name: TranslatableTextContent;
+    role: TranslatableTextContent;
+}
 
 type OrgCreditCardProps = {
     name: string;
@@ -86,7 +93,7 @@ function CreditCard({ imageSrc, name, role }: CreditCardProps): JSX.Element {
                 {imageSrc ? (
                     <img
                         src={imageSrc}
-                        alt={name}
+                        alt={typeof name === 'object' ? String(name.english) : name}
                         style={{
                             width: 'auto',
                             height: '100%',
@@ -106,12 +113,20 @@ function CreditCard({ imageSrc, name, role }: CreditCardProps): JSX.Element {
                     >🧑‍💻</Box>
                 )}
             </Box>
-            <Typography variant="h5" sx={{ mt: 2, mb: 1 }}>
-                {name}
-            </Typography>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                {role}
-            </Typography>
+
+            <TranslatableText
+                variant="h5"
+                english={name.english}
+                bengali={name.bengali}
+                sx={{ mt: 2, mb: 1 }}
+            />
+
+            <TranslatableText
+                variant="subtitle1"
+                english={role.english}
+                bengali={role.bengali}
+                sx={{ mb: 1 }}
+            />
         </Box>
     );
 }
@@ -119,7 +134,11 @@ function CreditCard({ imageSrc, name, role }: CreditCardProps): JSX.Element {
 export default function Credits(): JSX.Element {
     return (
         <Box sx={{ ...sectionStyle, background: 'dodgerblue' }} px={{ xs: 1, sm: 1, md: 4 }}>
-            <Typography variant='h3'>The Team</Typography>
+            <TranslatableText 
+                variant='h3'
+                english='The Team'
+                bengali='টিম সদস্যবৃন্দ'
+            /> 
             <Stack
                 direction={{
                     md: 'column-reverse',
@@ -129,30 +148,38 @@ export default function Credits(): JSX.Element {
                 justifyContent='center'
                 flexWrap='wrap'
             >
-                {CreditCard({
-                    imageSrc: '/contributors/Mo_Hoque.jpg',
-                    name: 'Dr Mo Hoque',
-                    role: 'Principal Investigator, University of Portsmouth',
-                })}
-                {CreditCard({
-                    imageSrc: '/contributors/kane.png',
-                    name: 'Kane Swartz',
-                    role: 'Technical Lead, University of Portsmouth',
-                })}
-                {CreditCard({
-                    imageSrc: '/contributors/Atikul_Islam.jpg',
-                    name: 'Atikul Islam',
-                    role: 'Researcher, University of Dhaka & University of Portsmouth',
-                })}
 
-                {CreditCard({
-                    name: 'Fuad Jamali',
-                    role: 'Researcher, University of Portsmouth',
-                    imageSrc: '/contributors/Fuad_Jamali.jpg',
-                })}
+                <CreditCard
+                    imageSrc='/contributors/Mo_Hoque.jpg'
+                    name={{ english: 'Dr Mo Hoque', bengali: 'ড. মো হক' }}
+                    role={{ english: 'Principal Investigator, University of Portsmouth', bengali: 'প্রধান গবেষক ও প্রকল্প পরিচালক, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+
+                <CreditCard
+                    imageSrc='/contributors/kane.png'
+                    name={{ english: 'Kane Swartz', bengali: 'কেন সোয়ার্টজ' }}
+                    role={{ english: 'Technical Lead, University of Portsmouth', bengali: 'প্রযুক্তি প্রধান, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+
+                <CreditCard
+                    imageSrc='/contributors/Atikul_Islam.jpg'
+                    name={{ english: 'Atikul Islam', bengali: 'আতিকুল ইসলাম' }}
+                    role={{ english: 'Researcher, University of Dhaka & University of Portsmouth', bengali: 'গবেষক, ঢাকা বিশ্ববিদ্যালয় ও ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+
+                <CreditCard
+                    imageSrc='/contributors/Fuad_Jamali.jpg'
+                    name={{ english: 'Fuad Jamali', bengali: 'ফুয়াদ জামালি' }}
+                    role={{ english: 'Researcher, University of Portsmouth', bengali: 'গবেষক, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
             </Stack>
 
-            <Typography variant='h3'>Academic Collaborators</Typography>
+            <TranslatableText 
+                variant='h3'
+                english='Academic Collaborators'
+                bengali='একাডেমিক সহযোগীরা'
+            />
+
             <Stack
                 direction={{
                     md: 'column-reverse',
@@ -163,39 +190,48 @@ export default function Credits(): JSX.Element {
                 maxWidth='100%'
                 flexWrap='wrap'
             >
-                {CreditCard({
-                    name: 'Dr Jacek Kopecký',
-                    role: 'School of Computing, University of Portsmouth',
-                    imageSrc: '/contributors/jacek.jpg',
-                })}
-                {CreditCard({
-                    imageSrc: '/contributors/Jim_Smith.jpg',
-                    name: 'Prof Jim Smith',
-                    role: 'School of Earth & Environmental Sciences, University of Portsmouth',
-                })}
-                {CreditCard({
-                    imageSrc: '/contributors/Shubhankar_Dam.jpg',
-                    name: 'Prof Shubhankar Dam',
-                    role: 'School of Law, University of Portsmouth',
-                })}
-                {CreditCard({
-                    imageSrc: '/contributors/Adrian_Butler.jpg',
-                    name: 'Prof Adrian Butler',
-                    role: 'Department of Civil and Environmental Engineering, Imperial College London',
-                })}
-                {CreditCard({
-                    name: 'Prof Kazi Ahmed',
-                    role: 'Department of Geology, University of Dhaka, Bangladesh',
-                    imageSrc: '/contributors/Kazi_Matin_Ahmed.jpg',
-                })}
-                {CreditCard({
-                    name: 'Dr Ashraf Dewan',
-                    role: 'School of Earth and Planetary Sciences (EPS), Curtin University, Australia',
-                    imageSrc: '/contributors/Ashraf_Dewan.png',
-                })}
+                <CreditCard
+                    imageSrc='/contributors/jacek.jpg'
+                    name={{ english: 'Dr Jacek Kopecký', bengali: 'ড. যাসেক কোপেকি' }}
+                    role={{ english: 'School of Computing, University of Portsmouth', bengali: 'স্কুল অফ কম্পিউটিং, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+
+                <CreditCard
+                    imageSrc='/contributors/Jim_Smith.jpg'
+                    name={{ english: 'Prof Jim Smith', bengali: 'প্রফেসর জিম স্মিথ' }}
+                    role={{ english: 'School of Earth & Environmental Sciences, University of Portsmouth', bengali: 'ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+                
+                <CreditCard
+                    imageSrc='/contributors/Shubhankar_Dam.jpg'
+                    name={{ english: 'Prof Shubhankar Dam', bengali: 'প্রফেসর শুভঙ্কর দাম' }}
+                    role={{ english: 'School of Law, University of Portsmouth', bengali: 'স্কুল অফ ল’ (আইন), ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+
+                <CreditCard
+                    imageSrc='/contributors/Adrian_Butler.jpg'
+                    name={{ english: 'Prof Adrian Butler', bengali: 'প্রফেসর আদ্রিয়ান বাটলার' }}
+                    role={{ english: 'Department of Civil and Environmental Engineering, Imperial College London', bengali: 'সিভিল ও এনভায়রনমেন্টাল ইঞ্জিনিয়ারিং বিভাগ, ইম্পেরিয়াল কলেজ লন্ডন' }}
+                />
+
+                <CreditCard
+                    imageSrc='/contributors/Kazi_Matin_Ahmed.jpg'
+                    name={{ english: 'Prof Kazi Ahmed', bengali: 'প্রফেসর কাজী মতিন আহমেদ' }}
+                    role={{ english: 'Department of Geology, University of Dhaka, Bangladesh', bengali: 'ভূতত্ত্ব বিভাগ, ঢাকা বিশ্ববিদ্যালয়, বাংলাদেশ' }}
+                />
+                
+                <CreditCard
+                    imageSrc='/contributors/Ashraf_Dewan.png'
+                    name={{ english: 'Dr Ashraf Dewan', bengali: 'ড. আশরাফ দেওয়ান' }}
+                    role={{ english: 'School of Earth and Planetary Sciences (EPS), Curtin University, Australia', bengali: 'স্কুল অফ আর্থ অ্যান্ড প্লানেটারি সায়েন্সেস, কার্টিন ইউনিভার্সিটি, অস্ট্রেলিয়া' }}
+                />
             </Stack>
 
-            <Typography variant='h3'>Former Contributors</Typography>
+            <TranslatableText 
+                variant='h3'
+                english='Former Contributors'
+                bengali='সাবেক অবদানকারী'
+            />
             <Stack
                 direction={{
                     md: 'column',
@@ -206,41 +242,48 @@ export default function Credits(): JSX.Element {
                 maxWidth='100%'
                 flexWrap='wrap'
             >
-                {CreditCard({
-                    name: 'Dr Simon Parker',
-                    role: 'Researcher, Imperial College London',
-                    imageSrc: '/contributors/Simon_Parker.jpg',
-                })}
-                {CreditCard({
-                    name: "Dillon O'Shea",
-                    role: 'Researcher, University of Portsmouth',
-                    imageSrc: '/contributors/dillon.webp',
-                })}
+                <CreditCard
+                    imageSrc='/contributors/Simon_Parker.jpg'
+                    name={{ english: 'Dr Simon Parker', bengali: 'ড. সাইমন পার্কার' }}
+                    role={{ english: 'Researcher, Imperial College London', bengali: 'গবেষক, ইম্পেরিয়াল কলেজ লন্ডন' }}
+                />
 
-                {CreditCard({
-                    name: 'Lewis Newton',
-                    role: 'Researcher, University of Portsmouth',
-                    imageSrc: '/contributors/lewis.webp',
-                })}
+                <CreditCard
+                    imageSrc='/contributors/dillon.webp'
+                    name={{ english: "Dillon O'Shea", bengali: "ডিলন ও'শি" }}
+                    role={{ english: 'Researcher, University of Portsmouth', bengali: 'গবেষক, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
 
-                {CreditCard({
-                    name: 'Nylah Daniella Klasson',
-                    role: 'Researcher, University of Portsmouth',
-                    imageSrc: '/contributors/nylah.jpg',
-                })}
+                <CreditCard
+                    imageSrc='/contributors/lewis.webp'
+                    name={{ english: 'Lewis Newton', bengali: 'লুইস নিউটন' }}
+                    role={{ english: 'Researcher, University of Portsmouth', bengali: 'গবেষক, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
 
-                {CreditCard({
-                    name: 'Benjamin Kyd',
-                    role: 'Researcher, University of Portsmouth',
-                    imageSrc: '/contributors/ben.jpg',
-                })}
+                <CreditCard
+                    imageSrc='/contributors/nylah.jpg'
+                    name={{ english: 'Nylah Daniella Klasson', bengali: 'নায়লা ড্যানিয়েলা ক্ল্যাসন' }}
+                    role={{ english: 'Researcher, University of Portsmouth', bengali: 'গবেষক, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
 
-                {CreditCard({
-                    name: 'Fiona Plant',
-                    role: 'Researcher, University of Portsmouth',
-                })}
+                <CreditCard
+                    imageSrc='/contributors/ben.jpg'
+                    name={{ english: 'Benjamin Kyd', bengali: 'বেনজামিন কিড' }}
+                    role={{ english: 'Researcher, University of Portsmouth', bengali: 'গবেষক, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+
+                <CreditCard
+                    name={{ english: 'Fiona Plant', bengali: 'ফিওনা প্ল্যান্ট' }}
+                    role={{ english: 'Researcher, University of Portsmouth', bengali: 'গবেষক, ইউনিভার্সিটি অফ পোর্টসমাউথ' }}
+                />
+
             </Stack>
-            <Typography variant='h3'>In Partnership With</Typography>
+
+            <TranslatableText 
+                variant='h3'
+                english='In Partnership With'
+                bengali='সহযোগিতার অংশীদার'
+            />
             <Stack
                 direction={{
                     md: 'column-reverse',

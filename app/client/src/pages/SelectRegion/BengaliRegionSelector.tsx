@@ -55,6 +55,7 @@ export default function BengaliRegionSelector({
                     setErrors(e => ({ ...e, division: false }));
                 }}
                 getOptionLabel={(option) => rt.Divisions[option.division] || option.division}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField
@@ -78,6 +79,7 @@ export default function BengaliRegionSelector({
                     setErrors(e => ({ ...e, district: false }));
                 }}
                 getOptionLabel={(option) => rt.Districts[option.district] || option.district}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField
@@ -101,6 +103,7 @@ export default function BengaliRegionSelector({
                     setErrors(e => ({ ...e, upazila: false }));
                 }}
                 getOptionLabel={(option) => rt.Upazilas[option.upazila] || option.upazila}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField
@@ -123,6 +126,7 @@ export default function BengaliRegionSelector({
                     setErrors(e => ({ ...e, union: false }));
                 }}
                 getOptionLabel={(option) => rt.Unions[option.union] || option.union}
+                noOptionsText=""
                 renderInput={(params) => {
                 return (
                         <TextField
@@ -144,6 +148,7 @@ export default function BengaliRegionSelector({
                     setErrors(e => ({ ...e, mouza: false }));
                 }}
                 getOptionLabel={(mouza) => rt.Mouzas[mouza] || mouza}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField

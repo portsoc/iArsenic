@@ -1,5 +1,5 @@
 import { Box, Stack } from '@mui/material';
-import TranslatableText from '../../components/TranslatableText';
+import { ReactNode } from 'react';
 
 const sectionStyle = {
     display: 'flex',
@@ -15,26 +15,19 @@ const sectionStyle = {
     position: 'relative',
 };
 
-const fontStyle = {
-    color: 'whitesmoke',
-    textAlign: 'justify',
-    m: 4,
-    mb: '2rem',
-};
-
 type props = {
-    title: { english: string, bengali: string },
-    texts: { english: string, bengali: string }[],
+    title: ReactNode;
+    texts: ReactNode[];
     imageConfig?: {
-        imageUrl: string,
-        imageSide: 'left' | 'right',
-        imageAlt: string,
-    },
-    backgroundColor: string,
-    maxTextWidth: string,
-    textAlign?: 'center' | 'left' | 'right' | 'justify',
-    imageBorderRadius?: string,
-    appendage?: JSX.Element,
+        imageUrl: string;
+        imageSide: 'left' | 'right';
+        imageAlt: string;
+    };
+    backgroundColor: string;
+    maxTextWidth: string;
+    textAlign?: 'center' | 'left' | 'right' | 'justify';
+    imageBorderRadius?: string;
+    appendage?: JSX.Element;
 };
 
 export default function Section({
@@ -49,11 +42,8 @@ export default function Section({
 }: props): JSX.Element {
     return (
         <Box sx={{ ...sectionStyle, backgroundColor }} px={{ xs: 1, sm: 1, md: 4 }}>
-            <TranslatableText
-                variant='h3'
-                english={title.english}
-                bengali={title.bengali}
-            />
+            {title}
+
             <Stack
                 direction={{
                     md: 'column-reverse',
@@ -64,16 +54,18 @@ export default function Section({
             >
                 <Box maxWidth={{ md: '100%', lg: maxTextWidth }}>
                     {texts.map((text, index) => (
-                        <TranslatableText
-                            variant='h5'
+                        <Box
                             key={index}
-                            sx={{...fontStyle, textAlign: textAlign ? textAlign : 'justify'}}
-                            mx={{ xs: 1, sm: 1, md: 4}}
-                            english={text.english}
-                            bengali={text.bengali}
-                        />
+                            sx={{
+                                textAlign: textAlign ?? 'justify',
+                            }}
+                            mx={{ xs: 1, sm: 1, md: 4 }}
+                        >
+                            {text}
+                        </Box>
                     ))}
                 </Box>
+
                 {imageConfig && (
                     <Box mx={{ xs: 1, sm: 1, md: 4 }}>
                         <img
@@ -89,7 +81,9 @@ export default function Section({
                     </Box>
                 )}
             </Stack>
+
             {appendage}
         </Box>
     );
 }
+

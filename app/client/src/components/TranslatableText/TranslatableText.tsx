@@ -7,6 +7,7 @@ interface TranslatableTextProps extends Omit<TypographyProps, 'children'> {
     mb?: string | number;
     textAlign?: TypographyProps['align'];
     error?: boolean;
+    sx?: TypographyProps['sx'];
 }
 
 export default function TranslatableText({
@@ -18,13 +19,14 @@ export default function TranslatableText({
     mb,
     textAlign,
     error,
+    sx,
     ...rest
 }: TranslatableTextProps): JSX.Element {
     const baseStyle = {
         mb,
         textAlign,
         color: error ? 'error.main' : rest.color,
-        ...rest.sx,
+        ...sx,
     };
 
     return (

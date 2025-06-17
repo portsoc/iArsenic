@@ -1,5 +1,6 @@
 {
   "Divisions": {
+    "Division":	"বিভাগ",
     "Barisal": "বরিশাল",
     "Chittagong": "চট্টগ্রাম",
     "Dhaka": "ঢাকা",
@@ -10,6 +11,7 @@
     "Sylhet": "সিলেট"
   },
   "Districts": {
+    "District": "জেলা",
     "Bagerhat": "বাগেরহাট",
     "Bandarban": "বান্দরবান",
     "Barguna": "বরগুনা",
@@ -76,6 +78,7 @@
     "Thakurgaon": "ঠাকুরগাঁও"
   },
   "Upazilas": {
+    "Upazila": "উপজিলা",
     "Abhaynagar": "অভয়নগর",
     "Adabor": "আদাবর",
     "Adamdighi": "আদমদীঘি",
@@ -600,6 +603,7 @@
     "Zianagar": "জিয়ানগর"
   },
   "Unions": {
+    "Union": "ইউনিয়ন",
     "Abaipur": "আবাইপুর",
     "Abdullahpur": "আবদুল্লাহপুর",
     "Abdullapur": "আবদুল্লাপুর",
@@ -4910,6 +4914,7 @@
     "Zorwarganj": "জোরওয়ারগঞ্জ"
   },
   "Mouzas": {
+    "Mouza": "মৌজা",
     "Aai": "এয়াই",
     "Abad Chandipur": "আবাদ চন্ডিপুর",
     "Abadpur": "আবাদপুর",
