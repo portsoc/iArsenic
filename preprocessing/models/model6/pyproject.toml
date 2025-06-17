@@ -9,6 +9,8 @@ python = "^3.10"
 geopandas = "^1.0.1"
 topojson = "^1.9"
 dill = "^0.3.9"
+filelock = "^3.18.0"
+tqdm = "^4.67.1"
 
 [tool.poetry.dev-dependencies]
 
