@@ -239,7 +239,11 @@ export default function SplashPage(): JSX.Element {
                         sx={{ padding: '1rem 2rem', fontSize: '1.2rem' }}
                         onClick={handleTryAppClick}
                     >
-                        অ্যাপটি ব্যবহার করুন
+                        <TranslatableText 
+                            variant='body1' 
+                            english='Try the App'
+                            bengali='অ্যাপটি ব্যবহার করুন'
+                        />
                     </Button>
                 }
             />

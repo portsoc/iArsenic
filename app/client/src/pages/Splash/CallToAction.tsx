@@ -70,7 +70,7 @@ export default function CallToAction({ tryAppClick }: props): JSX.Element {
                 gutterBottom 
                 sx={fontStyle}
                 english='Instant arsenic screening of hand pump tubewells in Bangladesh using online technology'
-                bengali='“আপনার নলকূপের পানিতে আর্সেনিক উপস্থিতির ঝুকি আছে কি না মুহূর্তেই যাচাই করুন”'
+                bengali='আপনার নলকূপের পানিতে আর্সেনিক উপস্থিতির ঝুকি আছে কি না মুহূর্তেই যাচাই করুন'
             />
 
             <Button
@@ -83,7 +83,7 @@ export default function CallToAction({ tryAppClick }: props): JSX.Element {
                 <TranslatableText 
                     variant='body1' 
                     english='Try the App'
-                    bengali='“অ্যাপটি ব্যবহার করুন”'
+                    bengali='অ্যাপটি ব্যবহার করুন'
                 />
             </Button>
         </Box>

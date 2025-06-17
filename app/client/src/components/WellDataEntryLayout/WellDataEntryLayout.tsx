@@ -1,18 +1,23 @@
 import { Box, Button, Typography } from '@mui/material';
 import { ReactNode } from 'react';
+import TranslatableText from '../TranslatableText';
 
 interface Props {
-    title: string;
+    title: ReactNode;
     onNext: () => void;
     children: ReactNode;
-    nextText?: string;
+    nextText?: ReactNode;
 }
 
 export default function WellAssessmentPageLayout({
     title,
     onNext,
     children,
-    nextText = 'Next Step',
+    nextText = <TranslatableText
+        variant="button"
+        english="Next Step"
+        bengali="পরবর্তী ধাপে যান"
+    />,
 }: Props): JSX.Element {
     return (
         <>

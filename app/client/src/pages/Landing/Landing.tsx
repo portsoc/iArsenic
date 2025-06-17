@@ -20,7 +20,7 @@ export default function Landing(): JSX.Element {
                     textAlign='center'
                     variant='h6'
                     english='WARNING'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='⚠️ সতর্কবার্তা'
                 />
 
                 <TranslatableText
@@ -32,14 +32,10 @@ export default function Landing(): JSX.Element {
                             for use in the field.</b>
                         </>
                     }
-                    bengali='BENGALI PLACEHOLDER'
-                />
-
-                <TranslatableText
-                    mb='1rem'
-                    variant='body1'
-                    english='Please use this deployment for testing and demo purposes only.'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        এটি একটি গবেষণা পর্যায়ের ভার্সন, যা এখনো মাঠপর্যায়ে ব্যবহারের জন্য প্রস্তুত নয়।
+                        অনুগ্রহ করে এটি শুধুমাত্র পরীক্ষা কিংবা অভিজ্ঞতা অর্জনের জন্য ব্যবহারের করুন।
+                    `}
                 />
             </PageCard>
 
@@ -65,14 +61,14 @@ export default function Landing(): JSX.Element {
                     mb='1rem'
                     variant='h6'
                     english='Proceed with an Account'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অ্যাকাউন্ট দিয়ে এগিয়ে যান' // chatgpt generated
                 />
 
                 <TranslatableText
                     mb='1rem'
                     variant='body1'
                     english='Access your personalized dashboard and save your data'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার ব্যক্তিগত ড্যাশবোর্ডে প্রবেশ করুন এবং আপনার ডেটা সংরক্ষণ করুন' // chatgpt generated
                 />
 
                 <Button
@@ -83,7 +79,7 @@ export default function Landing(): JSX.Element {
                     <TranslatableText
                         variant='body1'
                         english='Login or Sign Up'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='লগইন বা সাইন আপ করুন'
                     />
                 </Button>
             </PageCard>
@@ -94,7 +90,7 @@ export default function Landing(): JSX.Element {
                     textAlign='center'
                     mb='1rem'
                     english='Express Assesment'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='দ্রুত মূল্যায়ন' // chatgpt generated
                 />
 
                 <TranslatableText

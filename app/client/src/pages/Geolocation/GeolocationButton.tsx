@@ -102,7 +102,7 @@ export default function GeolocationButton({
                 <TranslatableText
                     variant='body1'
                     english='Geolocation found successfully'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='জিওলোকেশন সফলভাবে পাওয়া গেছে' // chatgpt generated
                 />
             </Button>
         );
@@ -120,7 +120,7 @@ export default function GeolocationButton({
                 <TranslatableText
                     variant='body1'
                     english='Geolocation not supported'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='জিওলোকেশন সমর্থিত নয়' // chatgpt generated
                 />
             </Button>
         );
@@ -138,7 +138,7 @@ export default function GeolocationButton({
                 <TranslatableText
                     variant='body1'
                     english='Getting Region'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অঞ্চলের তথ্য সংগ্রহ করা হচ্ছে' // chatgpt generated
                 />
             </Button>
         );
@@ -156,7 +156,7 @@ export default function GeolocationButton({
                 <TranslatableText
                     variant='body1'
                     english='Region not found'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অঞ্চল পাওয়া যায়নি' // chatgpt generated
                 />
             </Button>
         );
@@ -172,7 +172,7 @@ export default function GeolocationButton({
             <TranslatableText
                 variant='body1'
                 english='Use Geolocation'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='জিওলোকেশন ব্যবহার করুন' // chatgpt generated
             />
         </Button>
     );

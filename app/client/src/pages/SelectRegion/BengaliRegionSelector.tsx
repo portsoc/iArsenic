@@ -62,7 +62,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Divisions.Division}
                             error={errors.division}
-                            helperText={errors.division ? 'BENGALI PLACEHOLDER' : ''}
+                            helperText={errors.division ? 'অনুগ্রহ করে একটি বিভাগ নির্বাচন করুন' : ''} // chatgpt generated
                         />
                     );
                 }}
@@ -86,7 +86,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Districts.District}
                             error={errors.district}
-                            helperText={errors.district ? 'BENGALI PLACEHOLDER' : ''}
+                            helperText={errors.district ? 'অনুগ্রহ করে একটি জেলা নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedDivision}
                         />
                     );
@@ -110,7 +110,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Upazilas.Upazila}
                             error={errors.upazila}
-                            helperText={errors.upazila ? 'BENGALI PLACEHOLER' : ''}
+                            helperText={errors.upazila ? 'অনুগ্রহ করে একটি উপজেলা নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedDistrict}
                         />
                     );
@@ -133,7 +133,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Unions.Union}
                             error={errors.union}
-                            helperText={errors.union ? 'BENGALI PLACEHOLER' : ''}
+                            helperText={errors.union ? 'অনুগ্রহ করে একটি ইউনিয়ন নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedUpazila}
                         />
                     );
@@ -155,7 +155,7 @@ export default function BengaliRegionSelector({
                             {...params}
                             label={rt.Mouzas.Mouza}
                             error={errors.mouza}
-                            helperText={errors.mouza ? 'BENGALI PLACEHOLER' : ''}
+                            helperText={errors.mouza ? 'অনুগ্রহ করে একটি মৌজা নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedUnion}
                         />
                     );

@@ -1,4 +1,4 @@
-import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Box } from "@mui/material";
+import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Box, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema } from 'iarsenic-types';
@@ -64,14 +64,23 @@ export default function StainingPage(): JSX.Element {
     }
 
     return (
-        <WellDataEntryLayout title="Staining" onNext={handleNext}>
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Staining"
+                    bengali="পাকা মেঝের দাগের ধরন"
+                />
+            }
+            onNext={handleNext}
+        >
             <PageCard>
                 <TranslatableText 
                     marginBottom='1rem' 
                     textAlign='center' 
                     variant='h5'
                     english='Is There Staining On The Platform?'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='নলকূপের পাকা মেঝেতে কি কোনো দাগ আছে? (যেখানে পানি পড়ে ছিটকে ছড়ায়, সেই পাকা সিমেন্টের মেঝেতে)'
                 />
 
                 <Stack mb={2} alignItems='center' width='100%'>
@@ -83,7 +92,7 @@ export default function StainingPage(): JSX.Element {
                         <TranslatableText 
                             variant='body1'
                             english='See Staining Guide'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='দাগ চেনার গাইড দেখুন'
                         />
                     </Button>
                 </Stack>
@@ -106,32 +115,41 @@ export default function StainingPage(): JSX.Element {
                         name="well-staining-selector"
                     >
                         <FormControlLabel 
+                            sx={{ marginBottom: '1rem' }}
                             value="red"
                             control={<Radio />}
                             label={
                                 <TranslatableText 
                                     variant='body1'
                                     english='Red' 
-                                    bengali='BENGALI PLACEHOLDEr'
+                                    bengali='লালচে দাগ (আয়রন থেকে তৈরি — মেঝে লাল বা কমলা দেখায়)'
                                 />
                             }
                         />
 
                         <FormControlLabel 
+                            sx={{ marginBottom: '1rem' }}
                             value="black" 
                             control={<Radio />} 
                             label={
                                 <TranslatableText 
                                     variant='body1'
                                     english='Black' 
-                                    bengali='BENGALI PLACEHOLDEr'
+                                    bengali='কালচে দাগ (সিমেন্ট রঙ বা গাঢ় কালো, কোনো লালচে ভাব নেই)'
                                 />
                             }
                         />
                         <FormControlLabel
+                            sx={{ marginBottom: '1rem' }}
                             value="not sure"
                             control={<Radio />}
-                            label="Mixed or Unsure"
+                            label={
+                                <TranslatableText 
+                                    variant='body1'
+                                    english='Mixed or Unsure' 
+                                    bengali='মিশ্র বা নিশ্চিত নন (দাগ স্পষ্ট নয় বা বুঝতে পারছেন না)'
+                                />
+                            }
                         />
                     </RadioGroup>
                     {errors.wellStaining && (
@@ -139,7 +157,7 @@ export default function StainingPage(): JSX.Element {
                             error={true}
                             variant='body1'
                             english='Please select a staining type for the well platform.'
-                            bengali='BENGALI PLACEHOLDEr'
+                            bengali='অনুগ্রহ করে নলকূপের চৌকাঠের দাগের ধরন নির্বাচন করুন' // chatgpt generated
                         />
                     )}
                 </FormControl>
@@ -152,7 +170,6 @@ export default function StainingPage(): JSX.Element {
                             component="fieldset"
                             sx={{
                                 width: '100%',
-                                padding: '1rem',
                                 borderRadius: '5px',
                                 outline: errors.utensilStaining ? '1px solid red' : 'none',
                             }}
@@ -160,9 +177,9 @@ export default function StainingPage(): JSX.Element {
                             <TranslatableText
                                 variant="h5" 
                                 textAlign='center' 
-                                mt='1rem'
+                                my='1rem'
                                 english='Is there staining on your utensil?'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='আপনার হাড়ি-পাতিলে কি কোনো দাগ পড়ে? (নলকূপের পানি দিয়ে নিয়মিত ব্যবহারের ফলে)'
                             />
 
                             <RadioGroup
@@ -173,28 +190,28 @@ export default function StainingPage(): JSX.Element {
                                 name="utensil-staining-selector"
                             >
                                 <FormControlLabel
+                                    sx={{ marginBottom: '1rem' }}
                                     value="red"
                                     control={<Radio />}
                                     label={
                                         <TranslatableText
-                                            variant="h5" 
+                                            variant="body1" 
                                             textAlign='center' 
-                                            mt='1rem'
                                             english='Red'
-                                            bengali='BENGALI PLACEHOLDER'
+                                            bengali='লালচে দাগ পড়ে'
                                         />
                                     }
                                 />
                                 <FormControlLabel
+                                    sx={{ marginBottom: '1rem' }}
                                     value="black"
                                     control={<Radio />}
                                     label={
                                         <TranslatableText
-                                            variant="h5" 
+                                            variant="body1" 
                                             textAlign='center' 
-                                            mt='1rem'
                                             english="No colour change to slightly blackish"
-                                            bengali='BENGALI PLACEHOLDER'
+                                            bengali='দাগ নেই বা হালকা কালচে দাগ পড়ে'
                                         />
                                     }
                                 />
@@ -204,7 +221,7 @@ export default function StainingPage(): JSX.Element {
                                 <TranslatableText
                                     error={true} 
                                     english='Please select a staining type for the utensil.'
-                                    bengali='BENGALI PLACEHOLDER'
+                                    bengali='অনুগ্রহ করে পাত্রের দাগের ধরন নির্বাচন করুন'
                                 />
                             )}
 
@@ -215,28 +232,56 @@ export default function StainingPage(): JSX.Element {
                         <Box mb={1}>
                             <img width='100%' src={`/red_platform_1.jpg`} />
                         </Box>
-                        <TranslatableText
-                            className='english'
-                            variant='body1'
-                            textAlign='center'
-                            fontStyle='italic'
-                            english='Example of a tube well platform with red platform staining.'
-                            bengali='BENGALI PLACEHOLDER'
-                        />
+
+                        {/* TransatableText component failing here for unknown reasons */}
+                        <>
+                            <Typography
+                                className="english"
+                                variant="body1"
+                                textAlign="center"
+                                sx={{ fontStyle: 'italic' }}
+                            >
+                                Example of a tube well platform with red platform staining.
+                            </Typography>
+
+                            <Typography
+                                className="bengali"
+                                variant="body1"
+                                textAlign="center"
+                                sx={{ fontStyle: 'italic' }}
+                            >
+                                লাল দাগযুক্ত নলকূপের চৌকাঠের একটি উদাহরণ।
+                            </Typography>
+                        </>
+
                     </Collapse>
 
                     <Collapse in={wellStaining === 'black'}>
                         <Box mb={1}>
                             <img width='100%' src={`/black_platform_1.jpg`} />
                         </Box>
-                        <TranslatableText
-                            className='english'
-                            variant='body1'
-                            textAlign='center'
-                            fontStyle='italic'
-                            english='Example of a tube well platform with black platform staining.'
-                            bengali='BENGALI PLACEHOLDER'
-                        />
+
+                        {/* TransatableText component failing here for unknown reasons */}
+                        <>
+                            <Typography
+                                className="english"
+                                variant="body1"
+                                textAlign="center"
+                                sx={{ fontStyle: 'italic' }}
+                            >
+                                Example of a tube well platform with black platform staining.
+                            </Typography>
+
+                            <Typography
+                                className="bengali"
+                                variant="body1"
+                                textAlign="center"
+                                sx={{ fontStyle: 'italic' }}
+                            >
+                                কালো দাগযুক্ত নলকূপের চৌকাঠের একটি উদাহরণ।
+                            </Typography>
+                        </>
+
                     </Collapse>
                 </Box>
             </PageCard>

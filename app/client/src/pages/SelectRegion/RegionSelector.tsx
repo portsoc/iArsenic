@@ -128,14 +128,23 @@ export default function Region(): JSX.Element {
     }
 
     return (
-        <WellDataEntryLayout title='Region' onNext={handleNext}>
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Region"
+                    bengali="অঞ্চল"
+                />
+            }
+            onNext={handleNext}
+        >
             <PageCard>
                 <TranslatableText 
                     mb='1rem'
                     textAlign='center'
                     variant='h5'
                     english='Enter Region Manually'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali="এলাকার তথ্য নিজে লিখুন"
                 />
 
                 <EnglishRegionSelector

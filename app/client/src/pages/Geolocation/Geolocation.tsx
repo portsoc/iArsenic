@@ -126,14 +126,23 @@ export default function Region(): JSX.Element {
     }
 
     return (
-        <WellDataEntryLayout title="Region" onNext={handleNext}>
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Region"
+                    bengali="অঞ্চল"
+                />
+            }
+            onNext={handleNext}
+        >
             <PageCard>
                 <TranslatableText
                     mb='1rem'
                     textAlign="center"
                     variant='h5'
                     english='Are you currently with the well?'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনি কি বর্তমানে নলকূপের কাছে আছেন?' // chatgpt generated
                 />
 
                 <FormControl
@@ -182,7 +191,7 @@ export default function Region(): JSX.Element {
                             variant='body1'
                             error={true} 
                             english='Please select whether you are currently near the well'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='আপনি বর্তমানে নলকূপের কাছে আছেন কি না, তা নির্বাচন করুন' // chatgpt generated
                         />
                     )}
                 </FormControl>
@@ -200,7 +209,7 @@ export default function Region(): JSX.Element {
                         mb='2rem'
                         textAlign="center"    
                         english='Identify Region With Geolocation'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='অটোমেটিকভাবে জিওলোকেশন ব্যবহার করে অঞ্চল শনাক্ত করুন'
                     />
 
                     <Stack alignItems='center' width='100%'>
