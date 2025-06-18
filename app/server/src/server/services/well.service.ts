@@ -73,7 +73,7 @@ export const WellService = {
     },
 
     async getWellById(
-        auth: { user: User, token: AbstractToken },
+        _auth: { user: User, token: AbstractToken },
         wellId: string
     ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
@@ -86,17 +86,22 @@ export const WellService = {
             })
         }
 
-        if (well.userId !== 'guest') {
-            if (well.userId !== auth.user.id) {
-                if (auth.user.type !== 'admin') {
-                    throw new KnownError({
-                        message: 'Unauthorized',
-                        code: 403,
-                        name: 'UnauthorizedError',
-                    });
-                }
-            }
-        }
+        // disable auth for demonstration while accounts system is not up and running
+        // this is so that the maps function without errors
+        // if the accounts system and error handling is setup properly
+        // this will be re-enabled though it will require the maps to be
+        // kept behind admin auth as it shows data about every well in the system
+        // if (well.userId !== 'guest') {
+        //     if (well.userId !== auth.user.id) {
+        //         if (auth.user.type !== 'admin') {
+        //             throw new KnownError({
+        //                 message: 'Unauthorized',
+        //                 code: 403,
+        //                 name: 'UnauthorizedError',
+        //             });
+        //         }
+        //     }
+        // }
 
         return WellSchema.parse(well);
     },

@@ -64,7 +64,7 @@ export default function HeaderBar(): JSX.Element {
                             <TranslatableText
                                 variant='body1'
                                 english='Logout'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='লগআউট' // chatgpt generated
                             />
                         </Button>
                     ) : (
@@ -76,7 +76,7 @@ export default function HeaderBar(): JSX.Element {
                             <TranslatableText
                                 variant='body1'
                                 english='Login'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='লগইন করুন' // chatgpt generated
                             />
                         </Button>
                     )}

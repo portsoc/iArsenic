@@ -5,6 +5,7 @@ import { Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
 import getMapPin from '../../utils/getMapPin';
 import TranslatableText from '../../components/TranslatableText';
+import { Link } from 'wouter';
 
 type props = {
     wells: Well[],
@@ -82,22 +83,26 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                         <Popup>
                             <TranslatableText 
                                 variant='body1'
-                                english={`ID: ${w.id}`}
-                                bengali={`BENGALI PLACEHOLDER: ${w.id}`}
+                                english={<>
+                                    ID: <Link href={`/well/${w.id}/result`}>{w.id}</Link>
+                                </>}
+                                bengali={<>
+                                    আইডি: <Link href={`/well/${w.id}/result`}>{w.id}</Link>
+                                </>}
                             />
 
                             <TranslatableText 
                                 variant='body1'
                                 english={`Risk Factor: ${predictionToRiskFactor(w.riskAssesment).english}`}
-                                bengali={`BENGALI PLACEHOLDER: ${predictionToRiskFactor(w.riskAssesment).bengali}`}
+                                bengali={`ঝুঁকির মাত্রা: ${predictionToRiskFactor(w.riskAssesment).bengali}`} // chatgpt generated
                             />
 
                             <TranslatableText 
                                 variant='body1'
                                 english={`Division: ${w.division}`}
                                 bengali={`
-                                    ${regionTranslations.Divisions.Division}:
-                                    ${regionTranslations.Divisions[w.division!]}
+                                    ${regionTranslations.Divisions.division}:
+                                    ${regionTranslations.Divisions[(w.division! as string).toLowerCase()]}
                                 `}
                             />
 
@@ -105,8 +110,8 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                                 variant='body1'
                                 english={`District: ${w.district}`}
                                 bengali={`
-                                    ${regionTranslations.Districts.District}:
-                                    ${regionTranslations.Districts[w.district!]}
+                                    ${regionTranslations.Districts.district}:
+                                    ${regionTranslations.Districts[(w.district! as string).toLowerCase()]}
                                 `}
                             />
 
@@ -114,8 +119,8 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                                 variant='body1'
                                 english={`Upazila: ${w.upazila!}`}
                                 bengali={`
-                                    ${regionTranslations.Upazilas.Upazila}:
-                                    ${regionTranslations.Upazilas[w.upazila!]}
+                                    ${regionTranslations.Upazilas.upazila}:
+                                    ${regionTranslations.Upazilas[(w.upazila!).toLowerCase()]}
                                 `}
                             />
 
@@ -123,8 +128,8 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                                 variant='body1'
                                 english={`Union: ${w.union!}`}
                                 bengali={`
-                                    ${regionTranslations.Unions.Union}:
-                                    ${regionTranslations.Unions[w.union!]}
+                                    ${regionTranslations.Unions.union}:
+                                    ${regionTranslations.Unions[(w.union!).toLowerCase()]}
                                 `}
                             />
 
@@ -132,19 +137,19 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                                 variant='body1'
                                 english={`Mouza: ${w.mouza}`}
                                 bengali={`
-                                    ${regionTranslations.Mouzas.Mouza}:
-                                    ${regionTranslations.Mouzas[w.mouza!]}
+                                    ${regionTranslations.Mouzas.mouza}:
+                                    ${regionTranslations.Mouzas[(w.mouza!).toLowerCase()]}
                                 `}
                             />
 
                             <TranslatableText 
                                 variant='body1'
-                                english={`
-                                    Depth: ${w!.depth}m
-                                `}
-                                bengali={`
-                                    BENGALI PLACEHOLDER: ${w!.depth}m
-                                `}
+                                english={<>
+                                    Depth: {((w!.depth as number) * 3.281).toFixed(0)} ft ({w!.depth} meters)
+                                </>}
+                                bengali={<>
+                                    গভীরতা: {((w!.depth as number) * 3.281).toFixed(0)} ফুট ({w!.depth} মিটার)
+                                </>}
                             />
 
                             <TranslatableText 
@@ -153,7 +158,7 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                                     Flooding: ${w.flooding ? 'Yes' : 'No'}
                                 `}
                                 bengali={`
-                                    BENGALI PLACEHOLDER: ${w.flooding ? 'Yes' : 'No'}
+                                    বন্যাপ্রবণতা: ${w.flooding ? 'হ্যাঁ' : 'না'}
                                 `}
                             />
 
@@ -169,9 +174,22 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                                 english={`
                                     Well Staining: ${w.staining}
                                 `}
-                                bengali={`
-                                    BENGALI PLACEHOLDER: ${w.staining}
-                                `}
+                                bengali={
+                                    (() => {
+                                        const value = (() => {
+                                            if (w.staining === 'red') return 'লালচে দাগ';
+                                            if (w.staining === 'black') return 'কালো দাগ';
+                                            if (w.staining === 'not sure') return 'নিশ্চিত না';
+                                            if (!w.staining) return '';
+                                            return w.staining; // fallback
+                                        })();
+                                        return (
+                                            <>
+                                                দাগ: {value}
+                                            </>
+                                        );
+                                    })()
+                                } // values chatgpt generated
                             />
 
                             {
@@ -182,9 +200,21 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                                         english={`
                                             Utensil Staining: ${w.utensilStaining}   
                                         `}
-                                        bengali={`
-                                            BENGALI PLACEHOLDER: ${w.utensilStaining}
-                                        `}
+                                        bengali={
+                                            (() => {
+                                                const value = (() => {
+                                                    if (w.utensilStaining === 'red') return 'লালচে দাগ';
+                                                    if (w.utensilStaining === 'black') return 'কালো দাগ';
+                                                    if (w.utensilStaining === undefined) return '';
+                                                    return w.utensilStaining; // fallback
+                                                })();
+                                                return (
+                                                    <>
+                                                        হাড়ি-পাতিলের দাগ: {value}
+                                                    </>
+                                                );
+                                            })()
+                                        } // values chatgpt generated
                                     />
                                 </>
                             }

@@ -37,7 +37,7 @@ export default function({ well }: props) {
                             })();
                             return (
                                 <>
-                                    <strong>প্ল্যাটফর্মে দাগ</strong> {value}
+                                    <strong>দাগ</strong> {value}
                                 </>
                             );
                         })()

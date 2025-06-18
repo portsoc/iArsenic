@@ -123,7 +123,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                 <Divider />
                 <TranslatableText
                     english='Select Language' 
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ভাষা নির্বাচন করুন' // chatgpt generated
                     variant='h6'
                 />
 
