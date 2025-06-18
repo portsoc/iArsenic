@@ -51,7 +51,7 @@ export default function({ well }: props) {
                         <strong>Division</strong> {well.division}
                     </>}
                     bengali={<>
-                        <strong>{rt.Divisions.Division}</strong> {rt.Divisions[well.division]}
+                        <strong>{rt.Divisions.division}</strong> {rt.Divisions[well.division.toLowerCase()]}
                     </>}
                 />
 
@@ -61,7 +61,7 @@ export default function({ well }: props) {
                         <strong>District</strong> {well.district}
                     </>}
                     bengali={<>
-                        <strong>{rt.Districts.District}</strong> {rt.Districts[well.district as string]}
+                        <strong>{rt.Districts.district}</strong> {rt.Districts[(well.district as string).toLowerCase()]}
                     </>}
                 />
 
@@ -72,7 +72,7 @@ export default function({ well }: props) {
                         <strong>Upazila</strong> {well.upazila}
                     </>}
                     bengali={<>
-                        <strong>{rt.Upazilas.Upazila}</strong> {rt.Upazilas[well.upazila as string]}
+                        <strong>{rt.Upazilas.upazila}</strong> {rt.Upazilas[(well.upazila as string).toLowerCase()]}
                     </>}
                 />
 
@@ -82,7 +82,7 @@ export default function({ well }: props) {
                         <strong>Union</strong> {well.union}
                     </>}
                     bengali={<>
-                        <strong>{rt.Unions.Union}</strong> {rt.Unions[well.union as string]}
+                        <strong>{rt.Unions.union}</strong> {rt.Unions[(well.union as string).toLowerCase()]}
                     </>}
                 />
 
@@ -92,7 +92,7 @@ export default function({ well }: props) {
                         <strong>Mouza</strong> {well.mouza}
                     </>}
                     bengali={<>
-                        <strong>{rt.Mouzas.Mouza}</strong> {rt.Mouzas[well.mouza as string]}
+                        <strong>{rt.Mouzas.mouza}</strong> {rt.Mouzas[(well.mouza as string).toLowerCase()]}
                     </>}
                 />
 

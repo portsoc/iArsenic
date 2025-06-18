@@ -91,7 +91,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Division'
-                        bengali={regionTranslations.Divisions.Division}
+                        bengali={regionTranslations.Divisions.division}
                     />
                 }
             >
@@ -100,7 +100,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={d.division}
-                            bengali={regionTranslations.Divisions[d.division]}
+                            bengali={regionTranslations.Divisions[d.division.toLowerCase()]}
                         />
                     </MenuItem>
                 ))}
@@ -122,7 +122,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='District'
-                        bengali={regionTranslations.Districts.District}
+                        bengali={regionTranslations.Districts.district}
                     />
                 }
             >
@@ -131,7 +131,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={d.district}
-                            bengali={regionTranslations.Districts[d.district]}
+                            bengali={regionTranslations.Districts[d.district.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}
@@ -152,7 +152,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Upazila'
-                        bengali={regionTranslations.Upazilas.Upazila}
+                        bengali={regionTranslations.Upazilas.upazila}
                     />
                 }
             >
@@ -161,7 +161,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={u.upazila}
-                            bengali={regionTranslations.Upazilas[u.upazila]}
+                            bengali={regionTranslations.Upazilas[u.upazila.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}
@@ -181,7 +181,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Union'
-                        bengali={regionTranslations.Unions.Union}
+                        bengali={regionTranslations.Unions.union}
                     />
                 }
             >
@@ -190,7 +190,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={u.union}
-                            bengali={regionTranslations.Unions[u.union]}
+                            bengali={regionTranslations.Unions[u.union.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}
@@ -208,7 +208,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Mouza'
-                        bengali={regionTranslations.Mouzas.Mouza}
+                        bengali={regionTranslations.Mouzas.mouza}
                     />
                 }
             >
@@ -217,7 +217,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={m}
-                            bengali={regionTranslations.Mouzas[m]}
+                            bengali={regionTranslations.Mouzas[m.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}
