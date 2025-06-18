@@ -1,6 +1,6 @@
 import TranslatableText from "../../components/TranslatableText";
 import PageCard from "../../components/PageCard";
-import { Button } from "@mui/material";
+import { Button, List, ListItem } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function PrivacyPolicy(): JSX.Element {
@@ -12,7 +12,7 @@ export default function PrivacyPolicy(): JSX.Element {
                 mb='1rem'
                 textAlign='center'
                 english='Privacy Policy'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='গোপনীয়তা নীতি'
             />
 
             <Button
@@ -25,7 +25,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     textAlign='center'
                     english='Return'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ফিরে যান' // chatgpt generated
                 />
             </Button>
 
@@ -36,7 +36,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     mb='1rem'
                     textAlign='center'
                     english='Our Data Practices'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আমাদের ডেটা ব্যবস্থাপনা'
                 />
 
                 <TranslatableText 
@@ -59,7 +59,9 @@ export default function PrivacyPolicy(): JSX.Element {
                         experience while using our service to assess
                         arsenic risk in your tubewell.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        iArsenic-এ আমরা আপনার গোপনীয়তা রক্ষা করার জন্য প্রতিশ্রুতিবদ্ধ। এই নীতিতে ব্যাখ্যা করা হয়েছে, আপনি যখন আমাদের অ্যাপ ব্যবহার করেন তখন আপনার দেওয়া তথ্য আমরা কীভাবে ব্যবহার করি। আমাদের লক্ষ্য হলো আপনাকে একটি নিরাপদ এবং বিশ্বাসযোগ্য সেবা দেওয়া, যাতে আপনি আপনার নলকূপে আর্সেনিকের ঝুঁকি বুঝতে পারেন।
+                    `}
                 />
             </PageCard>
 
@@ -70,7 +72,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     textAlign="center"
                     mb='1rem'
                     english='Data Collection'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ডেটা সংগ্রহ'
                 />
 
                 <TranslatableText 
@@ -78,7 +80,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='What We Collect'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আমরা কী সংগ্রহ করি'
                 />
 
                 <TranslatableText 
@@ -86,20 +88,55 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     mb='1rem'
                     english={`
-                        To estimate arsenic levels, we ask you to input
-                        the following details: the administrative region
-                        of your tubewell, the depth of the well, and
-                        the color of any staining on the well platform.
+                        To estimate arsenic levels, we ask you to input the following details
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আমরা আপনাকে কিছু তথ্য দিতে বলি—যেমন'
                 />
+
+                <List sx={{ mb: '1rem', width: '100%' }}>
+                    <ListItem>
+                        <TranslatableText
+                            variant='body1'
+                            english={`
+                                • The administrative region of your tubewell
+                            `}
+                            bengali={`
+                                • আপনার নলকূপের অবস্থান (বিভাগ, জেলা ইত্যাদি)
+                            `}
+                        />
+                    </ListItem>
+
+                    <ListItem>
+                        <TranslatableText
+                            variant='body1'
+                            english={`
+                                • The depth of the well
+                            `}
+                            bengali={`
+                                • নলকূপের গভীরতা
+                            `}
+                        />
+                    </ListItem>
+
+                    <ListItem>
+                        <TranslatableText
+                            variant='body1'
+                            english={`
+                                • The color of any staining on the well platform
+                            `}
+                            bengali={`
+                                • নলকূপের সিমেন্টের মেঝেতে কোনো দাগ আছে কি না এবং কী রঙ
+                            `}
+                        />
+                    </ListItem>
+                </List>
 
                 <TranslatableText 
                     width='100%'
                     variant='body1' 
                     fontWeight='bold'
                     english='Purpose'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='উদ্দেশ্য'
                 />
 
                 <TranslatableText 
@@ -111,7 +148,7 @@ export default function PrivacyPolicy(): JSX.Element {
                         conditions and chemical properties that are crucial
                         for predicting arsenic contamination levels in your water.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='এই তথ্যগুলো আমাদেরকে ভূমির রাসায়নিক ও ভূতাত্ত্বিক অবস্থা বুঝতে সাহায্য করে, যা পানি নিরাপদ কি না তা অনুমান করতে কাজে লাগে।'
                 />
             </PageCard>
 
@@ -122,7 +159,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     textAlign="center"
                     mb='1rem'
                     english='Data Use'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ডেটা ব্যবহার'
                 />
 
                 <TranslatableText 
@@ -130,7 +167,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Analysis'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='বিশ্লেষণ'
                 />
 
                 <TranslatableText 
@@ -142,7 +179,9 @@ export default function PrivacyPolicy(): JSX.Element {
                         calculations are based on aggregated data and scientific
                         models developed through extensive research.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        আপনার দেওয়া তথ্য ব্যবহার করে আমরা হিসাব করি—আপনার পানিতে আর্সেনিক থাকতে পারে কি না। এটি বৈজ্ঞানিক গবেষণার ভিত্তিতে তৈরি মডেল ও ডেটার মাধ্যমে হয়।
+                    `}
                 />
 
                 <TranslatableText 
@@ -150,7 +189,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Improvement'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='উন্নয়ন'
                 />
 
                 <TranslatableText 
@@ -162,7 +201,9 @@ export default function PrivacyPolicy(): JSX.Element {
                         functionality and predictive accuracy. This ongoing
                         improvement helps us serve you and others better.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        আমরা নামবিহীন (anonymized) ডেটা ব্যবহার করি অ্যাপ আরও ভালো করার জন্য, যাতে ভবিষ্যতে আপনি ও অন্যরা আরও ভালোভাবে উপকৃত হতে পারেন।
+                    `}
                 />
             </PageCard>
 
@@ -173,7 +214,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     mb='1rem'
                     textAlign="center"
                     english='Data Protection'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ডেটা সুরক্ষা'
                 />
 
                 <TranslatableText 
@@ -181,7 +222,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Storage'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='স্টোরেজ'
                 />
 
                 <TranslatableText 
@@ -192,7 +233,7 @@ export default function PrivacyPolicy(): JSX.Element {
                         All data is stored on secure cloud servers, which
                         are protected with the latest encryption technologies.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`সব ডেটা নিরাপদ ক্লাউড সার্ভারে রাখা হয় এবং আধুনিক এনক্রিপশন প্রযুক্তি দিয়ে সুরক্ষিত।`}
                 />
 
                 <TranslatableText 
@@ -200,7 +241,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     fontWeight='bold' 
                     variant='body1'
                     english='Access'
-                    bengali='PLACEHOLDER BEGNALI'
+                    bengali='অ্যাক্সেস'
                 />
 
                 <TranslatableText 
@@ -213,7 +254,9 @@ export default function PrivacyPolicy(): JSX.Element {
                         and only for purposes of improving the app and
                         its algorithms.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        শুধু নির্ধারিত টিমের সদস্যরা এই ডেটা দেখতে পারে, এবং সেটিও শুধুমাত্র অ্যাপ উন্নয়নের জন্য।
+                    `}
                 />
 
                 <TranslatableText 
@@ -221,7 +264,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     fontWeight='bold' 
                     variant='body1'
                     english='Anonymity'
-                    bengali='PLACEHOLDER BEGNALI'
+                    bengali='গোপনীয়তা'
                 />
 
                 <TranslatableText 
@@ -234,7 +277,9 @@ export default function PrivacyPolicy(): JSX.Element {
                         or any information that could be used to trace
                         data back to an individual.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        আমরা আপনার নাম বা ব্যক্তিগত পরিচয় কখনোই সংরক্ষণ করি না। ব্যবহৃত সব ডেটা সম্পূর্ণ নামবিহীন থাকে।
+                    `}
                 />
             </PageCard>
 
@@ -245,7 +290,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     mb='1rem'
                     textAlign="center"
                     english='User Consent'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ব্যবহারকারীর সম্মতি'
                 />
 
                 <TranslatableText 
@@ -253,7 +298,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Informed Consent'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার সম্মতি'
                 />
 
                 <TranslatableText 
@@ -265,7 +310,9 @@ export default function PrivacyPolicy(): JSX.Element {
                         information, you consent to our use of your
                         anonymized data as described above.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        আপনি যখন আমাদের অ্যাপ ব্যবহার করেন এবং তথ্য দেন, তখন আপনি আমাদের এই ডেটা ব্যবহারে সম্মতি দিচ্ছেন।
+                    `}
                 />
 
                 <TranslatableText 
@@ -273,7 +320,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Withdrawal of Consent'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='সম্মতি বাতিল'
                 />
 
                 <TranslatableText 
@@ -293,7 +340,10 @@ export default function PrivacyPolicy(): JSX.Element {
                         feasible for data that has already been used to
                         generate assessments.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        আপনি চাইলে "Assess Risk" বোতাম প্রেস করার আগে অ্যাপ ব্যবহার বন্ধ করে দিতে পারেন। সেটি হলে আমরা আপনার ডেটা আর ব্যবহার করব না।
+                        কিন্তু একবার যদি আপনি "Assess Risk" চাপেন, তখন আপনার ডেটা সঙ্গে সঙ্গে নামবিহীনভাবে সংরক্ষণ হয়ে যায়, এবং সেটি আর চিহ্নিত বা মুছে ফেলা সম্ভব নয়।
+                    `}
                 />
             </PageCard>
             
@@ -306,7 +356,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     width='100%'
                     variant='body1' 
                     english='Return'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ফিরে যান' // chatgpt generated
                 />
             </Button>
         </>

@@ -57,7 +57,7 @@ export default function UnderstandingRisk(): JSX.Element {
                 variant='h4'
                 textAlign='center'
                 english='Understanding Your Arsenic Risk Level'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='আপনার আর্সেনিক ঝুঁকি স্তর বুঝতে'
             />
 
             <Button
@@ -70,7 +70,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     textAlign='center'
                     english='Return'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ফিরে যান'
                 />
             </Button>
 
@@ -80,7 +80,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     textAlign='center' 
                     variant='h5'
                     english='What does probability mean here?'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali="এখানে 'সম্ভাবনা' বলতে কী বোঝায়?"
                 />
 
                 <TranslatableText 
@@ -89,14 +89,74 @@ export default function UnderstandingRisk(): JSX.Element {
                         In the context of our iArsenic app, "risk" 
                         refers to our best estimate of the likelihood that 
                         your tubewell contains arsenic at levels that could 
-                        be harmful. We use data about your well’s location, 
+                        be harmful. 
+                    `}
+                    bengali={`
+                        iArsenic অ্যাপের প্রেক্ষাপটে, 'সম্ভাবনা' হল আমাদের সেরা অনুমান যা নির্ধারণ করে যে আপনার টিউবওয়েলে ক্ষতিকর মাত্রায় আর্সেনিক থাকার সম্ভাবনা কতটুকু।
+                    `}
+                />
+                <TranslatableText 
+                    variant='body1'
+                    english={`
+                        We use data about your well’s location, 
                         depth, and visible characteristics to estimate this 
-                        risk. Remember, these are educated guesses based on 
+                        risk. 
+                    `}
+                    bengali={`
+                        আমরা এই ঝুঁকি নির্ধারণের জন্য নলকূপের অবস্থান, গভীরতা এবং দৃশ্যমান বৈশিষ্ট্যগুলির উপাত্ত ব্যবহার করি।
+                    `}
+                />
+                <TranslatableText 
+                    variant='body1'
+                    english={`
+                        Remember, these are educated guesses based on 
                         available data, and not certainties. Confirming arsenic 
                         levels through laboratory testing is always recommended, 
                         especially if your result indicates medium or higher risk.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={`
+                        মনে রাখবেন, এগুলি পাওয়া উপাত্ত অনুযায়ী শিক্ষিত অনুমান মাত্র, নিশ্চয়তা নয়। বিশেষ করে মাঝারি বা তার চেয়ে বেশি ঝুঁকি নির্দেশিত হলে, ল্যাবরেটরি পরীক্ষা দ্বারা আর্সেনিক মাত্রা নিশ্চিত করা উচিৎ ।
+                    `}
+                />
+            </PageCard>
+
+            <PageCard>
+                <TranslatableText
+                    mb='1rem'
+                    textAlign='center' 
+                    variant='h5'
+                    english='How to use this guide'
+                    bengali="এখানে 'সম্ভাবনা' বলতে কী বোঝায়?"
+                /> 
+
+                <TranslatableText 
+                    variant='body1' 
+                    english={`
+                        Each time you receive a risk assessment using the iArsenic app, use this guide to help you understand your results and what action to take.
+                    `}
+                    bengali={`
+                        প্রতিবার যখন আপনি iArsenic অ্যাপ ব্যবহার করে ঝুঁকি মূল্যায়ন পাবেন, তখন এই গাইডের দ্বারা আপনার ফলাফল বুঝতে এবং কী পদক্ষেপ নেওয়া উচিত তা বোঝার জন্য সহায়তা নিন।
+                    `}
+                />
+
+                <TranslatableText 
+                    variant='body1' 
+                    english={`
+                        Remember, it is possible to reduce the health risks of arsenic by taking appropriate steps based on your risk level.
+                    `}
+                    bengali={`
+                        মনে রাখবেন, আপনার ঝুঁকি স্তরের উপর ভিত্তি করে উপযুক্ত পদক্ষেপ নিলে আর্সেনিকের স্বাস্থ্যঝুঁকি লাঘব করা সম্ভব।
+                    `}
+                />
+
+                <TranslatableText 
+                    variant='body1' 
+                    english={`
+                        This guide is easy to understand and follow, providing an effective way to ensure the safety of your water and protect yourself and your family from the potential effects of arsenic contamination.
+                    `}
+                    bengali={`
+                        এই গাইডটি বুঝতে এবং অনুসরণ করতে সহজ হওয়ায়, আপনার পানির নিরাপত্তা নিশ্চিত করতে এবং আর্সেনিক দূষণের সম্ভাব্য প্রভাব থেকে নিজেকে এবং আপনার পরিবারকে রক্ষা করতে একটি কার্যকরী উপায় প্রদান করে।
+                    `}
                 />
             </PageCard>
 
@@ -111,7 +171,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     textAlign='center' 
                     variant='h5'
                     english='Output Demonstration'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ফলাফল দেখানো' // chatgpt generated
                 />
 
                 <Stack sx={{ 
@@ -173,7 +233,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         <TranslatableText
                             variant='body1'
                             english='Select Risk Value'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='ঝুঁকির মাত্রা নির্বাচন করুন' // chatgpt generated
                         />
                     </FormLabel>
 
@@ -209,7 +269,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     textAlign='center'
                     english='Risk Levels for Arsenic Contamination'
                     mb='2rem'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ঝুঁকি শ্রেণিবিন্যাস ব্যাখ্যা:ছি'
                 />
 
                 <TranslatableText
@@ -217,7 +277,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     mb='1rem'
                     variant='h6'
                     english="1. Rare Risk (Dark Green)"
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='১) বিরল ঝুঁকি (গাঢ় সবুজ)'
                 />
 
                 <TranslatableText 
@@ -225,7 +285,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Description'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='বর্ণনা'
                 />
 
                 <TranslatableText 
@@ -236,7 +296,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         The data indicates an extremely low likelihood 
                         of arsenic being present in your water at harmful levels.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='উপাত্ত নির্দেশ করে যে আপনার পানির মধ্যে আর্সেনিক থাকার সম্ভাবনা অত্যন্ত কম।'
                 />
 
                 <TranslatableText 
@@ -244,7 +304,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='What it means'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অর্থ কী'
                 />
 
                 <TranslatableText 
@@ -258,7 +318,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         occasional testing, perhaps once every few years, is 
                         advised to ensure continued safety.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার পানি আর্সেনিক দূষণের দিক থেকে খুবই নিরাপদ বিবেচিত। তবে, নিশ্চয়তা পেতে রাসায়নিক পরীক্ষা করা উচিত। পরিবেশ সর্বদা অপরিবর্তনশীল নয়, তাই মাঝে মাঝে, হয়তো কয়েক বছর অন্তর, পরীক্ষা করানো উচিত।'
                 />
 
                 {/* Low Risk */}
@@ -267,7 +327,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     mb='1rem'
                     variant='h6'
                     english="2. Low Risk (Green)"
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='২) কম ঝুঁকি (সবুজ)'
                 />
 
                 <TranslatableText 
@@ -275,7 +335,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Description'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='বর্ণনা'
                 />
 
                 <TranslatableText 
@@ -285,7 +345,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     english={`
                         The data suggests a low likelihood of harmful arsenic levels.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='উপাত্ত নির্দেশ করে যে আপনার পানির মধ্যে ক্ষতিকর আর্সেনিকের মাত্রা কম।'
                 />
 
                 <TranslatableText 
@@ -293,7 +353,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='What it means'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অর্থ কী'
                 />
 
                 <TranslatableText 
@@ -306,7 +366,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         provide certainty. Regular monitoring and occasional 
                         laboratory testing remain important to ensure safety over time.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার পানি সম্ভবত আর্সেনিকের দিক থেকে নিরাপদ, তবে পরিস্থিতি পরিবর্তনশীল। নিশ্চয়তা পেতে রাসায়নিক পরীক্ষা করা উচিত। নিয়মিত পর্যবেক্ষণ এবং মাঝে মাঝে ল্যাবরেটরি পরীক্ষা জরুরি।'
                 />
 
                 {/* Medium Risk */}
@@ -314,8 +374,8 @@ export default function UnderstandingRisk(): JSX.Element {
                     width='100%'
                     mb='1rem'
                     variant='h6'
-                    english=""
-                    bengali='BENGALI PLACEHOLDER'
+                    english="3. Medium Risk (Yellow)"
+                    bengali='৩) মাঝারি ঝুঁকি (হলুদ)'
                 />
 
                 <TranslatableText 
@@ -323,7 +383,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Description'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='বর্ণনা'
                 />
 
                 <TranslatableText 
@@ -334,7 +394,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         There is a moderate likelihood that arsenic 
                         levels in your water are unsafe.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার পানির মধ্যে অনিরাপদ হতে পারে, এবং মাঝারি মাত্রার আর্সেনিক থাকার সম্ভাবনা রয়েছে।'
                 />
 
                 <TranslatableText 
@@ -342,7 +402,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='What it means'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অর্থ কী'
                 />
 
                 <TranslatableText 
@@ -357,7 +417,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         filters or other treatment methods may also 
                         be advisable until confirmed safe.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='সম্ভব হলে বিকল্প পানির উৎস ব্যবহার করুন। আপনার কূপের পানির সঠিক আর্সেনিক মাত্রা নির্ধারণের জন্য রাসায়নিক পরীক্ষা গুরুত্বপূর্ণ।'
                 />
 
                 <TranslatableText 
@@ -370,7 +430,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         headquarters has one of the branch offices – try 
                         to contact them in your area.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='নিরাপদ নিশ্চিত হওয়া পর্যন্ত পানি পরিশোধন করে পান করা উচিত। সাধারণত, প্রতিটি উপজেলা সদরে একটি শাখা অফিস থাকে - আপনার এলাকায় তাদের যোগাযোগ করার চেষ্টা করুন।'
                 />
 
                 {/* High Risk */}
@@ -379,7 +439,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     mb='1rem'
                     variant='h6'
                     english="4. High Risk (Orange)"
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='৪) উচ্চ ঝুঁকি (কমলা)'
                 />
 
                 <TranslatableText 
@@ -387,7 +447,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Description'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='বর্ণনা'
                 />
 
                 <TranslatableText 
@@ -398,7 +458,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         It is likely that your water contains 
                         arsenic at levels that pose a health risk.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার নলকুপের পানিতে আর্সেনিকের মাত্রা স্বাস্থ্যের জন্য ঝুঁকিপূর্ণ পর্যায়ে থাকার সম্ভবনা প্রবল ।'
                 />
 
                 <TranslatableText 
@@ -406,7 +466,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='What it means'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অর্থ কী'
                 />
 
                 <TranslatableText 
@@ -421,7 +481,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         understand the exact level of risk and 
                         necessary precautions.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আমরা পরামর্শ দিচ্ছি যে এই পানি পান বা রান্না করা এড়িয়ে চলুন। অবিলম্বে নিরাপদ পানির উৎস খুঁজুন।'
                 />
 
                 <TranslatableText 
@@ -433,7 +493,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         every upazila headquarters has one of the 
                         branch offices – try to contact them in your area.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='পানির মধ্যে আর্সেনিকের সঠিক মাত্রা বুঝতে রাসায়নিক পরীক্ষা করা অত্যাবশ্যক। অনুগ্রহ করে স্থানীয় জনস্বাস্থ্য প্রকৌশল অধিদপ্তর টিমের সাথে পরামর্শ করুন। সাধারণত, প্রতিটি উপজেলা সদরে একটি শাখা অফিস থাকে - আপনার এলাকায় তাদের যোগাযোগ করার চেষ্টা করুন।'
                 />
 
                 {/* Severe Risk */}
@@ -442,7 +502,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     mb='1rem'
                     variant='h6'
                     english="5. Severe Risk (Red)"
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='৫) গুরুতর ঝুঁকি (লাল)'
                 />
 
                 <TranslatableText 
@@ -450,7 +510,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Description'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='বর্ণনা'
                 />
 
                 <TranslatableText 
@@ -462,7 +522,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         that the arsenic levels in your 
                         water are dangerous.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার পানির মধ্যে আর্সেনিকের মাত্রা খুব বেশি থাকার সম্ভবনা প্রবল যা খুবই ক্ষতিকর।'
                 />
 
                 <TranslatableText 
@@ -470,7 +530,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='What it means'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অর্থ কী'
                 />
 
                 <TranslatableText 
@@ -485,7 +545,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         water purification systems if no alternatives are 
                         available.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আমরা পরামর্শ দিচ্ছি যে এই পানি ঘরোয়া কাজে ব্যবহার করা বন্ধ করুন। অবিলম্বে স্থানীয় স্বাস্থ্য কর্তৃপক্ষের সাথে যোগাযোগ করুন (সাধারণত, প্রতিটি উপজেলা সদরে একটি শাখা অফিস থাকে - আপনার এলাকায় তাদের যোগাযোগ করার চেষ্টা করুন) এবং সাহায্য নিন।'
                 />
 
                 <TranslatableText 
@@ -496,7 +556,7 @@ export default function UnderstandingRisk(): JSX.Element {
                         Normally, every upazila headquarters has one of 
                         the branch offices – try to contact them in your area.
                     `}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অবিলম্বে পরীক্ষা করুন এবং বিকল্প উৎস না থাকলে দ্রুত পানি পরিশোধন ব্যবস্থা স্থাপন করুন।'
                 />
             </PageCard>
 
@@ -509,7 +569,7 @@ export default function UnderstandingRisk(): JSX.Element {
                     width='100%'
                     variant='body1' 
                     english='Return'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='ফিরে যান'
                 />
             </Button>
         </>
