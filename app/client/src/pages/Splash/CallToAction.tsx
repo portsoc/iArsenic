@@ -1,5 +1,6 @@
-import { Box, useTheme, Button } from '@mui/material';
+import { Box, useTheme, Button, Avatar, Typography } from '@mui/material';
 import TranslatableText from '../../components/TranslatableText';
+import { useLanguage } from '../../utils/useLanguage';
 
 const sectionStyle = {
     display: 'flex',
@@ -38,6 +39,7 @@ interface props {
 }
 
 export default function CallToAction({ tryAppClick }: props): JSX.Element {
+    const { setLanguage } = useLanguage();
     const theme = useTheme();
 
     return (
@@ -73,15 +75,67 @@ export default function CallToAction({ tryAppClick }: props): JSX.Element {
                 bengali='আপনার নলকূপের পানিতে আর্সেনিক উপস্থিতির ঝুকি আছে কি না মুহূর্তেই যাচাই করুন'
             />
 
+            <Typography variant='h4'>ভাষা নির্বাচন করুন / Select Language</Typography>
+
+            <Box
+                sx={{
+                    height: 'max-content',
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                }} 
+            >
+                <Box
+                    sx={{
+                        width: '100%',
+                        maxWidth: '700px',
+                        display: 'flex',
+                        justifyContent: 'space-around'
+                    }} 
+                >
+                    <Box
+                        onClick={() => setLanguage('english')}
+                    >
+                        <Button
+                            startIcon={
+                                <Avatar
+                                    sx={{ height: '100%', width: '8rem', borderRadius: '16px' }}
+                                    src={`/british.png`}
+                                />
+                            }
+                        />
+                        <Typography variant='h5'>English</Typography>
+                    </Box>
+
+                    <Box
+                        onClick={() => setLanguage('bengali')} 
+                    >
+                        <Button
+                            startIcon={
+                                <Avatar
+                                    sx={{ height: '100%', width: '8rem', borderRadius: '16px' }}
+                                    src={`/bangladesh.jpg`}
+                                />
+                            }
+                        />
+                        <Typography variant='h5'>বাংলা</Typography>
+                    </Box>
+                </Box>
+            </Box>
+
             <Button
                 variant='contained'
                 color='primary'
-                size='large'
-                sx={{ padding: '1rem 2rem', fontSize: '1.2rem' }}
+                sx={{ 
+                    height: '6rem',
+                    width: '24rem',
+                    maxWidth: '80%',
+                    padding: '1rem 2rem', 
+                }}
                 onClick={tryAppClick}
             >
                 <TranslatableText 
-                    variant='body1' 
+                    variant='h5' 
                     english='Try the App'
                     bengali='অ্যাপটি ব্যবহার করুন'
                 />
