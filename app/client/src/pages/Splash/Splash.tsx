@@ -235,12 +235,16 @@ export default function SplashPage(): JSX.Element {
                     <Button
                         variant='contained'
                         color='primary'
-                        size='large'
-                        sx={{ padding: '1rem 2rem', fontSize: '1.2rem' }}
+                        sx={{ 
+                            height: '6rem',
+                            width: '24rem',
+                            maxWidth: '80%',
+                            padding: '1rem 2rem', 
+                        }}
                         onClick={handleTryAppClick}
                     >
                         <TranslatableText 
-                            variant='body1' 
+                            variant='h5' 
                             english='Try the App'
                             bengali='অ্যাপটি ব্যবহার করুন'
                         />

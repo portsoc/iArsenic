@@ -7,8 +7,8 @@ export function useLanguage() {
     const { data: token } = useAccessToken();
 
     function getLanguage(): 'english' | 'bengali' {
-        const stored = localStorage.getItem(LANGUAGE_KEY) || 'english';
-        return stored === 'bengali' ? 'bengali' : 'english';
+        const stored = localStorage.getItem(LANGUAGE_KEY) || 'bengali';
+        return stored === 'english' ? 'english' : 'bengali';
     }
 
     function init() {
