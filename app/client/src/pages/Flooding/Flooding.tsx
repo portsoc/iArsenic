@@ -52,14 +52,23 @@ export default function Flooding(): JSX.Element {
     }
 
     return (
-        <WellDataEntryLayout title="Flooding" onNext={handleNext}>
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Flooding"
+                    bengali="বন্যাপ্রবণতা"
+                />
+            }
+            onNext={handleNext}
+        >
             <PageCard>
                 <TranslatableText
                     variant='h5'
                     mb='1rem'
                     textAlign="center"
                     english='Is the area prone to flooding?'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আপনার নলকূপ এলাকাটি কি বন্যাপ্রবণ অর্থাৎ বর্ষার সময়ে কলতলায় পানি আসে কি?'
                 />
 
                 <FormControl
@@ -109,7 +118,7 @@ export default function Flooding(): JSX.Element {
                         variant='body1'
                         error={true}
                         english='Please select an option'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='একটি অপশন নির্বাচন করুন'
                     />
                 )}
             </PageCard>

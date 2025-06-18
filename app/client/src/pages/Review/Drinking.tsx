@@ -16,13 +16,21 @@ export default function({ well }: props) {
                     variant="h6"
                     mb='1rem'
                     english='Well In Use'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='নলকূপের ব্যবহার'
                 />
 
                 <TranslatableText 
                     variant="body1" 
-                    english={`Well in use: ${well.wellInUse ? 'Yes' : 'No'}`}
-                    bengali='BENGALI PLACEHOLDER'
+                    english={
+                        <>
+                            <strong>Well in use</strong> {well.wellInUse ? 'Yes' : 'No'}
+                        </>
+                    }
+                    bengali={
+                        <>
+                            <strong>এই নলকূপ দিয়ে পানি খাওয়া বা রান্না করা হয়</strong> {well.wellInUse ? 'হ্যাঁ' : 'না'}
+                        </>
+                    }
                 />
 
                 <Box display="flex" justifyContent="center" mt={4}>
@@ -36,7 +44,7 @@ export default function({ well }: props) {
                         <TranslatableText 
                             variant="body1" 
                             english='Edit Well In Use'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='ব্যবহার তথ্য সম্পাদন করুন'
                         />
                     </Button>
                 </Box>

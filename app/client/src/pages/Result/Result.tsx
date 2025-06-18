@@ -90,7 +90,22 @@ export default function Result(): JSX.Element {
     }
 
     return (
-        <WellDataEntryLayout title="Results" onNext={() => navigate(`/`)} nextText="Return to Start">
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Results"
+                    bengali="ফলাফল"
+                />
+            }
+            nextText={
+                <TranslatableText
+                    english="Return to Start"
+                    bengali="আবার শুরু করুন"
+                />
+            }
+            onNext={() => navigate(`/`)}
+        >
             <Grid container spacing={2} justifyContent="center" alignItems="center">
 
                 <Grid item xs={12} style={{ height: '220px' }}>
@@ -130,7 +145,7 @@ export default function Result(): JSX.Element {
                                     <TranslatableText 
                                         variant='body1' 
                                         english='What does this mean?'
-                                        bengali='BENGALI PLACEHOLDER'
+                                        bengali='ফলাফল বিশদ ব্যাখ্যা দেখতে চান?'
                                     />
                                 </Button>
                             </PageCard>

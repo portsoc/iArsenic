@@ -16,20 +16,55 @@ export default function({ well }: props) {
                     variant="h6" 
                     mb='1rem'
                     english='Staining'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='দাগ'
                 />
 
                 <TranslatableText
-                    variant="body1" 
-                    english={`Staining: ${well.staining}`}
-                    bengali='BENGALI PLACEHOLDER'
+                    variant="body1"
+                    english={
+                        <>
+                            <strong>Staining</strong> {well.staining}
+                        </>
+                    }
+                    bengali={
+                        (() => {
+                            const value = (() => {
+                                if (well.staining === 'red') return 'লালচে দাগ';
+                                if (well.staining === 'black') return 'কালো দাগ';
+                                if (well.staining === 'not sure') return 'নিশ্চিত না';
+                                if (!well.staining) return '';
+                                return well.staining; // fallback
+                            })();
+                            return (
+                                <>
+                                    <strong>প্ল্যাটফর্মে দাগ</strong> {value}
+                                </>
+                            );
+                        })()
+                    } // values chatgpt generated
                 />
 
                 {well.utensilStaining && (
                     <TranslatableText
                         variant="body1" 
-                        english={`Utensil Staining: ${well.utensilStaining}`}
-                        bengali='BENGALI PLACEHOLDER'
+                        english={<>
+                            <strong>Utensil Staining</strong> {well.utensilStaining}
+                        </>}
+                        bengali={
+                            (() => {
+                                const value = (() => {
+                                    if (well.utensilStaining === 'red') return 'লালচে দাগ';
+                                    if (well.utensilStaining === 'black') return 'কালো দাগ';
+                                    if (well.utensilStaining === undefined) return '';
+                                    return well.utensilStaining; // fallback
+                                })();
+                                return (
+                                    <>
+                                        <strong>হাড়ি-পাতিলের দাগ</strong> {value}
+                                    </>
+                                );
+                            })()
+                        } // values chatgpt generated
                     />
                 )}
 
@@ -44,7 +79,7 @@ export default function({ well }: props) {
                         <TranslatableText
                             variant="body1" 
                             english='Edit Staining'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='দাগ সংশোধন করুন'
                         />
                     </Button>
                 </Box>

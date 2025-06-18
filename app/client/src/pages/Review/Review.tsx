@@ -11,6 +11,7 @@ import Drinking from './Drinking';
 import Images from './Images';
 import { useAccessToken } from '../../utils/useAccessToken';
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import TranslatableText from '../../components/TranslatableText';
 
 export default function Review(): JSX.Element {
     const [, params] = useRoute('/well/:id/review');
@@ -58,7 +59,22 @@ export default function Review(): JSX.Element {
     }
 
     return (
-        <WellDataEntryLayout title="Review" onNext={handleNext} nextText="Results">
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Review"
+                    bengali="পর্যালোচনা"
+                />
+            }
+            nextText={
+                <TranslatableText
+                    english="Review"
+                    bengali="ফলাফল দেখুন"
+                />
+            }
+            onNext={handleNext}
+        >
             <Region well={well} />
             <Staining well={well} />
             <Depth well={well} />

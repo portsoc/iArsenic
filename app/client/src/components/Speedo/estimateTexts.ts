@@ -2,7 +2,7 @@
 export default {
     0: {
         english: {
-            title: 'Rare Risk (under 10 µg/L)',
+            title: 'Rare Risk',
             body: `
                 Your tube well water is categorised as 'Rare Risk'
                 for arsenic. It is generally considered safe for
@@ -46,7 +46,7 @@ export default {
     },
     2: {
         english: {
-            title: 'Medium Risk (under 100 µg/L)',
+            title: 'Medium Risk',
             body: `
                 Your tube well is at 'Medium Risk' of arsenic
                 contamination. We suggest you seek an alternative
@@ -68,7 +68,7 @@ export default {
     },
     3: {
         english: {
-            title: 'High Risk (under 200 µg/L)',
+            title: 'High Risk',
             body: `
                 Your tube well is categorised as 'High Risk'
                 for arsenic. It is strongly recommended that you
@@ -92,7 +92,7 @@ export default {
     },
     4: {
         english: {
-            title: 'Severe Risk (over 200 µg/L)',
+            title: 'Severe Risk',
             body: `
                 Your tube well is in the 'Severe Risk' category
                 for arsenic contamination. Do not use this

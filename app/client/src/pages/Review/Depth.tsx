@@ -16,13 +16,19 @@ export default function({ well }: props) {
                     variant="h6" 
                     gutterBottom
                     english='Depth'
-                    bengali='PLACEHOLDER BENGALI'
+                    bengali='নল্কুপের গভীরতা'
                 />
+                
                 <TranslatableText 
                     variant="body1" 
-                    english={`Depth: ${well.depth} meters`}
-                    bengali='PLACEHOLDER BENGALI'
+                    english={<>
+                        <strong>Depth</strong> {(well.depth as number * 3.281).toFixed(0)} ft ({well.depth} meters)
+                    </>}
+                    bengali={<>
+                        <strong>গভীরতা</strong> {(well.depth as number * 3.281).toFixed(0)} ফুট ({well.depth} মিটার)
+                    </>} // chatgpt generated
                 />
+
 
                 <Box display="flex" justifyContent="center" mt={4}>
                     <Button
@@ -35,7 +41,7 @@ export default function({ well }: props) {
                         <TranslatableText 
                             variant="body1" 
                             english='Edit Depth'
-                            bengali='PLACEHOLDER BENGALI'
+                            bengali='গভীরতা সম্পাদন করুন'
                         />
                     </Button>
                 </Box>

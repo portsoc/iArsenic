@@ -56,12 +56,22 @@ export default function WellInUse(): JSX.Element {
     }
 
     return (
-        <WellDataEntryLayout title="Well in use" onNext={handleNext}>
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Well in use"
+                    bengali="নলকূপ ব্যবহার"
+                />
+            }
+            onNext={handleNext}
+        >
             <PageCard>
                 <TranslatableText 
                     variant='h5'
+                    textAlign="center"
                     english='Is anyone drinking from this well?'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='এই নলকূপের পানি কি কেউ খাওয়া বা রান্নার কাজে ব্যবহার করছেন?'
                 />
 
                 <FormControl
@@ -86,7 +96,7 @@ export default function WellInUse(): JSX.Element {
                                     <TranslatableText 
                                         variant='body1'
                                         english='Yes'
-                                        bengali='BENGALI PLACEHOLDER'
+                                        bengali='হ্যাঁ'
                                     />
                                 }
                             />
@@ -98,7 +108,7 @@ export default function WellInUse(): JSX.Element {
                                     <TranslatableText 
                                         variant='body1'
                                         english='No'
-                                        bengali='BENGALI PLACEHOLDER'
+                                        bengali='না'
                                     />
                                 }
                             />
@@ -110,7 +120,7 @@ export default function WellInUse(): JSX.Element {
                     <TranslatableText 
                         error={true}
                         english='Please select an option'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='অনুগ্রহ করে একটি অপশন বেছে নিন'
                     />
                 )}
             </PageCard>

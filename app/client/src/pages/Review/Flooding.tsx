@@ -14,15 +14,23 @@ export default function({ well }: props) {
             <Stack width='100%'>
                 <TranslatableText 
                     variant="h6" 
-                    mb='1rem'
+                    gutterBottom
                     english='Flooding'
-                    bengali='PLACEHOLDER BENGALI'
+                    bengali='বন্যা'
                 />
 
                 <TranslatableText 
                     variant="body1" 
-                    english={`Flooding: ${well.flooding ? 'Yes' : 'No'}`}
-                    bengali='PLACEHOLDER BENGALI'
+                    english={
+                        <>
+                            <strong>Flooding</strong> {well.flooding ? 'Yes' : 'No'}
+                        </>
+                    }
+                    bengali={
+                        <>
+                            <strong>কলতলা বন্যাপ্রবণ</strong> {well.flooding ? 'হ্যাঁ' : 'না'}
+                        </>
+                    }
                 />
 
                 <Box display="flex" justifyContent="center" mt={4}>
@@ -36,7 +44,7 @@ export default function({ well }: props) {
                         <TranslatableText 
                             variant="body1" 
                             english='Edit Flooding'
-                            bengali='PLACEHOLDER BENGALI'
+                            bengali='বন্যা তথ্য পরিবর্তন করুন'
                         />
                     </Button>
                 </Box>
