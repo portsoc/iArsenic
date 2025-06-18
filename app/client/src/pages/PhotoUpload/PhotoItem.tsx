@@ -1,7 +1,8 @@
-import { Box, Stack, CircularProgress, Typography } from "@mui/material";
+import { Box, Stack, CircularProgress } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useEffect, useRef, useState } from "react";
+import TranslatableText from "../../components/TranslatableText";
 
 interface Props {
     url: string;
@@ -145,15 +146,15 @@ export default function PhotoItem({ url, index, onDelete }: Props) {
                             },
                         }}
                     >
-                        <Typography
+                        <TranslatableText
                             variant="caption"
-                            fontWeight="bold"
                             color="white"
+                            fontWeight="bold"
                             px={2}
                             sx={{ fontSize: '0.7rem' }}
-                        >
-                            Delete?
-                        </Typography>
+                            english="Delete?"
+                            bengali="মুছে ফেলুন?"
+                        />
                     </Box>
                 ) : (
                     <Box

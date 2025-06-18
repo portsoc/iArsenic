@@ -1,6 +1,8 @@
-import { Typography, Card, Box, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import { User } from 'iarsenic-types';
+import PageCard from '../../components/PageCard';
+import TranslatableText from '../../components/TranslatableText';
 
 interface Props {
     user: User;
@@ -10,49 +12,109 @@ interface Props {
 export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
     return (
         <Box width='100%'>
-           <Typography className='english' textAlign='center' variant='h4' gutterBottom>
-                Profile Page
-            </Typography>
+           <TranslatableText 
+                width='100%'
+                textAlign='center' 
+                variant='h4'
+                mb='1rem'
+                english='Profile Page'
+                bengali='BENGALI PLACEHOLDER'
+            />
 
-            <Card variant='outlined' sx={{ margin: '0 1rem 1rem 1rem', padding: '1rem' }}>
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Name</strong> {user.name}
-                </Typography>
+            <PageCard>
+                <TranslatableText 
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Name</strong> {user.name}
+                        </>
+                    }
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Email</strong> {user.email}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Email</strong> {user.email}
+                        </>
+                    }
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Email Verified</strong> {user.emailVerified ? "Yes" : "No"}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Email Verified</strong> {user.emailVerified ? "Yes" : "No"}
+                        </>
+                    }
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>User Type</strong> {user.type.charAt(0).toUpperCase() + user.type.slice(1)}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>User Type</strong> {user.type.charAt(0).toUpperCase() + user.type.slice(1)}
+                        </>
+                    }
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Created At</strong> {user.createdAt.toLocaleDateString()}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Created At</strong> {user.createdAt.toLocaleDateString()}
+                        </>
+                    }
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Language</strong> {user.language}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Language</strong> {user.language}
+                        </>
+                    }
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                <Typography className='english' variant='body1' mb={2}>
-                    <strong>Units System</strong> {user.units}
-                </Typography>
+                <TranslatableText 
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Units System</strong> {user.units}
+                        </>
+                    }
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
-                {/* Add Edit Button */}
-                <Button
-                    variant='outlined'
-                    startIcon={<CreateIcon />}
-                    sx={{ mt: 2 }}
-                    onClick={() => setEditMode(true)}
-                >
-                    Edit Profile
-                </Button>
-            </Card>
+                <Box width='100%'>
+                    <Button
+                        variant='outlined'
+                        startIcon={<CreateIcon />}
+                        sx={{ mt: 2 }}
+                        onClick={() => setEditMode(true)}
+                    >
+                        <TranslatableText 
+                            width='100%'
+                            variant='body1'
+                            english='Edit Profile'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </Button>
+                </Box>
+            </PageCard>
         </Box>
     );
 }

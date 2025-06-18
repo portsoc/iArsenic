@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
-    Typography,
     Alert,
     CircularProgress,
 } from '@mui/material';
@@ -14,6 +13,7 @@ import fetchDropdownData from '../../utils/fetchDropdownData';
 import { Well, WellSchema } from 'iarsenic-types';
 import { useAccessToken } from '../../utils/useAccessToken';
 import Filter from './Filter';
+import TranslatableText from '../../components/TranslatableText';
 
 export default function MyWells(): JSX.Element {
     const [filterOpen, setFilterOpen] = useState<boolean>(false)
@@ -128,18 +128,29 @@ export default function MyWells(): JSX.Element {
 
     return (
         <>
-            <Typography alignSelf="center" variant="h4">
-                My Wells
-            </Typography>
+            <TranslatableText 
+                english='My Wells' 
+                bengali='BENGALI PLACEHOLDER'
+                textAlign='center'
+                variant='h4'
+            />
 
             {!token && (
                 <Alert severity="warning" sx={{ margin: "1rem" }}>
-                    You are not logged in. Wells you create will not be saved to your account until you sign in.
+                    <TranslatableText
+                        variant='body1'
+                        english='You are not logged in. Wells you create will not be saved to your account until you sign in.'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 </Alert>
             )}
 
             <Button onClick={addWell} variant="contained">
-                Add Well
+                <TranslatableText
+                    variant='body1'
+                    english='Add Well'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
 
             {token && dropdownQuery.data && (
@@ -157,7 +168,11 @@ export default function MyWells(): JSX.Element {
                 {(
                     wells?.length === 0 && !(token ? wellsQuery.isLoading : guestWellsQuery.isLoading)
                 ) ? (
-                    <Typography>No wells found.</Typography>
+                    <TranslatableText
+                        variant='body1'
+                        english='No wells found' 
+                        bengali='BENGALI PLACEHOLDER' 
+                    />
                 ) : (
                     wells?.map(well => (
                         <WellCard

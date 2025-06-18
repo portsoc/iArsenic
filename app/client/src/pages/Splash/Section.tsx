@@ -1,4 +1,5 @@
-import { Typography, Box, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
+import { ReactNode } from 'react';
 
 const sectionStyle = {
     display: 'flex',
@@ -14,26 +15,19 @@ const sectionStyle = {
     position: 'relative',
 };
 
-const fontStyle = {
-    color: 'whitesmoke',
-    textAlign: 'justify',
-    m: 4,
-    mb: '2rem',
-};
-
 type props = {
-    title: string,
-    texts: string[],
+    title: ReactNode;
+    texts: ReactNode[];
     imageConfig?: {
-        imageUrl: string,
-        imageSide: 'left' | 'right',
-        imageAlt: string,
-    },
-    backgroundColor: string,
-    maxTextWidth: string,
-    textAlign?: 'center' | 'left' | 'right' | 'justify',
-    imageBorderRadius?: string,
-    appendage?: JSX.Element,
+        imageUrl: string;
+        imageSide: 'left' | 'right';
+        imageAlt: string;
+    };
+    backgroundColor: string;
+    maxTextWidth: string;
+    textAlign?: 'center' | 'left' | 'right' | 'justify';
+    imageBorderRadius?: string;
+    appendage?: JSX.Element;
 };
 
 export default function Section({
@@ -48,7 +42,8 @@ export default function Section({
 }: props): JSX.Element {
     return (
         <Box sx={{ ...sectionStyle, backgroundColor }} px={{ xs: 1, sm: 1, md: 4 }}>
-            <Typography variant='h3'>{title}</Typography>
+            {title}
+
             <Stack
                 direction={{
                     md: 'column-reverse',
@@ -59,27 +54,36 @@ export default function Section({
             >
                 <Box maxWidth={{ md: '100%', lg: maxTextWidth }}>
                     {texts.map((text, index) => (
-                        <Typography
-                            variant='h5'
+                        <Box
                             key={index}
-                            sx={{...fontStyle, textAlign: textAlign ? textAlign : 'justify'}}
-                            mx={{ xs: 1, sm: 1, md: 4}}
+                            sx={{
+                                textAlign: textAlign ?? 'justify',
+                            }}
+                            mx={{ xs: 1, sm: 1, md: 4 }}
                         >
                             {text}
-                        </Typography>
+                        </Box>
                     ))}
                 </Box>
+
                 {imageConfig && (
                     <Box mx={{ xs: 1, sm: 1, md: 4 }}>
                         <img
+                            style={{
+                                maxWidth: '100%',
+                                maxHeight: '50rem',
+                                height: 'auto',
+                                borderRadius: imageBorderRadius,
+                            }}
                             src={imageConfig.imageUrl}
-                            style={{ maxWidth: '100%', maxHeight: '50rem', height: 'auto', borderRadius: imageBorderRadius }}
                             alt={imageConfig.imageAlt}
                         />
                     </Box>
                 )}
             </Stack>
+
             {appendage}
         </Box>
     );
 }
+

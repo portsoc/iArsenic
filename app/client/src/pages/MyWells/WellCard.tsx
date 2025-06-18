@@ -1,9 +1,10 @@
-import { Card, Typography, Box } from '@mui/material';
+import { Card, Box } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import { Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
 import { useAccessToken } from '../../utils/useAccessToken';
+import TranslatableText from '../../components/TranslatableText';
 
 interface Props {
     well: Well;
@@ -70,9 +71,11 @@ export default function WellCard({ well }: Props): JSX.Element {
             onClick={() => navigate(`/well/${well.id}`)}
         >
             <Box>
-                <Typography variant="body1" fontWeight="bold">
-                    Well {well.id.slice(0, 6)}...
-                </Typography>
+                <TranslatableText 
+                    english={`Well ${well.id}`} 
+                    bengali='BENGALI PLACEHOLDER' 
+                    variant='subtitle2'
+                />
             </Box>
 
             <Box

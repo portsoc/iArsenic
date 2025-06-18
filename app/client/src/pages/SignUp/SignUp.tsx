@@ -1,7 +1,9 @@
-import { Button, Card, TextField, Typography } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { IKnownError, RegisterRequestSchema } from 'iarsenic-types';
 import { useLanguage } from '../../utils/useLanguage';
+import TranslatableText from '../../components/TranslatableText';
+import PageCard from '../../components/PageCard';
 
 export default function SignUp(): JSX.Element {
     const { language } = useLanguage()
@@ -29,20 +31,36 @@ export default function SignUp(): JSX.Element {
 
     function validatePassword(password: string): string | null {
         if (password.length < 10) {
-            return "Password must be at least 10 characters long.";
+            if (language === 'english') {
+                return "Password must be at least 10 characters long.";
+            } else {
+                return "BENGALI PLACEHOLDER";
+            }
         }
         if (!/[A-Z]/.test(password)) {
-            return "Password must contain at least one uppercase letter.";
+            if (language === 'english') {
+                return "Password must contain at least one uppercase letter.";
+            } else {
+                return "BENGALI PLACEHOLDER";
+            }
         }
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            return "Password must contain at least one symbol.";
+            if (language === 'english') {
+                return "Password must contain at least one symbol.";
+            } else {
+                return "BENGALI PLACEHOLDER";
+            }
         }
         return null;
     }
 
     async function handleSubmit() {
         if (!name || !email || !password || !confirmPassword) {
-            setError('All fields are required');
+            if (language === 'english') {
+                setError('All fields are required');
+            } else {
+                setError('BENGALI PLACEHOLDER');
+            }
             return;
         }
 
@@ -53,7 +71,11 @@ export default function SignUp(): JSX.Element {
         }
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match");
+            if (language === 'english') {
+                setError("Passwords do not match");
+            } else {
+                setError('BENGALI PLACEHOLDER');
+            }
             return;
         }
 
@@ -112,69 +134,92 @@ export default function SignUp(): JSX.Element {
 
     return (
         <>
-            <Card
-                variant='outlined'
-                sx={{
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    pb: '2rem',
-                }}
-            >
-                <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                    Sign Up
-                </Typography>
+            <PageCard>
+                <TranslatableText
+                    marginBottom='1rem' 
+                    textAlign='center' 
+                    variant='h4'
+                    english='Sign Up'
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <TextField
-                    label="Name"
                     type="text"
                     value={name}
                     onChange={handleNameChange}
                     sx={{ width: '85%' }}
+                    label={
+                        <TranslatableText
+                            variant='body1'
+                            english='Name'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    }
                 />
 
                 <TextField
-                    label="Email"
                     type="email"
                     value={email}
                     onChange={handleEmailChange}
                     sx={{ width: '85%' }}
+                    label={
+                        <TranslatableText
+                            variant='body1'
+                            english='email'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    }
                 />
 
                 <TextField
-                    label="Password"
                     type="password"
                     value={password}
                     onChange={handlePasswordChange}
                     sx={{ width: '85%' }}
+                    label={
+                        <TranslatableText
+                            variant='body1'
+                            english='Password'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    }
                 />
 
                 <TextField
-                    label="Confirm Password"
                     type="password"
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
                     sx={{ width: '85%' }}
+                    label={
+                        <TranslatableText 
+                            variant='body1'
+                            english="Confirm Password"
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    }
                 />
 
                 {error && (
-                    <Typography color="error" variant="body2">
-                        {error}
-                    </Typography>
+                    <TranslatableText 
+                        error={true}
+                        variant="body2"
+                        english={error}
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 )}
 
                 <Button
-                    sx={{ width: '90%', height: '3rem' }}
+                    sx={{ width: '90%', height: '4rem' }}
                     variant='contained'
                     onClick={handleSubmit}
                 >
-                    Sign Up
+                    <TranslatableText 
+                        variant='body1'
+                        english="Sign Up"
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 </Button>
-            </Card>
+            </PageCard>
         </>
     );
 }

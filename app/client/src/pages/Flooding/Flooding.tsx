@@ -1,10 +1,13 @@
-import { Button, Card, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from "@mui/material";
-import { navigate } from "wouter/use-browser-location";
+import { FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import { useState } from "react";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
+import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import { navigate } from "wouter/use-browser-location";
+import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
-export default function Depth(): JSX.Element {
+export default function Flooding(): JSX.Element {
     const [, params] = useRoute('/well/:id/flooding');
     const wellId = params?.id;
     const { data: token } = useAccessToken();
@@ -17,27 +20,56 @@ export default function Depth(): JSX.Element {
         setError(false);
     }
 
-    return (
-        <>
-            <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                Flooding
-            </Typography>
+    async function handleNext() {
+        if (!flooding) {
+            setError(true);
+            return;
+        }
 
-            <Card
-                variant='outlined'
-                sx={{
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                }}
-            >
-                <Typography marginBottom='1rem' textAlign='center' variant='h5'>
-                    Is the area prone to flooding?
-                </Typography>
+        const floodingBool = flooding === 'yes';
+        const body = { flooding: floodingBool };
+        const headers: HeadersInit = {};
+
+        if (token) {
+            headers['authorization'] = `Bearer ${token.id}`;
+        }
+
+        const res = await fetch(`/api/v1/self/well/${wellId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            console.error('Failed to update well:', res);
+            return;
+        }
+
+        navigate(`/well/${wellId}/well-in-use`);
+    }
+
+    return (
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Flooding"
+                    bengali="বন্যাপ্রবণতা"
+                />
+            }
+            onNext={handleNext}
+        >
+            <PageCard>
+                <TranslatableText
+                    variant='h5'
+                    mb='1rem'
+                    textAlign="center"
+                    english='Is the area prone to flooding?'
+                    bengali='আপনার নলকূপ এলাকাটি কি বন্যাপ্রবণ অর্থাৎ বর্ষার সময়ে কলতলায় পানি আসে কি?'
+                />
 
                 <FormControl
                     error={error}
@@ -55,54 +87,41 @@ export default function Depth(): JSX.Element {
                         onChange={handleFloodingChange}
                     >
                         <Stack direction='row' columnGap={3}>
-                            <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                            <FormControlLabel value='no' control={<Radio />} label='No' />
+                            <FormControlLabel 
+                                value='yes' 
+                                control={<Radio />} 
+                                label={
+                                    <TranslatableText
+                                        variant="body1"
+                                        english="Yes"
+                                        bengali="হ্যাঁ"
+                                    />
+                                }
+                            />
+                            <FormControlLabel 
+                                value='no' 
+                                control={<Radio />} 
+                                label={
+                                    <TranslatableText
+                                        variant="body1"
+                                        english="No"
+                                        bengali="না"
+                                    />
+                                }
+                            />
                         </Stack>
                     </RadioGroup>
                 </FormControl>
+
                 {error && (
-                    <Typography color='error'>
-                        Please select an option
-                    </Typography>
+                    <TranslatableText
+                        variant='body1'
+                        error={true}
+                        english='Please select an option'
+                        bengali='একটি অপশন নির্বাচন করুন'
+                    />
                 )}
-            </Card>
-
-            <Button
-                sx={{ width: '90%', height: '4rem' }}
-                variant='contained'
-                onClick={async () => {
-                    if (!flooding) {
-                        setError(true);
-                        return;
-                    }
-
-                    const floodingBool = flooding === 'yes';
-                    const body = { flooding: floodingBool };
-                    const headers: HeadersInit = {};
-
-                    if (token) {
-                        headers['authorization'] = `Bearer ${token.id}`;
-                    }
-
-                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...headers,
-                        },
-                        body: JSON.stringify(body),
-                    });
-
-                    if (!res.ok) {
-                        console.error('Failed to update well:', res);
-                        return;
-                    }
-
-                    navigate(`/well/${wellId}/well-in-use`);
-                }}
-            >
-                Next Step
-            </Button>
-        </>
+            </PageCard>
+        </WellDataEntryLayout>
     );
 }

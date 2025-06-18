@@ -1,6 +1,8 @@
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
+import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 interface props {
     well: Well;
@@ -8,30 +10,45 @@ interface props {
 
 export default function({ well }: props) {
     return (
-        <Card
-            variant="outlined"
-            sx={{
-                width: '100%',
-                padding: '16px',
-                marginBottom: '16px',
-            }}
-        >
-            <Typography variant="h6" gutterBottom>Flooding</Typography>
-            <Typography variant="body1" component="p">
-                Flooding: {well.flooding ? 'Yes' : 'No'}
-            </Typography>
+        <PageCard>
+            <Stack width='100%'>
+                <TranslatableText 
+                    variant="h6" 
+                    gutterBottom
+                    english='Flooding'
+                    bengali='বন্যা'
+                />
 
-            <Box display="flex" justifyContent="center" mt={2}>
-                <Button
-                    sx={{ width: '80%', height: '3rem' }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate(`/well/${well.id}/flooding`);
-                    }}
-                >
-                    Edit Flooding
-                </Button>
-            </Box>
-        </Card>
+                <TranslatableText 
+                    variant="body1" 
+                    english={
+                        <>
+                            <strong>Flooding</strong> {well.flooding ? 'Yes' : 'No'}
+                        </>
+                    }
+                    bengali={
+                        <>
+                            <strong>কলতলা বন্যাপ্রবণ</strong> {well.flooding ? 'হ্যাঁ' : 'না'}
+                        </>
+                    }
+                />
+
+                <Box display="flex" justifyContent="center" mt={4}>
+                    <Button
+                        sx={{ width: '80%', height: '3rem' }}
+                        variant="outlined"
+                        onClick={() => {
+                            navigate(`/well/${well.id}/flooding`);
+                        }}
+                    >
+                        <TranslatableText 
+                            variant="body1" 
+                            english='Edit Flooding'
+                            bengali='বন্যা তথ্য পরিবর্তন করুন'
+                        />
+                    </Button>
+                </Box>
+            </Stack>
+        </PageCard>
     );
 }

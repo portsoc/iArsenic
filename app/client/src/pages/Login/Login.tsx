@@ -1,7 +1,8 @@
-import { Button, Card, TextField, Typography } from '@mui/material';
+import { Button, Card, TextField } from '@mui/material';
 import { useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 import { useLogin } from '../../utils/useLogin';
+import TranslatableText from '../../components/TranslatableText';
 
 export default function Login(): JSX.Element {
     const [email, setEmail] = useState('');
@@ -42,32 +43,57 @@ export default function Login(): JSX.Element {
                     gap: '1rem',
                 }}
             >
-                <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                    Login
-                </Typography>
+                <TranslatableText 
+                    textAlign='center'
+                    mb='1rem'
+                    variant='h4'
+                    english='Login' 
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <TextField
-                    label="Email"
                     type="email"
                     value={email}
                     onChange={handleEmailChange}
                     sx={{ width: '85%' }}
+                    label={
+                        <TranslatableText 
+                            variant='body1'
+                            english='Email' 
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    }
                 />
 
                 <TextField
-                    label="Password"
                     type="password"
                     value={password}
                     onChange={handlePasswordChange}
                     sx={{ width: '85%' }}
+                    label={
+                        <TranslatableText 
+                            variant='body1'
+                            english='Password' 
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    }
                 />
 
                 {err && (
-                    <Typography color='error'>{err}</Typography>
+                    <TranslatableText 
+                        variant='body1'
+                        error={true}
+                        english={err}
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 )}
 
                 <Button onClick={() => navigate(`/forgot-password`)}>
-                    Forgot Password?
+                    <TranslatableText 
+                        variant='body1'
+                        english='Forgot Password?'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 </Button>
 
                 <Button
@@ -76,7 +102,11 @@ export default function Login(): JSX.Element {
                     onClick={handleSubmit}
                     disabled={loginMutation.isPending}
                 >
-                    {loginMutation.isPending ? 'Logging in...' : 'Login'}
+                    <TranslatableText 
+                        variant='body1'
+                        english={loginMutation.isPending ? 'Logging in...' : 'Login'}
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 </Button>
             </Card>
 
@@ -92,16 +122,23 @@ export default function Login(): JSX.Element {
                     gap: '1rem',
                 }}
             >
-                <Typography textAlign='center' variant='h5'>
-                    Don't have an account?
-                </Typography>
+                <TranslatableText 
+                    variant='h5'
+                    textAlign='center'
+                    english="Don't have an account?"
+                    bengali='BENGALI PLACEHOLDER'
+                />
 
                 <Button
                     sx={{ width: '90%', height: '4rem' }}
                     variant='outlined'
                     onClick={() => navigate(`/sign-up`)}
                 >
-                    Sign Up
+                    <TranslatableText 
+                        variant='body1'
+                        english='Sign Up'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                 </Button>
             </Card>
         </>

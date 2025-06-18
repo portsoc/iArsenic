@@ -1,4 +1,4 @@
-import { Button, Card, Typography, Box, Alert, CircularProgress } from "@mui/material";
+import { Button, Card, Box, Alert, CircularProgress } from "@mui/material";
 import { useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
@@ -7,6 +7,7 @@ import { resizeImage } from "../../utils/resizeImage";
 import { navigate } from "wouter/use-browser-location";
 import PhotoItem from "./PhotoItem";
 import ImageIcon from '@mui/icons-material/Image';
+import TranslatableText from "../../components/TranslatableText";
 
 export default function WellImageUpload(): JSX.Element {
     const [, params] = useRoute('/well/:id/upload-image');
@@ -179,9 +180,13 @@ export default function WellImageUpload(): JSX.Element {
 
     return (
         <>
-            <Typography textAlign="center" variant="h4" gutterBottom>
-                Upload Well Image
-            </Typography>
+            <TranslatableText 
+                variant='h4'
+                textAlign="center"
+                marginBottom='1rem'
+                english='Upload Well Image' 
+                bengali='BENGALI PLACEHOLDER'
+            />
 
             <Card
                 variant="outlined"
@@ -241,15 +246,50 @@ export default function WellImageUpload(): JSX.Element {
                             }
                         }}
                     >
-                        {imageUrls.length >= 5
-                            ? "Max images reached"
-                            : uploading
-                                ? "Uploading..."
-                                : "Upload"}
+                        <TranslatableText
+                            variant='body1'
+                            english={
+                                imageUrls.length >= 5
+                                ? "Max images reached"
+                                : uploading
+                                    ? "Uploading..."
+                                    : "Upload"
+                            }
+                            bengali={
+                                imageUrls.length >= 5
+                                ? "BENGALI PLACHOLDER"
+                                : uploading
+                                    ? "BENGALI PLACHOLDER"
+                                    : "BENGALI PLACHOLDER"
+                            }
+                        />
                     </Button>
 
-                    {success && <Alert severity="success" sx={{ width: '100%' }}>Image uploaded successfully!</Alert>}
-                    {error && <Alert severity="error" sx={{ width: '100%' }}>{error}</Alert>}
+                    {success && (
+                        <Alert 
+                            severity="success" 
+                            sx={{ width: '100%' }}
+                        >
+                            <TranslatableText 
+                                variant='body1'
+                                english='Image uploaded successfully!'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </Alert>
+                    )}
+
+                    {error && 
+                        <Alert 
+                            severity="error" 
+                            sx={{ width: '100%' }}
+                        >
+                            <TranslatableText 
+                                variant='body1'
+                                english={error}
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </Alert>
+                    }
                 </Box>
             </Card>
 
@@ -267,16 +307,21 @@ export default function WellImageUpload(): JSX.Element {
                     alignItems="center"
                     flexDirection="column"
                 >
-                    <Typography variant="h5" mb={2}>
-                        Uploaded Images
-                    </Typography>
+                    <TranslatableText 
+                        variant='h5' 
+                        mb='2rem'
+                        english='Uploaded Images'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
 
                     {loadingImages ? (
                         <CircularProgress />
                     ) : imageUrls.length === 0 ? (
-                        <Typography color="text.secondary">
-                            No images uploaded.
-                        </Typography>
+                        <TranslatableText 
+                            color="text.secondary"
+                            english='No images uploaded.'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
                     ) : (
                         <Box flexWrap="wrap" gap="1rem" display="flex" justifyContent="center">
                             {imageUrls.map((url, i) => (
@@ -304,7 +349,10 @@ export default function WellImageUpload(): JSX.Element {
                     navigate(`/well/${wellId}/review`);
                 }}
             >
-                Next Step
+                <TranslatableText 
+                    english='Next Step'
+                    bengali='BENGALI PLACEHOLDER'
+                />
             </Button>
         </>
     );

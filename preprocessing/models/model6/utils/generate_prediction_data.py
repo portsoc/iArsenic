@@ -5,6 +5,9 @@ import multiprocessing as mp
 import numpy as np
 from utils.load_training_df import load_training_data_df
 from utils.find_regions_within_radius import find_regions_within_radius
+from filelock import FileLock, Timeout
+from tqdm import tqdm
+from collections import defaultdict
 
 
 #  s15: {
@@ -39,7 +42,8 @@ from utils.find_regions_within_radius import find_regions_within_radius
 #    u: ...    // exluded when patch used
 #  }
 
-MAX_WORKERS = mp.cpu_count()
+# MAX_WORKERS = os.cpu_count()
+MAX_WORKERS = 16
 
 # Globals for use by sub processes (reduces memory usage)
 PATCH_LTE_90_DF = None
@@ -65,11 +69,11 @@ def produce_message(med, max_val):
 
     chem_test_status = 0 if max_val <= 100 else 1
 
-    if med <= 20:
+    if med <= 10:
         return 1 + chem_test_status
     elif med <= 50:
         return 3 + chem_test_status
-    elif med <= 200:
+    elif med <= 150:
         return 5 + chem_test_status
     else:
         return 7 + chem_test_status
@@ -96,13 +100,14 @@ def s15_flood_stats(gd, td, region_key, centroid):
     arsenic_15 = wells_15['Arsenic'].dropna()
 
     if len(arsenic_15) >= 7:
-        p25, p75, p95 = np.percentile(arsenic_15, [25, 75, 95])
+        p25, p50, p75, p95 = np.percentile(arsenic_15, [25, 50, 75, 95])
         max_val = arsenic_15.max()
 
         return {
             "m2": produce_message(p25, max_val),
             "m7": produce_message(p75, max_val),
             "m9": produce_message(p95, max_val),
+            "median": p50,
         }
     write_not_enough_data_warning(region_key, 's15_flood')
 
@@ -129,6 +134,7 @@ def s15_stats(mou, gd, td, region_key, centroid):
             "m": produce_message(p50, max_val),
             "l": round(p1, 1),
             "u": round(p9, 1),
+            "median": p50,
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -185,6 +191,7 @@ def s45_stats(mou, gd, td, region_key, centroid):
             "m": produce_message(p50, arsenic_45.max()),
             "l": round(p1, 1),
             "u": round(p9, 1),
+            "median": p50,
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -239,6 +246,7 @@ def s65_stats(mou, gd, td, region_key, centroid):
             "m": produce_message(p50, arsenic_65.max()),
             "l": round(p1, 1),
             "u": round(p9, 1),
+            "median": p50,
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -292,6 +300,7 @@ def s90_stats(mou, gd, td, region_key, centroid):
             "m": produce_message(p50, arsenic_90.max()),
             "l": round(p10, 1),
             "u": round(p90, 1),
+            "median": p50,
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -338,6 +347,7 @@ def s150_stats(mou, gd, td, region_key, centroid):
             "m": produce_message(p50, arsenic_150.max()),
             "l": round(p10, 1),
             "u": round(p90, 1),
+            "median": p50,
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -378,6 +388,7 @@ def sD_stats(mou, gd, td, region_key, centroid):
             "m": produce_message(p50, arsenic_d.max()),
             "l": round(p10, 1),
             "u": round(p90, 1),
+            "median": p50,
         }
     else:
         div, dis, upa = mou['div'].lower(), mou['dis'].lower(), mou['upa'].lower()
@@ -394,89 +405,81 @@ def sD_stats(mou, gd, td, region_key, centroid):
     write_not_enough_data_warning(region_key, 'sD')
     return {"m": 0}
 
-def process_mouza(args):
-    mou, region_key = args
+
+def process_upa(args):
+    filename, mouza_batch = args
 
     gd = GEODATA_IN_TRAINING_DATA
     td = TRAINING_DATA
+    filepath = os.path.join("m150_10", filename)
 
-    filename = f"{mou['div']}-{mou['dis']}-{mou['upa']}-{mou['uni']}-{mou['mou']}.json"
-
-    if os.path.exists(f'model/{filename}'):
+    if os.path.exists(filepath):
         return
 
-    mou_geometry = mou['geometry']
-    centroid = mou_geometry.centroid
+    file_data = {}
 
-    mou_dict = {}
+    for mou, region_key in mouza_batch:
+        uni = mou["uni"]
+        mou_key = mou["mou"]
+        centroid = mou["geometry"].centroid
 
-    # s15: depth < 15m
-    mou_dict["s15"] = s15_flood_stats(gd, td, region_key, centroid)
-    mou_dict["s15"] = s15_stats(mou, gd, td, region_key, centroid)
+        s15_main = s15_stats(mou, gd, td, region_key, centroid)
+        s15_flood = s15_flood_stats(gd, td, region_key, centroid)
 
-    # s45: 15m <= depth < 45m
-    mou_dict["s45"] = s45_stats(mou, gd, td, region_key, centroid)
+        if isinstance(s15_main, dict) and isinstance(s15_flood, dict):
+            s15_combined = {**s15_main, **s15_flood}
+        else:
+            s15_combined = s15_main if isinstance(s15_main, dict) else s15_flood
 
-    # s65: 45m <= depth < 65m
-    mou_dict["s65"] = s65_stats(mou, gd, td, region_key, centroid)
+        mou_dict = {
+            "s15": s15_combined,
+            "s45": s45_stats(mou, gd, td, region_key, centroid),
+            "s65": s65_stats(mou, gd, td, region_key, centroid),
+            "s90": s90_stats(mou, gd, td, region_key, centroid),
+            "s150": s150_stats(mou, gd, td, region_key, centroid),
+            "sD": sD_stats(mou, gd, td, region_key, centroid),
+        }
 
-    # s90: 65m <= depth < 90m
-    mou_dict["s90"] = s90_stats(mou, gd, td, region_key, centroid)
+        if uni not in file_data:
+            file_data[uni] = {}
 
-    # s150: depth 90–150+ meters
-    mou_dict["s150"] = s150_stats(mou, gd, td, region_key, centroid)
+        file_data[uni][mou_key] = mou_dict
 
-    # sD: depth >= 150m
-    mou_dict["sD"] = sD_stats(mou, gd, td, region_key, centroid)
+    with open(filepath, "w") as f:
+        json.dump(file_data, f, separators=(",", ":"))
 
-    try:
-        with open(f'model/{filename}', 'w') as f:
-            json.dump(mou_dict, f, separators=(',', ':'))
-    except Exception as e:
-        error_path = 'logs/generate_prediction_data/failed_to_write_model.txt'
-        with open(error_path, 'a') as err_file:
-            err_file.write(f"{filename},{json.dumps(mou_dict)}\n")
 
+        
 def run_prediction_jobs(region_tree, gd_index, td, gd_in_td):
-    total_divisions = len(region_tree)
-    jobs = []
+    # Group jobs by filename (one file per upazila)
+    grouped_jobs = defaultdict(list)
 
-    for idx_div, div_obj in enumerate(region_tree, start=1):
-        div = div_obj['division']
-        districts = div_obj['districts']
-        print(f"Processing Division {idx_div}/{total_divisions}: {div} (Total Districts: {len(districts)})")
+    for div_obj in region_tree:
+        div = div_obj["division"]
+        for dis_obj in div_obj["districts"]:
+            dis = dis_obj["district"]
+            for upa_obj in dis_obj["upazilas"]:
+                upa = upa_obj["upazila"]
+                filename = f"{div}-{dis}-{upa}.json"
 
-        for idx_dis, dis_obj in enumerate(districts, start=1):
-            dis = dis_obj['district']
-            upazilas = dis_obj['upazilas']
-
-            for idx_upa, upa_obj in enumerate(upazilas, start=1):
-                upa = upa_obj['upazila']
-                unions = upa_obj['unions']
-
-                for idx_uni, uni_obj in enumerate(unions, start=1):
-                    uni = uni_obj['union']
-                    mouzas = uni_obj['mouzas']
-
-                    for idx_mou, mou in enumerate(mouzas, start=1):
+                for uni_obj in upa_obj["unions"]:
+                    uni = uni_obj["union"]
+                    for mou in uni_obj["mouzas"]:
                         region_key = f"{div}-{dis}-{upa}-{uni}-{mou}"
                         gd_mou = gd_index.loc[region_key]
+                        grouped_jobs[filename].append((gd_mou, region_key))
 
-                        jobs.append((
-                            gd_mou,
-                            region_key,
-                        ))
-
+    jobs = list(grouped_jobs.items())
     print('--------------------------------')
     print('Starting multiprocessing')
-    print(f'Total jobs: {len(jobs)}')
+    print(f'Total files to process: {len(jobs)}')
 
     with mp.Pool(
-        processes=MAX_WORKERS, 
+        processes=MAX_WORKERS,
         initializer=init_worker,
-        initargs=(gd_in_td, td)
+        initargs=(gd_in_td, td),
     ) as pool:
-        for result in pool.imap_unordered(process_mouza, jobs):
+        for _ in tqdm(pool.imap_unordered(process_upa, jobs), total=len(jobs)):
             pass
 
 def generate_prediction_data(dropdown_data, mou_topo, training_data):

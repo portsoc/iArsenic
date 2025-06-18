@@ -1,16 +1,21 @@
-import { Box, Button, Card, Slider, Switch, TextField, Typography } from "@mui/material";
+import { Box, Button, Collapse, Slider, Switch, TextField } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useState } from "react";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
+import WellDataEntryLayout from "../../components/WellDataEntryLayout";
+import PageCard from "../../components/PageCard";
+import { useUnits } from "../../utils/useUnits";
+import TranslatableText from "../../components/TranslatableText";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
     const wellId = params?.id;
     const { data: token } = useAccessToken();
+    const { units, setUnits } = useUnits();
 
-    const [unit, setUnit] = useState<'m' | 'ft'>('ft');
-    const [depth, setDepth] = useState(0);
+    const [depth, setDepth] = useState(1);
+    const [showDepthGuide, setShowDepthGuide] = useState(false)
 
     function handleSliderChange(_: Event, newValue: number | number[]) {
         setDepth(newValue as number);
@@ -19,46 +24,138 @@ export default function Depth(): JSX.Element {
     function handleDepthChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value: number = Number(event.target.value);
         setDepth(value);
+        console.log(value)
     }
 
     function switchUnits() {
-        setUnit(unit === 'ft' ? 'm' : 'ft');
+        const newUnits = units === 'feet' ? 'meters' : 'feet';
+        setUnits(newUnits);
 
-        if (unit === 'ft') setDepth(Math.floor(depth * 0.3048));
-        if (unit === 'm') setDepth(Math.floor(depth / 0.3048));
+        let newDepth
+        if (units === 'feet') {
+            newDepth = Math.floor(depth * 0.3048);
+        } else {
+            newDepth = Math.floor(depth / 0.3048);
+        }
+
+        if (newDepth < 1) setDepth(1)
+        else setDepth(newDepth)
+    }
+
+    async function handleNext() {
+        const headers: HeadersInit = {};
+        if (token) {
+            headers['authorization'] = `Bearer ${token.id}`;
+        }
+
+        const depthMeters = units === 'meters' ? depth : Math.floor(depth * 0.3048);
+        const body = { depth: depthMeters };
+
+        const res = await fetch(`/api/v1/self/well/${wellId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                ...headers,
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+            console.error('Failed to update well:', res);
+            return;
+        }
+
+        navigate(`/well/${wellId}/flooding`);
     }
 
     return (
-        <>
-            <Typography marginBottom='1rem' textAlign='center' variant='h4'>
-                Depth
-            </Typography>
+        <WellDataEntryLayout
+            title={
+                <TranslatableText
+                    variant="h4"
+                    english="Depth"
+                    bengali="গভীরতা"
+                />
+            }
+            onNext={handleNext}
+        >
 
-            <Card
-                variant='outlined'
-                sx={{
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                }}
-            >
+            <PageCard>
+                <TranslatableText 
+                    marginBottom='0.5rem' 
+                    textAlign='center' 
+                    variant='h5'
+                    english='What is the depth of your tubewell?'
+                    bengali='আপনার নলকূপের গভীরতা কত?'
+                />
+
+                <TranslatableText 
+                    variant='body1'
+                    english='Enter the number below or drag the scale.'
+                    bengali='নিচে সংখ্যা লিখুন বা স্কেল টেনে দিন।'
+                />
+
+                <Button
+                    variant='outlined'
+                    onClick={() => setShowDepthGuide(!showDepthGuide)}
+                >
+                    <TranslatableText
+                        variant="body1"
+                        textAlign='center' 
+                        english="Not sure about depth?"
+                        bengali="গভীরতা না জানলে কীভাবে অনুমান করবেন?"
+                    />
+                </Button>
+
+                <Box position='relative'>
+                    <Collapse in={showDepthGuide}>
+                        <TranslatableText
+                            mb='2rem'
+                            variant="body1"
+                            textAlign="justify"
+                            english={`If the tubewell was installed by 3–4 people using only hands and a flap, it is likely less than 250 ft.`}
+                            bengali={`যদি নলকূপ হাত দিয়ে ৩–৪ জন মিলে ছোট তিন বাঁশের মাচা দিয়ে বসানো হয়, তাহলে সম্ভবত ২৫০ ফুটের নিচে।`}
+                        />
+
+                        <TranslatableText
+                            mb='2rem'
+                            variant="body1"
+                            textAlign="justify"
+                            english={`If the tubewell was installed by a team using a bamboo rig and pump, with people rotating around a hole, it is likely 500 ft or more.`}
+                            bengali={`যদি অনেক লোক মিলে বাঁশের তৈরি অনেক উঁচা মাচা ব্যবহার করে, পানির পাম্প চালিয়ে ঘুরে ঘুরে কাজ করে নলকূপ বসায়, তাহলে সেটি সম্ভবত ৫০০ ফুট বা তার বেশি।`}
+                        />
+
+                        <TranslatableText
+                            variant="body1"
+                            textAlign="justify"
+                            english={`You may enter an approximate depth like 200 ft or 600 ft based on this.`}
+                            bengali={`আপনি আপনার নলকুপ বসানোর কায়দার কথা চিন্তা করে ২০০ ফুট বা ৬০০ ফুট এইভাবে আনুমানিক গভীরতা লিখতে পারেন।`}
+                        />
+                    </Collapse>
+                </Box>
+            </PageCard>
+
+            <PageCard>
                 <Box
                     justifyItems='center'
                     alignItems='center'
                     display='grid'
-                    gridTemplateColumns='repeat(3, 3rem)'
+                    gridTemplateColumns='repeat(3, 4.5rem)'
+                    position='relative'
                     gap={2}
                 >
                     <Box justifySelf='end' width='100%'>
-                        <Typography>feet</Typography>
+                        <TranslatableText
+                            textAlign="right"
+                            variant='body1' 
+                            english='feet'
+                            bengali='ফুট (ft)'
+                        />
                     </Box>
 
                     <Box>
                         <Switch
+                            checked={(units === 'meters')}
                             onChange={switchUnits}
                             sx={{
                                 "&.MuiSwitch-root .MuiSwitch-switchBase": {
@@ -73,7 +170,11 @@ export default function Depth(): JSX.Element {
                     </Box>
 
                     <Box justifySelf='start'>
-                        <Typography>meters</Typography>
+                        <TranslatableText 
+                            variant='body1' 
+                            english='meters'
+                            bengali='মিটার (m) '
+                        />
                     </Box>
                 </Box>
 
@@ -82,14 +183,25 @@ export default function Depth(): JSX.Element {
                     onChange={handleSliderChange}
                     value={depth}
                     step={1}
-                    min={0}
-                    max={unit === 'ft' ? 1640 : 500}
+                    min={1}
+                    max={units === 'meters' ? 500 : 1640}
                     valueLabelDisplay="auto"
                 />
 
                 <TextField
                     id="outlined-number"
-                    label={unit}
+                    label={units === 'meters' ?
+                        <TranslatableText 
+                            variant='body1' 
+                            english='meters'
+                            bengali='মিটার (m) '
+                        /> :
+                        <TranslatableText 
+                            variant='body1' 
+                            english='feet'
+                            bengali='ফুট (ft)'
+                        />
+                    }
                     type="number"
                     value={depth}
                     onChange={handleDepthChange}
@@ -98,43 +210,8 @@ export default function Depth(): JSX.Element {
                     }}
                     sx={{ width: '85%' }}
                 />
-            </Card>
+            </PageCard>
 
-            <Button
-                sx={{ width: '90%', height: '4rem' }}
-                variant='contained'
-                onClick={async () => {
-                    const headers: HeadersInit = {};
-                    if (token) {
-                        headers['authorization'] = `Bearer ${token.id}`;
-                    }
-
-                    const depthMeters = (() => {
-                        if (unit === 'm') return depth;
-                        return Math.floor(depth * 0.3048);
-                    })();
-
-                    const body = { depth: depthMeters };
-
-                    const res = await fetch(`/api/v1/self/well/${wellId}`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...headers,
-                        },
-                        body: JSON.stringify(body),
-                    });
-
-                    if (!res.ok) {
-                        console.error('Failed to update well:', res);
-                        return;
-                    }
-
-                    navigate(`/well/${wellId}/flooding`);
-                }}
-            >
-                Next Step
-            </Button>
-        </>
+        </WellDataEntryLayout>
     );
 }

@@ -54,14 +54,15 @@ export default function BengaliRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, division: false }));
                 }}
-                getOptionLabel={(option) => rt.Divisions[option.division] || option.division}
+                getOptionLabel={(option) => rt.Divisions[option.division.toLowerCase()] || option.division}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label={rt.Divisions.Division}
+                            label={rt.Divisions.division}
                             error={errors.division}
-                            helperText={errors.division ? 'Please select a division' : ''}
+                            helperText={errors.division ? 'অনুগ্রহ করে একটি বিভাগ নির্বাচন করুন' : ''} // chatgpt generated
                         />
                     );
                 }}
@@ -77,14 +78,15 @@ export default function BengaliRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, district: false }));
                 }}
-                getOptionLabel={(option) => rt.Districts[option.district] || option.district}
+                getOptionLabel={(option) => rt.Districts[option.district.toLowerCase()] || option.district}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label={rt.Districts.District}
+                            label={rt.Districts.district}
                             error={errors.district}
-                            helperText={errors.district ? 'Please select a district' : ''}
+                            helperText={errors.district ? 'অনুগ্রহ করে একটি জেলা নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedDivision}
                         />
                     );
@@ -100,14 +102,15 @@ export default function BengaliRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, upazila: false }));
                 }}
-                getOptionLabel={(option) => rt.Upazilas[option.upazila] || option.upazila}
+                getOptionLabel={(option) => rt.Upazilas[option.upazila.toLowerCase()] || option.upazila}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label={rt.Upazilas.Upazila}
+                            label={rt.Upazilas.upazila}
                             error={errors.upazila}
-                            helperText={errors.upazila ? 'Please select an upazila' : ''}
+                            helperText={errors.upazila ? 'অনুগ্রহ করে একটি উপজেলা নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedDistrict}
                         />
                     );
@@ -122,14 +125,15 @@ export default function BengaliRegionSelector({
                     setSelectedMouza(null);
                     setErrors(e => ({ ...e, union: false }));
                 }}
-                getOptionLabel={(option) => rt.Unions[option.union] || option.union}
+                getOptionLabel={(option) => rt.Unions[option.union.toLowerCase()] || option.union}
+                noOptionsText=""
                 renderInput={(params) => {
                 return (
                         <TextField
                             {...params}
-                            label={rt.Unions.Union}
+                            label={rt.Unions.union}
                             error={errors.union}
-                            helperText={errors.union ? 'Please select a union' : ''}
+                            helperText={errors.union ? 'অনুগ্রহ করে একটি ইউনিয়ন নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedUpazila}
                         />
                     );
@@ -143,14 +147,15 @@ export default function BengaliRegionSelector({
                     setSelectedMouza(newValue);
                     setErrors(e => ({ ...e, mouza: false }));
                 }}
-                getOptionLabel={(mouza) => rt.Mouzas[mouza] || mouza}
+                getOptionLabel={(mouza) => rt.Mouzas[mouza.toLowerCase()] || mouza}
+                noOptionsText=""
                 renderInput={(params) => {
                     return (
                         <TextField
                             {...params}
-                            label={rt.Mouzas.Mouza}
+                            label={rt.Mouzas.mouza}
                             error={errors.mouza}
-                            helperText={errors.mouza ? 'Please select a mouza' : ''}
+                            helperText={errors.mouza ? 'অনুগ্রহ করে একটি মৌজা নির্বাচন করুন' : ''} // chatgpt generated
                             disabled={!selectedUnion}
                         />
                     );

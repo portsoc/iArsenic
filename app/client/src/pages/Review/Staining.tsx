@@ -1,6 +1,8 @@
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
+import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 interface props {
     well: Well;
@@ -8,36 +10,80 @@ interface props {
 
 export default function({ well }: props) {
     return (
-        <Card
-            variant="outlined"
-            sx={{
-                width: '100%',
-                padding: '16px',
-                marginBottom: '16px',
-            }}
-        >
-            <Typography variant="h6" gutterBottom>Staining</Typography>
-            <Typography variant="body1" component="p" gutterBottom>
-                Staining: {well.staining}
-            </Typography>
+        <PageCard>
+            <Stack width='100%'>
+                <TranslatableText
+                    variant="h6" 
+                    mb='1rem'
+                    english='Staining'
+                    bengali='দাগ'
+                />
 
-            {well.utensilStaining && (
-                <Typography variant="body1" component="p" gutterBottom>
-                    Utensil Staining: {well.utensilStaining}
-                </Typography>
-            )}
+                <TranslatableText
+                    variant="body1"
+                    english={
+                        <>
+                            <strong>Staining</strong> {well.staining}
+                        </>
+                    }
+                    bengali={
+                        (() => {
+                            const value = (() => {
+                                if (well.staining === 'red') return 'লালচে দাগ';
+                                if (well.staining === 'black') return 'কালো দাগ';
+                                if (well.staining === 'not sure') return 'নিশ্চিত না';
+                                if (!well.staining) return '';
+                                return well.staining; // fallback
+                            })();
+                            return (
+                                <>
+                                    <strong>দাগ</strong> {value}
+                                </>
+                            );
+                        })()
+                    } // values chatgpt generated
+                />
 
-            <Box display="flex" justifyContent="center" mt={2}>
-                <Button
-                    sx={{ width: '80%', height: '3rem' }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate(`/well/${well.id}/staining`);
-                    }}
-                >
-                    Edit Staining
-                </Button>
-            </Box>
-        </Card>
+                {well.utensilStaining && (
+                    <TranslatableText
+                        variant="body1" 
+                        english={<>
+                            <strong>Utensil Staining</strong> {well.utensilStaining}
+                        </>}
+                        bengali={
+                            (() => {
+                                const value = (() => {
+                                    if (well.utensilStaining === 'red') return 'লালচে দাগ';
+                                    if (well.utensilStaining === 'black') return 'কালো দাগ';
+                                    if (well.utensilStaining === undefined) return '';
+                                    return well.utensilStaining; // fallback
+                                })();
+                                return (
+                                    <>
+                                        <strong>হাড়ি-পাতিলের দাগ</strong> {value}
+                                    </>
+                                );
+                            })()
+                        } // values chatgpt generated
+                    />
+                )}
+
+                <Box display="flex" justifyContent="center" mt={4}>
+                    <Button
+                        sx={{ width: '80%', height: '3rem' }}
+                        variant="outlined"
+                        onClick={() => {
+                            navigate(`/well/${well.id}/staining`);
+                        }}
+                    >
+                        <TranslatableText
+                            variant="body1" 
+                            english='Edit Staining'
+                            bengali='দাগ সংশোধন করুন'
+                        />
+                    </Button>
+                </Box>
+            </Stack>
+        </PageCard>
     );
 }

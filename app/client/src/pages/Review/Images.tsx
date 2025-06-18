@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Card, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Stack } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import { useAccessToken } from "../../utils/useAccessToken";
+import PageCard from "../../components/PageCard";
+import TranslatableText from "../../components/TranslatableText";
 
 interface Props {
     well: Well;
@@ -59,62 +61,65 @@ export default function WellImageDisplay({ well }: Props) {
     }, [well]);
 
     return (
-        <Card
-            variant="outlined"
-            sx={{
-                width: "100%",
-                padding: "16px",
-                marginBottom: "16px",
-            }}
-        >
-            <Typography variant="h6" gutterBottom>
-                Uploaded Images
-            </Typography>
+        <PageCard>
+            <Stack width='100%'>
+                <TranslatableText 
+                    variant="h6" 
+                    gutterBottom
+                    english='Uploaded Images'
+                    bengali='PLACEHOLDER BENGALI'
+                />
 
-            <Box
-                width="100%"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                minHeight={300}
-            >
-                {loading ? (
-                    <CircularProgress />
-                ) : imageUrls.length > 0 ? (
-                    <Carousel
-                        showThumbs={false}
-                        showStatus={false}
-                        emulateTouch
-                        dynamicHeight
-                    >
-                        {imageUrls.map((url, index) => (
-                            <div key={index}>
-                                <img
-                                    src={url}
-                                    alt={`Well image ${index + 1}`}
-                                    style={{ maxHeight: 300, objectFit: "cover" }}
-                                />
-                            </div>
-                        ))}
-                    </Carousel>
-                ) : (
-                    <Typography color="text.secondary">
-                        No images uploaded.
-                    </Typography>
-                )}
-            </Box>
-
-            <Box display="flex" justifyContent="center" mt={2}>
-                <Button
-                    sx={{ width: '80%', height: '3rem' }}
-                    variant="outlined"
-                    onClick={() => {
-                        navigate(`/well/${well.id}/upload-image`);
-                    }}
+                <Box
+                    width="100%"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    minHeight={300}
                 >
-                    Edit Images
-                </Button>
-            </Box>
-        </Card>
+                    {loading ? (
+                        <CircularProgress />
+                    ) : imageUrls.length > 0 ? (
+                        <Carousel
+                            showThumbs={false}
+                            showStatus={false}
+                            emulateTouch
+                            dynamicHeight
+                        >
+                            {imageUrls.map((url, index) => (
+                                <div key={index}>
+                                    <img
+                                        src={url}
+                                        alt={`Well image ${index + 1}`}
+                                        style={{ maxHeight: 300, objectFit: "cover" }}
+                                    />
+                                </div>
+                            ))}
+                        </Carousel>
+                    ) : (
+                        <TranslatableText 
+                            color="text.secondary"
+                            english='No images uploaded.'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    )}
+                </Box>
+
+                <Box display="flex" justifyContent="center" mt={4}>
+                    <Button
+                        sx={{ width: '80%', height: '3rem' }}
+                        variant="outlined"
+                        onClick={() => {
+                            navigate(`/well/${well.id}/upload-image`);
+                        }}
+                    >
+                        <TranslatableText 
+                            english='Edit Images'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </Button>
+                </Box>
+            </Stack>
+        </PageCard>
     );
 }
