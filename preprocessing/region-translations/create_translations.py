@@ -11,13 +11,22 @@ CSV_FILES = {
     "Mouzas": "mouzas.csv",
 }
 
+STATIC_LABELS = {
+    "division": "বিভাগ",
+    "district": "জেলা",
+    "mouza": "মৌজা",
+    "union": "ইউনিয়ন",
+    "upazila": "উপজিলা",
+}
+
 def load_translation_csv(file_path: Path) -> dict[str, str]:
     translations = {}
     with file_path.open(encoding="utf-8") as f:
         reader = csv.reader(f)
         next(reader)  # Skip header
         for english, bengali in reader:
-            translations[english.strip()] = bengali.strip()
+            key = english.strip().lower()
+            translations[key] = bengali.strip()
     return translations
 
 def main():
@@ -27,6 +36,12 @@ def main():
     for key, filename in CSV_FILES.items():
         csv_path = base_dir / filename
         region_translations[key] = load_translation_csv(csv_path)
+
+    region_translations['Divisions']['division'] = STATIC_LABELS['division']
+    region_translations['Districts']['district'] = STATIC_LABELS['district']
+    region_translations['Upazilas']['upazila'] = STATIC_LABELS['upazila']
+    region_translations['Unions']['union'] = STATIC_LABELS['union']
+    region_translations['Mouzas']['mouza'] = STATIC_LABELS['mouza']
 
     # Save as JSON
     output_path = base_dir / "region-translations.json"
