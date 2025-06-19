@@ -1,4 +1,4 @@
-import { Marker, Popup } from 'react-leaflet';
+import { Circle, Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import { RegionTranslations } from '../../types';
 import { Well } from 'iarsenic-types';
@@ -10,9 +10,10 @@ import { Link } from 'wouter';
 type props = {
     wells: Well[],
     regionTranslations: RegionTranslations,
+    highlightId: string | null,
 }
 
-export default function Markers({ wells, regionTranslations }: props): JSX.Element {
+export default function Markers({ wells, regionTranslations, highlightId }: props): JSX.Element {
     function getIcon(prediction: 0.5 | 1.5 | 2.5 | 3.5 | 4.5 | undefined): L.Icon<L.IconOptions> {
         const iconColor = (() => {
             switch (prediction) {
@@ -68,6 +69,7 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
     );
 
     console.log(filteredWells)
+    console.log(`highlightId: ${highlightId}`)
 
     return (
         <>
@@ -79,7 +81,21 @@ export default function Markers({ wells, regionTranslations }: props): JSX.Eleme
                         position={
                             (w.geolocation ?? w.mouzaGeolocation) as LatLngExpression
                         }
+                        eventHandlers={{
+                            add: (e) => {
+                                if (w.id === highlightId) {
+                                    setTimeout(() => e.target.openPopup(), 100);
+                                }
+                            }
+                        }}
                     >
+                        {w.id === highlightId && (
+                            <Circle
+                                center={(w.geolocation ?? w.mouzaGeolocation) as LatLngExpression}
+                                radius={500}
+                                pathOptions={{ color: 'cornflowerblue', fillOpacity: 0.1 }}
+                            />
+                        )}
                         <Popup>
                             <TranslatableText 
                                 variant='body1'

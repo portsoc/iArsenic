@@ -148,6 +148,18 @@ export default function Result(): JSX.Element {
                                         bengali='ফলাফল বিশদ ব্যাখ্যা দেখতে চান?'
                                     />
                                 </Button>
+
+                                <Button
+                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
+                                    variant='outlined'
+                                    onClick={() => navigate(`/map?highlight=${well.id}`)}
+                                >
+                                    <TranslatableText 
+                                        variant='body1' 
+                                        english='View on map'
+                                        bengali='মানচিত্রে দেখুন' // chatgpt generated
+                                    />
+                                </Button>
                             </PageCard>
                         </Box>
                     </Grid>

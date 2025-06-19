@@ -12,6 +12,8 @@ import UpaMap from './upaMap';
 import { useAccessToken } from '../../utils/useAccessToken';
 
 export default function Map() {
+    const highlightId = new URLSearchParams(window.location.search).get('highlight');
+
     const position: LatLngExpression = [23.8041, 90.4152];
     const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
     const { data: token } = useAccessToken()
@@ -84,7 +86,7 @@ export default function Map() {
                 />
 
                 <UpaMap interactiveMap={interactiveMap} regionTranslations={regionTranslations} />
-                <Markers wells={wells} regionTranslations={regionTranslations} />
+                <Markers wells={wells} regionTranslations={regionTranslations} highlightId={highlightId} />
             </MapContainer>
         </Stack>
     );

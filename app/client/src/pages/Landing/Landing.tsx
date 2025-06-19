@@ -2,6 +2,7 @@ import { Button, List, ListItem } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
+import config from '../../config'
 
 export default function Landing(): JSX.Element {
     return (
@@ -14,30 +15,32 @@ export default function Landing(): JSX.Element {
                 bengali='আইআর্সেনিকে আপনাকে স্বাগতম'
             />
 
-            <PageCard sx={{ outline: '1px solid red' }}>
-                <TranslatableText
-                    mb='1rem'
-                    textAlign='center'
-                    variant='h6'
-                    english='WARNING'
-                    bengali='⚠️ সতর্কবার্তা'
-                />
+            {config.env === 'staging' && (
+                <PageCard sx={{ outline: '1px solid red' }}>
+                    <TranslatableText
+                        mb='1rem'
+                        textAlign='center'
+                        variant='h6'
+                        english='WARNING'
+                        bengali='⚠️ সতর্কবার্তা'
+                    />
 
-                <TranslatableText
-                    mb='1rem'
-                    variant='body1'
-                    english={
-                        <>
-                            This is a research release which is <b>not ready or approved
-                            for use in the field.</b>
-                        </>
-                    }
-                    bengali={`
-                        এটি একটি গবেষণা পর্যায়ের ভার্সন, যা এখনো মাঠপর্যায়ে ব্যবহারের জন্য প্রস্তুত নয়।
-                        অনুগ্রহ করে এটি শুধুমাত্র পরীক্ষা কিংবা অভিজ্ঞতা অর্জনের জন্য ব্যবহারের করুন।
-                    `}
-                />
-            </PageCard>
+                    <TranslatableText
+                        mb='1rem'
+                        variant='body1'
+                        english={
+                            <>
+                                This is a research release which is <b>not ready or approved
+                                for use in the field.</b>
+                            </>
+                        }
+                        bengali={`
+                            এটি একটি গবেষণা পর্যায়ের ভার্সন, যা এখনো মাঠপর্যায়ে ব্যবহারের জন্য প্রস্তুত নয়।
+                            অনুগ্রহ করে এটি শুধুমাত্র পরীক্ষা কিংবা অভিজ্ঞতা অর্জনের জন্য ব্যবহারের করুন।
+                        `}
+                    />
+                </PageCard>
+            )}
 
             <PageCard>
                 <TranslatableText
