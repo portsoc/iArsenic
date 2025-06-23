@@ -1,18 +1,21 @@
-import { Box, Button, Collapse, Slider, Switch, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Collapse, Slider, Stack, Switch, TextField } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import { useUnits } from "../../utils/useUnits";
 import TranslatableText from "../../components/TranslatableText";
+import { useWells } from "../../utils/useWells";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
     const wellId = params?.id;
-    const { data: token } = useAccessToken();
     const { units, setUnits } = useUnits();
+
+    const { getWell, updateWell } = useWells();
+    const { data: well, isLoading } = getWell(wellId);
+    const updateWellMutation = updateWell()
 
     const [depth, setDepth] = useState(1);
     const [showDepthGuide, setShowDepthGuide] = useState(false)
@@ -42,41 +45,47 @@ export default function Depth(): JSX.Element {
     }
 
     async function handleNext(): Promise<void> {
-        const headers: HeadersInit = {};
-        if (token) {
-            headers['authorization'] = `Bearer ${token.id}`;
-        }
-
+        if (!wellId) return
         const depthMeters = units === 'meters' ? depth : Math.floor(depth * 0.3048);
-        const body: {
+
+        const updates: {
             depth: number,
             flooding?: false,
         } = { depth: depthMeters };
 
         if (depthMeters >= 15) {
-            body.flooding = false
+            updates.flooding = false
         }
 
-        const res = await fetch(`/api/v1/self/well/${wellId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
-            body: JSON.stringify(body),
-        });
+        try {
+            await updateWellMutation.mutateAsync({
+                wellId,
+                data: updates,
+            })
 
-        if (!res.ok) {
-            console.error('Failed to update well:', res);
+            if (updates?.flooding !== undefined) {
+                navigate(`/well/${wellId}/well-in-use`)
+            }
+
+            navigate(`/well/${wellId}/flooding`);
             return;
+        } catch (err) {
+            console.error('Failed to update well:', err)
         }
+    }
 
-        if (body?.flooding !== undefined) {
-            navigate(`/well/${wellId}/well-in-use`)
+    useEffect(() => {
+        if (well && well.depth !== undefined) {
+            setDepth(well.depth)
         }
+    }, [well]);
 
-        navigate(`/well/${wellId}/flooding`);
-        return;
+    if (isLoading) {
+        return (
+            <Stack alignItems='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
+        )
     }
 
     return (

@@ -25,9 +25,6 @@ export default function StainingPage(): JSX.Element {
     });
 
     function handleValidation() {
-        console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
-        console.log(wellStaining)
-        console.log(utensilStaining)
         const newErrors = {
             wellStaining: !wellStaining,
             utensilStaining: wellStaining === 'not sure' &&
