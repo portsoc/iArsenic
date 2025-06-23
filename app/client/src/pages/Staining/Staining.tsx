@@ -1,18 +1,20 @@
-import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Box, Typography } from "@mui/material";
+import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Box, Typography, CircularProgress } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema } from 'iarsenic-types';
 import { useRoute } from "wouter";
-import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
+import { useWells } from "../../utils/useWells";
 
 export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/well/:id/staining');
     const wellId = params?.id;
 
-    const { data: token } = useAccessToken();
+    const { getWell, updateWell } = useWells();
+    const { data: well, isLoading } = getWell(wellId);
+    const updateWellMutation = updateWell()
 
     const [wellStaining, setWellStaining] = useState<Staining>();
     const [utensilStaining, setUtensilStaining] = useState<UtensilStaining>();
@@ -23,44 +25,71 @@ export default function StainingPage(): JSX.Element {
     });
 
     function handleValidation() {
+        console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+        console.log(wellStaining)
+        console.log(utensilStaining)
         const newErrors = {
             wellStaining: !wellStaining,
-            utensilStaining: wellStaining === 'not sure' && !utensilStaining
+            utensilStaining: wellStaining === 'not sure' &&
+                utensilStaining === undefined
         };
 
         setErrors(newErrors);
 
-        return !Object.values(newErrors).some(Boolean);
+        if (Object.values(newErrors).some(Boolean)) {
+            throw new Error('Page errors')
+        }
+
+        return true
     }
 
     async function handleNext() {
+        if (!wellId) return
         if (!handleValidation()) return;
 
-        const headers: HeadersInit = {};
-        if (token) {
-            headers['authorization'] = `Bearer ${token.id}`;
+        try {
+            const updates: {
+                staining: Staining,
+                utensilStaining?: UtensilStaining,
+            } = {
+                staining: wellStaining as Staining,
+            }
+
+            if (wellStaining === 'not sure') {
+                if (utensilStaining !== undefined) {
+                    updates.utensilStaining = utensilStaining
+                }
+            } else {
+                updates.utensilStaining = undefined
+            }
+
+            await updateWellMutation.mutateAsync({
+                wellId,
+                data: updates,
+            });
+
+            navigate(`/well/${wellId}/depth`);
+        } catch (err) {
+            console.error('Failed to update well:', err);
+        }
+    }
+    
+    useEffect(() => {
+        if (well && well.staining !== undefined) {
+            setWellStaining(well.staining);
         }
 
-        const body = {
-            staining: wellStaining,
-            utensilStaining: wellStaining === 'not sure' ? utensilStaining : undefined
-        };
-
-        const res = await fetch(`/api/v1/self/well/${wellId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
-            body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-            console.error('Failed to update well:', res);
-            return;
+        if (well && well.utensilStaining !== undefined) {
+            setUtensilStaining(well.utensilStaining)
         }
+    }, [well]);
 
-        navigate(`/well/${wellId}/depth`);
+    if (isLoading) {
+        return (
+            <Stack alignItems='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
+        )
     }
 
     return (
@@ -110,9 +139,17 @@ export default function StainingPage(): JSX.Element {
                     <RadioGroup
                         onChange={event => {
                             setWellStaining(StainingSchema.parse(event.target.value));
+                            if (wellStaining !== 'not sure') {
+                                setUtensilStaining(undefined)
+                            }
                             setErrors(e => ({ ...e, wellStaining: false }));
                         }}
                         name="well-staining-selector"
+                        value={
+                            wellStaining !== undefined ?
+                            wellStaining :
+                            ''
+                        }
                     >
                         <FormControlLabel 
                             sx={{ marginBottom: '1rem' }}
@@ -152,13 +189,16 @@ export default function StainingPage(): JSX.Element {
                             }
                         />
                     </RadioGroup>
+
                     {errors.wellStaining && (
-                        <TranslatableText 
-                            error={true}
-                            variant='body1'
-                            english='Please select a staining type for the well platform.'
-                            bengali='অনুগ্রহ করে নলকূপের চৌকাঠের দাগের ধরন নির্বাচন করুন' // chatgpt generated
-                        />
+                        <Box m='1rem'>
+                            <TranslatableText 
+                                error={true}
+                                variant='body1'
+                                english='Please select a staining type for the well platform.'
+                                bengali='অনুগ্রহ করে নলকূপের চৌকাঠের দাগের ধরন নির্বাচন করুন' // chatgpt generated
+                            />
+                        </Box>
                     )}
                 </FormControl>
 
@@ -172,6 +212,7 @@ export default function StainingPage(): JSX.Element {
                                 width: '100%',
                                 borderRadius: '5px',
                                 outline: errors.utensilStaining ? '1px solid red' : 'none',
+                                padding: '1rem',
                             }}
                         >
                             <TranslatableText
@@ -188,6 +229,11 @@ export default function StainingPage(): JSX.Element {
                                     setErrors(e => ({ ...e, utensilStaining: false }));
                                 }}
                                 name="utensil-staining-selector"
+                                value={
+                                    utensilStaining !== undefined ?
+                                    utensilStaining :
+                                    ''
+                                }
                             >
                                 <FormControlLabel
                                     sx={{ marginBottom: '1rem' }}
@@ -218,11 +264,13 @@ export default function StainingPage(): JSX.Element {
                             </RadioGroup>
 
                             {errors.utensilStaining && (
-                                <TranslatableText
-                                    error={true} 
-                                    english='Please select a staining type for the utensil.'
-                                    bengali='অনুগ্রহ করে পাত্রের দাগের ধরন নির্বাচন করুন'
-                                />
+                                <Box m='1rem'>
+                                    <TranslatableText
+                                        error={true} 
+                                        english='Please select a staining type for the utensil.'
+                                        bengali='অনুগ্রহ করে পাত্রের দাগের ধরন নির্বাচন করুন'
+                                    />
+                                </Box>
                             )}
 
                         </FormControl>

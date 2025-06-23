@@ -1,58 +1,65 @@
-import { FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
-import { useState } from "react";
+import { CircularProgress, FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
 import { useAccessToken } from "../../utils/useAccessToken";
 import { navigate } from "wouter/use-browser-location";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
+import { useWells } from "../../utils/useWells";
 
 export default function WellInUse(): JSX.Element {
     const [, params] = useRoute('/well/:id/well-in-use');
     const wellId = params?.id;
     const { data: token } = useAccessToken();
 
+    const { getWell, updateWell } = useWells();
+    const { data: well, isLoading } = getWell(wellId);
+    const updateWellMutation = updateWell()
+
     const [wellInUse, setWellInUse] = useState<boolean>();
-    const [error, setError] = useState<boolean>(false);
+    const [pageError, setPageError] = useState<boolean>(false);
 
     function handleWellInUseChange(event: React.ChangeEvent<HTMLInputElement>) {
         const newBool = event.target.value === 'yes';
         setWellInUse(newBool);
-        setError(false);
+        setPageError(false);
     }
 
     async function handleNext() {
-        if (wellInUse === undefined) {
-            setError(true);
+        if (wellInUse === undefined || !wellId) {
+            setPageError(true);
             return;
         }
 
-        const body = { wellInUse };
-        const headers: HeadersInit = {};
+        try {
+            await updateWellMutation.mutateAsync({
+                wellId,
+                data: { wellInUse },
+            });
 
-        if (token) {
-            headers['authorization'] = `Bearer ${token.id}`;
+            if (token) {
+                navigate(`/well/${wellId}/upload-image`);
+            } else {
+                navigate(`/well/${wellId}/review`);
+            }
+        } catch (err) {
+            console.error('Failed to update well:', err);
         }
+    }
 
-        const res = await fetch(`/api/v1/self/well/${wellId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
-            body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-            console.error('Failed to update well:', res);
-            return;
+    useEffect(() => {
+        if (well && well.wellInUse !== undefined) {
+            setWellInUse(well.wellInUse);
         }
+    }, [well]);
 
-        if (token) {
-            navigate(`/well/${wellId}/upload-image`);
-        } else {
-            navigate(`/well/${wellId}/review`);
-        }
+    if (isLoading) {
+        return (
+            <Stack alignItems='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
+        )
     }
 
     return (
@@ -75,17 +82,21 @@ export default function WellInUse(): JSX.Element {
                 />
 
                 <FormControl
-                    error={error}
+                    error={pageError}
                     sx={{
                         width: 'max-content',
                         padding: '1rem',
                         borderRadius: '5px',
-                        outline: error ? '1px solid red' : 'none',
+                        outline: pageError ? '1px solid red' : 'none',
                     }}
                 >
                     <RadioGroup
                         name="anyone-drinking-selector"
-                        value={wellInUse}
+                        value={
+                            wellInUse === true ? 'yes' :
+                            wellInUse === false ? 'no' :
+                            ''
+                        }
                         onChange={handleWellInUseChange}
                     >
                         <Stack direction='row' columnGap={3}>
@@ -116,7 +127,7 @@ export default function WellInUse(): JSX.Element {
                     </RadioGroup>
                 </FormControl>
 
-                {error && (
+                {pageError && (
                     <TranslatableText 
                         error={true}
                         english='Please select an option'

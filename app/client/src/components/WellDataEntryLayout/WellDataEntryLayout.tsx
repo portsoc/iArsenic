@@ -54,11 +54,16 @@ export default function WellAssessmentPageLayout({
                 onClick={async () => {
                     setChangingPage(true)
                     try {
-                        if (returnToReview === 'true') {
-                            await navigate(`/well/${wellId}/review`)
-                            return
+                        try {
+                            await onNext()
+                            if (returnToReview === 'true') {
+                                await navigate(`/well/${wellId}/review`)
+                                return
+                            }
+                        } catch (error) {
+                            console.error('page errors found')
+                            console.error(error)
                         }
-                        await onNext()
                     } finally {
                         setChangingPage(false)
                     }

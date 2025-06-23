@@ -1,7 +1,7 @@
 import { Repository } from './repo.interface';
 import { Well, WellSchema } from 'iarsenic-types';
 import db from '../db';
-import { Timestamp } from 'firebase-admin/firestore';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
 export interface IWellRepo extends Repository<Well> {
     update: (well: Well) => Promise<void>;
@@ -67,6 +67,7 @@ export const WellRepo: IWellRepo = {
     },
 
     async update(well: Well): Promise<void> {
+        console.log(well)
         const wellRef = db.collection('well');
     
         const querySnapshot = await wellRef.where('id', '==', well.id).get();
@@ -80,6 +81,10 @@ export const WellRepo: IWellRepo = {
         const updateData: Well = {
             ...well,
         };
+
+        if (well.staining !== 'not sure') {
+            (updateData as any).utensilStaining = FieldValue.delete();
+        }
     
         await doc.ref.set(updateData, { merge: true });
     },
