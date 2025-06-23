@@ -80,8 +80,8 @@ export default function Map() {
         <Stack direction='column' justifyContent='center' alignItems='center'>
             <MapContainer center={position} zoom={7} scrollWheelZoom={true}>
                 <TileLayer
-                    attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-                    url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     crossOrigin="anonymous"
                 />
 
@@ -90,5 +90,4 @@ export default function Map() {
             </MapContainer>
         </Stack>
     );
-    
 }

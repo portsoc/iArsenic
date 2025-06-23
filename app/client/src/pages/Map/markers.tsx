@@ -171,10 +171,10 @@ export default function Markers({ wells, regionTranslations, highlightId }: prop
                             <TranslatableText 
                                 variant='body1'
                                 english={`
-                                    Flooding: ${w.flooding ? 'Yes' : 'No'}
+                                    Drinking Source: ${w.wellInUse ? 'Yes' : 'No'}
                                 `}
                                 bengali={`
-                                    বন্যাপ্রবণতা: ${w.flooding ? 'হ্যাঁ' : 'না'}
+                                    পানীয় উৎস: ${w.wellInUse ? 'হ্যাঁ' : 'না'}
                                 `}
                             />
 

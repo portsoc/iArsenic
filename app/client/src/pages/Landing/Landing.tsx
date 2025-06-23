@@ -41,7 +41,7 @@ export default function Landing(): JSX.Element {
                     />
                 </PageCard>
             )}
-            
+
             <PageCard>
                 <TranslatableText
                     variant='h6'
