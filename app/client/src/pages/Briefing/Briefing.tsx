@@ -1,14 +1,17 @@
-import { Button, Link, List, ListItem } from "@mui/material";
+import { Button, CircularProgress, Link, List, ListItem } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { Well } from "iarsenic-types";
 import { useAccessToken } from "../../utils/useAccessToken";
 import TranslatableText from "../../components/TranslatableText";
 import PageCard from "../../components/PageCard";
+import { useState } from "react";
 
 export default function Briefing(): JSX.Element {
     const { data: token } = useAccessToken();
+    const [changingPage, setChangingPage] = useState(false)
 
     async function addWell(): Promise<Well> {
+        setChangingPage(true)
         const headers: HeadersInit = {};
 
         if (token) {
@@ -32,6 +35,7 @@ export default function Briefing(): JSX.Element {
             localStorage.setItem("unclaimedWellIds", JSON.stringify([...unclaimed, well.id]));
         }
 
+        setChangingPage(false)
         return well as Well;
     }
 
@@ -218,16 +222,20 @@ export default function Briefing(): JSX.Element {
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
+                disabled={changingPage}
                 onClick={async () => {
                     const newWell = await addWell();
                     navigate(`/well/${newWell.id}/region`);
                 }}
             >
-                <TranslatableText 
-                    variant='body1'
-                    english='Generate Estimate' 
-                    bengali='ঝুঁকি  মূল্যায়ন করুন'
-                />
+                {changingPage ?
+                    <CircularProgress /> :
+                    <TranslatableText 
+                        variant='body1'
+                        english='Generate Estimate' 
+                        bengali='ঝুঁকি  মূল্যায়ন করুন'
+                    />
+                }
             </Button>
         </>
     );
