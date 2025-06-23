@@ -229,7 +229,7 @@ export default function Region(): JSX.Element {
                         <Box width='100%' height='400px'>
                             <MapContainer
                                 center={geolocation ?? position}
-                                zoom={geolocation ? 11 : 7}
+                                zoom={geolocation ? 11 : 6}
                                 style={{ width: '100%', height: '100%' }}
                             >
                                 <TileLayer
