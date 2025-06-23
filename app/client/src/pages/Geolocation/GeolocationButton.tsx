@@ -7,7 +7,7 @@ import TranslatableText from "../../components/TranslatableText";
 
 type props = {
     setRegionGeovalidated: (geovalidated: boolean) => void,
-    geolocation: [number, number] | undefined,
+    geolocation: [number, number] | '',
     setGeolocation: (geolocation: [number, number]) => void,
     setDivision: (selectedDivision: string) => void,
     setDistrict: (selectedDistrict: string) => void,

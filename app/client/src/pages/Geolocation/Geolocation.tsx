@@ -1,9 +1,6 @@
 import { Box, CircularProgress, FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { navigate } from "wouter/use-browser-location";
-import { Well } from "iarsenic-types";
-import { useAccessToken } from "../../utils/useAccessToken";
-import GeolocationButton from "./GeolocationButton";
 import { useRoute } from "wouter";
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { LatLngExpression } from "leaflet";
@@ -13,6 +10,8 @@ import Collapse from "@mui/material/Collapse";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
+import GeolocationButton from "./GeolocationButton";
+import { useWells } from "../../utils/useWells";
 
 export type RegionErrors = {
     withWell: boolean;
@@ -22,8 +21,10 @@ export default function Region(): JSX.Element {
     const position: LatLngExpression = [23.8041, 90.4152];
     const [, params] = useRoute('/well/:id/region');
     const wellId = params?.id;
-    const [well, setWell] = useState<Well>();
-    const { data: token } = useAccessToken();
+
+    const { getWell, updateWell } = useWells();
+    const { data: well, isLoading } = getWell(wellId);
+    const updateWellMutation = updateWell();
 
     const [division, setDivision] = useState<string | null>(null);
     const [district, setDistrict] = useState<string | null>(null);
@@ -33,37 +34,22 @@ export default function Region(): JSX.Element {
     const [withWell, setWithWell] = useState<boolean | null>(null);
     const [errors, setErrors] = useState<RegionErrors>({ withWell: false });
     const [regionGeovalidated, setRegionGeovalidated] = useState<boolean>(false);
-    const [geolocation, setGeolocation] = useState<[number, number]>();
+    const [geolocation, setGeolocation] = useState<[number, number] | ''>('');
 
     useEffect(() => {
-        async function fetchWell() {
-            if (!wellId) return;
+        if (!well) return
 
-            const headers: HeadersInit = {};
-            if (token) {
-                headers['authorization'] = `Bearer ${token.id}`;
-            }
-
-            const result = await fetch(`/api/v1/self/well/${wellId}`, { headers });
-
-            if (!result.ok) {
-                console.error('Failed to fetch well:', result);
-                return;
-            }
-
-            const well = await result.json();
-            setWell(well);
-
-            if (well.geolocation) {
-                setGeolocation(well.geolocation);
-                setWithWell(true);
-            }
+        if (well.geolocation) {
+            setGeolocation(well.geolocation)
+            setWithWell(true)
+        } else {
+            setWithWell(false)
         }
-
-        fetchWell();
-    }, [token, wellId]);
+    }, [well]);
 
     async function handleNext() {
+        if (!wellId) return;
+
         if (withWell == null) {
             setErrors({ withWell: true });
             return;
@@ -76,48 +62,38 @@ export default function Region(): JSX.Element {
             return;
         }
 
-        const headers: HeadersInit = {};
-        if (token) {
-            headers['authorization'] = `Bearer ${token.id}`;
+        try {
+            const body: {
+                division: string,
+                district: string,
+                upazila: string,
+                union: string,
+                mouza: string,
+                geolocation?: [number, number]
+            } = {
+                division: division!,
+                district: district!,
+                upazila: upazila!,
+                union: union!,
+                mouza: mouza!,
+            };
+
+            if (regionGeovalidated && geolocation) {
+                body.geolocation = geolocation;
+            }
+
+            await updateWellMutation.mutateAsync({
+                wellId,
+                data: body,
+            });
+
+            navigate(`/well/${wellId}/staining`);
+        } catch (err) {
+            console.error('Failed to update well:', err);
         }
-
-        const body: {
-            division: string,
-            district: string,
-            upazila: string,
-            union: string,
-            mouza: string,
-            geolocation?: [number, number]
-        } = {
-            division: division!,
-            district: district!,
-            upazila: upazila!,
-            union: union!,
-            mouza: mouza!,
-        };
-
-        if (regionGeovalidated && geolocation) {
-            body.geolocation = geolocation;
-        }
-
-        const res = await fetch(`/api/v1/self/well/${wellId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
-            body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-            console.error('Failed to update well:', res);
-            return;
-        }
-
-        navigate(`/well/${wellId}/staining`);
     }
 
-    if (!well) {
+    if (isLoading || !well) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
                 <CircularProgress />
@@ -161,6 +137,11 @@ export default function Region(): JSX.Element {
                             setWithWell(event.target.value === 'yes');
                             setErrors({ withWell: false });
                         }}
+                        value={
+                            withWell ?
+                            'yes' :
+                            'no'
+                        }
                     >
                         <FormControlLabel 
                             value="yes" 
@@ -198,7 +179,7 @@ export default function Region(): JSX.Element {
             </PageCard>
 
             <Collapse
-                in={withWell || (geolocation != null)}
+                in={withWell || (geolocation !== '')}
                 sx={{
                     width: '100%',
                 }}
@@ -228,8 +209,12 @@ export default function Region(): JSX.Element {
 
                         <Box width='100%' height='400px'>
                             <MapContainer
-                                center={geolocation ?? position}
-                                zoom={geolocation ? 11 : 6}
+                                center={
+                                    geolocation === '' ? 
+                                    position :
+                                    geolocation
+                                }
+                                zoom={geolocation === '' ? 6 : 11}
                                 style={{ width: '100%', height: '100%' }}
                             >
                                 <TileLayer

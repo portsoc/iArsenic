@@ -56,9 +56,13 @@ export default function WellAssessmentPageLayout({
                     try {
                         try {
                             await onNext()
-                            if (returnToReview === 'true') {
-                                await navigate(`/well/${wellId}/review`)
-                                return
+                            const currentPath = location.split('?')[0];
+
+                            // still go to manual region entry when not with well
+                            // on geolocation page
+                            if (returnToReview === 'true' && !currentPath.endsWith('/region')) {
+                                await navigate(`/well/${wellId}/review`);
+                                return;
                             }
                         } catch (error) {
                             console.error('page errors found')
