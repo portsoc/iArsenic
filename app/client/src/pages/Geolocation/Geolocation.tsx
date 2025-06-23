@@ -26,12 +26,12 @@ export default function Region(): JSX.Element {
     const { data: well, isLoading } = getWell(wellId);
     const updateWellMutation = updateWell();
 
-    const [division, setDivision] = useState<string | null>(null);
-    const [district, setDistrict] = useState<string | null>(null);
-    const [upazila, setUpazila] = useState<string | null>(null);
-    const [union, setUnion] = useState<string | null>(null);
-    const [mouza, setMouza] = useState<string | null>(null);
-    const [withWell, setWithWell] = useState<boolean | null>(null);
+    const [division, setDivision] = useState<string>();
+    const [district, setDistrict] = useState<string>();
+    const [upazila, setUpazila] = useState<string>();
+    const [union, setUnion] = useState<string>();
+    const [mouza, setMouza] = useState<string>();
+    const [withWell, setWithWell] = useState<boolean>();
     const [errors, setErrors] = useState<RegionErrors>({ withWell: false });
     const [regionGeovalidated, setRegionGeovalidated] = useState<boolean>(false);
     const [geolocation, setGeolocation] = useState<[number, number] | ''>('');
@@ -42,9 +42,7 @@ export default function Region(): JSX.Element {
         if (well.geolocation) {
             setGeolocation(well.geolocation)
             setWithWell(true)
-        } else {
-            setWithWell(false)
-        }
+        } 
     }, [well]);
 
     async function handleNext() {
@@ -138,6 +136,8 @@ export default function Region(): JSX.Element {
                             setErrors({ withWell: false });
                         }}
                         value={
+                            withWell === undefined ?
+                            '' : 
                             withWell ?
                             'yes' :
                             'no'
