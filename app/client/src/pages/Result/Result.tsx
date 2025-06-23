@@ -104,7 +104,7 @@ export default function Result(): JSX.Element {
                     bengali="আবার শুরু করুন"
                 />
             }
-            onNext={() => navigate(`/`)}
+            onNext={async () => navigate(`/`)}
         >
             <Grid container spacing={2} justifyContent="center" alignItems="center">
 

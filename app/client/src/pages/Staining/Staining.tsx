@@ -250,7 +250,7 @@ export default function StainingPage(): JSX.Element {
                                 textAlign="center"
                                 sx={{ fontStyle: 'italic' }}
                             >
-                                লাল দাগযুক্ত নলকূপের চৌকাঠের একটি উদাহরণ।
+                                লাল দাগযুক্ত নলকূপের পাকা মেঝের একটি উদাহরণ।
                             </Typography>
                         </>
 
@@ -278,7 +278,7 @@ export default function StainingPage(): JSX.Element {
                                 textAlign="center"
                                 sx={{ fontStyle: 'italic' }}
                             >
-                                কালো দাগযুক্ত নলকূপের চৌকাঠের একটি উদাহরণ।
+                                কালো দাগযুক্ত নলকূপের পাকা মেঝের একটি উদাহরণ।
                             </Typography>
                         </>
 

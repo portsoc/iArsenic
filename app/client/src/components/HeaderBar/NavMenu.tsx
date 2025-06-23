@@ -7,8 +7,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LocalDrinkIcon from '@mui/icons-material/LocalDrink';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupsIcon from '@mui/icons-material/Groups';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import LoginIcon from '@mui/icons-material/Login';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
@@ -50,7 +52,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
 
     return (
         <Drawer open={open} onClose={() => setOpen(false)}>
-            <Box sx={{ width: 250 }} onClick={() => setOpen(false)}>
+            <Box sx={{ width: 300 }} onClick={() => setOpen(false)}>
                 <List>
                     <NavListItem
                         path='landing'
@@ -82,6 +84,32 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         Icon={FmdGoodIcon}
                         label={<TranslatableText english="Maps" bengali="মানচিত্র" variant="body1" />}
                     />
+                    <NavListItem
+                        path='login'
+                        Icon={LoginIcon}
+                        label={<TranslatableText english="Login" bengali="লগইন করুন" variant="body1" />}
+                    />
+                    <ListItem key='powerbi-dash'>
+                        <ListItemButton onClick={() => {
+                            window.open(
+                                'https://app.powerbi.com/view?r=eyJrIjoiMjA0NWJiMjAtOWNjNi00MzBkLWI2ZjQtYTgyY2I5YzI2M2JmIiwidCI6IjAwNTIzMDdjLTU2NGQtNGZkYy05ODc5LTVhNDQ2Y2Y2Yzc0NiIsImMiOjh9', 
+                                '_blank',
+                            )?.focus()
+                        }}>
+                            <ListItemIcon>
+                                <DashboardIcon />
+                            </ListItemIcon>
+                            <ListItemText 
+                                primary={
+                                    <TranslatableText
+                                        english='ARRP DataViewer'
+                                        bengali='ARRP DataViewer'
+                                        variant='body1'
+                                    />
+                                } 
+                            />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
 
                 {role && (

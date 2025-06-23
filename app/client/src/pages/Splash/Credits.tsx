@@ -141,7 +141,7 @@ export default function Credits(): JSX.Element {
             /> 
             <Stack
                 direction={{
-                    md: 'column-reverse',
+                    md: 'column',
                     lg: 'row',
                 }}
                 alignItems='center'

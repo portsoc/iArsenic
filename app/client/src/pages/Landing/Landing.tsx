@@ -41,52 +41,7 @@ export default function Landing(): JSX.Element {
                     />
                 </PageCard>
             )}
-
-            <PageCard>
-                <TranslatableText
-                    variant='body1'
-                    english={`
-                        Powered by cutting-edge research to bring
-                        safety to your doorstep.
-                        Get started today to help assess 
-                        the safety of your drinking water.
-                    `}
-                    bengali={`
-                        আপনার পানিয়জলের নিরাপত্তা  সম্পর্কে  তথ্য দিতে সর্বাধুনিক গবেষণা দ্বারা
-                        চালিত। আপনি এবং আপনার পরিবার নিরাপদ পানি পান করছে কিনা তা
-                        জানতে আজই শুরু করুন ।
-                    `}
-                />
-            </PageCard>
-
-            <PageCard>
-                <TranslatableText
-                    mb='1rem'
-                    variant='h6'
-                    english='Proceed with an Account'
-                    bengali='অ্যাকাউন্ট দিয়ে এগিয়ে যান' // chatgpt generated
-                />
-
-                <TranslatableText
-                    mb='1rem'
-                    variant='body1'
-                    english='Access your personalized dashboard and save your data'
-                    bengali='আপনার ব্যক্তিগত ড্যাশবোর্ডে প্রবেশ করুন এবং আপনার ডেটা সংরক্ষণ করুন' // chatgpt generated
-                />
-
-                <Button
-                    sx={{ width: '90%', height: '4rem' }}
-                    variant='contained'
-                    onClick={() => navigate(`/login`)}
-                >
-                    <TranslatableText
-                        variant='body1'
-                        english='Login or Sign Up'
-                        bengali='লগইন বা সাইন আপ করুন'
-                    />
-                </Button>
-            </PageCard>
-
+            
             <PageCard>
                 <TranslatableText
                     variant='h6'

@@ -44,7 +44,7 @@ export default function PrivacyPolicy(): JSX.Element {
                     variant='body1' 
                     fontWeight='bold'
                     english='Our Commitment'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='আমাদের অঙ্গীকার'
                 />
 
                 <TranslatableText 

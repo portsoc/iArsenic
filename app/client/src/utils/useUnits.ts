@@ -8,8 +8,8 @@ export function useUnits() {
     const queryClient = useQueryClient();
 
     function getUnits(): 'meters' | 'feet' {
-        const stored = localStorage.getItem(UNITS_KEY) || 'meters';
-        return stored === 'feet' ? 'feet' : 'meters';
+        const stored = localStorage.getItem(UNITS_KEY) || 'feet';
+        return stored === 'meters' ? 'meters' : 'feet';
     }
 
     async function setUnits(units: 'meters' | 'feet') {

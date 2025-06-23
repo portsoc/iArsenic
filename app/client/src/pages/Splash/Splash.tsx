@@ -103,6 +103,7 @@ export default function SplashPage(): JSX.Element {
                         </>}
                     />,
                     <TranslatableText
+                        variant='h5'
                         english={`
                             It is widely accepted that iron reduction is the main driver of the release of arsenic into aquifer water. Studies have found that qualitative factors, such as tubewell staining, can indicate subsurface redox condition, geology and water quality. Red staining is associated with iron reduction that may lead to release of As whilst black staining is associated with manganese reduction (any release of As due to manganese reduction is sorbed back on the, yet to be reduced, iron).
                         `}

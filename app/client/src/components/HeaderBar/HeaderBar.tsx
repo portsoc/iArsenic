@@ -1,11 +1,10 @@
-import { AppBar, Stack, Typography, Box, Button, IconButton } from '@mui/material';
+import { AppBar, Stack, Typography, Box, IconButton } from '@mui/material';
 import { navigate } from 'wouter/use-browser-location';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 
 import NavMenu from './NavMenu';
-import { useAccessToken, deleteAccessToken } from '../../utils/useAccessToken';
-import TranslatableText from '../TranslatableText';
+import { useAccessToken } from '../../utils/useAccessToken';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);
@@ -51,7 +50,7 @@ export default function HeaderBar(): JSX.Element {
                 </Stack>
 
                 <Box>
-                    {user ? (
+                    {/* {user ? (
                         <Button
                             variant='outlined'
                             sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
@@ -79,7 +78,7 @@ export default function HeaderBar(): JSX.Element {
                                 bengali='লগইন করুন' // chatgpt generated
                             />
                         </Button>
-                    )}
+                    )} */}
                 </Box>
             </Stack>
         </AppBar>

@@ -144,7 +144,7 @@ export default function Region(): JSX.Element {
                     textAlign='center'
                     variant='h5'
                     english='Enter Region Manually'
-                    bengali="এলাকার তথ্য নিজে লিখুন"
+                    bengali="পুরণ করুন"
                 />
 
                 <EnglishRegionSelector

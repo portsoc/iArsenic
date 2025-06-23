@@ -24,7 +24,6 @@ export default function Depth(): JSX.Element {
     function handleDepthChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value: number = Number(event.target.value);
         setDepth(value);
-        console.log(value)
     }
 
     function switchUnits() {
@@ -42,7 +41,7 @@ export default function Depth(): JSX.Element {
         else setDepth(newDepth)
     }
 
-    async function handleNext() {
+    async function handleNext(): Promise<void> {
         const headers: HeadersInit = {};
         if (token) {
             headers['authorization'] = `Bearer ${token.id}`;
@@ -66,6 +65,7 @@ export default function Depth(): JSX.Element {
         }
 
         navigate(`/well/${wellId}/flooding`);
+        return;
     }
 
     return (
