@@ -48,7 +48,14 @@ export default function Depth(): JSX.Element {
         }
 
         const depthMeters = units === 'meters' ? depth : Math.floor(depth * 0.3048);
-        const body = { depth: depthMeters };
+        const body: {
+            depth: number,
+            flooding?: false,
+        } = { depth: depthMeters };
+
+        if (depthMeters >= 15) {
+            body.flooding = false
+        }
 
         const res = await fetch(`/api/v1/self/well/${wellId}`, {
             method: 'PATCH',
@@ -62,6 +69,10 @@ export default function Depth(): JSX.Element {
         if (!res.ok) {
             console.error('Failed to update well:', res);
             return;
+        }
+
+        if (body?.flooding !== undefined) {
+            navigate(`/well/${wellId}/well-in-use`)
         }
 
         navigate(`/well/${wellId}/flooding`);

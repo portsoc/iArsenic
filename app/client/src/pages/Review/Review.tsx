@@ -78,7 +78,9 @@ export default function Review(): JSX.Element {
             <Region well={well} />
             <Staining well={well} />
             <Depth well={well} />
-            <Flooding well={well} />
+            {well.depth && well.depth <= 15 && 
+                <Flooding well={well} />
+            }
             <Drinking well={well} />
             {token && <Images well={well} />}
         </WellDataEntryLayout>
