@@ -11,6 +11,7 @@ import { useAccessToken } from "../../utils/useAccessToken";
 import PageCard from "../../components/PageCard";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from "../../components/TranslatableText";
+import { useWells } from "../../utils/useWells";
 
 export type RegionErrors = {
     division: boolean;
@@ -23,7 +24,10 @@ export type RegionErrors = {
 export default function Region(): JSX.Element {
     const [, params] = useRoute('/well/:id/select-region');
     const wellId = params?.id;
-    const { data: token } = useAccessToken()
+    const { data: token } = useAccessToken();
+    const { getWell, updateWell } = useWells();
+    const { data: well, isLoading } = getWell(wellId);
+    const updateWellMutation = updateWell();
 
     const [dropdownData, setDropdownData] = useState<DropdownDivision[]>([]);
     const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
@@ -67,11 +71,37 @@ export default function Region(): JSX.Element {
         fetchRegionTranslations();
     }, []);
 
-    async function handleNext() {
-        if (!handleValidation()) return;
+    useEffect(() => {
+        if (!well) return;
 
-        // if validation returns true, we know these values are
-        // all strings, check anyway to satisfy TS
+        setSelectedDivision(
+            dropdownData.find(div => div.division === well.division) || null
+        );
+
+        setSelectedDistrict(
+            dropdownData
+                .flatMap(div => div.districts)
+                .find(dist => dist.district === well.district) || null
+        );
+
+        setSelectedUpazila(
+            dropdownData
+                .flatMap(div => div.districts.flatMap(d => d.upazilas))
+                .find(upz => upz.upazila === well.upazila) || null
+        );
+
+        setSelectedUnion(
+            dropdownData
+                .flatMap(div => div.districts.flatMap(d => d.upazilas.flatMap(u => u.unions)))
+                .find(un => un.union === well.union) || null
+        );
+
+        setSelectedMouza(well.mouza || null);
+    }, [well, dropdownData]);
+
+    async function handleNext() {
+        if (!wellId) return
+        if (!handleValidation()) return;
 
         if (!selectedDivision?.division ||
             !selectedDistrict?.district ||
@@ -85,13 +115,12 @@ export default function Region(): JSX.Element {
             headers['authorization'] = `Bearer ${token.id}`;
         }
 
-        const body: { 
+        const body: {
             division: string,
             district: string,
             upazila: string,
             union: string,
             mouza: string,
-            geolocation?: [number, number],
         } = {
             division: selectedDivision.division,
             district: selectedDistrict.district,
@@ -100,26 +129,18 @@ export default function Region(): JSX.Element {
             mouza: selectedMouza,
         };
 
-        const res = await fetch(`/api/v1/self/well/${wellId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
-            body: JSON.stringify({
-                ...body
-            })
-        });
-
-        if (!res.ok) {
-            console.error('Failed to update well:', res);
-            return;
+        try {
+            await updateWellMutation.mutateAsync({
+                wellId,
+                data: body,
+            });
+            navigate(`/well/${wellId}/staining`);
+        } catch (err) {
+            console.error('Failed to update well:', err);
         }
-
-        navigate(`/well/${wellId}/staining`);
     }
 
-    if (!regionTranslations) {
+    if (!regionTranslations || isLoading) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
                 <CircularProgress />

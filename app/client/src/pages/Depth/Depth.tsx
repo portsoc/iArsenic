@@ -65,6 +65,7 @@ export default function Depth(): JSX.Element {
 
             if (updates?.flooding !== undefined) {
                 navigate(`/well/${wellId}/well-in-use`)
+                return
             }
 
             navigate(`/well/${wellId}/flooding`);
