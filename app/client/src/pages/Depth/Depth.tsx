@@ -32,16 +32,6 @@ export default function Depth(): JSX.Element {
     function switchUnits() {
         const newUnits = units === 'feet' ? 'meters' : 'feet';
         setUnits(newUnits);
-
-        let newDepth
-        if (units === 'feet') {
-            newDepth = Math.floor(depth * 0.3048);
-        } else {
-            newDepth = Math.floor(depth / 0.3048);
-        }
-
-        if (newDepth < 1) setDepth(1)
-        else setDepth(newDepth)
     }
 
     async function handleNext(): Promise<void> {
@@ -74,12 +64,16 @@ export default function Depth(): JSX.Element {
             console.error('Failed to update well:', err)
         }
     }
-
+    
     useEffect(() => {
         if (well && well.depth !== undefined) {
-            setDepth(well.depth)
+            if (units === 'meters') {
+                setDepth(well.depth);
+            } else {
+                setDepth(Math.floor(well.depth / 0.3048));
+            }
         }
-    }, [well]);
+    }, [well, units]);
 
     if (isLoading) {
         return (
