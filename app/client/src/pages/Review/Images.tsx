@@ -110,7 +110,7 @@ export default function WellImageDisplay({ well }: Props) {
                         sx={{ width: '80%', height: '3rem' }}
                         variant="outlined"
                         onClick={() => {
-                            navigate(`/well/${well.id}/upload-image`);
+                            navigate(`/well/${well.id}/upload-image?returnToReview=true`);
                         }}
                     >
                         <TranslatableText 

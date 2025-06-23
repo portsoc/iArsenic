@@ -1,6 +1,8 @@
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { ReactNode, useState } from 'react';
 import TranslatableText from '../TranslatableText';
+import { navigate } from 'wouter/use-browser-location';
+import { useLocation } from 'wouter';
 
 interface Props {
     title: ReactNode;
@@ -19,6 +21,10 @@ export default function WellAssessmentPageLayout({
         bengali="পরবর্তী ধাপে যান"
     />,
 }: Props): JSX.Element {
+    const returnToReview = new URLSearchParams(window.location.search).get('returnToReview');
+    const [location] = useLocation();
+    const wellId = location.split('/')[2];
+
     const [changingPage, setChangingPage] = useState(false)
 
     return (
@@ -48,6 +54,10 @@ export default function WellAssessmentPageLayout({
                 onClick={async () => {
                     setChangingPage(true)
                     try {
+                        if (returnToReview === 'true') {
+                            await navigate(`/well/${wellId}/review`)
+                            return
+                        }
                         await onNext()
                     } finally {
                         setChangingPage(false)

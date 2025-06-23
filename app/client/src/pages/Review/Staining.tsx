@@ -23,7 +23,10 @@ export default function({ well }: props) {
                     variant="body1"
                     english={
                         <>
-                            <strong>Staining</strong> {well.staining}
+                            <strong>Staining</strong> {
+                                (well.staining as string).charAt(0).toUpperCase() + 
+                                (well.staining as string).slice(1)
+                            }
                         </>
                     }
                     bengali={
@@ -73,7 +76,7 @@ export default function({ well }: props) {
                         sx={{ width: '80%', height: '3rem' }}
                         variant="outlined"
                         onClick={() => {
-                            navigate(`/well/${well.id}/staining`);
+                            navigate(`/well/${well.id}/staining?returnToReview=true`);
                         }}
                     >
                         <TranslatableText

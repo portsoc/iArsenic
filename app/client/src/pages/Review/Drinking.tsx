@@ -38,7 +38,7 @@ export default function({ well }: props) {
                         sx={{ width: '80%', height: '3rem' }}
                         variant="outlined"
                         onClick={() => {
-                            navigate(`/well/${well.id}/well-in-use`);
+                            navigate(`/well/${well.id}/well-in-use?returnToReview=true`);
                         }}
                     >
                         <TranslatableText 
